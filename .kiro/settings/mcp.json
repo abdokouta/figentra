@@ -1,0 +1,150 @@
+{
+  "$comment": "Kiro-native MCP config. Every URL-based server that requires a token is wrapped in `doppler run --command exec npx -y mcp-remote <URL> --header \"\u2026\"`. `doppler run` fetches Layer 1 canonical vars from `figentra-workspace/dev` at MCP-spawn time; the child shell (invoked by `--command`) expands `$VAR` inside the header string before mcp-remote receives it. `mcp-remote` (github.com/geelen/mcp-remote) then proxies stdio \u2194 HTTPS with the resolved header. This matches the pattern the two Doppler MCPs already use.",
+  "mcpServers": {
+    "github": {
+      "command": "/opt/homebrew/bin/doppler",
+      "args": [
+        "run",
+        "--project",
+        "figentra-workspace",
+        "--config",
+        "dev",
+        "--command",
+        "exec npx -y mcp-remote@latest https://api.githubcopilot.com/mcp/ --header \"Authorization: Bearer $FIGENTRA_GITHUB_MCP_TOKEN\""
+      ]
+    },
+    "doppler-figentra": {
+      "command": "/opt/homebrew/bin/doppler",
+      "args": [
+        "run",
+        "--project",
+        "figentra-workspace",
+        "--config",
+        "dev",
+        "--command",
+        "DOPPLER_TOKEN=\"$FIGENTRA_DOPPLER_TOKEN\" exec npx -y @dopplerhq/mcp-server"
+      ],
+      "autoApprove": [
+        "confirm_access",
+        "projects_list",
+        "projects_create",
+        "environments_list",
+        "secrets_update",
+        "configs_list",
+        "secrets_download",
+        "secrets_names"
+      ]
+    },
+    "doppler-academorix": {
+      "command": "/opt/homebrew/bin/doppler",
+      "args": [
+        "run",
+        "--project",
+        "figentra-workspace",
+        "--config",
+        "dev",
+        "--command",
+        "DOPPLER_TOKEN=\"$ACADEMORIX_DOPPLER_TOKEN\" exec npx -y @dopplerhq/mcp-server"
+      ],
+      "autoApprove": [
+        "confirm_access",
+        "projects_list",
+        "projects_create",
+        "environments_list",
+        "secrets_update",
+        "configs_list",
+        "secrets_download",
+        "secrets_names"
+      ]
+    },
+    "resend": {
+      "command": "/opt/homebrew/bin/doppler",
+      "args": [
+        "run",
+        "--project",
+        "figentra-workspace",
+        "--config",
+        "dev",
+        "--command",
+        "exec npx -y mcp-remote@latest https://mcp.resend.com/mcp --header \"Authorization: Bearer $FIGENTRA_RESEND_API_KEY\""
+      ]
+    },
+    "heroui-react": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@heroui/react-mcp@latest"
+      ],
+      "autoApprove": [
+        "get_component_docs",
+        "list_components",
+        "get_theme_variables"
+      ]
+    },
+    "heroui-native": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@heroui/native-mcp@latest"
+      ]
+    },
+    "heroui-pro": {
+      "command": "/opt/homebrew/bin/doppler",
+      "args": [
+        "run",
+        "--project",
+        "figentra-workspace",
+        "--config",
+        "dev",
+        "--command",
+        "exec npx -y mcp-remote@latest https://mcp.heroui.pro/mcp --header \"x-heroui-personal-token: $STACKRA_HEROUI_PERSONAL_TOKEN\""
+      ],
+      "autoApprove": [
+        "list_components",
+        "get_component_docs",
+        "get_docs",
+        "get_theme_variables",
+        "get_css"
+      ]
+    },
+    "heroui-native-pro": {
+      "command": "/opt/homebrew/bin/doppler",
+      "args": [
+        "run",
+        "--project",
+        "figentra-workspace",
+        "--config",
+        "dev",
+        "--command",
+        "exec npx -y mcp-remote@latest https://native-mcp.heroui.pro/mcp --header \"x-heroui-personal-token: $STACKRA_HEROUI_PERSONAL_TOKEN\""
+      ]
+    },
+    "sentry": {
+      "command": "/opt/homebrew/bin/doppler",
+      "args": [
+        "run",
+        "--project",
+        "figentra-workspace",
+        "--config",
+        "dev",
+        "--command",
+        "exec npx -y mcp-remote@latest https://mcp.sentry.dev/mcp --header \"Authorization: Sentry-Bearer $FIGENTRA_SENTRY_ACCESS_TOKEN\""
+      ],
+      "autoApprove": [
+        "find_organizations",
+        "find_teams",
+        "find_projects",
+        "find_dsns",
+        "get_issue_details",
+        "search_issues",
+        "search_events"
+      ]
+    },
+    "nightwatch": {
+      "url": "https://nightwatch.laravel.com/mcp"
+    }
+  },
+  "powers": {
+    "mcpServers": {}
+  }
+}

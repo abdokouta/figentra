@@ -1,0 +1,52 @@
+# Stackra Client cache — Kiro Usage Specification
+
+**Status:** Approved integration boundary
+
+## Repository-discovered Stackra packages
+
+The current repository uses these Stackra packages:
+
+| Package | Primary use | Boundary |
+|---|---|---|
+| `@stackra/container` | dependency injection/container | UI/app composition; not platform service persistence |
+| `@stackra/container/react` | React container integration | React composition only |
+| `@stackra/http` | typed HTTP transport | client-side transport |
+| `@stackra/logger` | application logging | local/application observability |
+| `@stackra/state` | reactive/local state | local UI state, not server source of truth |
+| `@stackra/testing` | testing utilities | test-only/shared testing |
+| `@stackra/testing/preset` | test preset | test configuration |
+| `@stackra/testing/setup` | test setup | test runtime |
+| `@stackra/oxlint-config` | linting | workspace tooling |
+| `@stackra/prettier-config` | formatting | workspace tooling |
+| `@stackra/tsup-config` | package builds | workspace tooling |
+| `@stackra/typescript-config` | TypeScript presets | workspace tooling |
+| `@stackra/typescript-config/base` | base TS preset | workspace tooling |
+| `@stackra/typescript-config/native` | native/mobile TS preset | mobile tooling |
+| `@stackra/typescript-config/nest` | Nest TS preset | Nest services |
+| `@stackra/typescript-config/vite` | Vite TS preset | web apps |
+| `@stackra/typescript-config/worker` | Worker TS preset | Cloudflare Workers |
+
+`@stackra/query`, `@stackra/dashboard`, `@stackra/events`, and other Stackra
+packages mentioned in historical architecture discussions are **conditional/planned**
+until they are actually present in the workspace. Do not add them solely because they
+appear in an architecture diagram.
+
+## Purpose
+
+Use for frontend/server-state cache primitives; platform domain cache remains service-owned and Redis-backed where needed.
+
+## Usage rules
+
+- Prefer the public Stackra API; do not reach into implementation internals.
+- Pin compatible versions through the workspace catalog.
+- Document any adapter or integration code in the consuming component.
+- Do not re-wrap a Stackra primitive without a concrete Figentra-specific requirement.
+- Keep browser-safe and server-only imports separate.
+
+## Testing
+
+Verify the integration at the consuming application/package level and include a regression test for any behavior relied upon by Figentra.
+
+## Non-goals
+
+This spec does not transfer ownership of Figentra identity, tenancy, IAM, business data, authorization or platform events to Stackra.

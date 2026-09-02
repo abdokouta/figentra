@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Session start — no /tmp; write scratch files under .tmp/",
+      "trigger": "SessionStart",
+      "description": "Reminds the assistant that all agent-produced temp files (drafts, diffs, logs, generated fixtures, version-message drafts, scratch scripts) land under .tmp/ at the workspace root — never in /tmp. Canonical rule of record: .kiro/steering/tmp-files.md.",
+      "action": {
+        "type": "agent",
+        "prompt": "Temp-file guardrail: NEVER write agent-produced scratch files to `/tmp`. All temporary files the AGENT writes MUST land under `.tmp/` at the workspace root (preferred), or `tmp/` as a fallback only when a third-party tool cannot be redirected.\n\nRules:\n\n- `mkdir -p .tmp/` (or use `fs_write` — it creates parents) before writing.\n- Group by concern: `.tmp/diffs/`, `.tmp/logs/`, `.tmp/drafts/`, `.tmp/fixtures/`, `.tmp/reports/`, `.tmp/scripts/`.\n- `.tmp/` and `tmp/` are gitignored. Every file inside is throw-away by contract — do not import from `.tmp/` in committed source, do not reference `.tmp/` paths in ADRs / docs / changesets.\n- Committed artefacts (Kiro audit reports, ADRs, changesets) DO NOT go under `.tmp/` — they live at `.kiro/reports/`, `docs/adr/`, `.changeset/` respectively.\n\nScope:\n\n- Applies to files the AGENT WRITES via `fs_write`, `fs_append`, `execute_bash` / `control_bash_process` command strings that write files (redirection, `tee`, `> file`), and hook `action.command` values.\n- Does NOT apply to files the user themselves opens at `/tmp/*` (their editor state — do not touch), or to third-party tools that internally use `/tmp` (Doppler CLI temp files, system utilities — outside the agent's control).\n\nIf a `/tmp/*` file surfaces in the editor context (open-editor-files / active-editor-file), that is the user's file, not an agent write. Do not modify it in place — produce your own reply / draft in `.tmp/` and reference it back to the user.\n\nCanonical rule of record: `.kiro/steering/tmp-files.md`."
+      }
+    }
+  ]
+}

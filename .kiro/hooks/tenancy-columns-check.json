@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Tenancy Columns Check — Save Reminder",
+      "trigger": "PostFileSave",
+      "description": "Reminds about the row-level attribution mandate (tenancy-columns.md) when a migration / schema / repository file is saved.",
+      "matcher": "(migrations?/.*\\.sql$|\\.(repository|entity|schema)\\.ts$)",
+      "action": {
+        "type": "agent",
+        "prompt": "A migration, schema, or repository file was just saved. It may touch the row-level attribution surface governed by `.kiro/steering/tenancy-columns.md`. Verify the change against the `tenancy-columns-check` mandate before committing:\n\n1. **Required column** — a tenant-scoped table carries `tenant_id` (via the `tenantId()` helper), and its repository composes `withTenant()` + has a Supabase RLS policy.\n2. **`application_id` allow-list** — only the 12 rows named in tenancy-columns.md §2 carry `application_id` directly. Any other row is a violation (cascade through `tenant_id`).\n3. **Forbidden shortcut FKs** — no `region_id` on `organizations`, no `organization_id` on `facilities`/`regions` (§5).\n4. **`scope_node_id`** — only on config-consumer packages, never on domain data rows (§4).\n5. **Cross-service FKs** — none; cross-service references use reference columns + domain-event cascade per `data-ownership.md` (`no-cross-service-foreign-key`).\n6. **Composite index** — every tenant-scoped table with `created_at` carries the `(tenant_id, created_at)` index (§8, ADR-0041).\n7. **Naming drift** — no `owner_id` outside `scope_nodes`, no `workspace_id` where `tenant_id` is expected.\n\nThis is a reminder, not a blocker. Fix any violation in the same PR, or route the review to `data-modeler` / `data-lead`. The CI `tenancy-columns-check` schema-lint enforces the same rules at the lint gate; a P0 finding fails CI."
+      }
+    }
+  ]
+}
