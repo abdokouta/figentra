@@ -5,77 +5,22 @@
   "type": "module",
   "description": "Provider-neutral durable workflow contracts and Cloudflare, Temporal and Vercel runtime adapters.",
   "license": "UNLICENSED",
-  "engines": {
-    "node": ">=24.0.0"
-  },
+  "engines": { "node": ">=24.0.0" },
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    },
-    "./nest": {
-      "types": "./dist/nest/index.d.ts",
-      "import": "./dist/nest/index.js"
-    },
-    "./cloudflare": {
-      "types": "./dist/cloudflare/index.d.ts",
-      "import": "./dist/cloudflare/index.js"
-    },
-    "./decorators": {
-      "types": "./dist/decorators/index.d.ts",
-      "import": "./dist/decorators/index.js"
-    },
-    "./dsl": {
-      "types": "./dist/dsl/index.d.ts",
-      "import": "./dist/dsl/index.js"
-    },
-    "./providers": {
-      "types": "./dist/providers/index.d.ts",
-      "import": "./dist/providers/index.js"
-    }
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./nest": { "types": "./dist/nest/index.d.ts", "import": "./dist/nest/index.js" },
+    "./cloudflare": { "types": "./dist/cloudflare/index.d.ts", "import": "./dist/cloudflare/index.js" },
+    "./decorators": { "types": "./dist/decorators/index.d.ts", "import": "./dist/decorators/index.js" },
+    "./dsl": { "types": "./dist/dsl/index.d.ts", "import": "./dist/dsl/index.js" },
+    "./providers": { "types": "./dist/providers/index.d.ts", "import": "./dist/providers/index.js" },
+    "./providers/cloudflare": { "types": "./dist/providers/cloudflare/index.d.ts", "import": "./dist/providers/cloudflare/index.js" },
+    "./providers/temporal": { "types": "./dist/providers/temporal/index.d.ts", "import": "./dist/providers/temporal/index.js" },
+    "./providers/vercel": { "types": "./dist/providers/vercel/index.d.ts", "import": "./dist/providers/vercel/index.js" }
   },
-  "files": [
-    "dist",
-    "README.md"
-  ],
-  "scripts": {
-    "build": "tsup",
-    "lint": "oxlint src __tests__",
-    "lint:fix": "oxlint --fix src __tests__",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "typecheck": "tsc --noEmit",
-    "check-types": "pnpm run typecheck",
-    "test": "vitest run",
-    "test:watch": "vitest"
-  },
-  "dependencies": {
-    "reflect-metadata": "catalog:"
-  },
-  "devDependencies": {
-    "@stackra/oxlint-config": "workspace:*",
-    "@stackra/prettier-config": "workspace:*",
-    "@stackra/typescript-config": "workspace:*",
-    "@stackra/tsup-config": "workspace:*",
-    "@stackra/testing": "workspace:*",
-    "@cloudflare/workers-types": "catalog:",
-    "oxlint": "catalog:",
-    "prettier": "catalog:",
-    "typescript": "catalog:",
-    "tsup": "catalog:",
-    "vitest": "catalog:",
-    "@vitest/coverage-v8": "catalog:"
-  },
-  "peerDependencies": {
-    "@nestjs/common": "catalog:",
-    "@nestjs/core": "catalog:"
-  },
-  "peerDependenciesMeta": {
-    "@nestjs/common": {
-      "optional": true
-    },
-    "@nestjs/core": {
-      "optional": true
-    }
-  }
+  "files": ["dist", "README.md"],
+  "scripts": { "build": "tsup", "lint": "oxlint src __tests__", "lint:fix": "oxlint --fix src __tests__", "format": "prettier --write .", "format:check": "prettier --check .", "typecheck": "tsc --noEmit", "check-types": "pnpm run typecheck", "test": "vitest run", "test:watch": "vitest" },
+  "dependencies": { "reflect-metadata": "catalog:" },
+  "devDependencies": { "@stackra/oxlint-config": "workspace:*", "@stackra/prettier-config": "workspace:*", "@stackra/typescript-config": "workspace:*", "@stackra/tsup-config": "workspace:*", "@stackra/testing": "workspace:*", "@cloudflare/workers-types": "catalog:", "oxlint": "catalog:", "prettier": "catalog:", "typescript": "catalog:", "tsup": "catalog:", "vitest": "catalog:", "@vitest/coverage-v8": "catalog:" },
+  "peerDependencies": { "@nestjs/common": "catalog:", "@nestjs/core": "catalog:" },
+  "peerDependenciesMeta": { "@nestjs/common": { "optional": true }, "@nestjs/core": { "optional": true } }
 }
