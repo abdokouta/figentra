@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Academorix · merch + apparel · technical t-shirt · training kit
+  ==================================================================
+  Front + back technical illustration for the training-kit tee. The
+  same silhouette is drawn twice on one canvas; the front carries the
+  chest chevron (Track Orange applique) and a small A-Chevron over
+  the left chest; the back carries the jersey-number slot, the athlete
+  last-name curve, and a sleeve-slot on the right sleeve.
+
+  Every printable area is annotated in millimetres so a supplier can
+  cut applique / DTG / heat-transfer without a follow-up spec sheet.
+  Safe-area rectangles = dashed Track Orange. Callout leaders =
+  hairline ink with a Track Orange endpoint dot.
+
+  Sprint 1 lineage:
+    · A-Chevron mark  — inlined verbatim (viewBox 0 0 120 120)
+    · Track Orange    — accent only (chevron applique + apex marker)
+    · Geist 500 /-.03 — display type
+    · Geist Mono 500  — mm callouts + slot names
+
+  Variable slots (server-side substitute at render):
+    BELAID   back yoke curve   "FARID"
+    07      back number slot  "07"
+    FALCONS optional chest overprint (rare — usually
+                            the chevron alone carries the identity)
+    TRACK ORANGE      right-sleeve wordmark (may be empty)
+
+  Renders in a browser at 1400×900 for review; print at 100% for
+  supplier communication.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 1400 900"
+     width="1400" height="900"
+     role="img"
+     aria-label="Academorix technical t-shirt · front + back with safe-area annotations">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Geist:wght@500;600;700&amp;family=Geist+Mono:wght@500;600&amp;display=swap");
+    .title      { font-family: "Geist", "Inter", sans-serif; font-weight: 700; font-size: 26px; letter-spacing: -0.03em; fill: #141414; }
+    .subtitle   { font-family: "Geist", "Inter", sans-serif; font-weight: 600; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; fill: rgba(20,20,20,0.62); }
+    .view-label { font-family: "Geist", "Inter", sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; fill: rgba(20,20,20,0.72); }
+    .callout-lbl{ font-family: "Geist", "Inter", sans-serif; font-weight: 500; font-size: 11px; fill: rgba(20,20,20,0.72); }
+    .slot       { font-family: "Geist Mono", ui-monospace, monospace; font-weight: 500; font-size: 11px; letter-spacing: 0.04em; fill: rgba(20,20,20,0.52); }
+    .mm         { font-family: "Geist Mono", ui-monospace, monospace; font-weight: 500; font-size: 11px; fill: rgba(20,20,20,0.72); }
+    .kicker     { font-family: "Geist", "Inter", sans-serif; font-weight: 600; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; fill: #ff6b35; }
+    .fabric     { fill: #f4f4f4; stroke: rgba(20,20,20,0.14); stroke-width: 1.5; stroke-linejoin: round; }
+    .fabric-2   { fill: #eeeeee; stroke: rgba(20,20,20,0.18); stroke-width: 1; }
+    .stitch     { fill: none; stroke: rgba(20,20,20,0.28); stroke-width: 1; stroke-dasharray: 4 3; }
+    .chevron-hi { fill: none; stroke: #ff6b35; stroke-width: 16; stroke-linecap: butt; stroke-linejoin: miter; }
+    .safe       { fill: rgba(255,107,53,0.06); stroke: #ff6b35; stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .leader     { fill: none; stroke: rgba(20,20,20,0.38); stroke-width: 0.8; }
+    .leader-dot { fill: #ff6b35; }
+    .neck-fill  { fill: #fafafa; stroke: rgba(20,20,20,0.18); stroke-width: 1.2; }
+    .number-ghost{ font-family: "Geist", "Inter", sans-serif; font-weight: 800; font-size: 176px; letter-spacing: -0.03em; fill: rgba(20,20,20,0.10); }
+    .name-ghost { font-family: "Geist", "Inter", sans-serif; font-weight: 600; font-size: 22px; letter-spacing: 0.24em; fill: rgba(20,20,20,0.32); }
+    .rule       { fill: none; stroke: rgba(20,20,20,0.14); stroke-width: 1; }
+  </style>
+
+  <!-- ── header ────────────────────────────────────────── -->
+  <text x="60" y="52" class="title">Technical t-shirt · training kit</text>
+  <text x="60" y="78" class="subtitle">Front · back · applied safe areas · millimetre callouts</text>
+  <line class="rule" x1="60" y1="98" x2="1340" y2="98"/>
+
+  <!-- ═══════════════════ FRONT VIEW ═══════════════════ -->
+  <g transform="translate(100 130)">
+    <text x="230" y="24" class="view-label" text-anchor="middle">Front</text>
+
+    <!-- silhouette (single path, crew neck curve dips inside body top) -->
+    <path class="fabric" d="
+      M 140 100
+      Q 280 148 420 100
+      L 500 112
+      L 560 232
+      L 486 258
+      L 420 140
+      L 420 668
+      L 140 668
+      L 140 140
+      L 74 258
+      L 0 232
+      L 60 112
+      Z"/>
+
+    <!-- collar rib (visible on top of neck curve) -->
+    <path class="stitch" d="M 200 108 Q 280 150 360 108"/>
+
+    <!-- shoulder + hem topstitch -->
+    <path class="stitch" d="M 60 112 L 140 105"/>
+    <path class="stitch" d="M 500 112 L 420 105"/>
+    <path class="stitch" d="M 140 665 L 420 665"/>
+    <path class="stitch" d="M 74 258 L 486 258"/>
+
+    <!-- chest chevron applique -->
+    <polyline class="chevron-hi" points="180,270 280,215 380,270"/>
+
+    <!-- small A-Chevron over left chest (mini-mark) -->
+    <g transform="translate(174 322) scale(0.24)">
+      <path d="M 30 90 L 60 30" stroke="currentColor" stroke-width="10" fill="none"/>
+      <path d="M 60 30 L 90 90" stroke="currentColor" stroke-width="10" fill="none"/>
+      <rect x="40" y="60" width="40" height="10" fill="currentColor"/>
+      <rect x="56" y="14" width="8" height="6" fill="#ff6b35"/>
+    </g>
+    <text x="200" y="360" class="slot" text-anchor="middle">A-mark · 30mm</text>
+
+    <!-- safe-area for chest applique -->
+    <rect class="safe" x="150" y="200" width="260" height="90" rx="2"/>
+
+    <!-- callouts · front chest -->
+    <g class="leader">
+      <line x1="150" y1="200" x2="150" y2="188"/>
+      <line x1="150" y1="188" x2="10" y2="188"/>
+    </g>
+    <circle class="leader-dot" cx="10" cy="188" r="2.5"/>
+    <text x="10" y="180" class="mm">260mm · chest applique width</text>
+
+    <g class="leader">
+      <line x1="410" y1="290" x2="500" y2="290"/>
+      <line x1="500" y1="290" x2="500" y2="278"/>
+    </g>
+    <circle class="leader-dot" cx="500" cy="278" r="2.5"/>
+    <text x="500" y="270" class="mm" text-anchor="end">90mm high</text>
+
+    <g class="leader">
+      <line x1="280" y1="665" x2="280" y2="710"/>
+      <line x1="280" y1="710" x2="360" y2="710"/>
+    </g>
+    <circle class="leader-dot" cx="360" cy="710" r="2.5"/>
+    <text x="366" y="714" class="mm">60mm min · hem clearance</text>
+
+    <text x="230" y="768" class="kicker" text-anchor="middle">applique · Pantone 165 C · Track Orange</text>
+  </g>
+
+  <!-- ═══════════════════ BACK VIEW ═══════════════════ -->
+  <g transform="translate(760 130)">
+    <text x="230" y="24" class="view-label" text-anchor="middle">Back</text>
+
+    <!-- silhouette · back neck curve is shallower (higher scoop) -->
+    <path class="fabric" d="
+      M 140 100
+      Q 280 118 420 100
+      L 500 112
+      L 560 232
+      L 486 258
+      L 420 140
+      L 420 668
+      L 140 668
+      L 140 140
+      L 74 258
+      L 0 232
+      L 60 112
+      Z"/>
+
+    <!-- back neck taping (ink) -->
+    <path class="stitch" d="M 200 108 Q 280 122 360 108"/>
+    <!-- shoulder + hem topstitch -->
+    <path class="stitch" d="M 60 112 L 140 105"/>
+    <path class="stitch" d="M 500 112 L 420 105"/>
+    <path class="stitch" d="M 140 665 L 420 665"/>
+    <path class="stitch" d="M 74 258 L 486 258"/>
+
+    <!-- athlete last-name curve (yoke bar) -->
+    <text x="280" y="200" class="name-ghost" text-anchor="middle">BELAID</text>
+    <rect class="safe" x="150" y="170" width="260" height="40"/>
+
+    <!-- jersey-number safe box -->
+    <rect class="safe" x="180" y="240" width="200" height="290" rx="2"/>
+    <text x="280" y="410" class="number-ghost" text-anchor="middle">07</text>
+
+    <!-- sleeve slot (right sleeve on back view = wearer's left, mirror of front sponsor) -->
+    <rect class="safe" x="4" y="150" width="70" height="70" rx="2"/>
+    <text x="39" y="192" class="slot" text-anchor="middle">80×60mm</text>
+
+    <!-- callouts · back -->
+    <g class="leader">
+      <line x1="150" y1="170" x2="150" y2="158"/>
+      <line x1="150" y1="158" x2="10" y2="158"/>
+    </g>
+    <circle class="leader-dot" cx="10" cy="158" r="2.5"/>
+    <text x="10" y="150" class="mm">260×40mm · last name curve</text>
+
+    <g class="leader">
+      <line x1="380" y1="240" x2="470" y2="240"/>
+      <line x1="470" y1="240" x2="470" y2="230"/>
+    </g>
+    <circle class="leader-dot" cx="470" cy="230" r="2.5"/>
+    <text x="470" y="222" class="mm" text-anchor="end">200×290mm · number safe area</text>
+
+    <g class="leader">
+      <line x1="280" y1="530" x2="280" y2="560"/>
+      <line x1="280" y1="560" x2="360" y2="560"/>
+    </g>
+    <circle class="leader-dot" cx="360" cy="560" r="2.5"/>
+    <text x="366" y="564" class="mm">140mm from bottom hem</text>
+
+    <g class="leader">
+      <line x1="4" y1="220" x2="4" y2="232"/>
+      <line x1="4" y1="232" x2="-40" y2="232"/>
+    </g>
+    <circle class="leader-dot" cx="-40" cy="232" r="2.5"/>
+    <text x="-46" y="228" class="mm" text-anchor="end">sleeve slot · 80×60mm</text>
+
+    <text x="230" y="768" class="kicker" text-anchor="middle">DTG or applique · ink Black 6 C · number Geist 800</text>
+  </g>
+
+  <!-- ═══════════════════ LEGEND ═══════════════════ -->
+  <line class="rule" x1="60" y1="810" x2="1340" y2="810"/>
+  <text x="60" y="838" class="subtitle">Slot glossary</text>
+
+  <g transform="translate(60 852)" class="callout-lbl">
+    <rect class="safe" x="0" y="4" width="16" height="10"/>
+    <text x="24" y="14" class="slot">safe-area</text>
+    <text x="120" y="14">bleed rectangle · print MUST stay inside</text>
+  </g>
+  <g transform="translate(500 852)" class="callout-lbl">
+    <circle class="leader-dot" cx="8" cy="8" r="2.5"/>
+    <text x="20" y="12" class="slot">callout dot</text>
+    <text x="120" y="12">measurement anchor · Track Orange endpoint</text>
+  </g>
+  <g transform="translate(940 852)" class="callout-lbl">
+    <rect fill="currentColor" x="0" y="4" width="16" height="10"/>
+    <text x="24" y="14" class="slot">ink zone</text>
+    <text x="120" y="14">Pantone Black 6 C · Geist 800 numerals</text>
+  </g>
+
+  <!-- provenance stamp -->
+  <text x="1340" y="878" class="slot" text-anchor="end">Academorix · training kit · v1.1 · Sprint 2</text>
+
+</svg>

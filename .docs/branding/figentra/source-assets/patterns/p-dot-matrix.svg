@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Pattern — Dot Matrix
+  Tileable 16×16. Ink dots at 15%. The workspace's quietest pattern —
+  reach for it when a section needs texture but shouldn't compete with
+  copy. Pairs cleanly under Signal-mint accents on top.
+  See docs/brand/13-patterns-and-assets.md.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+  <circle cx="8" cy="8" r="1" fill="currentColor" opacity="0.15"/>
+</svg>

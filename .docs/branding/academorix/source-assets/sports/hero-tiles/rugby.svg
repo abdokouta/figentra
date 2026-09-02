@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sport HERO tile — rugby.
+  Full pitch top-down · World Rugby proportions (68m × 100m in-goal 6m each end).
+  Includes: outer touch lines · try lines · dead-ball lines · 22m lines ·
+  10m lines · halfway · goal-line + goalposts.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Rugby pitch — top-down">
+  <defs>
+    <style>
+      .field { fill: #141414; }
+      .line { fill: none; stroke: #FF6B35; stroke-width: 3; stroke-linejoin: miter; opacity: 0.9; }
+      .line-thin { fill: none; stroke: #FF6B35; stroke-width: 2; stroke-linejoin: miter; opacity: 0.6; }
+      .line-dash { fill: none; stroke: #FF6B35; stroke-width: 2; stroke-dasharray: 6 4; opacity: 0.7; }
+      .dot { fill: #FF6B35; }
+    </style>
+  </defs>
+
+  <!-- Field surface -->
+  <rect width="800" height="500" class="field"/>
+
+  <!-- Outer pitch (100m + 2×6m in-goal = 112m total, 68m wide → 720×360 with margins) -->
+  <rect x="40" y="70" width="720" height="360" class="line"/>
+
+  <!-- IN-GOAL areas (dead-ball to try line, ~6m/112m = 39px each end) -->
+  <line x1="79" y1="70" x2="79" y2="430" class="line"/>
+  <line x1="721" y1="70" x2="721" y2="430" class="line"/>
+
+  <!-- Halfway line (heavy) -->
+  <line x1="400" y1="70" x2="400" y2="430" class="line"/>
+
+  <!-- 22m lines (each side · 22m from try line · 141px in) -->
+  <line x1="220" y1="70" x2="220" y2="430" class="line"/>
+  <line x1="580" y1="70" x2="580" y2="430" class="line"/>
+
+  <!-- 10m lines (dashed · 10m each side of halfway · 64px offset) -->
+  <line x1="336" y1="70" x2="336" y2="430" class="line-dash"/>
+  <line x1="464" y1="70" x2="464" y2="430" class="line-dash"/>
+
+  <!-- 5m lines (dashed · 5m from each touchline · 32px in from top/bottom) -->
+  <line x1="79" y1="102" x2="721" y2="102" class="line-dash"/>
+  <line x1="79" y1="398" x2="721" y2="398" class="line-dash"/>
+
+  <!-- 15m lines (dashed · 15m from each touchline · 96px in) -->
+  <line x1="79" y1="166" x2="721" y2="166" class="line-dash"/>
+  <line x1="79" y1="334" x2="721" y2="334" class="line-dash"/>
+
+  <!-- Goal posts (each end · H-shape) -->
+  <!-- LEFT posts -->
+  <line x1="79" y1="230" x2="79" y2="270" class="line" stroke-width="4"/>
+  <circle cx="79" cy="230" r="3" class="dot"/>
+  <circle cx="79" cy="270" r="3" class="dot"/>
+
+  <!-- RIGHT posts -->
+  <line x1="721" y1="230" x2="721" y2="270" class="line" stroke-width="4"/>
+  <circle cx="721" cy="230" r="3" class="dot"/>
+  <circle cx="721" cy="270" r="3" class="dot"/>
+
+  <!-- Centre kickoff dot -->
+  <circle cx="400" cy="250" r="3" class="dot"/>
+</svg>

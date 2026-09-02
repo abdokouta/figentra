@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+  <!--
+    hero-bg · chevron-lane hero backdrop
+    Per docs/brand/academorix/05-illustration-library.md §2.1
+    Four horizontal running-lanes, each with three chevrons of increasing size.
+    Ink stroke at 8% opacity so the pattern reads as a texture, not a foreground.
+  -->
+  <defs>
+    <g id="chev-sm">
+      <path d="M -14 6 L 0 -6 L 14 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g id="chev-md">
+      <path d="M -22 10 L 0 -10 L 22 10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g id="chev-lg">
+      <path d="M -34 14 L 0 -14 L 34 14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </defs>
+
+  <g opacity="0.08">
+    <!-- lane 1 · y=120 -->
+    <use href="#chev-sm" x="200" y="120"/>
+    <use href="#chev-md" x="720" y="120"/>
+    <use href="#chev-lg" x="1240" y="120"/>
+
+    <!-- lane 2 · y=260 -->
+    <use href="#chev-sm" x="320" y="260"/>
+    <use href="#chev-md" x="840" y="260"/>
+    <use href="#chev-lg" x="1320" y="260"/>
+
+    <!-- lane 3 · y=400 -->
+    <use href="#chev-sm" x="160" y="400"/>
+    <use href="#chev-md" x="680" y="400"/>
+    <use href="#chev-lg" x="1200" y="400"/>
+
+    <!-- lane 4 · y=540 -->
+    <use href="#chev-sm" x="280" y="540"/>
+    <use href="#chev-md" x="800" y="540"/>
+    <use href="#chev-lg" x="1280" y="540"/>
+  </g>
+</svg>

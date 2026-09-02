@@ -1,0 +1,134 @@
+<!doctype html>
+<!--
+  Academorix · error page · 404 not found
+  ------------------------------------------------------------------
+  Renders on any unmatched route. Coach-forward copy · sports-adjacent
+  illustration inherited from Sprint 1's line-art vocabulary.
+
+  Deploy: symlink or bundle this file at every consumer app's 404
+  route. Every asset is same-origin except the illustration + tokens
+  (both live under .tmp/drafts/academorix-logos/sprint2/). (retired 2026-08-18)
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>404 · Off target · Academorix</title>
+    <meta
+      name="description"
+      content="The page you were looking for isn't on this roster. Check the URL, jump back to the dashboard, or search from the header."
+    />
+    <link rel="stylesheet" href="../_shared/tokens.css" />
+    <style>
+      body {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 48px 24px;
+      }
+      .err {
+        max-width: 720px;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        align-items: center;
+      }
+      .err-code {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .err-code .kicker { margin: 0; }
+      .err-code .code {
+        font-family: var(--font-mono);
+        font-weight: 600;
+        font-size: clamp(96px, 12vw, 160px);
+        letter-spacing: -0.06em;
+        line-height: 0.9;
+        color: var(--ink);
+      }
+      .err-code .code em {
+        font-style: normal;
+        color: var(--signal);
+      }
+      .err-title {
+        font-size: clamp(28px, 3vw, 40px);
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+        margin: 24px 0 12px;
+      }
+      .err-body {
+        color: var(--text-muted);
+        line-height: 1.55;
+        margin: 0 0 32px;
+        max-width: 480px;
+      }
+      .err-cta {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .err-illo {
+        display: grid;
+        place-items: center;
+        aspect-ratio: 4 / 3;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-4);
+        padding: 32px;
+      }
+      .err-illo img { width: 100%; height: auto; }
+      .err-nav {
+        margin-top: 40px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--text-muted);
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+      .err-nav a { color: var(--text-muted); }
+      .err-nav a:hover { color: var(--signal); }
+      @media (max-width: 720px) {
+        .err { grid-template-columns: 1fr; }
+        .err-illo { order: -1; max-width: 320px; margin: 0 auto; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="err" role="main">
+      <section class="err-body-side">
+        <div class="err-code">
+          <p class="kicker">Off target · route not found</p>
+          <div class="code" aria-hidden="true"><em>4</em>0<em>4</em></div>
+        </div>
+        <h1 class="err-title">
+          That page isn&#39;t on this roster.
+        </h1>
+        <p class="err-body">
+          The link you followed points at a page we don&#39;t serve, or a
+          record that was archived. Nothing broke — the URL just missed the
+          rim. Check the address, or bounce back to somewhere with a
+          scoreboard.
+        </p>
+        <div class="err-cta">
+          <a class="btn btn-primary" href="/">Back to dashboard</a>
+          <a class="btn btn-ghost" href="/search">Search Academorix</a>
+        </div>
+        <nav class="err-nav" aria-label="Quick jumps">
+          <a href="/roster">Roster</a>
+          <a href="/sessions/today">Today's sessions</a>
+          <a href="/inbox">Coach inbox</a>
+          <a href="/status">System status</a>
+        </nav>
+      </section>
+      <figure class="err-illo" aria-hidden="true">
+        <img src="./illustrations/404-missed-shot.svg" alt="" />
+      </figure>
+    </main>
+  </body>
+</html>

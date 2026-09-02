@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-label="Whistle + hourglass · 503 timeout">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+  <!--
+    503-timeout-whistle · coach's whistle blowing over a session-clock
+    Track Orange whistle body says "we're paused for maintenance".
+    Chevron sound-lines pulse outward · hourglass sand mid-drop.
+  -->
+
+  <!-- Whistle · Track Orange body -->
+  <g transform="translate(80, 100)">
+    <!-- Cord loop -->
+    <path d="M -8 -6 Q -14 -20 6 -30 Q 30 -36 40 -20"
+          fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+    <!-- Whistle body -->
+    <rect x="-28" y="-10" width="52" height="26" rx="4" fill="#FF6B35" stroke="currentColor" stroke-width="2"/>
+    <!-- Whistle chamber (circle inside body) -->
+    <circle cx="-8" cy="3" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+    <!-- Mouthpiece -->
+    <rect x="24" y="-4" width="10" height="14" fill="#FF6B35" stroke="currentColor" stroke-width="2"/>
+    <!-- Air vent -->
+    <line x1="-8" y1="10" x2="-8" y2="16" stroke="currentColor" stroke-width="1.5"/>
+  </g>
+
+  <!-- Chevron sound-lines (3 stacked · Sprint 1 vocabulary) -->
+  <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 132 92  L 144 100 L 132 108" opacity="0.72"/>
+    <path d="M 148 90  L 164 100 L 148 110" opacity="0.5"/>
+    <path d="M 168 88  L 188 100 L 168 112" opacity="0.28"/>
+  </g>
+
+  <!-- Hourglass · session paused mid-drop -->
+  <g transform="translate(240, 100)">
+    <!-- Frame -->
+    <g stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="-20" y1="-40" x2="20" y2="-40"/>
+      <line x1="-20" y1="40"  x2="20" y2="40"/>
+      <path d="M -18 -40 L 18 -40 L -12 0 L 18 40 L -18 40 L 12 0 Z"/>
+    </g>
+    <!-- Sand (top · draining) -->
+    <path d="M -10 -36 L 10 -36 L 4 -14 L -4 -14 Z" fill="currentColor" opacity="0.55"/>
+    <!-- Falling grain · Track Orange -->
+    <rect x="-1" y="-6" width="2" height="14" fill="#FF6B35"/>
+    <!-- Sand (bottom · piling) -->
+    <path d="M -12 34 Q 0 22 12 34 L 8 38 L -8 38 Z" fill="currentColor" opacity="0.55"/>
+  </g>
+
+  <!-- Status kicker · bottom -->
+  <g transform="translate(40, 224)">
+    <text x="0" y="0" font-family="Geist Mono, ui-monospace, monospace" font-size="10" fill="currentColor" letter-spacing="0.16em" opacity="0.6">TIME-OUT · MAINTENANCE WINDOW</text>
+  </g>
+</svg>

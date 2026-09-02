@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  @file palette.svg
+  @module brand/academorix/assets/palette
+  @description Academorix palette reference · single-color Track Orange.
+    Signal: Track Orange (#FF6B35) · one accent · one meaning.
+    Neutrals inherited from workspace shared tokens.
+    Codified by ADR-0104 · superseded the 2026-08-18 W3 dual-tone direction.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 340" width="100%" fill="none">
+  <style>
+    .bg { fill: #fafafa; }
+    .ink-fill { fill: #141414; }
+    .swatch-label { font: 600 12px 'Geist Mono', monospace; fill: #141414; letter-spacing: 0.06em; text-transform: uppercase; }
+    .swatch-hex { font: 500 14px 'Geist Mono', monospace; fill: #141414; }
+    .swatch-hex-light { font: 500 14px 'Geist Mono', monospace; fill: #fafafa; }
+    .hint { font: 500 11px 'Geist Mono', monospace; fill: rgba(20, 20, 20, 0.62); letter-spacing: 0.08em; text-transform: uppercase; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #0f0f0f; }
+      .ink-fill { fill: #fafafa; }
+      .swatch-label { fill: #fafafa; }
+      .swatch-hex { fill: #fafafa; }
+      .hint { fill: rgba(250, 250, 250, 0.65); }
+    }
+  </style>
+  <rect class="bg" width="900" height="340"/>
+
+  <text x="40" y="40" class="hint">ACADEMORIX · PALETTE · SINGLE ACCENT (2026-08-21)</text>
+  <text x="40" y="72" class="ink-fill" style="font: 600 24px 'Geist'; fill: currentColor;">Track Orange · one accent · one meaning.</text>
+
+  <!-- Signal · Track Orange -->
+  <text x="40" y="120" class="hint">SIGNAL · TRACK ORANGE · EVERY EMPHASIS MOMENT · SCOREBOARDS · MEDALS · CTAs</text>
+  <g transform="translate(40, 140)">
+    <rect width="160" height="120" fill="#ffd9c4"/>
+    <text x="16" y="24" class="swatch-label">SIGNAL-100</text>
+    <text x="16" y="108" class="swatch-hex">#FFD9C4</text>
+
+    <rect x="164" width="160" height="120" fill="#ffa680"/>
+    <text x="180" y="24" class="swatch-label">SIGNAL-300</text>
+    <text x="180" y="108" class="swatch-hex">#FFA680</text>
+
+    <rect x="328" width="160" height="120" fill="#ff6b35"/>
+    <text x="344" y="24" class="swatch-label">SIGNAL-500</text>
+    <text x="344" y="108" class="swatch-hex">#FF6B35</text>
+
+    <rect x="492" width="160" height="120" fill="#d14a1a"/>
+    <text x="508" y="24" class="swatch-hex-light" style="font-weight: 600;">SIGNAL-700</text>
+    <text x="508" y="108" class="swatch-hex-light">#D14A1A</text>
+
+    <rect x="656" width="160" height="120" fill="#8e2e0f"/>
+    <text x="672" y="24" class="swatch-hex-light" style="font-weight: 600;">SIGNAL-900</text>
+    <text x="672" y="108" class="swatch-hex-light">#8E2E0F</text>
+  </g>
+
+  <text x="40" y="310" class="hint">CANONICAL · WORDMARK USES SIGNAL-500 ON INK · CTA FILLS · ACTIVE-PERIOD DOTS · MEDAL FLAGS</text>
+</svg>

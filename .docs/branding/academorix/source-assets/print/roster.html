@@ -1,0 +1,415 @@
+<!doctype html>
+<!--
+  Academorix · print collateral · roster · A4 portrait
+  ------------------------------------------------------------------
+  24-athlete printable roster with photo slots, jersey number, name,
+  DOB, position, medical flag. Renders on-screen for review; prints
+  as a single A4 sheet via the shared @page CSS in ../_shared/tokens.css.
+
+  Consumer variables (server-side substitute before print):
+    Sahara Padel Academy     · Sahara Padel Academy
+    Falcons · U14        · Falcons U14
+    Fall 2026 / 27           · Fall Season 2026 / 27
+    Layla Farid       · Layla Farid
+    Padel · Doubles       · Padel · Doubles
+    {{RECORDS[]}}        · array of athlete rows (24 shown)
+
+  Open with: /usr/bin/open .../roster.html · then Cmd+P to print.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Roster · Falcons · U14 · Academorix</title>
+    <link rel="stylesheet" href="../_shared/tokens.css" />
+    <style>
+      /* ── screen shell · centres the sheet + adds print-nav ── */
+      body {
+        background: var(--surface-3);
+        display: grid;
+        place-items: start center;
+        padding: 32px 24px 96px;
+      }
+      .print-nav {
+        position: sticky;
+        top: 16px;
+        z-index: 20;
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        padding: 8px 14px;
+        background: var(--ink);
+        color: var(--paper);
+        border-radius: 999px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        box-shadow: var(--elevation-2);
+        margin-bottom: 24px;
+      }
+      .print-nav button {
+        border: 0;
+        background: var(--signal);
+        color: var(--ink);
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-family: inherit;
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      /* ── A4 sheet ─────────────────────────────────────── */
+      .sheet {
+        width: 210mm;
+        min-height: 297mm;
+        background: white;
+        color: var(--ink);
+        padding: 14mm 12mm;
+        box-shadow: var(--elevation-3);
+        display: flex;
+        flex-direction: column;
+        gap: 10mm;
+      }
+      @media print {
+        body { padding: 0; background: white; }
+        .print-nav { display: none; }
+        .sheet {
+          box-shadow: none;
+          width: auto;
+          min-height: 0;
+          padding: 0;
+        }
+      }
+
+      /* ── header · brand mark + season block ─────────── */
+      .rh {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        justify-content: space-between;
+        border-bottom: 2px solid var(--ink);
+        padding-bottom: 10px;
+      }
+      .rh-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .rh-brand svg { width: 28px; height: 28px; }
+      .rh-brand strong {
+        font-family: var(--font-sans);
+        font-weight: 500;
+        font-size: 17px;
+        letter-spacing: -0.02em;
+      }
+      .rh-brand .subline {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        color: var(--text-muted);
+        text-transform: uppercase;
+      }
+      .rh-meta {
+        text-align: right;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .rh-meta .kicker {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--signal);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+      .rh-meta h1 {
+        font-family: var(--font-sans);
+        font-size: 22px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        margin: 0;
+      }
+      .rh-meta .stamp {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--text-muted);
+        letter-spacing: 0.1em;
+      }
+
+      /* ── info bar · discipline · coach · counts ────── */
+      .info {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 8px;
+      }
+      .info-cell {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .info-cell .kicker {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        color: var(--text-muted);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .info-cell .value {
+        font-family: var(--font-sans);
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .info-cell .value .accent {
+        color: var(--signal);
+      }
+
+      /* ── roster table ─────────────────────────────── */
+      .roster {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: var(--font-sans);
+        font-size: 10px;
+      }
+      .roster thead th {
+        font-family: var(--font-mono);
+        font-size: 8.5px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-align: left;
+        padding: 6px 4px;
+        border-bottom: 2px solid var(--ink);
+      }
+      .roster thead th.n { text-align: center; width: 22px; }
+      .roster thead th.no { text-align: center; width: 32px; }
+      .roster thead th.photo { text-align: center; width: 34px; }
+      .roster thead th.flag { text-align: center; width: 30px; }
+      .roster tbody td {
+        padding: 6px 4px;
+        border-bottom: 1px dashed var(--border);
+        vertical-align: middle;
+        color: var(--ink);
+      }
+      .roster tbody tr:nth-child(even) td { background: rgba(20, 20, 20, 0.02); }
+      .roster tbody td.n {
+        text-align: center;
+        font-family: var(--font-mono);
+        color: var(--text-muted);
+        font-size: 9px;
+      }
+      .roster tbody td.no {
+        text-align: center;
+        font-family: var(--font-mono);
+        font-weight: 600;
+        color: var(--signal);
+        font-size: 13px;
+      }
+      .roster tbody td.photo {
+        text-align: center;
+      }
+      .roster .photo-box {
+        display: inline-block;
+        width: 26px;
+        height: 26px;
+        border: 1px solid var(--border-strong);
+        border-radius: 50%;
+        background: var(--paper-2);
+        position: relative;
+      }
+      .roster .photo-box::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 8px;
+        transform: translateX(-50%);
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--border-strong);
+      }
+      .roster .photo-box::after {
+        content: "";
+        position: absolute;
+        left: 4px;
+        right: 4px;
+        bottom: 3px;
+        height: 8px;
+        border-radius: 8px 8px 0 0;
+        background: var(--border-strong);
+      }
+      .roster tbody td.name { font-weight: 500; }
+      .roster tbody td.dob,
+      .roster tbody td.pos {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--text-muted);
+      }
+      .roster tbody td.flag { text-align: center; font-size: 10px; color: var(--signal); font-weight: 600; }
+      .roster tbody td.sign {
+        font-family: var(--font-mono);
+        font-size: 8px;
+        color: var(--text-muted);
+        letter-spacing: 0.06em;
+      }
+
+      /* ── footer · counts + signoff ────────────────── */
+      .rf {
+        border-top: 2px solid var(--ink);
+        padding-top: 10px;
+        display: grid;
+        grid-template-columns: 1.4fr 1fr 1fr;
+        gap: 16px;
+        margin-top: auto;
+      }
+      .rf-note {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        color: var(--text-muted);
+        line-height: 1.5;
+      }
+      .rf-sign {
+        border-top: 1px solid var(--ink);
+        padding-top: 6px;
+      }
+      .rf-sign .who {
+        font-family: var(--font-sans);
+        font-size: 11px;
+        font-weight: 500;
+      }
+      .rf-sign .role {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        color: var(--text-muted);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      /* ── colour print flag · red on real doc ──────── */
+      .flag-warn { color: var(--signal); }
+    </style>
+  </head>
+
+  <body>
+    <div class="print-nav" role="toolbar" aria-label="Print controls">
+      Roster · 24 athletes ·
+      <button onclick="window.print()">Print / Save as PDF</button>
+    </div>
+
+    <article class="sheet">
+      <!-- ── header ────────────────────────────────── -->
+      <header class="rh">
+        <div class="rh-brand">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <line x1="60" y1="24" x2="30" y2="96" stroke="currentColor" stroke-width="10" stroke-linecap="square"/>
+            <line x1="60" y1="24" x2="90" y2="96" stroke="currentColor" stroke-width="10" stroke-linecap="square"/>
+            <rect x="40" y="60" width="40" height="10" fill="currentColor"/>
+            <rect x="56" y="14" width="8" height="6" fill="#FF6B35"/>
+          </svg>
+          <div>
+            <strong>Academorix</strong>
+            <div class="subline">Sahara Padel Academy</div>
+          </div>
+        </div>
+        <div class="rh-meta">
+          <span class="kicker">Roster · Session sheet</span>
+          <h1>Falcons · U14</h1>
+          <span class="stamp">Fall 2026 / 27 · printed 24 Sep 26</span>
+        </div>
+      </header>
+
+      <!-- ── info bar ─────────────────────────────── -->
+      <section class="info" aria-label="Team metadata">
+        <div class="info-cell">
+          <span class="kicker">Discipline</span>
+          <span class="value">Padel · Doubles</span>
+        </div>
+        <div class="info-cell">
+          <span class="kicker">Head coach</span>
+          <span class="value">Layla Farid</span>
+        </div>
+        <div class="info-cell">
+          <span class="kicker">Rostered</span>
+          <span class="value"><span class="accent">24</span> · cap 28</span>
+        </div>
+        <div class="info-cell">
+          <span class="kicker">Venue</span>
+          <span class="value">Rabat Padel Club · CT-3</span>
+        </div>
+      </section>
+
+      <!-- ── roster table ────────────────────────── -->
+      <table class="roster" aria-label="Athlete roster">
+        <thead>
+          <tr>
+            <th class="n">#</th>
+            <th class="photo">Photo</th>
+            <th class="no">No.</th>
+            <th>Athlete</th>
+            <th class="dob">DOB</th>
+            <th class="pos">Position</th>
+            <th>Parent · phone</th>
+            <th class="flag">Med.</th>
+            <th>Coach signoff</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!--
+            24 rows. Placeholder text renders as scaffolded athletes so
+            the print preview reads a real page; consumer replaces via
+            server-side substitution before print.
+          -->
+          <tr><td class="n">01</td><td class="photo"><span class="photo-box" aria-hidden="true"></span></td><td class="no">07</td><td class="name">Aya Bensaid</td><td class="dob">2012-03-14</td><td class="pos">Right</td><td>Karim · +212 6 61 12 34 56</td><td class="flag flag-warn">A</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">02</td><td class="photo"><span class="photo-box"></span></td><td class="no">09</td><td class="name">Youssef Hakim</td><td class="dob">2011-11-02</td><td class="pos">Left</td><td>Layla · +212 6 62 44 22 10</td><td class="flag">–</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">03</td><td class="photo"><span class="photo-box"></span></td><td class="no">10</td><td class="name">Nadia Rachidi</td><td class="dob">2012-06-18</td><td class="pos">Right</td><td>Mehdi · +212 6 63 55 33 21</td><td class="flag flag-warn">M</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">04</td><td class="photo"><span class="photo-box"></span></td><td class="no">11</td><td class="name">Ilyas Amrani</td><td class="dob">2011-08-24</td><td class="pos">Left</td><td>Sara · +212 6 64 88 12 34</td><td class="flag">–</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">05</td><td class="photo"><span class="photo-box"></span></td><td class="no">12</td><td class="name">Sara El Amrani</td><td class="dob">2012-01-30</td><td class="pos">Right</td><td>Nadia · +212 6 65 22 44 11</td><td class="flag">–</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">06</td><td class="photo"><span class="photo-box"></span></td><td class="no">13</td><td class="name">Adam Cherif</td><td class="dob">2011-04-11</td><td class="pos">Left</td><td>Younes · +212 6 66 78 90 12</td><td class="flag">–</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">07</td><td class="photo"><span class="photo-box"></span></td><td class="no">14</td><td class="name">Salma Fassi</td><td class="dob">2012-09-05</td><td class="pos">Right</td><td>Layla · +212 6 67 34 56 78</td><td class="flag flag-warn">A</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">08</td><td class="photo"><span class="photo-box"></span></td><td class="no">15</td><td class="name">Karim Bennani</td><td class="dob">2011-12-22</td><td class="pos">Left</td><td>Fatima · +212 6 68 11 22 33</td><td class="flag">–</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">09</td><td class="photo"><span class="photo-box"></span></td><td class="no">16</td><td class="name">Rania Chaoui</td><td class="dob">2012-02-08</td><td class="pos">Right</td><td>Mohamed · +212 6 69 44 55 66</td><td class="flag">–</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">10</td><td class="photo"><span class="photo-box"></span></td><td class="no">17</td><td class="name">Mehdi Alaoui</td><td class="dob">2011-07-19</td><td class="pos">Left</td><td>Amina · +212 6 70 77 88 99</td><td class="flag">–</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">11</td><td class="photo"><span class="photo-box"></span></td><td class="no">18</td><td class="name">Inès Zniber</td><td class="dob">2012-10-01</td><td class="pos">Right</td><td>Rachid · +212 6 71 33 22 11</td><td class="flag flag-warn">M</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">12</td><td class="photo"><span class="photo-box"></span></td><td class="no">19</td><td class="name">Omar Tazi</td><td class="dob">2011-05-16</td><td class="pos">Left</td><td>Hind · +212 6 72 66 77 88</td><td class="flag">–</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">13</td><td class="photo"><span class="photo-box"></span></td><td class="no">20</td><td class="name">Lina Ouazzani</td><td class="dob">2012-04-27</td><td class="pos">Right</td><td>Nawal · +212 6 73 12 45 67</td><td class="flag">–</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">14</td><td class="photo"><span class="photo-box"></span></td><td class="no">21</td><td class="name">Amine Berrada</td><td class="dob">2011-01-08</td><td class="pos">Left</td><td>Younes · +212 6 74 45 67 89</td><td class="flag flag-warn">A</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">15</td><td class="photo"><span class="photo-box"></span></td><td class="no">22</td><td class="name">Nour Kabbaj</td><td class="dob">2012-07-13</td><td class="pos">Right</td><td>Salma · +212 6 75 33 44 55</td><td class="flag">–</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">16</td><td class="photo"><span class="photo-box"></span></td><td class="no">23</td><td class="name">Yassine El Fassi</td><td class="dob">2011-06-02</td><td class="pos">Left</td><td>Karim · +212 6 76 11 33 22</td><td class="flag">–</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">17</td><td class="photo"><span class="photo-box"></span></td><td class="no">24</td><td class="name">Meryem Idrissi</td><td class="dob">2012-11-25</td><td class="pos">Right</td><td>Ahmed · +212 6 77 55 66 77</td><td class="flag">–</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">18</td><td class="photo"><span class="photo-box"></span></td><td class="no">25</td><td class="name">Zakaria Hilali</td><td class="dob">2011-09-30</td><td class="pos">Left</td><td>Hanane · +212 6 78 88 99 00</td><td class="flag">–</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">19</td><td class="photo"><span class="photo-box"></span></td><td class="no">26</td><td class="name">Ghita Ben Jelloun</td><td class="dob">2012-05-17</td><td class="pos">Right</td><td>Rachid · +212 6 79 22 33 44</td><td class="flag flag-warn">M</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">20</td><td class="photo"><span class="photo-box"></span></td><td class="no">27</td><td class="name">Bilal Naciri</td><td class="dob">2011-03-04</td><td class="pos">Left</td><td>Salima · +212 6 80 66 77 88</td><td class="flag">–</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">21</td><td class="photo"><span class="photo-box"></span></td><td class="no">28</td><td class="name">Yasmine Chraibi</td><td class="dob">2012-08-19</td><td class="pos">Right</td><td>Nadir · +212 6 81 44 55 66</td><td class="flag">–</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">22</td><td class="photo"><span class="photo-box"></span></td><td class="no">29</td><td class="name">Zineb Sefrioui</td><td class="dob">2011-10-11</td><td class="pos">Left</td><td>Sami · +212 6 82 33 22 11</td><td class="flag flag-warn">A</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">23</td><td class="photo"><span class="photo-box"></span></td><td class="no">30</td><td class="name">Hicham Sqalli</td><td class="dob">2012-12-06</td><td class="pos">Right</td><td>Amina · +212 6 83 77 88 99</td><td class="flag">–</td><td class="sign">&nbsp;</td></tr>
+          <tr><td class="n">24</td><td class="photo"><span class="photo-box"></span></td><td class="no">31</td><td class="name">Farah Skalli</td><td class="dob">2011-02-14</td><td class="pos">Left</td><td>Reda · +212 6 84 12 34 56</td><td class="flag">–</td><td class="sign">&nbsp;</td></tr>
+        </tbody>
+      </table>
+
+      <!-- ── footer ───────────────────────────────── -->
+      <footer class="rf">
+        <div class="rf-note">
+          <strong>Legend</strong> ·
+          <span class="flag-warn">A</span> = allergy on file ·
+          <span class="flag-warn">M</span> = medical clearance active ·
+          <span>–</span> = none.<br/>
+          Every parent phone on this sheet has consented to SMS contact
+          for match-day and safeguarding purposes.
+          Verify online · academorix.com/roster/RST-2026-000024
+        </div>
+        <div class="rf-sign">
+          <div class="who">Layla Farid</div>
+          <div class="role">Head coach · signed 24 Sep 26</div>
+        </div>
+        <div class="rf-sign">
+          <div class="who">Karim Mehdi</div>
+          <div class="role">Safeguarding officer</div>
+        </div>
+      </footer>
+    </article>
+  </body>
+</html>

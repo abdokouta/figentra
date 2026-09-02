@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Academorix · provenance mark · v1.0 · 2026-08-21
+
+  Wordmark 'academorix' + Track Orange check-tick suffix. The tick
+  reads "verified · signed · authenticated" — used on docs footers,
+  security-review badges, provenance stamps, certificate seals.
+  Static — verified artifacts are settled, not animating.
+
+  Codified by ADR-0104 — supersedes the pre-2026-08-21 A-Chevron
+  provenance mark (deleted alongside mark-primary.svg).
+
+  Geometry
+  ────────
+  ViewBox    0 0 320 80
+  Wordmark   Geist Medium 48px · baseline y=56 · letter-spacing -0.03em
+  Tick       Track Orange (#FF6B35) · stroke 6px · linecap round ·
+             linejoin round · positioned at x=272 y=32 to y=52
+  Fill       currentColor on wordmark · Track Orange on tick
+
+  Per docs/brand/academorix/05-illustration-library.md §2.6.
+  Consumers: docs footers · security-review badges · signed-artifact
+  stamps · certificate seals.
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 320 80"
+  width="320"
+  height="80"
+  role="img"
+  aria-label="Academorix · Verified"
+>
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+    text {
+      font-family: "Geist", "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-weight: 500;
+      font-size: 48px;
+      letter-spacing: -0.03em;
+      fill: currentColor;
+    }
+  </style>
+  <text x="0" y="56">academorix</text>
+  <!-- Track Orange check-tick · verified suffix -->
+  <path
+    d="M 268 40 L 278 50 L 296 30"
+    fill="none"
+    stroke="#FF6B35"
+    stroke-width="6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

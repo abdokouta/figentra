@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Pattern — Cursor Field
+  Tileable 80×80. Mini F-Cursor stamp repeated. Use as a subtle brand
+  saturation on documents, presentation dividers, and merch backdrops.
+  Ink at 8% + Signal mint cursor at 40%. See docs/brand/13-patterns-and-assets.md.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+  <g opacity="0.08" fill="currentColor">
+    <rect x="24" y="20" width="4" height="40"/>
+    <rect x="24" y="20" width="24" height="4"/>
+    <rect x="24" y="36" width="16" height="4"/>
+  </g>
+  <rect x="52" y="21" width="8" height="3" fill="#00E5A0" opacity="0.55"/>
+</svg>

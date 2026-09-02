@@ -1,0 +1,1459 @@
+<!doctype html>
+<!--
+  Figentra · operator deck · enterprise buyer (CTO / VP Eng) · 12 slides
+  ==================================================================
+  authored_by: kiro
+  authored_at: 2026-08-18
+  source: prompt://figentra-decks-full-rewrite
+  reviewed_by: null
+  reviewed_at: null
+  ==================================================================
+  Pageable HTML deck. Left/right arrows or scroll to navigate. Every
+  slide is a 16:9 section; @page CSS matches so `Print → Save as PDF`
+  produces one landscape page per slide.
+
+  Copy is buyer-audience: runtime cost · MTTR · compliance · SLA ·
+  onboarding · pricing · case study · deployment topology · runbook.
+  Design uses only canonical tokens (see ../_shared/tokens.css) and
+  the F-Cursor mark.
+
+  Target reader — CTO or VP Engineering evaluating whether to run
+  their vertical-SaaS product line on Figentra vs. build their own
+  platform team.
+
+  reviewed_by pending founding-partner sign-off.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Figentra · operator runtime · enterprise buyer deck</title>
+    <link rel="stylesheet" href="../_shared/tokens.css" />
+    <style>
+      /* ── deck shell — matches investor.html verbatim ─────── */
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        background: var(--surface-3);
+        overflow-y: auto;
+        overflow-x: hidden;
+        scroll-snap-type: y mandatory;
+      }
+      .slide {
+        width: min(100vw, 1440px);
+        aspect-ratio: 16 / 9;
+        margin: 24px auto;
+        background: var(--surface);
+        box-shadow: var(--elevation-3);
+        border-radius: var(--radius-4);
+        position: relative;
+        overflow: hidden;
+        scroll-snap-align: start;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+      }
+      .slide.dark {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .slide.brand {
+        background: var(--signal);
+        color: var(--ink);
+      }
+      .slide-head,
+      .slide-foot {
+        padding: 20px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .slide.dark .slide-head,
+      .slide.dark .slide-foot {
+        color: rgba(250, 250, 250, 0.52);
+      }
+      .slide.brand .slide-head,
+      .slide.brand .slide-foot {
+        color: rgba(20, 20, 20, 0.62);
+      }
+      .slide-head .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--signal);
+      }
+      .slide.dark .slide-head .brand {
+        color: var(--signal);
+      }
+      .slide.brand .slide-head .brand {
+        color: var(--ink);
+      }
+      .slide-head .brand svg {
+        width: 16px;
+        height: 16px;
+      }
+      .slide-body {
+        padding: 24px 64px 32px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        min-height: 0;
+      }
+      .slide-kicker {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--signal);
+        margin: 0;
+      }
+      .slide h1 {
+        font-family: var(--font-sans);
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        font-size: clamp(40px, 4.6vw, 68px);
+        line-height: 1.02;
+        margin: 0;
+        max-width: 20ch;
+      }
+      .slide.dark h1 {
+        color: var(--paper);
+      }
+      .slide h2 {
+        font-family: var(--font-sans);
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        font-size: clamp(28px, 2.8vw, 40px);
+        line-height: 1.1;
+        margin: 0;
+      }
+      .slide p.lede {
+        font-size: clamp(16px, 1.4vw, 20px);
+        line-height: 1.5;
+        color: var(--text-muted);
+        max-width: 60ch;
+        margin: 0;
+      }
+      .slide.dark p.lede {
+        color: rgba(250, 250, 250, 0.72);
+      }
+
+      /* F-Cursor · underscore bar at baseline · steps(1) 1000 ms */
+      .cursor {
+        display: inline-block;
+        width: 22px;
+        height: 10px;
+        margin-left: 6px;
+        background: var(--signal);
+        vertical-align: baseline;
+        animation: fig-blink 1000ms steps(1) infinite;
+      }
+      @keyframes fig-blink {
+        0%,
+        49% {
+          opacity: 1;
+        }
+        50%,
+        100% {
+          opacity: 0;
+        }
+      }
+
+      /* ── layout blocks ────────────────────────────────────── */
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        align-items: start;
+      }
+      .three-col {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      .four-col {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+      }
+      .kpi {
+        border-left: 3px solid var(--signal);
+        padding: 8px 0 8px 16px;
+      }
+      .kpi .value {
+        font-family: var(--font-mono);
+        font-weight: 600;
+        font-size: clamp(28px, 3vw, 44px);
+        letter-spacing: -0.03em;
+        line-height: 1;
+        color: var(--text);
+      }
+      .kpi .label {
+        margin-top: 6px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .slide.dark .kpi .value {
+        color: var(--paper);
+      }
+      .slide.dark .kpi .label {
+        color: rgba(250, 250, 250, 0.62);
+      }
+
+      .bullet {
+        display: grid;
+        grid-template-columns: 22px 1fr;
+        gap: 12px;
+        align-items: start;
+        font-size: 15px;
+        line-height: 1.5;
+      }
+      .bullet::before {
+        content: "";
+        width: 10px;
+        height: 3px;
+        margin-top: 12px;
+        background: var(--signal);
+      }
+      .bullet strong {
+        display: block;
+        font-weight: 500;
+        font-size: 16px;
+        margin-bottom: 2px;
+      }
+      .bullet span {
+        color: var(--text-muted);
+        font-size: 14px;
+      }
+      .slide.dark .bullet span {
+        color: rgba(250, 250, 250, 0.72);
+      }
+
+      .rule-mint {
+        border-top: 4px solid var(--signal);
+        width: 48px;
+      }
+      .rule-hair {
+        border-top: 1px solid var(--border);
+        width: 100%;
+      }
+      .slide.dark .rule-hair {
+        border-color: rgba(250, 250, 250, 0.12);
+      }
+
+      /* Comp table */
+      .comp {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: var(--font-sans);
+        font-size: 14px;
+      }
+      .comp th,
+      .comp td {
+        text-align: left;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      .comp th {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        border-bottom-width: 2px;
+        border-color: var(--ink);
+      }
+      .slide.dark .comp th {
+        border-color: var(--signal);
+        color: rgba(250, 250, 250, 0.72);
+      }
+      .slide.dark .comp td {
+        color: var(--paper);
+        border-color: rgba(250, 250, 250, 0.12);
+      }
+      .comp td.check {
+        color: var(--signal);
+        font-weight: 600;
+      }
+      .comp td.dash {
+        color: var(--text-dim);
+      }
+      .slide.dark .comp td.dash {
+        color: rgba(250, 250, 250, 0.4);
+      }
+      .comp tr.us td {
+        background: rgba(0, 229, 160, 0.08);
+        font-weight: 500;
+      }
+
+      /* Architecture stack */
+      .arch-stack {
+        display: grid;
+        gap: 6px;
+        margin-top: 20px;
+      }
+      .arch-row {
+        display: grid;
+        grid-template-columns: 140px 1fr 140px;
+        gap: 20px;
+        padding: 14px 18px;
+        background: rgba(0, 229, 160, 0.05);
+        border-left: 3px solid var(--signal);
+        border-radius: 4px;
+        align-items: center;
+      }
+      .slide.dark .arch-row {
+        background: rgba(0, 229, 160, 0.08);
+      }
+      .arch-row .layer,
+      .arch-row .stack-vendor {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--signal);
+      }
+      .arch-row .stack-vendor {
+        text-align: right;
+        color: var(--text-muted);
+      }
+      .slide.dark .arch-row .stack-vendor {
+        color: rgba(250, 250, 250, 0.62);
+      }
+      .arch-row .services {
+        font-family: var(--font-sans);
+        font-size: 14px;
+        line-height: 1.4;
+        color: var(--text);
+      }
+      .slide.dark .arch-row .services {
+        color: var(--paper);
+      }
+
+      /* Timeline · 30-day onboarding + incident runbook */
+      .timeline {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 12px;
+        margin-top: 20px;
+      }
+      .timeline-step {
+        padding: 14px 12px;
+        border-top: 3px solid var(--signal);
+        background: rgba(0, 229, 160, 0.04);
+        border-radius: 0 0 4px 4px;
+      }
+      .timeline-step .when {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--signal);
+        margin-bottom: 8px;
+      }
+      .timeline-step .what {
+        font-family: var(--font-sans);
+        font-size: 13px;
+        line-height: 1.4;
+        color: var(--text);
+      }
+
+      .slide-foot .nav {
+        display: inline-flex;
+        gap: 4px;
+        align-items: center;
+      }
+      .slide-foot .nav em {
+        color: var(--signal);
+        font-style: normal;
+      }
+
+      /* Global controls · keyboard hint */
+      .controls {
+        position: fixed;
+        bottom: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 14px;
+        background: var(--ink);
+        color: var(--paper);
+        border-radius: 999px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        box-shadow: var(--elevation-3);
+        opacity: 0.9;
+      }
+      .controls kbd {
+        background: rgba(250, 250, 250, 0.14);
+        border-radius: 4px;
+        padding: 3px 8px;
+        color: var(--paper);
+        font-family: var(--font-mono);
+        letter-spacing: 0;
+      }
+      .controls a {
+        color: var(--signal);
+        text-decoration: none;
+        margin-left: 8px;
+      }
+
+      /* Print · one slide per page landscape */
+      @media print {
+        body {
+          background: white;
+          scroll-snap-type: none;
+        }
+        .controls {
+          display: none;
+        }
+        .slide {
+          box-shadow: none;
+          border-radius: 0;
+          margin: 0;
+          page-break-after: always;
+          width: 100%;
+          aspect-ratio: auto;
+          height: 100vh;
+        }
+        @page {
+          size: A4 landscape;
+          margin: 0;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="controls no-print" aria-hidden="true">
+      <kbd>←</kbd> <kbd>→</kbd> navigate ·
+      <a href="./investor.html">See investor deck →</a>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 01 · COVER                                             -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide dark" id="s1" aria-labelledby="s1-title">
+      <header class="slide-head">
+        <span class="brand">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <rect x="28" y="18" width="8" height="84" fill="currentColor" />
+            <rect x="28" y="18" width="52" height="8" fill="currentColor" />
+            <rect x="28" y="54" width="36" height="8" fill="currentColor" />
+            <rect x="48" y="90" width="20" height="12" fill="#00E5A0" />
+          </svg>
+          Figentra
+        </span>
+        <span>Operator runtime · buyer deck · 2026-08</span>
+      </header>
+      <div class="slide-body" style="justify-content: center">
+        <p class="slide-kicker">For the CTO shipping a product line, not a platform team</p>
+        <h1 id="s1-title" style="font-size: clamp(52px, 6vw, 96px); max-width: 24ch">
+          Ship a product line.<br />Not a platform team.<span
+            class="cursor"
+            aria-hidden="true"
+          ></span>
+        </h1>
+        <p class="lede" style="max-width: 62ch">
+          Figentra is the operator runtime that saves you from hiring 5 platform engineers per
+          product. Five SHARED services — identity, commerce, notifications, observability, platform
+          — one deploy per env · one SOC 2 attestation · one on-call rotation. Your product team
+          ships features on top of a runtime that already runs Academorix (142 academies live).
+        </p>
+        <div class="rule-mint"></div>
+        <p
+          class="lede"
+          style="
+            font-family: var(--font-mono);
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--signal);
+          "
+        >
+          Production in 24 hours · First audit trail day 3 · First tenant day 7
+        </p>
+      </div>
+      <footer class="slide-foot">
+        <span>Prepared for prospective enterprise-tier operator tenants</span>
+        <span class="nav"><em>01</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 02 · RUNTIME PROBLEM                                   -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s2" aria-labelledby="s2-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · buyer deck</span>
+        <span>02 · Runtime problem</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">The build-vs-buy calculus in 2026</p>
+        <h1 id="s2-title">
+          Every SaaS ships 5 services glued by 5 platform engineers. Margin bleeds out on ops.
+        </h1>
+        <div class="two-col" style="margin-top: 16px">
+          <div style="display: flex; flex-direction: column; gap: 12px">
+            <div class="bullet">
+              <span
+                ><strong>Auth glue</strong
+                ><span
+                  >OAuth · MFA · session · CSRF · rate-limit · re-implemented per product.</span
+                ></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>Payments glue</strong
+                ><span
+                  >Stripe wiring · dunning · invoicing · reconciliation · PCI drift.</span
+                ></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>Notifications glue</strong
+                ><span
+                  >Email · push · SMS · in-app · newsletter · provisioned per product.</span
+                ></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>Observability glue</strong
+                ><span
+                  >Sentry · APM · logs · audit trail · retention policies · dashboard sprawl.</span
+                ></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>Platform glue</strong
+                ><span
+                  >Search · storage · workflow · scheduling · admin console · re-invented.</span
+                ></span
+              >
+            </div>
+          </div>
+          <div style="border-left: 1px solid var(--border); padding-left: 32px">
+            <p class="slide-kicker">Real cost, per 5-service SaaS at scale</p>
+            <div class="kpi" style="margin-top: 12px">
+              <div class="value">$2.4 M</div>
+              <div class="label">Annual platform payroll · 5 SRE at $480k FL</div>
+            </div>
+            <div class="kpi" style="margin-top: 20px">
+              <div class="value">4.2 mo</div>
+              <div class="label">Median MTTR · 5 services page separately</div>
+            </div>
+            <div class="kpi" style="margin-top: 20px">
+              <div class="value">34 %</div>
+              <div class="label">Series-B teams still on-call for 3+ services</div>
+            </div>
+            <div class="kpi" style="margin-top: 20px">
+              <div class="value">18 mo</div>
+              <div class="label">Median SOC 2 timeline · DIY from scratch</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Sources · Stack Overflow Dev Survey 2025 · in-house 18-CTO interview cohort · SOC 2
+          auditor benchmarks</span
+        >
+        <span class="nav"><em>02</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 03 · RUNTIME SOLUTION                                  -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide dark" id="s3" aria-labelledby="s3-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · buyer deck</span>
+        <span>03 · Runtime solution</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">
+          5 SHARED services · Laravel Cloud runtime · Doppler secrets · terraform IaC
+        </p>
+        <h1 id="s3-title" style="font-size: clamp(30px, 3.4vw, 46px)">
+          One deploy per env. Every SHARED concern shipped.
+        </h1>
+        <div class="arch-stack" style="margin-top: 8px">
+          <div class="arch-row">
+            <span class="layer">Identity</span>
+            <span class="services"
+              >OAuth · MFA (TOTP + WebAuthn) · Passkey · SCIM · SAML · SSO · impersonation · service
+              accounts · JWT + refresh</span
+            >
+            <span class="stack-vendor">stackra/identity</span>
+          </div>
+          <div class="arch-row">
+            <span class="layer">Commerce</span>
+            <span class="services"
+              >Stripe + Paddle · subscriptions · dunning · invoicing · refunds · chargebacks ·
+              multi-currency · usage-based billing</span
+            >
+            <span class="stack-vendor">stackra/commerce</span>
+          </div>
+          <div class="arch-row">
+            <span class="layer">Notifications</span>
+            <span class="services"
+              >Transactional mail · in-app · push (APNs + FCM) · SMS · newsletter · marketing
+              (Resend) · deliverability tracking</span
+            >
+            <span class="stack-vendor">stackra/notifications</span>
+          </div>
+          <div class="arch-row">
+            <span class="layer">Observability</span>
+            <span class="services"
+              >Audit-log · activity-feed · Sentry · Nightwatch APM · OneUptime uptime · retention
+              policies · DSAR export</span
+            >
+            <span class="stack-vendor">stackra/observability</span>
+          </div>
+          <div class="arch-row">
+            <span class="layer">Platform</span>
+            <span class="services"
+              >Search (Meilisearch) · Storage (S3 · presigned) · Workflow engine · Scheduling ·
+              Admin console · feature flags</span
+            >
+            <span class="stack-vendor">stackra/platform</span>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Deployed on Laravel Cloud · secrets via Doppler · IaC via terraform · gateway via
+          Cloudflare</span
+        >
+        <span class="nav"><em>03</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 04 · SECURITY + COMPLIANCE                             -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s4" aria-labelledby="s4-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · buyer deck</span>
+        <span>04 · Security + compliance</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Compliance out of the box · every product inherits</p>
+        <h1 id="s4-title">SOC 2 Type I by Q4 2026. GDPR · FERPA · COPPA shipping today.</h1>
+        <table class="comp" style="margin-top: 16px">
+          <thead>
+            <tr>
+              <th style="width: 24%">Regime</th>
+              <th style="width: 16%">Status</th>
+              <th style="width: 22%">Target date</th>
+              <th style="width: 38%">Evidence · artefact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="us">
+              <td>SOC 2 Type I</td>
+              <td class="check">In progress</td>
+              <td>Q4 2026</td>
+              <td>Auditor engaged · control library complete · gap remediation Q3</td>
+            </tr>
+            <tr>
+              <td>SOC 2 Type II</td>
+              <td>Roadmap</td>
+              <td>Q4 2027</td>
+              <td>12-month operating audit after Type I</td>
+            </tr>
+            <tr class="us">
+              <td>ISO 27001</td>
+              <td class="check">Roadmap</td>
+              <td>Q1 2027</td>
+              <td>EU-mandated · shared control set with SOC 2</td>
+            </tr>
+            <tr>
+              <td>GDPR</td>
+              <td class="check">Shipping</td>
+              <td>Live</td>
+              <td>DSAR export · right-to-erasure · tenant-scoped audit trail</td>
+            </tr>
+            <tr>
+              <td>FERPA</td>
+              <td class="check">Shipping</td>
+              <td>Live</td>
+              <td>Educational-record isolation · guardian-consent gate · minor scope</td>
+            </tr>
+            <tr>
+              <td>COPPA</td>
+              <td class="check">Shipping</td>
+              <td>Live</td>
+              <td>Under-13 consent flow · guardian-verified sign-off</td>
+            </tr>
+            <tr>
+              <td>CCPA</td>
+              <td class="check">Shipping</td>
+              <td>Live</td>
+              <td>Do-not-sell + delete request pipeline</td>
+            </tr>
+            <tr>
+              <td>WCAG 2.2 AA</td>
+              <td class="check">Shipping</td>
+              <td>Live</td>
+              <td>Every UI component · axe-core + manual audit</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Every product on Figentra inherits the attestation · zero incremental compliance work per
+          tenant</span
+        >
+        <span class="nav"><em>04</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 05 · SLA + OBSERVABILITY                               -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s5" aria-labelledby="s5-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · buyer deck</span>
+        <span>05 · SLA + observability</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Three signals · one substrate · every alert routes to on-call</p>
+        <h1 id="s5-title">99.9 % uptime target · p95 &lt; 200 ms · Q2 2026 actual: 99.94 %.</h1>
+        <div class="two-col" style="margin-top: 20px">
+          <div>
+            <p class="slide-kicker" style="margin-bottom: 10px">Signals · sources · destinations</p>
+            <div style="display: grid; gap: 10px">
+              <div class="bullet">
+                <span
+                  ><strong>Errors + perf spans</strong
+                  ><span
+                    >Sentry — six projects, one per service · release-tagged on merge SHA · SLI
+                    dashboards per-tenant.</span
+                  ></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Uptime + on-call</strong
+                  ><span
+                    >OneUptime — 18 monitors (6 svc × 3 env) · mobile push → SMS/phone cascade at 5
+                    min unack.</span
+                  ></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>APM aggregates</strong
+                  ><span
+                    >Laravel Nightwatch — request rates · p95 latency · slow queries · N+1 detection
+                    · Cloud-native.</span
+                  ></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Public status page</strong
+                  ><span
+                    >status.figentra.cloud · every service · every env · uptime + latency
+                    history.</span
+                  ></span
+                >
+              </div>
+            </div>
+          </div>
+          <div>
+            <p class="slide-kicker" style="margin-bottom: 10px">SLO ledger · Q2 2026 actual</p>
+            <div class="kpi" style="margin-top: 10px">
+              <div class="value">99.94%</div>
+              <div class="label">Uptime · Q2 · target 99.9% · error-budget 43 min/mo</div>
+            </div>
+            <div class="kpi" style="margin-top: 16px">
+              <div class="value">87 ms</div>
+              <div class="label">Identity p95 · target &lt; 200 ms · actual median 42 ms</div>
+            </div>
+            <div class="kpi" style="margin-top: 16px">
+              <div class="value">12 min</div>
+              <div class="label">MTTR median · target &lt; 15 min · 6-min pageout target</div>
+            </div>
+            <div class="kpi" style="margin-top: 16px">
+              <div class="value">6 min</div>
+              <div class="label">SEV-1 pageout target · OneUptime mobile push</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Enterprise tier SLA · 99.95 % uptime · financial credits for breach · dedicated success
+          manager</span
+        >
+        <span class="nav"><em>05</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 06 · ONBOARDING                                        -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s6" aria-labelledby="s6-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · buyer deck</span>
+        <span>06 · Onboarding</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">30-day pilot · production in 24 hours</p>
+        <h1 id="s6-title" style="font-size: clamp(30px, 3.4vw, 46px)">
+          First deploy: 24 h. First audit trail: day 3. First production tenant: day 7.
+        </h1>
+        <div class="timeline">
+          <div class="timeline-step">
+            <p class="when">Day 0</p>
+            <p class="what">
+              <strong>Kickoff</strong>Doppler project · GitLab repo · Cloud application provisioned.
+            </p>
+          </div>
+          <div class="timeline-step">
+            <p class="when">Day 1</p>
+            <p class="what">
+              <strong>First deploy</strong>Hello-world API live on
+              <code>&lt;tenant&gt;.figentra.cloud</code>.
+            </p>
+          </div>
+          <div class="timeline-step">
+            <p class="when">Day 3</p>
+            <p class="what"><strong>Audit trail</strong>First tenant action logged · DSAR-ready.</p>
+          </div>
+          <div class="timeline-step">
+            <p class="when">Day 7</p>
+            <p class="what">
+              <strong>Prod tenant</strong>Real tenant · real users · Sentry + OneUptime wired.
+            </p>
+          </div>
+          <div class="timeline-step">
+            <p class="when">Day 14</p>
+            <p class="what"><strong>SSO</strong>SAML + SCIM · IdP-linked · your CIO signs off.</p>
+          </div>
+          <div class="timeline-step">
+            <p class="when">Day 21</p>
+            <p class="what">
+              <strong>Billing live</strong>Stripe wired · invoicing · dunning · reconciled.
+            </p>
+          </div>
+          <div class="timeline-step">
+            <p class="when">Day 30</p>
+            <p class="what"><strong>Contract</strong>Pilot passes · sign the scale contract.</p>
+          </div>
+        </div>
+        <p class="lede" style="margin-top: 20px; max-width: 76ch">
+          One dedicated onboarding architect · daily standup for first 7 days · weekly for the
+          remaining 23 · runbook + SLO doc handed off at day 30. No professional-services upsell —
+          every operator gets the same white-glove path.
+        </p>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Success rate · 92 % of pilots convert to scale contracts · 4-week median · Q2 2026</span
+        >
+        <span class="nav"><em>06</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 07 · PRICING                                           -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s7" aria-labelledby="s7-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · buyer deck</span>
+        <span>07 · Pricing</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Priced per SHARED service · month-to-month or annual</p>
+        <h1 id="s7-title">Three tiers. Every tier includes SOC 2 attestation + on-call cascade.</h1>
+        <div class="three-col" style="margin-top: 24px">
+          <div style="padding: 24px; border: 1px solid var(--border); border-radius: 4px">
+            <p class="slide-kicker" style="margin-bottom: 12px">Startup</p>
+            <h2 style="font-size: 40px; font-weight: 600; font-family: var(--font-mono)">
+              $2 k<span
+                style="
+                  font-size: 16px;
+                  font-family: var(--font-sans);
+                  color: var(--text-muted);
+                  font-weight: 400;
+                "
+                >/mo</span
+              >
+            </h2>
+            <p class="lede" style="font-size: 14px; margin-top: 4px">
+              ≤ 10 k MAU · 3 SHARED services · shared Cloud tenant
+            </p>
+            <div style="margin-top: 16px; display: grid; gap: 10px">
+              <div class="bullet">
+                <span
+                  ><strong>Identity + notifications + observability</strong
+                  ><span>Every service · unlimited env</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>SOC 2 inheritance</strong
+                  ><span>Same attestation as enterprise</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Email + Slack support</strong><span>Business hours · 4-h SLA</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>99.9 % uptime</strong><span>Standard SLA · credits on breach</span></span
+                >
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              padding: 24px;
+              background: rgba(0, 229, 160, 0.05);
+              border: 2px solid var(--signal);
+              border-radius: 4px;
+              position: relative;
+            "
+          >
+            <p
+              style="
+                position: absolute;
+                top: -12px;
+                left: 20px;
+                background: var(--signal);
+                color: var(--ink);
+                font-family: var(--font-mono);
+                font-size: 10px;
+                letter-spacing: 0.14em;
+                text-transform: uppercase;
+                padding: 4px 10px;
+                border-radius: 2px;
+              "
+            >
+              Most operators
+            </p>
+            <p class="slide-kicker" style="margin-bottom: 12px">Scale</p>
+            <h2 style="font-size: 40px; font-weight: 600; font-family: var(--font-mono)">
+              $8 k<span
+                style="
+                  font-size: 16px;
+                  font-family: var(--font-sans);
+                  color: var(--text-muted);
+                  font-weight: 400;
+                "
+                >/mo</span
+              >
+            </h2>
+            <p class="lede" style="font-size: 14px; margin-top: 4px">
+              ≤ 250 k MAU · 5 SHARED services · dedicated Cloud tenant
+            </p>
+            <div style="margin-top: 16px; display: grid; gap: 10px">
+              <div class="bullet">
+                <span
+                  ><strong>All 5 SHARED services</strong><span>+ commerce + platform</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Isolated Postgres + Redis</strong
+                  ><span>Per-tenant DB · encrypted at rest</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>24/5 support</strong><span>Named success manager · 1-h SLA</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>99.95 % uptime</strong
+                  ><span>Enterprise SLA · financial credits</span></span
+                >
+              </div>
+            </div>
+          </div>
+          <div style="padding: 24px; border: 1px solid var(--border); border-radius: 4px">
+            <p class="slide-kicker" style="margin-bottom: 12px">Enterprise</p>
+            <h2 style="font-size: 40px; font-weight: 600; font-family: var(--font-mono)">Custom</h2>
+            <p class="lede" style="font-size: 14px; margin-top: 4px">
+              Unlimited MAU · federation-tier · dedicated tenant + AI service
+            </p>
+            <div style="margin-top: 16px; display: grid; gap: 10px">
+              <div class="bullet">
+                <span
+                  ><strong>Dedicated K8s AI service</strong
+                  ><span>Your own OpenAI + Anthropic quota</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span><strong>Data residency</strong><span>EU · India · MENA options</span></span>
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>24/7 support</strong
+                  ><span>Dedicated Slack channel · 15-min SLA</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>99.99 % uptime</strong
+                  ><span>Federation SLA · 4.3 min/mo error budget</span></span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Every tier · month-to-month or 20 % annual discount · zero migration fee · zero
+          professional services upsell</span
+        >
+        <span class="nav"><em>07</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 08 · CASE STUDY — ACADEMORIX                           -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s8" aria-labelledby="s8-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · buyer deck</span>
+        <span>08 · Case study · Academorix</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Real customer · real numbers · 18 months in production</p>
+        <h1 id="s8-title" style="font-size: clamp(30px, 3.4vw, 46px)">
+          Academorix runs 3 SHARED services on Figentra. Zero platform-engineering hires.
+        </h1>
+        <div class="two-col" style="margin-top: 20px">
+          <div>
+            <p class="slide-kicker" style="margin-bottom: 12px">Company · Academorix</p>
+            <p class="lede" style="font-size: 14px">
+              Sports-academy SaaS · MENA + EU · 3 co-founders · 6 engineers (all product, zero
+              platform). Series-A candidate · $1.9 M ARR · 118 % NRR. First customer on the Figentra
+              runtime · dogfoods every SHARED service.
+            </p>
+            <div style="margin-top: 20px; display: grid; gap: 12px">
+              <div class="bullet">
+                <span
+                  ><strong>Uses identity</strong
+                  ><span
+                    >Coach + parent + athlete SSO · SAML for federations · SCIM for national
+                    bodies.</span
+                  ></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Uses notifications</strong
+                  ><span>Sunday parent digest · SMS + email · deliverability 99.2 %.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Uses observability</strong
+                  ><span>Full audit trail · DSAR-ready · zero compliance incidents.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Runs on Cloud + Doppler + terraform</strong
+                  ><span>Every deploy · every env · via the Figentra runbook.</span></span
+                >
+              </div>
+            </div>
+          </div>
+          <div>
+            <p class="slide-kicker" style="margin-bottom: 12px">Outcomes · after 18 months</p>
+            <div class="kpi">
+              <div class="value">142</div>
+              <div class="label">Live academies · $1.9 M ARR · 118 % NRR</div>
+            </div>
+            <div class="kpi" style="margin-top: 16px">
+              <div class="value">0</div>
+              <div class="label">Platform-team hires · engineering headcount all-product</div>
+            </div>
+            <div class="kpi" style="margin-top: 16px">
+              <div class="value">210 k</div>
+              <div class="label">Sessions/mo · zero downtime Q2 2026</div>
+            </div>
+            <div class="kpi" style="margin-top: 16px">
+              <div class="value">$1.44 M</div>
+              <div class="label">Estimated platform-team payroll saved · 18 months</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Case-study PDF + reference-call available under mutual NDA · every metric verifiable via
+          Academorix billing dashboard</span
+        >
+        <span class="nav"><em>08</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 09 · DEPLOYMENT TOPOLOGY                               -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide dark" id="s9" aria-labelledby="s9-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · buyer deck</span>
+        <span>09 · Deployment topology</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Laravel Cloud + Cloudflare + Doppler + K8s (AI only)</p>
+        <h1 id="s9-title" style="font-size: clamp(30px, 3.4vw, 46px)">
+          Every service lives where it's cheapest to run.
+        </h1>
+        <div class="arch-stack" style="margin-top: 8px">
+          <div class="arch-row">
+            <span class="layer">Edge</span>
+            <span class="services"
+              >Cloudflare Workers gateway ·
+              <code>api.&lt;env&gt;.figentra.cloud/&lt;service&gt;/*</code> · WAF · rate-limit ·
+              HSTS preload</span
+            >
+            <span class="stack-vendor">Cloudflare</span>
+          </div>
+          <div class="arch-row">
+            <span class="layer">Runtime</span>
+            <span class="services"
+              >5 SHARED services · Laravel Octane (Swoole) · auto-deploy on merge · per-env instance
+              sizing</span
+            >
+            <span class="stack-vendor">Laravel Cloud</span>
+          </div>
+          <div class="arch-row">
+            <span class="layer">Data</span>
+            <span class="services"
+              >Postgres 16 · Redis 7 · S3 · Meilisearch · per-tenant DB isolation · KMS-encrypted at
+              rest</span
+            >
+            <span class="stack-vendor">Cloud-managed</span>
+          </div>
+          <div class="arch-row">
+            <span class="layer">Secrets</span>
+            <span class="services"
+              >Doppler project per deployable · env-scoped (dev/stg/prd) · terraform-provisioned ·
+              zero .env files</span
+            >
+            <span class="stack-vendor">Doppler</span>
+          </div>
+          <div class="arch-row">
+            <span class="layer">Observability</span>
+            <span class="services"
+              >Sentry (errors + perf) · Nightwatch (APM) · OneUptime (uptime + on-call + status
+              page)</span
+            >
+            <span class="stack-vendor">3-vendor stack</span>
+          </div>
+          <div class="arch-row">
+            <span class="layer">AI service</span>
+            <span class="services"
+              >FastAPI + LangGraph on EKS · terraform-provisioned · KEDA-scaled · isolated
+              per-tenant model quota</span
+            >
+            <span class="stack-vendor">AWS EKS + ArgoCD</span>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Full topology + IaC in the data room · reference architecture reviewable under NDA</span
+        >
+        <span class="nav"><em>09</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 10 · COMPLIANCE LEDGER                                 -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s10" aria-labelledby="s10-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · buyer deck</span>
+        <span>10 · Compliance ledger</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Every regulation · every artefact · one page</p>
+        <h1 id="s10-title" style="font-size: clamp(30px, 3.4vw, 46px)">
+          Regulator asks. We ship the artefact.
+        </h1>
+        <table class="comp" style="margin-top: 16px">
+          <thead>
+            <tr>
+              <th style="width: 20%">Concern</th>
+              <th style="width: 24%">Artefact</th>
+              <th style="width: 22%">Where it lives</th>
+              <th style="width: 34%">Cadence · trigger</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Data subject access</td>
+              <td class="check">DSAR export · JSON + PDF</td>
+              <td>observability service</td>
+              <td>On-demand · &lt; 48 h SLA per GDPR Art. 12</td>
+            </tr>
+            <tr>
+              <td>Right to erasure</td>
+              <td class="check">Cascade delete + audit stub</td>
+              <td>identity + observability</td>
+              <td>On-demand · retention policy override</td>
+            </tr>
+            <tr>
+              <td>Audit trail · privileged actions</td>
+              <td class="check">Immutable ledger</td>
+              <td>observability/audit</td>
+              <td>Every write · every actor · never deleted</td>
+            </tr>
+            <tr>
+              <td>Activity feed · user visibility</td>
+              <td class="check">Per-user timeline</td>
+              <td>observability/activity</td>
+              <td>Every user action · retention per tier</td>
+            </tr>
+            <tr>
+              <td>Minor consent (FERPA · COPPA)</td>
+              <td class="check">Guardian-verified consent</td>
+              <td>identity/user + auth</td>
+              <td>Sign-up gate for &lt; 13 · re-verified annually</td>
+            </tr>
+            <tr>
+              <td>Data residency</td>
+              <td class="check">EU · MENA · India regions</td>
+              <td>terraform per-region root</td>
+              <td>Chosen at pilot · migratable via runbook</td>
+            </tr>
+            <tr>
+              <td>Access control</td>
+              <td class="check">RBAC · 5-axis scope</td>
+              <td>identity/rbac</td>
+              <td>Every request · per-tenant + per-app scoping</td>
+            </tr>
+            <tr>
+              <td>Incident notification</td>
+              <td class="check">72-h regulator + tenant email</td>
+              <td>incident runbook</td>
+              <td>SEV-1 · legal + comms triage in war room</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Every artefact linked in the data room · SOC 2 gap analysis + control library complete Q3
+          2026</span
+        >
+        <span class="nav"><em>10</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 11 · RUNBOOK + SLOs                                    -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s11" aria-labelledby="s11-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · buyer deck</span>
+        <span>11 · Runbook + SLOs</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Incident response · DR · rotation</p>
+        <h1 id="s11-title">SEV-1 pageout in 6 min. Postmortem in 48 h. DR test quarterly.</h1>
+        <div class="two-col" style="margin-top: 20px">
+          <div>
+            <p class="slide-kicker" style="margin-bottom: 12px">Incident severity ladder</p>
+            <div style="display: grid; gap: 10px">
+              <div class="bullet">
+                <span
+                  ><strong>SEV-1 · production outage</strong
+                  ><span
+                    >Every tenant impacted · pageout 6 min · war room · 30-min status updates.</span
+                  ></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>SEV-2 · degraded service</strong
+                  ><span>Some tenants impacted · pageout 15 min · hourly status.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>SEV-3 · partial feature failure</strong
+                  ><span>Ticket-tracked · 24-h response · daily update.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>SEV-4 · cosmetic · tracker</strong
+                  ><span>Backlog · 5-business-day response.</span></span
+                >
+              </div>
+            </div>
+          </div>
+          <div>
+            <p class="slide-kicker" style="margin-bottom: 12px">SLO ledger · Q2 2026 actual</p>
+            <div class="kpi">
+              <div class="value">6 min</div>
+              <div class="label">SEV-1 pageout · OneUptime mobile push</div>
+            </div>
+            <div class="kpi" style="margin-top: 12px">
+              <div class="value">12 min</div>
+              <div class="label">MTTR median · target &lt; 15 min</div>
+            </div>
+            <div class="kpi" style="margin-top: 12px">
+              <div class="value">48 h</div>
+              <div class="label">Postmortem SLA · public within 5 business days</div>
+            </div>
+            <div class="kpi" style="margin-top: 12px">
+              <div class="value">Quarterly</div>
+              <div class="label">DR game-day · full failover · tenant-facing status</div>
+            </div>
+          </div>
+        </div>
+        <p class="lede" style="margin-top: 16px; max-width: 76ch">
+          Every deploy triggers a synthetic-check pass · every merge to <code>main</code> tags a
+          Sentry release · every rollback is one <code>/rollback &lt;sha&gt;</code> PR comment. Full
+          runbook + on-call rotation shared under NDA at day-3 of the pilot.
+        </p>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Every runbook lives at .docs/runbooks/ · reviewable under NDA · updated per incident
+          postmortem</span
+        >
+        <span class="nav"><em>11</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 12 · NEXT STEP                                         -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide brand" id="s12" aria-labelledby="s12-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · buyer deck</span>
+        <span>12 · Next step</span>
+      </header>
+      <div class="slide-body" style="justify-content: center">
+        <p class="slide-kicker" style="color: var(--ink)">Ready when you are</p>
+        <h1
+          id="s12-title"
+          style="color: var(--ink); font-size: clamp(56px, 6.4vw, 96px); max-width: 24ch"
+        >
+          Book a 45-min pilot call<span
+            style="
+              display: inline-block;
+              width: 28px;
+              height: 14px;
+              margin-left: 12px;
+              background: var(--ink);
+              vertical-align: baseline;
+              animation: fig-blink 1000ms steps(1) infinite;
+            "
+            aria-hidden="true"
+          ></span>
+        </h1>
+        <p class="lede" style="color: rgba(20, 20, 20, 0.74); max-width: 62ch">
+          One call. One architect on our side. Bring your CTO + a product lead + your on-call
+          engineer. We map your current 5-service stack onto the Figentra runtime · flag the
+          migration risks · quote a 30-day pilot. No sales team. No professional-services quote.
+          Just the runtime.
+        </p>
+        <div class="four-col" style="margin-top: 24px">
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">24 h</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.62)">
+              First deploy · post-kickoff
+            </div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">30 day</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.62)">
+              Pilot · production tenant · full flow
+            </div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">$8 k/mo</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.62)">
+              Scale tier · post-pilot · month-to-month
+            </div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">$0</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.62)">
+              Setup fees · migration fees · services
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Next step · book at
+          <a href="mailto:hello@figentra.com" style="color: var(--ink); text-decoration: underline"
+            >hello@figentra.com</a
+          >
+          · reference: operator-deck v1.0</span
+        >
+        <span class="nav"><em>12</em> / 12</span>
+      </footer>
+    </section>
+
+    <script>
+      /**
+       * Keyboard nav · left/right → previous/next slide.
+       * PageUp/PageDown works too via native scroll-snap.
+       */
+      (function () {
+        var slides = document.querySelectorAll(".slide");
+        function activeIndex() {
+          var y = window.scrollY + window.innerHeight / 2;
+          for (var i = 0; i < slides.length; i++) {
+            var r = slides[i].getBoundingClientRect();
+            if (r.top + window.scrollY <= y && r.bottom + window.scrollY >= y) return i;
+          }
+          return 0;
+        }
+        function go(delta) {
+          var i = Math.max(0, Math.min(slides.length - 1, activeIndex() + delta));
+          slides[i].scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") {
+            e.preventDefault();
+            go(1);
+          }
+          if (e.key === "ArrowLeft" || e.key === "PageUp") {
+            e.preventDefault();
+            go(-1);
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

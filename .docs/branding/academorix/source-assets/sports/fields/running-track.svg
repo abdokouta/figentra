@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 460" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Running track diagram">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+
+  <title>Running track</title>
+  <desc>Line-art 400m running track — 6 lanes with straights + curves, start/finish line, and inner infield. Track Orange accent on the start/finish line + finish line pole. Academorix v0.1.</desc>
+
+  <!-- 6 lanes — outermost to innermost -->
+  <path d="M 260 20 L 540 20 A 210 210 0 0 1 540 440 L 260 440 A 210 210 0 0 1 260 20 Z"/>
+  <path d="M 260 44 L 540 44 A 186 186 0 0 1 540 416 L 260 416 A 186 186 0 0 1 260 44 Z"/>
+  <path d="M 260 68 L 540 68 A 162 162 0 0 1 540 392 L 260 392 A 162 162 0 0 1 260 68 Z"/>
+  <path d="M 260 92 L 540 92 A 138 138 0 0 1 540 368 L 260 368 A 138 138 0 0 1 260 92 Z"/>
+  <path d="M 260 116 L 540 116 A 114 114 0 0 1 540 344 L 260 344 A 114 114 0 0 1 260 116 Z"/>
+  <path d="M 260 140 L 540 140 A 90 90 0 0 1 540 320 L 260 320 A 90 90 0 0 1 260 140 Z"/>
+
+  <!-- Infield -->
+  <path d="M 260 164 L 540 164 A 66 66 0 0 1 540 296 L 260 296 A 66 66 0 0 1 260 164 Z" stroke-dasharray="4 6" opacity="0.5"/>
+
+  <!-- Start/finish line -->
+  <line x1="400" y1="20" x2="400" y2="140" stroke="#FF6B35" stroke-width="3"/>
+
+  <!-- Finish pole marker -->
+  <circle cx="400" cy="12" r="5" fill="#FF6B35" stroke="none"/>
+
+  <!-- Lane numbers hint (subtle marks on start line) -->
+  <line x1="397" y1="30" x2="403" y2="30" stroke="#FF6B35"/>
+  <line x1="397" y1="54" x2="403" y2="54" stroke="#FF6B35"/>
+  <line x1="397" y1="78" x2="403" y2="78" stroke="#FF6B35"/>
+  <line x1="397" y1="102" x2="403" y2="102" stroke="#FF6B35"/>
+  <line x1="397" y1="126" x2="403" y2="126" stroke="#FF6B35"/>
+</svg>

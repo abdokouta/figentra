@@ -1,0 +1,571 @@
+<!doctype html>
+<!--
+  Academorix · print collateral · match report · A4 portrait
+  ------------------------------------------------------------------
+  Post-match paper record: scoreboard header + score by period + key
+  moments + squad performance + referee signoff. Prints one A4
+  portrait sheet per match; the same layout renders on-screen for
+  head-coach review before signoff.
+
+  Variable slots (server-side substitution before print):
+    Regional Semifinal    · Falcons U14 vs Comets · Sep 22
+    FALCONS      · Falcons U14 · Sahara Padel Academy
+    SUNS      · Comets · Atlas Club
+    23     · 21
+    18     · 18
+    {{PERIODS[]}}      · per-set / per-quarter scores
+    {{MOMENTS[]}}      · notable in-game events (goals / points / cards / injuries)
+    {{HOME_SQUAD[]}}   · rostered players + stats
+    {{AWAY_SQUAD[]}}   · rostered players + stats
+    No incidents · both teams honoured the code of conduct.  · free-text referee comments
+    Nadia Karboub   · signature line 1
+    Layla Farid     · signature line 2
+    RPT-2026-000247      · SVR-...
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Match report · Regional Semifinal · Academorix</title>
+    <link rel="stylesheet" href="../_shared/tokens.css" />
+    <style>
+      body {
+        background: var(--surface-3);
+        display: grid;
+        place-items: start center;
+        padding: 32px 24px 96px;
+      }
+      .print-nav {
+        position: sticky;
+        top: 16px;
+        z-index: 20;
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        padding: 8px 14px;
+        background: var(--ink);
+        color: var(--paper);
+        border-radius: 999px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        box-shadow: var(--elevation-2);
+        margin-bottom: 24px;
+      }
+      .print-nav button {
+        border: 0;
+        background: var(--signal);
+        color: var(--ink);
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-family: inherit;
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .sheet {
+        width: 210mm;
+        min-height: 297mm;
+        background: white;
+        color: var(--ink);
+        padding: 14mm 12mm;
+        box-shadow: var(--elevation-3);
+        display: flex;
+        flex-direction: column;
+        gap: 6mm;
+      }
+      @media print {
+        body { padding: 0; background: white; }
+        .print-nav { display: none; }
+        .sheet {
+          box-shadow: none;
+          width: auto;
+          min-height: 0;
+          padding: 0;
+        }
+      }
+
+      /* ── header · brand + report id ───────────── */
+      .rh {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        justify-content: space-between;
+        border-bottom: 2px solid var(--ink);
+        padding-bottom: 10px;
+      }
+      .rh-brand { display: flex; align-items: center; gap: 10px; }
+      .rh-brand svg { width: 26px; height: 26px; }
+      .rh-brand strong { font-size: 16px; font-weight: 500; letter-spacing: -0.02em; }
+      .rh-brand .subline {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .rh-meta { text-align: right; }
+      .rh-meta .kicker {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--signal);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+      .rh-meta h1 { font-size: 20px; font-weight: 500; letter-spacing: -0.02em; margin: 0; }
+      .rh-meta .stamp {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--text-muted);
+      }
+
+      /* ── scoreboard readout ────────────────────── */
+      .scoreboard {
+        background: var(--ink);
+        color: var(--paper);
+        border-radius: var(--radius-3);
+        padding: 6mm 8mm;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 12mm;
+        align-items: center;
+      }
+      .scoreboard .team { text-align: left; }
+      .scoreboard .team.right { text-align: right; }
+      .scoreboard .team .name {
+        font-family: var(--font-sans);
+        font-weight: 500;
+        font-size: 18px;
+        letter-spacing: -0.02em;
+        color: var(--paper);
+      }
+      .scoreboard .team .sub {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: rgba(250, 250, 250, 0.6);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        margin-top: 2px;
+      }
+      .scoreboard .score {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        font-family: var(--font-mono);
+        font-weight: 600;
+        font-size: 56px;
+        letter-spacing: -0.03em;
+        line-height: 1;
+      }
+      .scoreboard .score .home { color: var(--signal); }
+      .scoreboard .score .colon {
+        font-size: 32px;
+        color: rgba(250, 250, 250, 0.5);
+      }
+      .scoreboard .score .away { color: var(--paper); }
+
+      /* ── match meta strip ────────────────────── */
+      .meta-row {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        padding: 3mm 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .meta-cell .kicker {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        color: var(--text-muted);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .meta-cell .value {
+        font-family: var(--font-sans);
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--ink);
+        margin-top: 2px;
+      }
+
+      /* ── period breakdown ────────────────────── */
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--signal);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        margin: 1mm 0 1mm;
+      }
+      .section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      table.periods {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: var(--font-sans);
+        font-size: 11px;
+      }
+      table.periods th, table.periods td {
+        padding: 5px 8px;
+        text-align: center;
+        border-bottom: 1px solid var(--border);
+      }
+      table.periods th {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        border-bottom-color: var(--ink);
+        border-bottom-width: 2px;
+      }
+      table.periods td.team { text-align: left; font-weight: 500; }
+      table.periods td.total {
+        font-family: var(--font-mono);
+        font-weight: 600;
+        color: var(--signal);
+      }
+      table.periods .win td { background: var(--signal-tint); }
+
+      /* ── key moments timeline ────────────────── */
+      .timeline {
+        display: grid;
+        grid-template-columns: 34px 1fr;
+        gap: 4mm 6px;
+        font-family: var(--font-sans);
+        font-size: 11px;
+      }
+      .timeline .t {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--signal);
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+      .timeline .m { color: var(--ink); line-height: 1.4; }
+      .timeline .m strong { font-weight: 500; margin-right: 4px; }
+      .timeline .m .team-badge {
+        display: inline-block;
+        padding: 1px 6px;
+        background: var(--ink);
+        color: var(--paper);
+        font-family: var(--font-mono);
+        font-size: 8px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        border-radius: 2px;
+        margin-right: 4px;
+        vertical-align: middle;
+      }
+      .timeline .m .team-badge.home { background: var(--signal); color: var(--ink); }
+
+      /* ── squad performance grid ──────────────── */
+      .squads {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6mm;
+      }
+      .squad h3 {
+        font-family: var(--font-sans);
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        margin: 0 0 4px;
+      }
+      .squad .badge {
+        display: inline-block;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: var(--font-mono);
+        font-size: 8px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        margin-right: 6px;
+      }
+      .squad .badge.home { background: var(--signal); color: var(--ink); }
+      .squad .badge.away { background: var(--ink); color: var(--paper); }
+      .squad table { width: 100%; border-collapse: collapse; font-size: 10px; }
+      .squad th, .squad td {
+        padding: 4px 6px;
+        text-align: left;
+        border-bottom: 1px dashed var(--border);
+      }
+      .squad th {
+        font-family: var(--font-mono);
+        font-size: 8.5px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        border-bottom: 1.5px solid var(--ink);
+      }
+      .squad td.no {
+        font-family: var(--font-mono);
+        color: var(--signal);
+        font-weight: 600;
+        text-align: center;
+        width: 24px;
+      }
+      .squad td.stat {
+        font-family: var(--font-mono);
+        text-align: center;
+        color: var(--ink);
+        width: 32px;
+      }
+
+      /* ── referee notes ───────────────────────── */
+      .notes {
+        border: 1px solid var(--ink);
+        padding: 4mm;
+        font-family: var(--font-sans);
+        font-size: 11px;
+        line-height: 1.55;
+        min-height: 18mm;
+      }
+      .notes .lines {
+        border-bottom: 1px solid var(--ink);
+        margin: 8px 0;
+        height: 8px;
+        opacity: 0.42;
+      }
+
+      /* ── signature block ─────────────────────── */
+      .signature {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8mm;
+        margin-top: auto;
+        padding-top: 6mm;
+        border-top: 2px solid var(--ink);
+      }
+      .signature .box { display: flex; flex-direction: column; gap: 4px; }
+      .signature .line { height: 12mm; border-bottom: 1.5px solid var(--ink); }
+      .signature .caption {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        color: var(--text-muted);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .signature .name {
+        font-family: var(--font-sans);
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      .footer-note {
+        font-family: var(--font-mono);
+        font-size: 8px;
+        color: var(--text-muted);
+        letter-spacing: 0.08em;
+        padding-top: 2mm;
+        display: flex;
+        justify-content: space-between;
+      }
+      .footer-note .provenance { color: var(--signal); }
+    </style>
+  </head>
+
+  <body>
+    <div class="print-nav" role="toolbar">
+      Match report · 1 page ·
+      <button onclick="window.print()">Print / Save as PDF</button>
+    </div>
+
+    <article class="sheet" aria-labelledby="mr-title">
+      <!-- ── header ────────────────────────────── -->
+      <header class="rh">
+        <div class="rh-brand">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <line x1="60" y1="24" x2="30" y2="96" stroke="currentColor" stroke-width="10" stroke-linecap="square"/>
+            <line x1="60" y1="24" x2="90" y2="96" stroke="currentColor" stroke-width="10" stroke-linecap="square"/>
+            <rect x="40" y="60" width="40" height="10" fill="currentColor"/>
+            <rect x="56" y="14" width="8" height="6" fill="#FF6B35"/>
+          </svg>
+          <div>
+            <strong>Academorix</strong>
+            <div class="subline">Sahara Padel Academy · Rabat Padel Club · CT-3</div>
+          </div>
+        </div>
+        <div class="rh-meta">
+          <span class="kicker">Match report · Official record</span>
+          <h1 id="mr-title">Regional Semifinal</h1>
+          <span class="stamp">18 Sep 26 · 16:30 · Report RPT-2026-000247</span>
+        </div>
+      </header>
+
+      <!-- ── scoreboard ────────────────────────── -->
+      <section class="scoreboard" aria-label="Final score">
+        <div class="team">
+          <div class="name">Falcons U14</div>
+          <div class="sub">Sahara Padel Academy · home</div>
+        </div>
+        <div class="score" role="text" aria-label="21 to 18">
+          <span class="home">21</span>
+          <span class="colon">·</span>
+          <span class="away">18</span>
+        </div>
+        <div class="team right">
+          <div class="name">Comets</div>
+          <div class="sub">Atlas Club · away</div>
+        </div>
+      </section>
+
+      <!-- ── meta strip ────────────────────────── -->
+      <section class="meta-row" aria-label="Match metadata">
+        <div class="meta-cell">
+          <div class="kicker">Discipline</div>
+          <div class="value">Padel · U14 · doubles</div>
+        </div>
+        <div class="meta-cell">
+          <div class="kicker">Format</div>
+          <div class="value">Best of 3 sets</div>
+        </div>
+        <div class="meta-cell">
+          <div class="kicker">Duration</div>
+          <div class="value">01:14:22</div>
+        </div>
+        <div class="meta-cell">
+          <div class="kicker">Head referee</div>
+          <div class="value">Karim Bennani</div>
+        </div>
+        <div class="meta-cell">
+          <div class="kicker">Weather · court</div>
+          <div class="value">21 °C · indoor #3</div>
+        </div>
+      </section>
+
+      <!-- ── period breakdown ─────────────────── -->
+      <h2 class="section-title">Score by period</h2>
+      <table class="periods" aria-label="Score by period">
+        <thead>
+          <tr>
+            <th style="text-align: left;">Team</th>
+            <th>Set 1</th>
+            <th>Set 2</th>
+            <th>Set 3</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="win">
+            <td class="team">Falcons · <em style="font-weight: 400; color: var(--text-muted);">home</em></td>
+            <td>6</td>
+            <td>4</td>
+            <td>6</td>
+            <td class="total">16 games · 21 pts</td>
+          </tr>
+          <tr>
+            <td class="team">Comets · <em style="font-weight: 400; color: var(--text-muted);">away</em></td>
+            <td>4</td>
+            <td>6</td>
+            <td>3</td>
+            <td class="total" style="color: var(--ink);">13 games · 18 pts</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- ── key moments ─────────────────────── -->
+      <h2 class="section-title">Key moments</h2>
+      <div class="timeline">
+        <div class="t">04:22</div>
+        <div class="m"><span class="team-badge home">Home</span><strong>Bensaid</strong>opens set 1 with a lob winner (2-0).</div>
+        <div class="t">18:35</div>
+        <div class="m"><span class="team-badge">Away</span><strong>Ahmed</strong>breaks serve · Comets take set 1 · 6-4.</div>
+        <div class="t">32:11</div>
+        <div class="m"><span class="team-badge home">Home</span><strong>Hakim</strong>PB on backhand rally · noted for the parent digest.</div>
+        <div class="t">45:08</div>
+        <div class="m"><span class="team-badge home">Home</span><strong>Bensaid + Hakim</strong>close set 2 · 6-4.</div>
+        <div class="t">58:44</div>
+        <div class="m"><span class="team-badge">Away</span>Injury pause · Comets · Ahmed (right ankle · walk-off).</div>
+        <div class="t">01:14</div>
+        <div class="m"><span class="team-badge home">Home</span>Match point on serve · <strong>Bensaid</strong>closes set 3 · 6-3.</div>
+      </div>
+
+      <!-- ── squads ──────────────────────────── -->
+      <h2 class="section-title">Squad performance</h2>
+      <div class="squads">
+        <div class="squad">
+          <h3><span class="badge home">Home</span>Falcons U14</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Athlete</th>
+                <th>Pts</th>
+                <th>Aces</th>
+                <th>DF</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="no">07</td><td>Aya Bensaid</td><td class="stat">12</td><td class="stat">4</td><td class="stat">1</td></tr>
+              <tr><td class="no">09</td><td>Youssef Hakim</td><td class="stat">9</td><td class="stat">2</td><td class="stat">3</td></tr>
+              <tr><td class="no">12</td><td>Sara El Amrani</td><td class="stat">–</td><td class="stat">–</td><td class="stat">–</td></tr>
+              <tr><td class="no">14</td><td>Salma Fassi</td><td class="stat">–</td><td class="stat">–</td><td class="stat">–</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="squad">
+          <h3><span class="badge away">Away</span>Comets</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Athlete</th>
+                <th>Pts</th>
+                <th>Aces</th>
+                <th>DF</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="no">03</td><td>Ahmed R.</td><td class="stat">7</td><td class="stat">2</td><td class="stat">2</td></tr>
+              <tr><td class="no">08</td><td>Karim B.</td><td class="stat">11</td><td class="stat">3</td><td class="stat">4</td></tr>
+              <tr><td class="no">15</td><td>Younes N.</td><td class="stat">–</td><td class="stat">–</td><td class="stat">–</td></tr>
+              <tr><td class="no">17</td><td>Mehdi A.</td><td class="stat">–</td><td class="stat">–</td><td class="stat">–</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── referee notes ───────────────────── -->
+      <h2 class="section-title">Referee notes</h2>
+      <div class="notes">
+        Injury sub for Comets in set 3 recorded on athlete file
+        Ahmed R. · left the court walking · academy medical officer
+        cleared for follow-up within 48 h. No cards issued. Match
+        finished in regulation. Result final on this report.
+        <div class="lines"></div>
+        <div class="lines"></div>
+      </div>
+
+      <!-- ── signatures ──────────────────────── -->
+      <section class="signature">
+        <div class="box">
+          <div class="line"></div>
+          <div class="caption">Head referee · date + time</div>
+          <div class="name">Nadia Karboub</div>
+        </div>
+        <div class="box">
+          <div class="line"></div>
+          <div class="caption">Head coach · Falcons U14</div>
+          <div class="name">Layla Farid</div>
+        </div>
+      </section>
+
+      <div class="footer-note">
+        <span>Verified match record · federation-compliant</span>
+        <span class="provenance">academorix.com/matches/RPT-2026-000247</span>
+        <span>Filed 24 Sep 26</span>
+      </div>
+    </article>
+  </body>
+</html>

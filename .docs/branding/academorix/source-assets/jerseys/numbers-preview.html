@@ -1,0 +1,519 @@
+<!doctype html>
+<!--
+  Academorix · jersey typography preview · v1.1 draft
+  ------------------------------------------------------------------
+  Side-by-side comparison of the three numeral suites shipped in
+  06-jersey-typography/ plus three jersey mock-ups showing a real
+  athlete number rendered in each family.
+
+  Consumers view this to pick the right family for their academy's
+  visual voice:
+    · Varsity  · classic, collegiate, tradition-first (WKF karate,
+                 Ivy-adjacent tennis clubs, prep-school basketball).
+    · Block    · loud, high-legibility, stadium-scale (football,
+                 padel, athletics, martial-arts belts + trophies).
+    · Modern   · technical, workspace-default, coach-cam-adjacent
+                 (every scoreboard readout, roster board, in-app UI).
+
+  reviewed_by: null · pending Founding Partner sign-off.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Academorix · jersey numerals · preview</title>
+    <link rel="stylesheet" href="../_shared/tokens.css" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Anton&family=Bungee+Inline&family=Geist:wght@500;700;800&family=Geist+Mono:wght@500;600&display=swap");
+
+      body {
+        padding: 48px 32px 96px;
+      }
+      .page {
+        max-width: 1440px;
+        margin: 0 auto;
+      }
+      header.hd {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 40px;
+      }
+      header.hd h1 {
+        font-family: var(--font-sans);
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        font-size: clamp(32px, 3.6vw, 48px);
+        line-height: 1.05;
+        margin: 0;
+      }
+      header.hd .kicker {
+        margin: 0 0 4px;
+      }
+      header.hd p {
+        max-width: 620px;
+        color: var(--text-muted);
+        line-height: 1.55;
+        margin: 8px 0 0;
+      }
+
+      /* One row per family */
+      .family {
+        margin-top: 40px;
+        padding: 32px;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-4);
+        box-shadow: var(--elevation-1);
+      }
+      .family-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .family-head h2 {
+        font-family: var(--font-sans);
+        font-weight: 500;
+        font-size: 28px;
+        letter-spacing: -0.02em;
+        margin: 0;
+      }
+      .family-head p {
+        color: var(--text-muted);
+        font-size: 13px;
+        letter-spacing: -0.01em;
+        margin: 0;
+        max-width: 620px;
+      }
+      .family-meta {
+        display: flex;
+        gap: 24px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-muted);
+        letter-spacing: 0.08em;
+      }
+      .family-meta strong {
+        color: var(--signal);
+        font-weight: 500;
+      }
+
+      .digit-strip {
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        gap: 8px;
+        margin: 24px 0;
+        border-bottom: 4px solid var(--signal);
+        padding-bottom: 6px;
+        align-items: end;
+      }
+      .digit-strip .cell {
+        text-align: center;
+        line-height: 0.9;
+      }
+
+      .fam-varsity .cell {
+        font-family: "Bungee Inline", "Rye", serif;
+        font-size: clamp(48px, 6vw, 96px);
+        color: var(--signal);
+      }
+      .fam-block .cell {
+        font-family: "Anton", "Bebas Neue", "Impact", sans-serif;
+        font-size: clamp(56px, 7vw, 112px);
+        color: var(--ink);
+        letter-spacing: -0.02em;
+      }
+      .fam-modern .cell {
+        font-family: var(--font-sans);
+        font-weight: 800;
+        font-size: clamp(52px, 6.4vw, 104px);
+        color: var(--ink);
+        letter-spacing: -0.04em;
+        position: relative;
+      }
+      .fam-modern .cell:first-child::after {
+        content: "";
+        position: absolute;
+        top: 12%;
+        right: 24%;
+        width: 8px;
+        height: 4px;
+        background: var(--signal);
+      }
+      .digit-strip .label {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--text-muted);
+        letter-spacing: 0.14em;
+        margin-top: 4px;
+      }
+
+      /* ── jersey mockups · shared shell ─────────────────── */
+      .mockups {
+        margin-top: 96px;
+      }
+      .mockups h2 {
+        font-family: var(--font-sans);
+        font-weight: 500;
+        font-size: 28px;
+        letter-spacing: -0.02em;
+        margin: 0 0 24px;
+      }
+      .jerseys {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      .jersey {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-4);
+        padding: 32px 24px 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+      .jersey-body {
+        /* jersey silhouette · CSS shape */
+        width: 220px;
+        height: 260px;
+        background: var(--ink);
+        color: var(--paper);
+        clip-path: polygon(
+          0% 12%, 20% 0%, 34% 6%, 66% 6%, 80% 0%, 100% 12%,
+          92% 20%, 100% 30%, 100% 100%, 0% 100%, 0% 30%, 8% 20%
+        );
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        text-align: center;
+      }
+      .jersey-body .club {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(250, 250, 250, 0.72);
+        margin-top: 32px;
+      }
+      .jersey-body .number {
+        line-height: 1;
+        color: var(--paper);
+        margin-top: 12px;
+      }
+      .jersey-body .number.varsity {
+        font-family: "Bungee Inline", "Rye", serif;
+        color: var(--signal);
+        font-size: 108px;
+      }
+      .jersey-body .number.block {
+        font-family: "Anton", "Bebas Neue", sans-serif;
+        font-size: 132px;
+        letter-spacing: -0.02em;
+      }
+      .jersey-body .number.modern {
+        font-family: var(--font-sans);
+        font-weight: 800;
+        font-size: 120px;
+        letter-spacing: -0.04em;
+      }
+      /* Track Orange chevron bar across the shoulders */
+      .jersey-body::before {
+        content: "";
+        position: absolute;
+        top: 20px;
+        left: 30px;
+        right: 30px;
+        height: 4px;
+        background: var(--signal);
+      }
+      /* athlete name plate */
+      .jersey-body .plate {
+        margin-top: 12px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: rgba(250, 250, 250, 0.72);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .jersey-caption {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-top: 6px;
+      }
+      .jersey-caption strong {
+        color: var(--signal);
+        font-weight: 500;
+      }
+
+      /* ── usage matrix ─────────────────────────────────── */
+      .use-matrix {
+        margin-top: 96px;
+      }
+      .use-matrix h2 {
+        font-family: var(--font-sans);
+        font-weight: 500;
+        font-size: 28px;
+        letter-spacing: -0.02em;
+        margin: 0 0 20px;
+      }
+      .use-matrix table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: var(--font-sans);
+      }
+      .use-matrix th,
+      .use-matrix td {
+        text-align: left;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        font-size: 14px;
+      }
+      .use-matrix th {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        border-bottom-color: var(--ink);
+        border-bottom-width: 2px;
+      }
+      .use-matrix td.on {
+        color: var(--signal);
+        font-weight: 500;
+      }
+      .use-matrix td.off {
+        color: var(--text-dim);
+      }
+
+      @media (max-width: 900px) {
+        .jerseys { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="page">
+      <header class="hd">
+        <p class="kicker">Jersey typography · v1.1</p>
+        <h1>Three families. One system. Pick per academy.</h1>
+        <p>
+          Every Academorix academy picks one numeral family and uses
+          it end-to-end — jerseys, rosters, trophies, roster boards,
+          scoreboards. The workspace default is <strong>Modern</strong>
+          (Geist 800) because it&#39;s already the type language of
+          every product screen; the other two are legitimate
+          swap-outs when the academy&#39;s visual voice calls for them.
+        </p>
+      </header>
+
+      <!-- ── varsity ────────────────────────────────────── -->
+      <section class="family">
+        <div class="family-head">
+          <div>
+            <h2>Varsity · Bungee Inline</h2>
+            <p>
+              Classic collegiate slab-serif with a tackle-twill
+              inline. Reads &ldquo;we&#39;ve been here since 1963&rdquo;.
+              Pairs with WKF karate, Ivy-adjacent tennis, prep-school
+              basketball.
+            </p>
+          </div>
+        </div>
+        <div class="family-meta">
+          <span><strong>Google Font</strong> Bungee Inline</span>
+          <span><strong>Fallback</strong> Rye · serif</span>
+          <span><strong>Print</strong> Pantone 165 C inline · Black 6 C outer</span>
+          <span><strong>Min height</strong> 25 mm</span>
+        </div>
+        <div class="digit-strip fam-varsity">
+          <div class="cell">0</div>
+          <div class="cell">1</div>
+          <div class="cell">2</div>
+          <div class="cell">3</div>
+          <div class="cell">4</div>
+          <div class="cell">5</div>
+          <div class="cell">6</div>
+          <div class="cell">7</div>
+          <div class="cell">8</div>
+          <div class="cell">9</div>
+        </div>
+      </section>
+
+      <!-- ── block ──────────────────────────────────────── -->
+      <section class="family">
+        <div class="family-head">
+          <div>
+            <h2>Block · Anton</h2>
+            <p>
+              Geometric condensed sans, heavy weight. Reads at 12 m
+              stadium seating. Pairs with football, padel, athletics,
+              martial-arts belts.
+            </p>
+          </div>
+        </div>
+        <div class="family-meta">
+          <span><strong>Google Font</strong> Anton</span>
+          <span><strong>Fallback</strong> Bebas Neue · Impact</span>
+          <span><strong>Print</strong> Pantone Black 6 C solid</span>
+          <span><strong>Min height</strong> 30 mm</span>
+        </div>
+        <div class="digit-strip fam-block">
+          <div class="cell">0</div>
+          <div class="cell">1</div>
+          <div class="cell">2</div>
+          <div class="cell">3</div>
+          <div class="cell">4</div>
+          <div class="cell">5</div>
+          <div class="cell">6</div>
+          <div class="cell">7</div>
+          <div class="cell">8</div>
+          <div class="cell">9</div>
+        </div>
+      </section>
+
+      <!-- ── modern ─────────────────────────────────────── -->
+      <section class="family">
+        <div class="family-head">
+          <div>
+            <h2>Modern · Geist 800 · workspace default</h2>
+            <p>
+              The default. Same type family as every product screen +
+              scoreboard readout + roster board. Track Orange nick on
+              the 0 mirrors the A-Chevron apex marker.
+            </p>
+          </div>
+        </div>
+        <div class="family-meta">
+          <span><strong>Google Font</strong> Geist 800</span>
+          <span><strong>Fallback</strong> Inter · system-ui</span>
+          <span><strong>Print</strong> Pantone Black 6 C · Track Orange nick</span>
+          <span><strong>Min height</strong> 25 mm</span>
+        </div>
+        <div class="digit-strip fam-modern">
+          <div class="cell">0</div>
+          <div class="cell">1</div>
+          <div class="cell">2</div>
+          <div class="cell">3</div>
+          <div class="cell">4</div>
+          <div class="cell">5</div>
+          <div class="cell">6</div>
+          <div class="cell">7</div>
+          <div class="cell">8</div>
+          <div class="cell">9</div>
+        </div>
+      </section>
+
+      <!-- ── jersey mock-ups ────────────────────────────── -->
+      <section class="mockups" aria-labelledby="mockups-title">
+        <h2 id="mockups-title">A single number in every family</h2>
+        <div class="jerseys">
+          <div class="jersey">
+            <div class="jersey-body">
+              <div class="club">Sahara Padel</div>
+              <div class="number varsity">07</div>
+              <div class="plate">FARID</div>
+            </div>
+            <div class="jersey-caption">
+              #07 · <strong>Varsity</strong>
+            </div>
+          </div>
+          <div class="jersey">
+            <div class="jersey-body">
+              <div class="club">Sahara Padel</div>
+              <div class="number block">23</div>
+              <div class="plate">HAKIM</div>
+            </div>
+            <div class="jersey-caption">
+              #23 · <strong>Block</strong>
+            </div>
+          </div>
+          <div class="jersey">
+            <div class="jersey-body">
+              <div class="club">Sahara Padel</div>
+              <div class="number modern">45</div>
+              <div class="plate">BENSAID</div>
+            </div>
+            <div class="jersey-caption">
+              #45 · <strong>Modern</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── usage matrix ───────────────────────────────── -->
+      <section class="use-matrix">
+        <h2>When to use which</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Surface</th>
+              <th>Varsity</th>
+              <th>Block</th>
+              <th>Modern · default</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Jersey back</td>
+              <td class="on">✓ collegiate</td>
+              <td class="on">✓ stadium-scale</td>
+              <td class="on">✓ default</td>
+            </tr>
+            <tr>
+              <td>Roster board · office</td>
+              <td class="off">–</td>
+              <td class="on">✓ high legibility</td>
+              <td class="on">✓ default</td>
+            </tr>
+            <tr>
+              <td>Trophy plaque + engraving</td>
+              <td class="on">✓ traditional</td>
+              <td class="off">–</td>
+              <td class="on">✓ engrave-friendly</td>
+            </tr>
+            <tr>
+              <td>In-product scoreboard</td>
+              <td class="off">–</td>
+              <td class="off">–</td>
+              <td class="on">✓ only choice</td>
+            </tr>
+            <tr>
+              <td>Match report · print</td>
+              <td class="off">–</td>
+              <td class="on">✓ readability</td>
+              <td class="on">✓ default</td>
+            </tr>
+            <tr>
+              <td>Certificate cover</td>
+              <td class="on">✓ display</td>
+              <td class="off">–</td>
+              <td class="on">✓ default</td>
+            </tr>
+            <tr>
+              <td>Locker plate</td>
+              <td class="on">✓ tradition</td>
+              <td class="on">✓ readability</td>
+              <td class="on">✓ default</td>
+            </tr>
+            <tr>
+              <td>Digital scoreboard face</td>
+              <td class="off">–</td>
+              <td class="off">–</td>
+              <td class="on">✓ only choice · uses Geist Mono</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </body>
+</html>

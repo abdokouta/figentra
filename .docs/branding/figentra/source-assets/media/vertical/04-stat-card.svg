@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Figentra vertical video · shape 04 · Stat card.
+  9:16 · 1080×1920. Single-anchor number frame · big value + label +
+  supporting hint. Used for percentage claims, count-up animations,
+  numeric-brag moments in a Reel or Short.
+
+  Content zones inside safe area:
+    - Kicker slot   · 260 y · Signal-mint · mono · uppercase
+    - Big value     · 500..900 y · Geist Mono 320 px · animatable
+    - Value unit    · aligned baseline at 850 y · Geist Mono 96 px
+    - Label         · 1000 y · Geist 44 px · muted
+    - Hint          · 1100 y · Geist 32 px · muted-2
+
+  Motion note: the 320 px value is intended as a count-up target.
+  Motion operators animate 0 → target over 800 ms ease-out. The
+  underscore glyph beside the value pulses on the target frame.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920" role="img" aria-label="Stat card · vertical video shape template" color="#141414">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+
+  <!-- Ink field -->
+  <rect x="0" y="0" width="1080" height="1920" fill="#0b0f14"/>
+
+  <!-- Signal-mint radial glow · centre anchor -->
+  <defs>
+    <radialGradient id="stat-glow" cx="50%" cy="42%" r="45%">
+      <stop offset="0%" stop-color="#00e5a0" stop-opacity="0.22"/>
+      <stop offset="70%" stop-color="#00e5a0" stop-opacity="0.02"/>
+      <stop offset="100%" stop-color="#00e5a0" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect x="0" y="0" width="1080" height="1920" fill="url(#stat-glow)"/>
+
+  <!-- Top safe-zone marker -->
+  <line x1="0" y1="206" x2="1080" y2="206" stroke="#fafafa" stroke-width="1" stroke-dasharray="6 6" opacity="0.14"/>
+
+  <!-- Kicker · Signal Mint mono -->
+  <text x="540" y="280" text-anchor="middle" font-family="'Geist Mono', ui-monospace, monospace" font-size="28" fill="#00e5a0" letter-spacing="0.18em">
+    THE NUMBERS · 04
+  </text>
+
+  <!-- Big value · Geist Mono 320 px · animatable target -->
+  <text x="540" y="880" text-anchor="middle" font-family="'Geist Mono', ui-monospace, monospace" font-weight="500" font-size="320" fill="#fafafa" letter-spacing="-0.03em">
+    100<tspan fill="#00e5a0">%</tspan>
+  </text>
+
+  <!-- Label · Geist 44 · muted -->
+  <text x="540" y="1000" text-anchor="middle" font-family="'Geist', 'Inter', sans-serif" font-weight="500" font-size="44" fill="#fafafa" opacity="0.85" letter-spacing="-0.01em">
+    Arabic parity, at build time
+  </text>
+
+  <!-- Hint · Geist 30 · muted-2 -->
+  <text x="540" y="1080" text-anchor="middle" font-family="'Geist', 'Inter', sans-serif" font-weight="400" font-size="30" fill="#fafafa" opacity="0.6">
+    CI blocks any missing localisation before merge.
+  </text>
+
+  <!-- Bottom safe-zone marker -->
+  <line x1="0" y1="1368" x2="1080" y2="1368" stroke="#fafafa" stroke-width="1" stroke-dasharray="6 6" opacity="0.14"/>
+
+  <!-- f_ mark · bottom-center of safe zone -->
+  <g transform="translate(490, 1220)">
+    <rect x="44" y="18" width="8" height="76" fill="#fafafa"/>
+    <rect x="44" y="18" width="30" height="8" fill="#fafafa"/>
+    <rect x="28" y="52" width="36" height="8" fill="#fafafa"/>
+    <rect x="28" y="102" width="64" height="8" fill="#00e5a0"/>
+  </g>
+</svg>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<!--
+  authored_by: kiro
+  authored_at: 2026-08-17
+  source: prompt://brand-system-phase-b-errors
+  reviewed_by: null
+  reviewed_at: null
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>404 · This page isn't here · Figentra</title>
+    <link rel="stylesheet" href="../_shared/tokens.css" />
+    <style>
+      main {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 32px;
+      }
+      .card {
+        max-width: 560px;
+        text-align: left;
+      }
+      .code {
+        font-family: var(--font-mono);
+        font-size: clamp(72px, 12vw, 140px);
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: -0.03em;
+        color: var(--signal);
+        margin: 0 0 24px;
+      }
+      .code::after {
+        content: "";
+        display: inline-block;
+        width: 0.35em;
+        height: 0.9em;
+        background: var(--signal);
+        vertical-align: -0.05em;
+        margin-left: 0.05em;
+        animation: blink var(--dur-blink) steps(1) infinite;
+      }
+      h1 {
+        font-family: var(--font-sans);
+        font-size: clamp(28px, 3.5vw, 36px);
+        font-weight: 500;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        color: var(--text);
+        margin: 0 0 16px;
+      }
+      p.body {
+        font-family: var(--font-sans);
+        font-size: 16px;
+        line-height: 1.6;
+        color: var(--text-muted);
+        margin: 0 0 32px;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 16px;
+      }
+      a.primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        background: var(--signal);
+        color: var(--ink);
+        font-family: var(--font-sans);
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        border-radius: 8px;
+      }
+      a.primary:hover {
+        background: var(--signal-700);
+        color: var(--paper);
+      }
+      a.secondary {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-decoration: none;
+      }
+      a.secondary:hover {
+        color: var(--signal);
+      }
+      .trace {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-dim);
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="card">
+        <p class="code">404</p>
+        <h1>This page isn't here</h1>
+        <p class="body">The URL is malformed, the resource was deleted, or the link is old. If a workspace admin sent you here, ask them to re-check the link.</p>
+        <div class="actions">
+          <a href="/" class="primary">Go home <span aria-hidden="true">→</span></a>
+          <a href="https://docs.figentra.cloud/search" class="secondary">Search the docs →</a>
+        </div>
+        <p class="trace">trace-id: <code>01H9K7BXWQGC0T8Y5PN6MS4Z2E</code> · region: <code>us-east-1</code> · signed by <code>figentra.com</code></p>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,1265 @@
+<!doctype html>
+<!--
+  Academorix · academorix.com landing page · v1.1 draft
+  ------------------------------------------------------------------
+  Sport-forward hero refresh. Every 8 seconds the hero swaps to the
+  next sport in { padel · basketball · football · martial-arts ·
+  swimming · tennis · athletics }, cycling the seven backdrops Sprint
+  1 already shipped under ../../sports/hero-*.svg.
+
+  Every token comes from ../_shared/tokens.css. If the accent needs
+  to swap for a co-branded tenant, override --signal at [data-brand].
+
+  Open with:
+    /usr/bin/open .tmp/drafts/academorix-logos/sprint2/01-landing/index.html (retired 2026-08-18)
+
+  reviewed_by: null · pending Founding Partner sign-off.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Academorix · run every session like it counts</title>
+    <meta
+      name="description"
+      content="Academorix is the operating system for sports academies. Rosters, attendance, coaching notes, grading events, invoicing, parent comms — one place, coach-forward, WCAG 2.2 AA."
+    />
+    <link rel="stylesheet" href="../_shared/tokens.css" />
+    <style>
+      /* ── page-local overrides ─────────────────────────────── */
+      html,
+      body {
+        min-height: 100vh;
+      }
+      body {
+        background: var(--surface);
+      }
+
+      /* ── top navbar ───────────────────────────────────────── */
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        background: color-mix(in oklab, var(--surface) 92%, transparent);
+        backdrop-filter: saturate(1.4) blur(8px);
+        -webkit-backdrop-filter: saturate(1.4) blur(8px);
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 24px;
+      }
+      .nav-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        color: var(--text);
+      }
+      .nav-brand svg {
+        width: 20px;
+        height: 20px;
+      }
+      .nav-brand strong {
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        font-size: 16px;
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .nav-links a {
+        text-decoration: none;
+        color: var(--text-muted);
+        font-size: 14px;
+        letter-spacing: -0.01em;
+      }
+      .nav-links a:hover {
+        color: var(--text);
+      }
+      .nav-cta {
+        display: flex;
+        gap: 12px;
+      }
+
+      /* ── hero ─────────────────────────────────────────────── */
+      .hero {
+        position: relative;
+        background: var(--ink);
+        color: var(--paper);
+        overflow: hidden;
+        min-height: 640px;
+        display: flex;
+        align-items: center;
+      }
+      .hero::after {
+        content: "";
+        position: absolute;
+        top: -20%;
+        right: -10%;
+        width: 60%;
+        height: 140%;
+        background: radial-gradient(circle, rgba(255, 107, 53, 0.24), rgba(255, 107, 53, 0) 60%);
+        pointer-events: none;
+        z-index: 1;
+      }
+      .hero-sport-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 800ms var(--ease-out-quart);
+      }
+      .hero-sport-bg[data-active="true"] {
+        opacity: 0.7;
+      }
+      .hero-sport-bg svg,
+      .hero-sport-bg img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .hero-inner {
+        position: relative;
+        z-index: 2;
+        max-width: 1280px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 96px 24px 128px;
+      }
+      .hero-kicker {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--signal);
+        margin: 0 0 20px;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .hero-kicker .sport-name {
+        color: var(--paper);
+        opacity: 0.72;
+      }
+      .hero-title {
+        font-size: clamp(48px, 6.4vw, 96px);
+        font-weight: 500;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        margin: 0 0 24px;
+        max-width: 780px;
+      }
+      /* .cursor · retired 2026-08-21 per ADR-0104 (no cursor bar in
+         Academorix identity) · empty spans hide via display:none. */
+      .hero-title .cursor {
+        display: none;
+      }
+      .hero-sub {
+        font-size: clamp(18px, 1.6vw, 22px);
+        line-height: 1.5;
+        max-width: 620px;
+        color: rgba(250, 250, 250, 0.78);
+        margin: 0 0 36px;
+      }
+      .hero-cta {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .hero .btn-primary:hover {
+        background: var(--paper);
+        border-color: var(--paper);
+        color: var(--ink);
+      }
+      .hero .btn-ghost {
+        color: var(--paper);
+        border-color: rgba(250, 250, 250, 0.24);
+      }
+      .hero .btn-ghost:hover {
+        color: var(--signal);
+        border-color: var(--signal);
+      }
+      .hero-metrics {
+        margin-top: 56px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px;
+        max-width: 720px;
+      }
+      .hero-metric {
+        border-left: 2px solid var(--signal);
+        padding: 4px 0 4px 16px;
+      }
+      .hero-metric-value {
+        font-family: var(--font-mono);
+        font-weight: 600;
+        font-size: 28px;
+        letter-spacing: -0.02em;
+        line-height: 1;
+        color: var(--paper);
+      }
+      .hero-metric-label {
+        margin-top: 6px;
+        font-size: 12px;
+        letter-spacing: 0.02em;
+        color: rgba(250, 250, 250, 0.62);
+      }
+
+      /* ── trust bar ────────────────────────────────────────── */
+      .trust {
+        background: var(--ink-2);
+        color: rgba(250, 250, 250, 0.62);
+        border-top: 1px solid rgba(250, 250, 250, 0.06);
+        border-bottom: 1px solid rgba(250, 250, 250, 0.06);
+      }
+      .trust-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 20px 24px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px 32px;
+        align-items: center;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .trust-label {
+        color: var(--signal);
+      }
+      .trust-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 22px;
+      }
+      .trust-badges span::before {
+        content: "· ";
+        color: rgba(250, 250, 250, 0.28);
+      }
+
+      /* ── generic section ──────────────────────────────────── */
+      .section {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 96px 24px;
+      }
+      .section-kicker {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--signal);
+        margin: 0 0 16px;
+      }
+      .section-title {
+        font-size: clamp(32px, 3.6vw, 48px);
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        line-height: 1.05;
+        max-width: 760px;
+        margin: 0 0 20px;
+      }
+      .section-lede {
+        font-size: 18px;
+        line-height: 1.55;
+        max-width: 640px;
+        color: var(--text-muted);
+        margin: 0 0 48px;
+      }
+
+      /* ── personas grid ────────────────────────────────────── */
+      .personas {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+      }
+      .persona {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 32px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-4);
+        background: var(--surface-2);
+        transition:
+          border-color 200ms var(--ease-out-quart),
+          transform 200ms var(--ease-out-quart);
+      }
+      .persona:hover {
+        border-color: var(--signal);
+        transform: translateY(-4px);
+      }
+      .persona-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--signal);
+      }
+      .persona-tag::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        background: var(--signal);
+        border-radius: 2px;
+      }
+      .persona h3 {
+        font-size: 22px;
+        letter-spacing: -0.02em;
+        font-weight: 500;
+        line-height: 1.2;
+        margin: 0;
+      }
+      .persona p {
+        font-size: 15px;
+        line-height: 1.55;
+        margin: 0;
+        color: var(--text-muted);
+      }
+      .persona ul {
+        list-style: none;
+        padding: 0;
+        margin: 8px 0 0;
+        display: grid;
+        gap: 8px;
+      }
+      .persona ul li {
+        font-size: 13px;
+        color: var(--text);
+        padding-left: 18px;
+        position: relative;
+        line-height: 1.4;
+      }
+      .persona ul li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 6px;
+        width: 8px;
+        height: 8px;
+        border-left: 2px solid var(--signal);
+        border-top: 2px solid var(--signal);
+        transform: rotate(45deg);
+      }
+
+      /* ── sport-vertical strip ─────────────────────────────── */
+      .sports-strip {
+        background: var(--surface-3);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        padding: 48px 24px;
+      }
+      .sports-strip-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 32px 48px;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+      }
+      .sports-strip .sport-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .sports-strip .sport-item img {
+        width: 22px;
+        height: 22px;
+        opacity: 0.6;
+      }
+
+      /* ── product proof · scoreboard readout ──────────────── */
+      .product-proof {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 48px;
+        align-items: center;
+      }
+      .product-proof-media {
+        aspect-ratio: 16 / 10;
+        background: var(--ink);
+        border-radius: var(--radius-4);
+        box-shadow: var(--elevation-3);
+        overflow: hidden;
+        position: relative;
+      }
+      .product-proof-media .board {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        color: var(--paper);
+      }
+      .product-proof-media .side {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 24px 32px;
+      }
+      .product-proof-media .side + .side {
+        border-left: 1px dashed rgba(250, 250, 250, 0.24);
+      }
+      .product-proof-media .team {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(250, 250, 250, 0.6);
+      }
+      .product-proof-media .score {
+        font-family: var(--font-mono);
+        font-size: clamp(72px, 12vw, 128px);
+        font-weight: 600;
+        letter-spacing: -0.03em;
+        line-height: 1;
+        color: var(--paper);
+      }
+      .product-proof-media .score em {
+        color: var(--signal);
+        font-style: normal;
+      }
+      .product-proof-media .clock {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        color: var(--signal);
+        margin-top: 8px;
+      }
+      .product-proof-body h3 {
+        font-size: 32px;
+        letter-spacing: -0.02em;
+        font-weight: 500;
+        margin: 0 0 16px;
+        line-height: 1.15;
+      }
+      .product-proof-body p {
+        color: var(--text-muted);
+        line-height: 1.55;
+        margin: 0 0 20px;
+      }
+      .product-proof-body ol {
+        counter-reset: step;
+        padding: 0;
+        list-style: none;
+      }
+      .product-proof-body ol li {
+        counter-increment: step;
+        padding: 14px 0 14px 44px;
+        position: relative;
+        border-top: 1px solid var(--border);
+      }
+      .product-proof-body ol li::before {
+        content: counter(step, decimal-leading-zero);
+        position: absolute;
+        left: 0;
+        top: 14px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        color: var(--signal);
+      }
+      .product-proof-body ol li strong {
+        font-weight: 500;
+        letter-spacing: -0.01em;
+      }
+      .product-proof-body ol li span {
+        display: block;
+        color: var(--text-muted);
+        font-size: 14px;
+        margin-top: 4px;
+      }
+
+      /* ── testimonial ──────────────────────────────────────── */
+      .testimonial {
+        background: var(--ink);
+        color: var(--paper);
+        padding: 96px 24px;
+        position: relative;
+        overflow: hidden;
+      }
+      .testimonial::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("../../patterns/p-chevron-lanes.svg");
+        background-size: 32px 32px;
+        opacity: 0.5;
+        pointer-events: none;
+      }
+      .testimonial-inner {
+        max-width: 960px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+      }
+      .testimonial q {
+        display: block;
+        font-size: clamp(24px, 2.6vw, 34px);
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        line-height: 1.3;
+        margin: 0 0 32px;
+      }
+      .testimonial q::before,
+      .testimonial q::after {
+        content: none;
+      }
+      .testimonial cite {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-style: normal;
+        color: rgba(250, 250, 250, 0.72);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .testimonial cite::before {
+        content: "";
+        width: 32px;
+        height: 2px;
+        background: var(--signal);
+      }
+
+      /* ── pricing ─────────────────────────────────────────── */
+      .pricing {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+      }
+      .tier {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-4);
+        padding: 32px;
+        background: var(--surface-2);
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        position: relative;
+      }
+      .tier.featured {
+        border-color: var(--signal);
+        background: var(--ink);
+        color: var(--paper);
+        box-shadow:
+          0 0 0 4px var(--signal-tint),
+          var(--elevation-3);
+      }
+      .tier.featured .tier-price small {
+        color: rgba(250, 250, 250, 0.6);
+      }
+      .tier.featured .tier-features li {
+        color: var(--paper);
+      }
+      .tier.featured .tier-features li span {
+        color: rgba(250, 250, 250, 0.6);
+      }
+      .tier.featured .tier-tag {
+        color: var(--ink);
+        background: var(--signal);
+      }
+      .tier-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--signal);
+        background: var(--signal-tint);
+        padding: 5px 8px;
+        border-radius: var(--radius-2);
+        width: fit-content;
+      }
+      .tier-name {
+        font-size: 26px;
+        letter-spacing: -0.02em;
+        font-weight: 500;
+        margin: 0;
+      }
+      .tier-price {
+        font-family: var(--font-mono);
+        font-size: 42px;
+        font-weight: 600;
+        letter-spacing: -0.03em;
+        line-height: 1;
+      }
+      .tier-price small {
+        font-family: var(--font-sans);
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-left: 6px;
+        font-weight: 400;
+      }
+      .tier-features {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 8px;
+        border-top: 1px solid var(--border);
+        padding-top: 20px;
+      }
+      .tier.featured .tier-features {
+        border-top-color: rgba(250, 250, 250, 0.12);
+      }
+      .tier-features li {
+        display: grid;
+        grid-template-columns: 20px 1fr;
+        gap: 8px;
+        align-items: start;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      .tier-features li::before {
+        content: "";
+        width: 12px;
+        height: 6px;
+        border-left: 2px solid var(--signal);
+        border-bottom: 2px solid var(--signal);
+        transform: rotate(-45deg);
+        margin-top: 6px;
+      }
+      .tier-features li span {
+        color: var(--text-muted);
+        display: block;
+        font-size: 12px;
+      }
+      .tier .btn {
+        margin-top: auto;
+        justify-content: center;
+      }
+      .tier.featured .btn-primary {
+        background: var(--signal);
+        color: var(--ink);
+      }
+      .tier.featured .btn-primary:hover {
+        background: var(--paper);
+      }
+
+      /* ── final CTA ───────────────────────────────────────── */
+      .cta {
+        text-align: center;
+        padding: 128px 24px;
+        background: var(--surface-3);
+      }
+      .cta h2 {
+        font-size: clamp(40px, 5vw, 64px);
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        line-height: 1.05;
+        margin: 0 0 20px;
+      }
+      /* .cta h2 .cursor · retired 2026-08-21 per ADR-0104. */
+      .cta h2 .cursor {
+        display: none;
+      }
+      .cta p {
+        max-width: 560px;
+        margin: 0 auto 32px;
+        color: var(--text-muted);
+        font-size: 18px;
+        line-height: 1.55;
+      }
+      .cta-cluster {
+        display: inline-flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      /* ── footer ──────────────────────────────────────────── */
+      .footer {
+        background: var(--ink);
+        color: rgba(250, 250, 250, 0.72);
+        padding: 64px 24px 32px;
+      }
+      .footer-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1.4fr repeat(4, 1fr);
+        gap: 40px;
+      }
+      .footer h4 {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--signal);
+        margin: 0 0 16px;
+      }
+      .footer ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 10px;
+      }
+      .footer a {
+        color: rgba(250, 250, 250, 0.72);
+        text-decoration: none;
+        font-size: 14px;
+      }
+      .footer a:hover {
+        color: var(--signal);
+      }
+      .footer-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      .footer-brand svg {
+        width: 32px;
+        height: 32px;
+        color: var(--paper);
+      }
+      .footer-brand strong {
+        color: var(--paper);
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        font-size: 20px;
+      }
+      .footer-note {
+        color: rgba(250, 250, 250, 0.5);
+        font-size: 13px;
+        line-height: 1.55;
+        max-width: 340px;
+      }
+      .footer-legal {
+        border-top: 1px solid rgba(250, 250, 250, 0.08);
+        margin: 48px auto 0;
+        padding: 24px 24px 0;
+        max-width: 1280px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px 32px;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        color: rgba(250, 250, 250, 0.4);
+      }
+      .footer-legal .provenance {
+        color: var(--signal);
+      }
+
+      /* ── responsive ──────────────────────────────────────── */
+      @media (max-width: 900px) {
+        .nav-links {
+          display: none;
+        }
+        .personas,
+        .pricing {
+          grid-template-columns: 1fr;
+        }
+        .product-proof {
+          grid-template-columns: 1fr;
+        }
+        .footer-inner {
+          grid-template-columns: 1fr 1fr;
+        }
+        .hero-metrics {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 640px) {
+        .footer-inner {
+          grid-template-columns: 1fr;
+        }
+        .hero-inner {
+          padding: 72px 20px 96px;
+        }
+        .section {
+          padding: 72px 20px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ── top navbar ─────────────────────────────────────── -->
+    <nav class="nav" aria-label="Primary">
+      <div class="nav-inner">
+        <a class="nav-brand" href="/" aria-label="Academorix home">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <line
+              x1="60"
+              y1="24"
+              x2="30"
+              y2="96"
+              stroke="currentColor"
+              stroke-width="10"
+              stroke-linecap="square"
+            />
+            <line
+              x1="60"
+              y1="24"
+              x2="90"
+              y2="96"
+              stroke="currentColor"
+              stroke-width="10"
+              stroke-linecap="square"
+            />
+            <rect x="40" y="60" width="40" height="10" fill="currentColor" />
+            <rect x="56" y="14" width="8" height="6" fill="#FF6B35" />
+          </svg>
+          <strong>Academorix</strong>
+        </a>
+        <ul class="nav-links">
+          <li><a href="#product">Product</a></li>
+          <li><a href="#sports">Sports</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#about">Academies</a></li>
+          <li><a href="/docs">Docs</a></li>
+        </ul>
+        <div class="nav-cta">
+          <a class="btn btn-ghost" href="/login">Sign in</a>
+          <a class="btn btn-primary" href="/trial">Start trial</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ── hero ───────────────────────────────────────────── -->
+    <header class="hero" aria-labelledby="hero-title">
+      <!-- rotating sport backdrops · one <img> per sport, JS toggles data-active -->
+      <div class="hero-sport-bg" data-sport="padel" data-active="true">
+        <img src="../../sports/hero-padel.svg" alt="" role="presentation" />
+      </div>
+      <div class="hero-sport-bg" data-sport="basketball">
+        <img src="../../sports/hero-basketball.svg" alt="" role="presentation" />
+      </div>
+      <div class="hero-sport-bg" data-sport="football">
+        <img src="../../sports/hero-football.svg" alt="" role="presentation" />
+      </div>
+      <div class="hero-sport-bg" data-sport="martial-arts">
+        <img src="../../sports/hero-martial-arts.svg" alt="" role="presentation" />
+      </div>
+      <div class="hero-sport-bg" data-sport="swimming">
+        <img src="../../sports/hero-swimming.svg" alt="" role="presentation" />
+      </div>
+      <div class="hero-sport-bg" data-sport="tennis">
+        <img src="../../sports/hero-tennis.svg" alt="" role="presentation" />
+      </div>
+      <div class="hero-sport-bg" data-sport="athletics">
+        <img src="../../sports/hero-athletics.svg" alt="" role="presentation" />
+      </div>
+
+      <div class="hero-inner">
+        <p class="hero-kicker">
+          <span>Sport OS · v1.1</span>
+          <span aria-hidden="true">·</span>
+          <span class="sport-name" id="sport-label">Padel</span>
+        </p>
+        <h1 class="hero-title" id="hero-title">
+          Run every session<br />like it counts
+        </h1>
+        <p class="hero-sub">
+          Academorix is the operating system for sports academies. Rosters, attendance, coaching
+          notes, grading events, invoicing, parent comms — one place, coach-forward, WCAG 2.2 AA.
+        </p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="/trial">Start a 30-day trial</a>
+          <a class="btn btn-ghost" href="/demo">Book a coach demo</a>
+        </div>
+        <dl class="hero-metrics">
+          <div class="hero-metric">
+            <dt class="hero-metric-label">Academies live</dt>
+            <dd class="hero-metric-value">142</dd>
+          </div>
+          <div class="hero-metric">
+            <dt class="hero-metric-label">Athletes rostered</dt>
+            <dd class="hero-metric-value">38.4k</dd>
+          </div>
+          <div class="hero-metric">
+            <dt class="hero-metric-label">Sessions logged / month</dt>
+            <dd class="hero-metric-value">210k</dd>
+          </div>
+        </dl>
+      </div>
+    </header>
+
+    <!-- ── trust bar ──────────────────────────────────────── -->
+    <section class="trust" aria-label="Trust + compliance">
+      <div class="trust-inner">
+        <span class="trust-label">Built to hold minors' data</span>
+        <div class="trust-badges">
+          <span>GDPR · Art. 8 minors</span>
+          <span>FERPA aligned</span>
+          <span>COPPA aligned</span>
+          <span>WCAG 2.2 AA</span>
+          <span>SOC 2 · in progress</span>
+          <span>ISO 27001 · in progress</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── personas section ───────────────────────────────── -->
+    <section class="section" id="product" aria-labelledby="personas-title">
+      <p class="section-kicker">Built for three roles</p>
+      <h2 class="section-title" id="personas-title">
+        Every side of the roster sees the same truth
+      </h2>
+      <p class="section-lede">
+        Coach-first product, parent-friendly, athlete-facing. One row of data, three windows into it
+        — no back-and-forth email, no WhatsApp sprawl, no spreadsheet forensics on Monday.
+      </p>
+      <div class="personas">
+        <article class="persona" aria-labelledby="p-coach">
+          <span class="persona-tag">Coach</span>
+          <h3 id="p-coach">Every drill leaves a trace</h3>
+          <p>
+            Roster in one tap, attendance in one row, drill notes in one thumb-stroke. Grading
+            events post to the athlete's record the moment you save.
+          </p>
+          <ul>
+            <li>Session runner · 6-min set-up</li>
+            <li>Grading events + belt-level ladders</li>
+            <li>Squad + jersey number assignment</li>
+            <li>Coach-cam post-session review</li>
+          </ul>
+        </article>
+        <article class="persona" aria-labelledby="p-parent">
+          <span class="persona-tag">Parent</span>
+          <h3 id="p-parent">See what your athlete practised today</h3>
+          <p>
+            One weekly digest, one signed-safeguarding record, one invoice per season. No app to
+            install if you don't want one — SMS + email reach every parent.
+          </p>
+          <ul>
+            <li>Session digest · Sunday evening</li>
+            <li>Auto-generated invoices + receipts</li>
+            <li>Consent + medical form vault</li>
+            <li>Direct-line messaging to the coach</li>
+          </ul>
+        </article>
+        <article class="persona" aria-labelledby="p-athlete">
+          <span class="persona-tag">Athlete</span>
+          <h3 id="p-athlete">Your record, your progression</h3>
+          <p>
+            Every session, every grading, every personal best. Owned by the athlete, exportable,
+            portable across academies — never held ransom by a switch.
+          </p>
+          <ul>
+            <li>Personal record · session-by-session</li>
+            <li>Rank ladder + grading history</li>
+            <li>Team roster + jersey number</li>
+            <li>Data export in one click</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- ── sports strip ───────────────────────────────────── -->
+    <section class="sports-strip" id="sports" aria-labelledby="sports-title">
+      <div class="sports-strip-inner">
+        <p class="section-kicker" id="sports-title" style="margin: 0">
+          Ships with 7 sport verticals
+        </p>
+        <div class="sport-item"><img src="../../sports/padel.svg" alt="" /><span>Padel</span></div>
+        <div class="sport-item">
+          <img src="../../sports/basketball.svg" alt="" /><span>Basketball</span>
+        </div>
+        <div class="sport-item">
+          <img src="../../sports/football.svg" alt="" /><span>Football</span>
+        </div>
+        <div class="sport-item">
+          <img src="../../sports/martial-arts.svg" alt="" /><span>Martial arts</span>
+        </div>
+        <div class="sport-item">
+          <img src="../../sports/swimming.svg" alt="" /><span>Swimming</span>
+        </div>
+        <div class="sport-item">
+          <img src="../../sports/tennis.svg" alt="" /><span>Tennis</span>
+        </div>
+        <div class="sport-item">
+          <img src="../../sports/athletics.svg" alt="" /><span>Athletics</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── product proof · scoreboard readout ─────────────── -->
+    <section class="section" aria-labelledby="proof-title">
+      <p class="section-kicker">Coach-forward workflows</p>
+      <div class="product-proof">
+        <figure
+          class="product-proof-media"
+          aria-label="Sample match scoreboard from a live Academorix session"
+        >
+          <div class="board">
+            <div class="side">
+              <div class="team">Home · Falcons U14</div>
+              <div class="score"><em>21</em></div>
+              <div class="clock">Set 2 · 04:12 · court 3</div>
+            </div>
+            <div class="side">
+              <div class="team">Away · Comets</div>
+              <div class="score">18</div>
+              <div class="clock">Serve · Comets</div>
+            </div>
+          </div>
+        </figure>
+        <div class="product-proof-body">
+          <h3 id="proof-title">One row of truth. Six seconds to a scoreline.</h3>
+          <p>
+            The scoreboard on the left is the same shape you scan on the sideline. Every scored
+            point writes back to the athlete's record, the coach's session log, the parent's digest,
+            and the federation report on the same call.
+          </p>
+          <ol>
+            <li>
+              <strong>Session opens · roster loaded.</strong>
+              <span>Attendance auto-checks against the training-plan window.</span>
+            </li>
+            <li>
+              <strong>Points scored · noted.</strong>
+              <span>One tap per point · coach-cam optional · offline-safe.</span>
+            </li>
+            <li>
+              <strong>Sign-off · everyone sees it.</strong>
+              <span>Athlete record · parent digest · federation report · one write.</span>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── testimonial ────────────────────────────────────── -->
+    <section class="testimonial" aria-labelledby="tt-quote">
+      <div class="testimonial-inner">
+        <blockquote>
+          <q id="tt-quote">
+            We were juggling three spreadsheets, one Google Form, and a WhatsApp group per team.
+            Academorix collapsed all of it into an app my coaches actually open every morning.
+            Attendance went from 71 % to 94 % in one season.
+          </q>
+          <cite>Layla Farid · Head coach · Sahara Padel Academy · Casablanca</cite>
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- ── pricing ────────────────────────────────────────── -->
+    <section class="section" id="pricing" aria-labelledby="pricing-title">
+      <p class="section-kicker">Pricing · month-to-month · cancel anytime</p>
+      <h2 class="section-title" id="pricing-title">
+        Priced by athletes on the roster, not by seats.
+      </h2>
+      <p class="section-lede">
+        Every tier ships every module. Upgrade when you outgrow the roster ceiling, not when a coach
+        signs up.
+      </p>
+      <div class="pricing" role="list">
+        <article class="tier" role="listitem" aria-labelledby="t-starter">
+          <span class="tier-tag">Starter</span>
+          <h3 id="t-starter" class="tier-name">Sideline</h3>
+          <div class="tier-price">$49<small>/ month</small></div>
+          <p class="body">Solo coach, one venue, up to 60 athletes.</p>
+          <ul class="tier-features">
+            <li>Roster + attendance<span>60 athletes cap</span></li>
+            <li>Session runner + coach notes<span>Unlimited sessions</span></li>
+            <li>Parent digest + SMS<span>1 000 SMS / mo</span></li>
+            <li>Grading events<span>1 discipline</span></li>
+            <li>Data export<span>CSV + PDF</span></li>
+          </ul>
+          <a class="btn btn-ghost" href="/trial?tier=sideline">Start trial</a>
+        </article>
+
+        <article class="tier featured" role="listitem" aria-labelledby="t-growth">
+          <span class="tier-tag">Most academies</span>
+          <h3 id="t-growth" class="tier-name">Academy</h3>
+          <div class="tier-price">$199<small>/ month</small></div>
+          <p class="body">Multi-coach, multi-branch, up to 400 athletes.</p>
+          <ul class="tier-features">
+            <li>Everything in Sideline<span>60 → 400 athletes</span></li>
+            <li>Branches + venues<span>Up to 5 branches</span></li>
+            <li>Invoicing + payments<span>Stripe + Paddle</span></li>
+            <li>Tournament + season micro-brand<span>Included</span></li>
+            <li>Custom belt-level ladders<span>3 disciplines</span></li>
+            <li>SSO · email-domain autolink<span>Included</span></li>
+          </ul>
+          <a class="btn btn-primary" href="/trial?tier=academy">Start trial</a>
+        </article>
+
+        <article class="tier" role="listitem" aria-labelledby="t-federation">
+          <span class="tier-tag">Federation</span>
+          <h3 id="t-federation" class="tier-name">Federation</h3>
+          <div class="tier-price">Custom<small></small></div>
+          <p class="body">Multi-academy federations, national bodies, franchise networks.</p>
+          <ul class="tier-features">
+            <li>Everything in Academy<span>Unlimited athletes</span></li>
+            <li>SAML + OIDC + SCIM<span>Included</span></li>
+            <li>Data residency choice<span>EU · MENA · US</span></li>
+            <li>Dedicated tenant DB<span>Opt-in</span></li>
+            <li>24/7 + dedicated CSM<span>SLA-backed</span></li>
+            <li>Break-glass audit trail<span>7-year retention</span></li>
+          </ul>
+          <a class="btn btn-ghost" href="/contact-sales">Talk to sales</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- ── final CTA ──────────────────────────────────────── -->
+    <section class="cta" id="about" aria-labelledby="cta-title">
+      <p class="section-kicker">Ready when you are</p>
+      <h2 id="cta-title">
+        Move your academy off spreadsheets
+      </h2>
+      <p>
+        30-day trial. Every module. No card. Import your roster from Google Sheets or CSV in under
+        three minutes.
+      </p>
+      <div class="cta-cluster">
+        <a class="btn btn-primary" href="/trial">Start a 30-day trial</a>
+        <a class="btn btn-ghost" href="/demo">Book a coach demo</a>
+      </div>
+    </section>
+
+    <!-- ── footer ─────────────────────────────────────────── -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div>
+          <div class="footer-brand">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <line
+                x1="60"
+                y1="24"
+                x2="30"
+                y2="96"
+                stroke="currentColor"
+                stroke-width="10"
+                stroke-linecap="square"
+              />
+              <line
+                x1="60"
+                y1="24"
+                x2="90"
+                y2="96"
+                stroke="currentColor"
+                stroke-width="10"
+                stroke-linecap="square"
+              />
+              <rect x="40" y="60" width="40" height="10" fill="currentColor" />
+              <rect x="56" y="14" width="8" height="6" fill="#FF6B35" />
+            </svg>
+            <strong>Academorix</strong>
+          </div>
+          <p class="footer-note">
+            The sports-academy operating system. Ships as a product on the Stackra framework,
+            operated by Figentra L.L.C.
+          </p>
+        </div>
+        <div>
+          <h4>Product</h4>
+          <ul>
+            <li><a href="/product/session-runner">Session runner</a></li>
+            <li><a href="/product/roster">Roster + attendance</a></li>
+            <li><a href="/product/grading">Grading + belts</a></li>
+            <li><a href="/product/invoicing">Invoicing + payments</a></li>
+            <li><a href="/product/parent-digest">Parent digest</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Sports</h4>
+          <ul>
+            <li><a href="/sports/padel">Padel</a></li>
+            <li><a href="/sports/basketball">Basketball</a></li>
+            <li><a href="/sports/football">Football</a></li>
+            <li><a href="/sports/martial-arts">Martial arts</a></li>
+            <li><a href="/sports/tennis">Tennis</a></li>
+            <li><a href="/sports/swimming">Swimming</a></li>
+            <li><a href="/sports/athletics">Athletics</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Trust</h4>
+          <ul>
+            <li><a href="/trust/security">Security</a></li>
+            <li><a href="/trust/privacy">Privacy + GDPR</a></li>
+            <li><a href="/trust/minors">Minor consent</a></li>
+            <li><a href="/trust/subprocessors">Sub-processors</a></li>
+            <li><a href="/trust/dpa">DPA + BAA</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About</a></li>
+            <li><a href="/careers">Careers</a></li>
+            <li><a href="/blog/the-track">The Track · blog</a></li>
+            <li><a href="/press">Press</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <span>© 2026 Figentra L.L.C · Academorix is a product of Figentra L.L.C</span>
+        <span class="provenance"> authored_by=kiro · reviewed_by=null · v1.1 draft </span>
+        <span>
+          <a href="/legal/terms">Terms</a> · <a href="/legal/privacy">Privacy</a> ·
+          <a href="/legal/cookies">Cookies</a>
+        </span>
+      </div>
+    </footer>
+
+    <script>
+      /**
+       * Rotating sport hero.
+       * Every 8 seconds the hero swaps to the next backdrop in
+       * SPORTS. The kicker's `#sport-label` reads the human name.
+       * No opacity-crossfade math — CSS handles the 800ms fade via
+       * .hero-sport-bg[data-active="true"] { opacity: 0.7 }.
+       *
+       * Honours prefers-reduced-motion by holding on the first
+       * sport (padel) and never rotating.
+       */
+      (function () {
+        const SPORTS = [
+          { key: "padel", label: "Padel" },
+          { key: "basketball", label: "Basketball" },
+          { key: "football", label: "Football" },
+          { key: "martial-arts", label: "Martial arts" },
+          { key: "swimming", label: "Swimming" },
+          { key: "tennis", label: "Tennis" },
+          { key: "athletics", label: "Athletics" },
+        ];
+        const label = document.getElementById("sport-label");
+        const layers = document.querySelectorAll(".hero-sport-bg");
+        const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (reduced) return;
+
+        let i = 0;
+        setInterval(() => {
+          i = (i + 1) % SPORTS.length;
+          layers.forEach((el) => {
+            el.dataset.active = el.dataset.sport === SPORTS[i].key ? "true" : "false";
+          });
+          label.textContent = SPORTS[i].label;
+        }, 8000);
+      })();
+    </script>
+  </body>
+</html>

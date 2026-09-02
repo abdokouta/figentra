@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sport HERO tile — volleyball.
+  Full court top-down · FIVB proportions (9m × 18m mapped to 800×500 with margins).
+  Includes: outer court · net line (centre) · 3m attack lines each side ·
+  service zones · centre kick spot.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Volleyball court — top-down">
+  <defs>
+    <style>
+      .field { fill: #141414; }
+      .line { fill: none; stroke: #FF6B35; stroke-width: 3; stroke-linejoin: miter; opacity: 0.9; }
+      .line-thin { fill: none; stroke: #FF6B35; stroke-width: 2; stroke-linejoin: miter; opacity: 0.6; }
+      .dot { fill: #FF6B35; }
+      .net { fill: none; stroke: #FF6B35; stroke-width: 4; stroke-dasharray: 3 5; opacity: 0.9; }
+    </style>
+  </defs>
+
+  <!-- Court surface -->
+  <rect width="800" height="500" class="field"/>
+
+  <!-- Court outline · 9m × 18m proportional to 720 × 360 -->
+  <rect x="40" y="70" width="720" height="360" class="line"/>
+
+  <!-- Centre net line (heavier, dashed to imply net) -->
+  <line x1="400" y1="70" x2="400" y2="430" class="net"/>
+
+  <!-- Attack lines (3m from centre on each side) -->
+  <!-- 3m/9m = 1/3 of half-court width (360px) = 120px from net -->
+  <line x1="280" y1="70" x2="280" y2="430" class="line"/>
+  <line x1="520" y1="70" x2="520" y2="430" class="line"/>
+
+  <!-- LEFT side · front zone label markers (corners of attack zone) -->
+  <line x1="40" y1="70" x2="55" y2="70" class="line-thin"/>
+  <line x1="40" y1="430" x2="55" y2="430" class="line-thin"/>
+
+  <!-- LEFT service zone (behind end line, dashed marker) -->
+  <line x1="30" y1="80" x2="30" y2="420" class="line-thin" stroke-dasharray="4 4"/>
+
+  <!-- RIGHT service zone -->
+  <line x1="770" y1="80" x2="770" y2="420" class="line-thin" stroke-dasharray="4 4"/>
+
+  <!-- Centre serve markers -->
+  <circle cx="220" cy="250" r="3" class="dot"/>
+  <circle cx="580" cy="250" r="3" class="dot"/>
+
+  <!-- Net posts (small dots at the top and bottom of net) -->
+  <circle cx="400" cy="60" r="4" class="dot"/>
+  <circle cx="400" cy="440" r="4" class="dot"/>
+</svg>

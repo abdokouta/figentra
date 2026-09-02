@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sport HERO tile — martial arts.
+  Competition mat top-down · nested squares (competition area, safety area,
+  outer boundary) · center circle · center dot · start marks for two competitors.
+  Improves landing's MatLines by: correct nested-square proportions (per FIJLKAM
+  judo spec, 8m × 8m match area within 10m × 10m safety), start-mark tapes,
+  brand-consistent color story.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Martial arts mat — top-down">
+  <defs>
+    <style>
+      .field { fill: #141414; }
+      .line { fill: none; stroke: #FF6B35; stroke-width: 3; opacity: 0.9; }
+      .line-thin { fill: none; stroke: #FF6B35; stroke-width: 2; opacity: 0.6; }
+      .line-thinner { fill: none; stroke: #FF6B35; stroke-width: 2; opacity: 0.35; }
+      .dot { fill: #FF6B35; }
+      .fill-orange { fill: #FF6B35; }
+    </style>
+  </defs>
+
+  <!-- Mat surface -->
+  <rect width="800" height="500" class="field"/>
+
+  <!-- Outer safety boundary (largest square) -->
+  <rect x="150" y="40" width="500" height="420" class="line-thinner"/>
+
+  <!-- Safety area (danger zone — outer square inside boundary) -->
+  <rect x="200" y="80" width="400" height="340" class="line-thin"/>
+
+  <!-- Competition area (match square) -->
+  <rect x="250" y="120" width="300" height="260" class="line"/>
+
+  <!-- Center circle -->
+  <circle cx="400" cy="250" r="50" class="line"/>
+  <!-- Inner circle -->
+  <circle cx="400" cy="250" r="20" class="line-thin"/>
+  <!-- Center dot -->
+  <circle cx="400" cy="250" r="3" class="dot"/>
+
+  <!-- Start marks — two tape lines where competitors face off -->
+  <!-- Left competitor start (blue in real judo · Track Orange in brand) -->
+  <line x1="360" y1="220" x2="360" y2="280" class="fill-orange" stroke="#FF6B35" stroke-width="4"/>
+  <!-- Right competitor start -->
+  <rect x="437" y="217" width="6" height="66" class="fill-orange"/>
+
+  <!-- Referee mark (center of one edge) -->
+  <circle cx="400" cy="120" r="4" class="dot"/>
+  <circle cx="400" cy="380" r="4" class="dot"/>
+
+  <!-- Corner judge marks -->
+  <circle cx="250" cy="250" r="3" class="dot"/>
+  <circle cx="550" cy="250" r="3" class="dot"/>
+</svg>

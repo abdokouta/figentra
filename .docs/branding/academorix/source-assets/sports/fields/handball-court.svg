@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 460" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Handball court diagram">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+
+  <title>Handball court</title>
+  <desc>Line-art handball court — outer boundary, 6m goal-area semicircles, 9m free-throw arcs (dashed), 7m penalty spots, halfway line, and goals + posts. Track Orange accent on the centre spot + penalty spots + goalposts. Academorix v0.1.</desc>
+
+  <!-- Outer court (40m × 20m proportional to 760 × 380) -->
+  <rect x="20" y="40" width="760" height="380" rx="2"/>
+
+  <!-- Halfway line -->
+  <line x1="400" y1="40" x2="400" y2="420"/>
+
+  <!-- Centre spot -->
+  <circle cx="400" cy="230" r="4" fill="#FF6B35" stroke="none"/>
+
+  <!-- LEFT goal-area (6m arc · scaled to 114px radius) -->
+  <path d="M 20 116 A 114 114 0 0 1 20 344"/>
+
+  <!-- LEFT free-throw arc (9m · dashed · scaled to 171px) -->
+  <path d="M 20 59 A 171 171 0 0 1 20 401" stroke-dasharray="6 4"/>
+
+  <!-- LEFT 7m penalty spot -->
+  <circle cx="153" cy="230" r="3" fill="#FF6B35" stroke="none"/>
+
+  <!-- LEFT goal -->
+  <rect x="4" y="210" width="16" height="40" stroke-width="2"/>
+
+  <!-- LEFT goalpost dots -->
+  <circle cx="20" cy="210" r="3" fill="#FF6B35" stroke="none"/>
+  <circle cx="20" cy="250" r="3" fill="#FF6B35" stroke="none"/>
+
+  <!-- RIGHT goal-area · mirror -->
+  <path d="M 780 116 A 114 114 0 0 0 780 344"/>
+  <path d="M 780 59 A 171 171 0 0 0 780 401" stroke-dasharray="6 4"/>
+  <circle cx="647" cy="230" r="3" fill="#FF6B35" stroke="none"/>
+  <rect x="780" y="210" width="16" height="40" stroke-width="2"/>
+  <circle cx="780" cy="210" r="3" fill="#FF6B35" stroke="none"/>
+  <circle cx="780" cy="250" r="3" fill="#FF6B35" stroke="none"/>
+
+  <!-- Substitution zone ticks (centre of each sideline) -->
+  <line x1="380" y1="36" x2="380" y2="46"/>
+  <line x1="420" y1="36" x2="420" y2="46"/>
+  <line x1="380" y1="414" x2="380" y2="424"/>
+  <line x1="420" y1="414" x2="420" y2="424"/>
+</svg>

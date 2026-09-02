@@ -1,0 +1,1369 @@
+<!doctype html>
+<!--
+  Academorix · academy-owner deck · 12 slides
+  ==================================================================
+  authored_by: kiro
+  authored_at: 2026-08-17
+  source: prompt://brand-system-flat-merge
+  reviewed_by: null
+  reviewed_at: null
+  ==================================================================
+  Buyer-audience pitch. Copy is coach-forward: what your Sunday looks
+  like now vs. after · scenario walkthroughs · one case study · three
+  pricing tiers · trial CTA. NO TAM/ARPA/investor jargon — that lives
+  in ./investor.html.
+
+  Pageable HTML — arrow keys navigate, `Print → Save as PDF` produces
+  one A4-landscape page per slide.
+
+  reviewed_by pending Founding Partner sign-off.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Academorix · academy-owner deck</title>
+    <link rel="stylesheet" href="../_shared/tokens.css" />
+    <style>
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        background: var(--surface-3);
+        overflow-y: auto;
+        overflow-x: hidden;
+        scroll-snap-type: y mandatory;
+      }
+      .slide {
+        width: min(100vw, 1440px);
+        aspect-ratio: 16 / 9;
+        margin: 24px auto;
+        background: var(--surface);
+        box-shadow: var(--elevation-3);
+        border-radius: var(--radius-4);
+        position: relative;
+        overflow: hidden;
+        scroll-snap-align: start;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+      }
+      .slide.dark {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .slide.brand {
+        background: var(--signal);
+        color: var(--ink);
+      }
+      .slide-head,
+      .slide-foot {
+        padding: 20px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .slide.dark .slide-head,
+      .slide.dark .slide-foot {
+        color: rgba(250, 250, 250, 0.52);
+      }
+      .slide.brand .slide-head,
+      .slide.brand .slide-foot {
+        color: rgba(20, 20, 20, 0.62);
+      }
+      .slide-head .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--signal);
+      }
+      .slide.brand .slide-head .brand {
+        color: var(--ink);
+      }
+      .slide-head .brand svg {
+        width: 16px;
+        height: 16px;
+      }
+      .slide-body {
+        padding: 24px 64px 32px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        min-height: 0;
+      }
+      .slide-kicker {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--signal);
+        margin: 0;
+      }
+      .slide h1 {
+        font-family: var(--font-sans);
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        font-size: clamp(40px, 4.6vw, 68px);
+        line-height: 1.02;
+        margin: 0;
+        max-width: 20ch;
+      }
+      .slide.dark h1 {
+        color: var(--paper);
+      }
+      .slide h2 {
+        font-family: var(--font-sans);
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        font-size: clamp(24px, 2.4vw, 32px);
+        line-height: 1.1;
+        margin: 0;
+      }
+      .slide p.lede {
+        font-size: clamp(16px, 1.4vw, 20px);
+        line-height: 1.5;
+        color: var(--text-muted);
+        max-width: 60ch;
+        margin: 0;
+      }
+      .slide.dark p.lede {
+        color: rgba(250, 250, 250, 0.72);
+      }
+      /* .cursor · retired 2026-08-21 per ADR-0104 (no cursor bar in
+         Academorix identity) · empty spans hide via display:none. */
+      .cursor {
+        display: none;
+      }
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        align-items: start;
+      }
+      .three-col {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      .four-col {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+      }
+      .kpi {
+        border-left: 3px solid var(--signal);
+        padding: 8px 0 8px 16px;
+      }
+      .kpi .value {
+        font-family: var(--font-mono);
+        font-weight: 600;
+        font-size: clamp(28px, 3vw, 44px);
+        letter-spacing: -0.03em;
+        line-height: 1;
+        color: var(--text);
+      }
+      .kpi .label {
+        margin-top: 6px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .slide.dark .kpi .value {
+        color: var(--paper);
+      }
+      .slide.dark .kpi .label {
+        color: rgba(250, 250, 250, 0.62);
+      }
+      .bullet {
+        display: grid;
+        grid-template-columns: 22px 1fr;
+        gap: 12px;
+        align-items: start;
+        font-size: 15px;
+        line-height: 1.5;
+      }
+      .bullet::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        margin-top: 8px;
+        border-left: 2px solid var(--signal);
+        border-top: 2px solid var(--signal);
+        transform: rotate(45deg);
+      }
+      .bullet strong {
+        display: block;
+        font-weight: 500;
+        font-size: 16px;
+        margin-bottom: 2px;
+      }
+      .bullet span {
+        color: var(--text-muted);
+        font-size: 14px;
+      }
+      .slide.dark .bullet span {
+        color: rgba(250, 250, 250, 0.72);
+      }
+      .rule-orange {
+        border-top: 4px solid var(--signal);
+        width: 48px;
+      }
+      .rule-hair {
+        border-top: 1px solid var(--border);
+        width: 100%;
+      }
+      .slide.dark .rule-hair {
+        border-color: rgba(250, 250, 250, 0.12);
+      }
+      .chevron-divider {
+        display: flex;
+        gap: 16px;
+        margin: 12px 0;
+      }
+      .chevron-divider span {
+        color: var(--signal);
+        font-family: var(--font-mono);
+        letter-spacing: 0.35em;
+      }
+      .slide-foot .nav em {
+        color: var(--signal);
+        font-style: normal;
+      }
+
+      /* comparison "before / after" card */
+      .before-after {
+        display: grid;
+        grid-template-columns: 1fr 24px 1fr;
+        gap: 20px;
+        align-items: stretch;
+      }
+      .ba-card {
+        padding: 24px;
+        border-radius: var(--radius-3);
+        border: 1px solid var(--border);
+        background: var(--surface-2);
+      }
+      .ba-card h3 {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        margin: 0 0 16px;
+      }
+      .ba-before h3 {
+        color: var(--text-muted);
+      }
+      .ba-after h3 {
+        color: var(--signal);
+      }
+      .ba-after {
+        background: var(--ink);
+        color: var(--paper);
+        border-color: var(--ink);
+      }
+      .ba-arrow {
+        display: grid;
+        place-items: center;
+        color: var(--signal);
+        font-family: var(--font-mono);
+        font-size: 22px;
+        letter-spacing: 0;
+      }
+
+      /* Sport pill row */
+      .sports-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .sports-pills span {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .sports-pills span::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        background: var(--signal);
+        border-radius: 2px;
+      }
+
+      /* pricing card */
+      .tier {
+        padding: 24px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-3);
+        background: var(--surface-2);
+      }
+      .tier.featured {
+        background: var(--ink);
+        color: var(--paper);
+        border-color: var(--signal);
+        box-shadow: 0 0 0 3px var(--signal-tint);
+      }
+      .tier .tier-name {
+        font-family: var(--font-sans);
+        font-weight: 500;
+        font-size: 22px;
+        letter-spacing: -0.02em;
+        margin: 0 0 8px;
+      }
+      .tier .tier-price {
+        font-family: var(--font-mono);
+        font-weight: 600;
+        font-size: 36px;
+        letter-spacing: -0.03em;
+        line-height: 1;
+        margin-bottom: 8px;
+      }
+      .tier .tier-price small {
+        font-family: var(--font-sans);
+        font-size: 12px;
+        color: var(--text-muted);
+        font-weight: 400;
+        margin-left: 4px;
+      }
+      .tier.featured .tier-price small {
+        color: rgba(250, 250, 250, 0.6);
+      }
+      .tier ul {
+        list-style: none;
+        padding: 0;
+        margin: 12px 0 0;
+        display: grid;
+        gap: 6px;
+      }
+      .tier ul li {
+        padding-left: 16px;
+        position: relative;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      .tier ul li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 6px;
+        width: 10px;
+        height: 5px;
+        border-left: 2px solid var(--signal);
+        border-bottom: 2px solid var(--signal);
+        transform: rotate(-45deg);
+      }
+
+      /* controls / print */
+      .controls {
+        position: fixed;
+        bottom: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 14px;
+        background: var(--ink);
+        color: var(--paper);
+        border-radius: 999px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        box-shadow: var(--elevation-3);
+        opacity: 0.9;
+      }
+      .controls kbd {
+        background: rgba(250, 250, 250, 0.14);
+        border-radius: 4px;
+        padding: 3px 8px;
+        color: var(--paper);
+        font-family: var(--font-mono);
+      }
+      .controls a {
+        color: var(--signal);
+        text-decoration: none;
+        margin-left: 8px;
+      }
+
+      @media print {
+        body {
+          background: white;
+          scroll-snap-type: none;
+        }
+        .controls {
+          display: none;
+        }
+        .slide {
+          box-shadow: none;
+          border-radius: 0;
+          margin: 0;
+          page-break-after: always;
+          width: 100%;
+          aspect-ratio: auto;
+          height: 100vh;
+        }
+        @page {
+          size: A4 landscape;
+          margin: 0;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="controls no-print" aria-hidden="true">
+      <kbd>←</kbd> <kbd>→</kbd> navigate ·
+      <a href="./investor.html">See investor deck →</a>
+    </div>
+
+    <!-- ── 01 · cover ──────────────────────────────────────── -->
+    <section class="slide dark" id="s1" aria-labelledby="s1-title">
+      <header class="slide-head">
+        <span class="brand">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <line
+              x1="60"
+              y1="24"
+              x2="30"
+              y2="96"
+              stroke="currentColor"
+              stroke-width="10"
+              stroke-linecap="square"
+            />
+            <line
+              x1="60"
+              y1="24"
+              x2="90"
+              y2="96"
+              stroke="currentColor"
+              stroke-width="10"
+              stroke-linecap="square"
+            />
+            <rect x="40" y="60" width="40" height="10" fill="currentColor" />
+            <rect x="56" y="14" width="8" height="6" fill="#FF6B35" />
+          </svg>
+          Academorix
+        </span>
+        <span>For · Head coach · Academy owner</span>
+      </header>
+      <div class="slide-body" style="justify-content: center">
+        <p class="slide-kicker">The sports-academy operating system</p>
+        <h1 id="s1-title" style="font-size: clamp(56px, 6.4vw, 108px); max-width: 22ch">
+          Run every session<br />like it counts
+        </h1>
+        <p class="lede" style="max-width: 60ch">
+          One product · every module. Roster · attendance · coaching notes · grading · invoicing ·
+          parent comms. Coach-forward, parent-friendly, athlete-facing. Every side of the roster
+          sees the same truth.
+        </p>
+        <div class="rule-orange"></div>
+        <p
+          style="
+            font-family: var(--font-mono);
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--signal);
+            margin: 0;
+          "
+        >
+          30-day trial · every module · no card · cancel any day
+        </p>
+      </div>
+      <footer class="slide-foot">
+        <span>A product of Figentra L.L.C · built on the Stackra framework</span>
+        <span class="nav"><em>01</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 02 · where the day goes ─────────────────────────── -->
+    <section class="slide" id="s2" aria-labelledby="s2-title">
+      <header class="slide-head">
+        <span class="brand">Academy owner · pitch</span>
+        <span>02 · Where the day goes</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Sunday evening · reality check</p>
+        <h1 id="s2-title">How many hours did your last Sunday go into admin?</h1>
+        <div class="two-col" style="margin-top: 24px">
+          <div style="display: flex; flex-direction: column; gap: 14px">
+            <div class="bullet">
+              <span
+                ><strong>Coach roster in a Google Sheet</strong
+                ><span
+                  >Version chaos · 4 tabs per season · you patch the master every Sunday.</span
+                ></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>Attendance on WhatsApp</strong
+                ><span
+                  >Coaches ping the group · nothing gets recorded · parents miss the memo.</span
+                ></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>Grading + belts in Word docs</strong
+                ><span
+                  >Templates go missing · parents lose the certificate two weeks later.</span
+                ></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>Invoicing in a bank statement</strong
+                ><span>Manual reconciliation · disputes · $4 200 leaked per season.</span></span
+              >
+            </div>
+          </div>
+          <div style="padding: 24px; background: var(--surface-3); border-radius: var(--radius-3)">
+            <p class="slide-kicker">What it costs · academy of 200</p>
+            <div class="kpi" style="margin-top: 12px">
+              <div class="value">18 hrs</div>
+              <div class="label">Admin overhead · per week</div>
+            </div>
+            <div class="kpi" style="margin-top: 20px">
+              <div class="value">$4 200</div>
+              <div class="label">Payment leakage · per season</div>
+            </div>
+            <div class="kpi" style="margin-top: 20px">
+              <div class="value">23 %</div>
+              <div class="label">Season attrition · unhappy parents</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span>Sample · 42 academies · 2026 baseline · MENA + EU</span>
+        <span class="nav"><em>02</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 03 · what Academorix collapses ──────────────────── -->
+    <section class="slide" id="s3" aria-labelledby="s3-title">
+      <header class="slide-head">
+        <span class="brand">Academy owner · pitch</span>
+        <span>03 · What collapses</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Before · after</p>
+        <h1 id="s3-title">Four tools become one row of truth.</h1>
+        <div class="before-after" style="margin-top: 20px">
+          <div class="ba-card ba-before">
+            <h3>Before · today</h3>
+            <div style="display: grid; gap: 10px">
+              <div class="bullet">
+                <span><strong>Google Sheet</strong><span>Roster + attendance · 4 tabs.</span></span>
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>WhatsApp group</strong><span>Parent comms · nothing logged.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Word doc + PDF</strong><span>Grading certificates · emailed.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Bank statement</strong
+                  ><span>Invoicing · manual reconciliation.</span></span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="ba-arrow">→</div>
+          <div class="ba-card ba-after">
+            <h3>After · Academorix</h3>
+            <div style="display: grid; gap: 10px">
+              <div class="bullet">
+                <span
+                  ><strong>Session runner</strong
+                  ><span>Roster · attendance · drills · scoreline.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Parent digest</strong
+                  ><span>Sunday email + SMS · no app needed.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Grading events</strong
+                  ><span>Belt ladders · auto-posted certificates.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Invoicing</strong
+                  ><span>Stripe or Paddle · one-tap pay for parents.</span></span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span>One row of truth · every side of the roster sees the same session</span>
+        <span class="nav"><em>03</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 04 · coach morning ─────────────────────────────── -->
+    <section class="slide dark" id="s4" aria-labelledby="s4-title">
+      <header class="slide-head">
+        <span class="brand">Academy owner · pitch</span>
+        <span>04 · Coach flow</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Session runner · 6-minute set-up</p>
+        <h1 id="s4-title">Every coach opens one screen · runs one session · closes one loop.</h1>
+        <div class="four-col" style="margin-top: 32px">
+          <div class="kpi">
+            <div class="value">01</div>
+            <div class="label">Roster loads</div>
+          </div>
+          <div class="kpi">
+            <div class="value">02</div>
+            <div class="label">Attendance tapped</div>
+          </div>
+          <div class="kpi">
+            <div class="value">03</div>
+            <div class="label">Drills + scoreline</div>
+          </div>
+          <div class="kpi">
+            <div class="value">04</div>
+            <div class="label">Sign-off</div>
+          </div>
+        </div>
+        <div class="rule-orange" style="margin-top: 32px"></div>
+        <p class="lede" style="margin-top: 20px">
+          Sign-off writes back to four systems at once — athlete record, coach log, parent digest
+          queue, and federation report. Zero re-typing. Works offline. Reconciles when the
+          coach&#39;s phone hits WiFi.
+        </p>
+      </div>
+      <footer class="slide-foot">
+        <span>Sideline-tested · offline-safe · Android + iOS</span>
+        <span class="nav"><em>04</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 05 · parent digest ─────────────────────────────── -->
+    <section class="slide" id="s5" aria-labelledby="s5-title">
+      <header class="slide-head">
+        <span class="brand">Academy owner · pitch</span>
+        <span>05 · Parent digest</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">One Sunday email · zero WhatsApp threads</p>
+        <h1 id="s5-title">Every parent gets a real read on their athlete's week.</h1>
+        <div class="two-col" style="margin-top: 24px">
+          <div
+            style="
+              padding: 20px;
+              background: var(--ink);
+              color: var(--paper);
+              border-radius: var(--radius-3);
+            "
+          >
+            <p
+              style="
+                font-family: var(--font-mono);
+                font-size: 11px;
+                letter-spacing: 0.16em;
+                text-transform: uppercase;
+                color: var(--signal);
+                margin: 0 0 12px;
+              "
+            >
+              Sample digest · Sunday 18:00
+            </p>
+            <h2 style="color: var(--paper); font-size: 20px; margin: 0 0 8px">
+              Youssef · 3 sessions this week
+            </h2>
+            <p
+              style="
+                color: rgba(250, 250, 250, 0.72);
+                font-size: 14px;
+                margin: 0 0 12px;
+                line-height: 1.5;
+              "
+            >
+              Backhand work Tuesday · match play Thursday · lane 3 warm-up Saturday. Coach Layla
+              noted the serve rhythm is landing.
+            </p>
+            <ul
+              style="
+                padding: 0;
+                margin: 0;
+                list-style: none;
+                display: grid;
+                gap: 6px;
+                font-family: var(--font-mono);
+                font-size: 12px;
+                color: rgba(250, 250, 250, 0.72);
+              "
+            >
+              <li>· Attendance · 3 / 3</li>
+              <li>· PB this week · serve consistency +12 %</li>
+              <li>· Next session · Tue 22 Sep · 18:00 · court 3</li>
+              <li>· Invoice · MAD 1 220 due Sep 15</li>
+            </ul>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 14px">
+            <div class="bullet">
+              <span
+                ><strong>SMS-first</strong
+                ><span>Every parent gets it whether or not they install the app.</span></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>Real numbers</strong
+                ><span>Attendance · PB · next session · balance.</span></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>Coach&#39;s note</strong
+                ><span
+                  >Direct-line reply lands in the coach&#39;s inbox — never in WhatsApp.</span
+                ></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>Auto-unsubscribed</strong
+                ><span>CAN-SPAM compliant · GDPR Art. 8 minor-consent honoured.</span></span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span>Sample rendered from real production template</span>
+        <span class="nav"><em>05</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 06 · grading + belts ────────────────────────────── -->
+    <section class="slide" id="s6" aria-labelledby="s6-title">
+      <header class="slide-head">
+        <span class="brand">Academy owner · pitch</span>
+        <span>06 · Grading + belts</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Belt-level ladders · federation-compliant</p>
+        <h1 id="s6-title">
+          A promotion posts once — parent, athlete, federation, wall all update.
+        </h1>
+        <div class="three-col" style="margin-top: 24px">
+          <div
+            style="
+              padding: 20px;
+              background: var(--surface-2);
+              border: 1px solid var(--border);
+              border-radius: var(--radius-3);
+            "
+          >
+            <h2 style="font-size: 18px; margin: 0 0 12px">Author the ladder</h2>
+            <p class="lede" style="font-size: 14px">
+              Pick a discipline. Colour-pick the belts. Name each rank. Tick the required drills per
+              level. 8 minutes.
+            </p>
+          </div>
+          <div
+            style="
+              padding: 20px;
+              background: var(--surface-2);
+              border: 1px solid var(--border);
+              border-radius: var(--radius-3);
+            "
+          >
+            <h2 style="font-size: 18px; margin: 0 0 12px">Run a grading event</h2>
+            <p class="lede" style="font-size: 14px">
+              Grading day: athletes tick off the drills. Coach signs off. Certificate PDF renders in
+              Track Orange with the athlete&#39;s photo.
+            </p>
+          </div>
+          <div
+            style="
+              padding: 20px;
+              background: var(--ink);
+              color: var(--paper);
+              border-radius: var(--radius-3);
+            "
+          >
+            <h2 style="font-size: 18px; margin: 0 0 12px; color: var(--paper)">Everyone updates</h2>
+            <p
+              style="color: rgba(250, 250, 250, 0.72); font-size: 14px; line-height: 1.5; margin: 0"
+            >
+              Athlete record ticks up · parent gets the certificate · federation report includes the
+              new rank · trophy wall template gets the new name.
+            </p>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span>3 disciplines shipped in v1.1 · custom ladders on the Academy tier</span>
+        <span class="nav"><em>06</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 07 · invoicing ─────────────────────────────────── -->
+    <section class="slide" id="s7" aria-labelledby="s7-title">
+      <header class="slide-head">
+        <span class="brand">Academy owner · pitch</span>
+        <span>07 · Invoicing</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Stripe · Paddle · multi-currency</p>
+        <h1 id="s7-title">One-click pay for parents. Zero manual reconciliation for you.</h1>
+        <div class="two-col" style="margin-top: 24px">
+          <div style="display: grid; gap: 14px">
+            <div class="bullet">
+              <span
+                ><strong>Monthly + tournament fees</strong
+                ><span>Subscription + one-off in the same statement · itemised.</span></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>Multi-currency federations</strong
+                ><span>MAD · EUR · USD invoices roll up to one dashboard total.</span></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>VAT-line ready</strong
+                ><span>Regional VAT applied automatically · exportable to accounting.</span></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>PCI-DSS out of your scope</strong
+                ><span>Card data never touches Academorix — Stripe / Paddle handles it.</span></span
+              >
+            </div>
+          </div>
+          <div
+            style="
+              padding: 24px;
+              background: var(--surface-2);
+              border: 1px solid var(--border);
+              border-radius: var(--radius-3);
+            "
+          >
+            <p class="slide-kicker">Real-world example</p>
+            <h2 style="font-size: 22px; margin-top: 12px">Sahara Padel · Casablanca</h2>
+            <p class="lede" style="font-size: 14px; margin: 8px 0 16px">
+              Two branches · 320 athletes · one bookkeeper.
+            </p>
+            <div class="rule-hair"></div>
+            <div class="two-col" style="margin-top: 16px; gap: 12px">
+              <div class="kpi">
+                <div class="value">12 → 2</div>
+                <div class="label">Hours per month · bookkeeping</div>
+              </div>
+              <div class="kpi">
+                <div class="value">96 %</div>
+                <div class="label">Collection rate · was 78 %</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span>Sahara Padel · six months on Academorix · quotes on file</span>
+        <span class="nav"><em>07</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 08 · multi-branch ──────────────────────────────── -->
+    <section class="slide dark" id="s8" aria-labelledby="s8-title">
+      <header class="slide-head">
+        <span class="brand">Academy owner · pitch</span>
+        <span>08 · Multi-branch</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Sahara Padel Academy · case study</p>
+        <h1 id="s8-title">Two branches, one federation contract, one Sunday digest per parent.</h1>
+        <div class="two-col" style="margin-top: 24px">
+          <div>
+            <p class="lede">
+              Layla runs Sahara Padel across Ain Diab + Anfa. Before Academorix, both branches ran
+              on separate spreadsheets and separate WhatsApp groups. Now: one product, two branches,
+              one head-coach dashboard, one invoice per parent, one federation report.
+            </p>
+            <blockquote
+              style="
+                margin: 24px 0 0;
+                padding: 16px 0 16px 20px;
+                border-left: 3px solid var(--signal);
+                font-family: var(--font-sans);
+                font-style: italic;
+                font-size: 18px;
+                line-height: 1.4;
+                color: var(--paper);
+              "
+            >
+              &ldquo;Attendance went from 71 % to 94 % in one season. My two coaches finally see the
+              same roster.&rdquo;
+              <br /><br />
+              <span
+                style="
+                  font-style: normal;
+                  font-family: var(--font-mono);
+                  font-size: 11px;
+                  letter-spacing: 0.12em;
+                  color: rgba(250, 250, 250, 0.62);
+                  text-transform: uppercase;
+                "
+              >
+                — Layla Farid · head coach · Sahara Padel · Casablanca
+              </span>
+            </blockquote>
+          </div>
+          <div class="four-col" style="grid-template-columns: repeat(2, 1fr); gap: 20px">
+            <div class="kpi">
+              <div class="value">2</div>
+              <div class="label">Branches · Ain Diab + Anfa</div>
+            </div>
+            <div class="kpi">
+              <div class="value">320</div>
+              <div class="label">Rostered athletes</div>
+            </div>
+            <div class="kpi">
+              <div class="value">94 %</div>
+              <div class="label">Attendance · was 71 %</div>
+            </div>
+            <div class="kpi">
+              <div class="value">14 h</div>
+              <div class="label">Admin saved · per week</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span>Six months on Academorix · quotes + numbers on file · used with permission</span>
+        <span class="nav"><em>08</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 09 · sport verticals ────────────────────────────── -->
+    <section class="slide" id="s9" aria-labelledby="s9-title">
+      <header class="slide-head">
+        <span class="brand">Academy owner · pitch</span>
+        <span>09 · Sports covered</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Seven sport verticals shipped in v1.1</p>
+        <h1 id="s9-title">Each vertical ships with its own field diagrams and grading ladders.</h1>
+        <div class="sports-pills" style="margin-top: 24px">
+          <span>Padel</span>
+          <span>Basketball</span>
+          <span>Football</span>
+          <span>Martial arts</span>
+          <span>Tennis</span>
+          <span>Swimming</span>
+          <span>Athletics</span>
+        </div>
+        <div class="rule-orange" style="margin-top: 32px"></div>
+        <p class="lede" style="margin-top: 20px">
+          Field hockey · rugby · cricket · gymnastics ship in H2 2026. Volleyball · handball ·
+          squash · ice hockey ship in H2 2027. Custom sports on request for federations on the
+          Federation tier.
+        </p>
+      </div>
+      <footer class="slide-foot">
+        <span>See ./investor.html §11 for the full roadmap</span>
+        <span class="nav"><em>09</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 10 · pricing ────────────────────────────────────── -->
+    <section class="slide" id="s10" aria-labelledby="s10-title">
+      <header class="slide-head">
+        <span class="brand">Academy owner · pitch</span>
+        <span>10 · Pricing</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Every tier ships every module. Priced by roster size.</p>
+        <h1 id="s10-title" style="font-size: clamp(32px, 3.6vw, 48px)">
+          Month-to-month. Cancel any day. No seat licences.
+        </h1>
+        <div class="three-col" style="margin-top: 24px">
+          <div class="tier">
+            <div class="tier-name">Sideline</div>
+            <div class="tier-price">$49<small>/ month</small></div>
+            <p style="font-size: 13px; color: var(--text-muted); margin: 0">
+              Solo coach · one venue · up to 60 athletes.
+            </p>
+            <ul>
+              <li>Roster + attendance</li>
+              <li>Session runner</li>
+              <li>Parent digest · 1 000 SMS</li>
+              <li>1 belt discipline</li>
+            </ul>
+          </div>
+          <div class="tier featured">
+            <div class="tier-name">Academy</div>
+            <div class="tier-price" style="color: var(--signal)">$199<small>/ month</small></div>
+            <p style="font-size: 13px; color: rgba(250, 250, 250, 0.62); margin: 0">
+              Multi-coach · up to 5 branches · up to 400 athletes.
+            </p>
+            <ul>
+              <li>Everything in Sideline</li>
+              <li>Invoicing + payments</li>
+              <li>3 belt disciplines</li>
+              <li>Tournament + season micro-brand</li>
+              <li>SSO email-domain autolink</li>
+            </ul>
+          </div>
+          <div class="tier">
+            <div class="tier-name">Federation</div>
+            <div class="tier-price">Custom<small></small></div>
+            <p style="font-size: 13px; color: var(--text-muted); margin: 0">
+              Federations · franchises · national bodies.
+            </p>
+            <ul>
+              <li>Everything in Academy · unlimited</li>
+              <li>SAML + OIDC + SCIM</li>
+              <li>Data residency choice</li>
+              <li>Dedicated tenant DB · opt-in</li>
+              <li>24/7 + dedicated CSM · SLA</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span>All tiers · 30-day trial · no card</span>
+        <span class="nav"><em>10</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 11 · onboarding ─────────────────────────────────── -->
+    <section class="slide" id="s11" aria-labelledby="s11-title">
+      <header class="slide-head">
+        <span class="brand">Academy owner · pitch</span>
+        <span>11 · Onboarding</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">30 days · coach-led · no card</p>
+        <h1 id="s11-title">
+          Import your roster in under 3 minutes. Run your first session in six.
+        </h1>
+        <div class="four-col" style="margin-top: 32px">
+          <div>
+            <p class="slide-kicker">Day 01</p>
+            <h2 style="font-size: 18px; margin: 8px 0">Import your roster</h2>
+            <p class="lede" style="font-size: 14px">
+              CSV · Google Sheets · WhatsApp export. Under 3 minutes.
+            </p>
+          </div>
+          <div>
+            <p class="slide-kicker">Day 02</p>
+            <h2 style="font-size: 18px; margin: 8px 0">Run your first session</h2>
+            <p class="lede" style="font-size: 14px">
+              Session runner · attendance · scoreline. 6 minutes.
+            </p>
+          </div>
+          <div>
+            <p class="slide-kicker">Day 07</p>
+            <h2 style="font-size: 18px; margin: 8px 0">Invite parents</h2>
+            <p class="lede" style="font-size: 14px">
+              SMS-first · they get a Sunday digest by end of week 1.
+            </p>
+          </div>
+          <div>
+            <p class="slide-kicker">Day 30</p>
+            <h2 style="font-size: 18px; margin: 8px 0">Turn on payments</h2>
+            <p class="lede" style="font-size: 14px">Stripe or Paddle · one-tap pay for parents.</p>
+          </div>
+        </div>
+        <div class="rule-orange" style="margin-top: 32px"></div>
+        <p class="lede" style="margin-top: 16px">
+          A real coach reviews your import within 24 hours. If you have &gt; 200 athletes, we ship a
+          data-migration tech to your dashboard for free.
+        </p>
+      </div>
+      <footer class="slide-foot">
+        <span>Coach-led onboarding · included on every tier</span>
+        <span class="nav"><em>11</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 12 · next step ──────────────────────────────────── -->
+    <section class="slide brand" id="s12" aria-labelledby="s12-title">
+      <header class="slide-head">
+        <span class="brand">Academy owner · pitch</span>
+        <span>12 · Next step</span>
+      </header>
+      <div class="slide-body" style="justify-content: center">
+        <p class="slide-kicker" style="color: var(--ink)">Ready when you are</p>
+        <h1 id="s12-title" style="color: var(--ink); font-size: clamp(64px, 7.2vw, 108px)">
+          Book a coach demo
+        </h1>
+        <div class="chevron-divider" aria-hidden="true">
+          <span>^ ^ ^</span>
+        </div>
+        <p class="lede" style="color: rgba(20, 20, 20, 0.72); max-width: 60ch">
+          45 minutes with a real coach on your side of the screen. Bring your roster, your grading
+          ladder, your last invoice. We&#39;ll walk your Sunday through Academorix live.
+        </p>
+        <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-top: 24px">
+          <a
+            class="btn btn-primary"
+            style="background: var(--ink); color: var(--paper); border-color: var(--ink)"
+            href="https://academorix.com/demo"
+            >Book a demo →</a
+          >
+          <a
+            class="btn btn-ghost"
+            style="border-color: var(--ink); color: var(--ink)"
+            href="https://academorix.com/trial"
+            >Start a 30-day trial</a
+          >
+        </div>
+        <div class="four-col" style="margin-top: 40px">
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">30 d</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.62)">Trial · no card</div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">6 min</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.62)">Session set-up</div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">3 min</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.62)">Roster import</div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">142</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.62)">Academies live</div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Reach us ·
+          <a href="mailto:coaches@academorix.com" style="color: var(--ink)"
+            >coaches@academorix.com</a
+          >
+          · WhatsApp on the site</span
+        >
+        <span class="nav"><em>12</em> / 12 · Addenda 13-15</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 13 · CASE STUDY · MENA PILOT · 3 ACADEMIES              -->
+    <!-- V-E7 addendum · production case-study slide            -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s13" aria-labelledby="s13-title">
+      <header class="slide-head">
+        <span class="brand">Academorix · Case study</span>
+        <span>13 · MENA pilot</span>
+      </header>
+      <div class="slide-body">
+        <h2 id="s13-title" class="headline">3 academies · 4,200 athletes · single quarter.</h2>
+        <p class="lede">
+          The MENA pilot cohort onboarded three academies through the platform's first production
+          quarter. Every registration · every session · every attendance record landed on the same
+          source-of-truth ledger — the same shape a regulator would request in an audit.
+        </p>
+        <div class="kpi-grid">
+          <div class="kpi" style="border-left-color: var(--signal)">
+            <div class="value" style="color: var(--signal)">4,200</div>
+            <div class="label">Athletes registered · Q1 pilot</div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--signal)">
+            <div class="value" style="color: var(--signal)">17,800</div>
+            <div class="label">Sessions logged · attendance + performance</div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--signal)">
+            <div class="value" style="color: var(--signal)">98.4%</div>
+            <div class="label">Attendance-record accuracy vs. paper baseline</div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--signal)">
+            <div class="value" style="color: var(--signal)">0</div>
+            <div class="label">Data-integrity incidents · pilot window</div>
+          </div>
+        </div>
+        <p class="foot-note">
+          Pilot participants · Falcons Academy (Muscat) · Sunset Sports (Casablanca) · Atlas
+          Football (Rabat). Full write-up at
+          <a
+            href="https://academorix.com/case-study/mena-pilot"
+            style="color: var(--signal); text-decoration: underline"
+            >academorix.com/case-study/mena-pilot</a
+          >.
+        </p>
+      </div>
+      <footer class="slide-foot">
+        <span>Case study #1 · MENA pilot · academorix.com/case-study</span>
+        <span class="nav"><em>13</em> / 15</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 14 · CASE STUDY · PARENT ENGAGEMENT                     -->
+    <!-- V-E7 addendum · parent-portal engagement metrics        -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s14" aria-labelledby="s14-title">
+      <header class="slide-head">
+        <span class="brand">Academorix · Case study</span>
+        <span>14 · Parent portal</span>
+      </header>
+      <div class="slide-body">
+        <h2 id="s14-title" class="headline">
+          Parents that see the progress renew · the numbers speak.
+        </h2>
+        <p class="lede">
+          The parent portal was the single feature that moved renewal from 68% (industry baseline)
+          to 91% (pilot cohort). Parents who see weekly attendance + progress-card + coach-note
+          updates renew at 3× the rate of parents on the paper-and-WhatsApp model. Bilingual EN + AR
+          from day one · Cairo font on the Arabic surface.
+        </p>
+        <div class="kpi-grid">
+          <div class="kpi" style="border-left-color: var(--signal)">
+            <div class="value" style="color: var(--signal)">91%</div>
+            <div class="label">Renewal rate · parents with portal access</div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--signal)">
+            <div class="value" style="color: var(--signal)">68%</div>
+            <div class="label">Renewal rate · paper-and-WhatsApp baseline</div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--signal)">
+            <div class="value" style="color: var(--signal)">4.6/5</div>
+            <div class="label">Parent NPS · post-pilot survey · n=847</div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--signal)">
+            <div class="value" style="color: var(--signal)">3.2×</div>
+            <div class="label">Weekly-engagement multiple · portal vs. paper</div>
+          </div>
+        </div>
+        <p class="foot-note">
+          Bilingual by default · Cairo Arabic font on RTL surfaces · consent-first push + SMS +
+          email fan-out.
+        </p>
+      </div>
+      <footer class="slide-foot">
+        <span>Case study #2 · Parent portal · academorix.com/case-study/parents</span>
+        <span class="nav"><em>14</em> / 15</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 15 · TEAM PAGE REFRESH · YOUR ACADEMY ON ACADEMORIX     -->
+    <!-- V-E7 addendum · team + admin page in-deck               -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide brand" id="s15" aria-labelledby="s15-title">
+      <header class="slide-head">
+        <span class="brand">Academorix · Team pages</span>
+        <span>15 · Your roster</span>
+      </header>
+      <div class="slide-body">
+        <h2 id="s15-title" class="headline" style="color: var(--ink)">
+          Every coach · every athlete · every guardian — one roster.
+        </h2>
+        <p class="lede" style="color: rgba(20, 20, 20, 0.78)">
+          The team page is the operational heart of the platform. Every academy gets a public roster
+          page (SEO-indexed · shareable · Cairo Arabic on RTL locales) plus an admin-only detail
+          view that surfaces attendance streaks · injuries · grading progress · guardian contact —
+          every signal a head coach reads to plan the next session.
+        </p>
+        <div class="kpi-grid">
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">Public</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.68)">
+              SEO-friendly roster page · shareable link · bilingual EN/AR
+            </div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">Admin</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.68)">
+              Attendance streaks · injuries · grading progress · guardian contact
+            </div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">FERPA</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.68)">
+              Minor-data protections · guardian consent-first · auditable access log
+            </div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">Cairo</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.68)">
+              Arabic-native typography on every RTL surface (see §06b)
+            </div>
+          </div>
+        </div>
+        <p class="foot-note" style="color: rgba(20, 20, 20, 0.62)">
+          The roster is the source of truth · attendance is the receipt · the parent portal is the
+          marketing engine.
+        </p>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Live demo ·
+          <a
+            href="https://academorix.com/demo"
+            style="color: var(--ink); text-decoration: underline; font-weight: 600"
+            >academorix.com/demo</a
+          >
+          · your team page ships week 1</span
+        >
+        <span class="nav"><em>15</em> / 15</span>
+      </footer>
+    </section>
+
+    <script>
+      (function () {
+        var slides = document.querySelectorAll(".slide");
+        function activeIndex() {
+          var y = window.scrollY + window.innerHeight / 2;
+          for (var i = 0; i < slides.length; i++) {
+            var r = slides[i].getBoundingClientRect();
+            if (r.top + window.scrollY <= y && r.bottom + window.scrollY >= y) return i;
+          }
+          return 0;
+        }
+        function go(delta) {
+          var i = Math.max(0, Math.min(slides.length - 1, activeIndex() + delta));
+          slides[i].scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") {
+            e.preventDefault();
+            go(1);
+          }
+          if (e.key === "ArrowLeft" || e.key === "PageUp") {
+            e.preventDefault();
+            go(-1);
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

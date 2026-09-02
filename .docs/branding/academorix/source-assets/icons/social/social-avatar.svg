@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Academorix · social-avatar.svg · 400×400 · v1.0 · 2026-08-21
+
+  Track Orange filled rounded-square (rx=48) with paper-white
+  'academorix' wordmark Geist Medium centered. For LinkedIn, X,
+  GitHub, Slack workspace avatars — the platform's aggressive
+  downscale to 40-80px still holds the wordmark's silhouette + the
+  Track Orange shape reads as the brand at every size.
+
+  Codified by ADR-0104 — supersedes the pre-2026-08-21 A-Chevron
+  social avatar. Same shape as the favicon, scaled 12.5× with the
+  full wordmark instead of a single letter.
+
+  Design choices
+  ──────────────
+  · Track Orange background — reads as Academorix at first glance
+    across every platform's mixed-chrome avatar rail.
+  · Paper-white 'academorix' Geist Medium 44px, letter-spacing
+    -0.03em, centered — visible down to ~120px avatar renders.
+  · rx=48 (12% radius) — same rounding ratio as the 32×32 favicon
+    (rx=6 · 18.75% radius), tightened a fraction for larger surfaces.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400" role="img" aria-label="Academorix social avatar">
+  <!-- Track Orange rounded-square background -->
+  <rect width="400" height="400" fill="#FF6B35" rx="48"/>
+
+  <!-- Paper-white 'academorix' wordmark · centered -->
+  <text
+    x="200"
+    y="216"
+    font-family="Geist, Inter, -apple-system, sans-serif"
+    font-weight="500"
+    font-size="44"
+    letter-spacing="-0.03em"
+    fill="#fafafa"
+    text-anchor="middle"
+  >academorix</text>
+</svg>

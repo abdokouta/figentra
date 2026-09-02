@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sport HERO tile — swimming.
+  Full 8-lane pool top-down · 50m Olympic proportions ·
+  turn tees · lane dividers · starting blocks · flags.
+  Improves landing's 6-lane by: 8 lanes (Olympic-standard) ·
+  turn tees at both ends · starting blocks · pace lines · brand consistency.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Swimming pool — top-down">
+  <defs>
+    <style>
+      .water { fill: #141414; }
+      .line { fill: none; stroke: #FF6B35; stroke-width: 3; opacity: 0.9; }
+      .line-thin { fill: none; stroke: #FF6B35; stroke-width: 2; opacity: 0.5; }
+      .dash { fill: none; stroke: #FF6B35; stroke-width: 2; stroke-dasharray: 12 6; opacity: 0.55; }
+      .dot { fill: #FF6B35; }
+    </style>
+  </defs>
+
+  <!-- Water surface -->
+  <rect width="800" height="500" class="water"/>
+
+  <!-- Pool outline -->
+  <rect x="40" y="60" width="720" height="380" class="line"/>
+
+  <!-- Lane dividers — 7 lines make 8 lanes -->
+  <line x1="40"  y1="107" x2="760" y2="107" class="dash"/>
+  <line x1="40"  y1="155" x2="760" y2="155" class="dash"/>
+  <line x1="40"  y1="203" x2="760" y2="203" class="dash"/>
+  <line x1="40"  y1="250" x2="760" y2="250" class="line-thin"/>
+  <line x1="40"  y1="297" x2="760" y2="297" class="dash"/>
+  <line x1="40"  y1="345" x2="760" y2="345" class="dash"/>
+  <line x1="40"  y1="393" x2="760" y2="393" class="dash"/>
+
+  <!-- Turn tees — LEFT wall (T-marks 2m before wall) -->
+  <g>
+    <line x1="76"  y1="83"  x2="76"  y2="107" class="line"/>
+    <line x1="70"  y1="107" x2="82"  y2="107" class="line"/>
+
+    <line x1="76"  y1="130" x2="76"  y2="155" class="line"/>
+    <line x1="70"  y1="155" x2="82"  y2="155" class="line"/>
+
+    <line x1="76"  y1="178" x2="76"  y2="203" class="line"/>
+    <line x1="70"  y1="203" x2="82"  y2="203" class="line"/>
+
+    <line x1="76"  y1="226" x2="76"  y2="250" class="line"/>
+    <line x1="70"  y1="250" x2="82"  y2="250" class="line"/>
+
+    <line x1="76"  y1="273" x2="76"  y2="297" class="line"/>
+    <line x1="70"  y1="297" x2="82"  y2="297" class="line"/>
+
+    <line x1="76"  y1="321" x2="76"  y2="345" class="line"/>
+    <line x1="70"  y1="345" x2="82"  y2="345" class="line"/>
+
+    <line x1="76"  y1="369" x2="76"  y2="393" class="line"/>
+    <line x1="70"  y1="393" x2="82"  y2="393" class="line"/>
+  </g>
+
+  <!-- Turn tees — RIGHT wall (mirror) -->
+  <g>
+    <line x1="724" y1="83"  x2="724" y2="107" class="line"/>
+    <line x1="718" y1="107" x2="730" y2="107" class="line"/>
+
+    <line x1="724" y1="130" x2="724" y2="155" class="line"/>
+    <line x1="718" y1="155" x2="730" y2="155" class="line"/>
+
+    <line x1="724" y1="178" x2="724" y2="203" class="line"/>
+    <line x1="718" y1="203" x2="730" y2="203" class="line"/>
+
+    <line x1="724" y1="226" x2="724" y2="250" class="line"/>
+    <line x1="718" y1="250" x2="730" y2="250" class="line"/>
+
+    <line x1="724" y1="273" x2="724" y2="297" class="line"/>
+    <line x1="718" y1="297" x2="730" y2="297" class="line"/>
+
+    <line x1="724" y1="321" x2="724" y2="345" class="line"/>
+    <line x1="718" y1="345" x2="730" y2="345" class="line"/>
+
+    <line x1="724" y1="369" x2="724" y2="393" class="line"/>
+    <line x1="718" y1="393" x2="730" y2="393" class="line"/>
+  </g>
+
+  <!-- Starting blocks — 8 numbered nubs above the pool -->
+  <g>
+    <rect x="66" y="42" width="20" height="14" class="dot"/>
+    <rect x="114" y="42" width="20" height="14" class="dot"/>
+    <rect x="162" y="42" width="20" height="14" class="dot"/>
+    <rect x="210" y="42" width="20" height="14" class="dot"/>
+    <rect x="258" y="42" width="20" height="14" class="dot"/>
+    <rect x="306" y="42" width="20" height="14" class="dot"/>
+    <rect x="354" y="42" width="20" height="14" class="dot"/>
+    <rect x="402" y="42" width="20" height="14" class="dot"/>
+  </g>
+
+  <!-- Backstroke flags — dashed line 5m from each end (horizontal ribbon) -->
+  <line x1="130" y1="52"  x2="130" y2="70"  class="line-thin"/>
+  <line x1="670" y1="52"  x2="670" y2="70"  class="line-thin"/>
+</svg>

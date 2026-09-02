@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Illustration — empty-state.svg
+  480×360 line-art terminal window with a $_ prompt and blinking cursor.
+  Use in empty tables, filter zero-results, first-run dashboards.
+  Ink strokes on paper; the cursor animates in-place. Screen readers get
+  the caption via <title>. See docs/brand/13-patterns-and-assets.md §Empty state.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360" font-family="'Geist Mono', 'JetBrains Mono', ui-monospace, monospace">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+  <title>Nothing here yet — the terminal is waiting on input.</title>
+
+  <!-- Terminal window -->
+  <g stroke="currentColor" stroke-width="2" fill="none">
+    <rect x="60" y="60" width="360" height="240" rx="12"/>
+    <!-- Window chrome -->
+    <line x1="60" y1="96" x2="420" y2="96"/>
+  </g>
+
+  <!-- Traffic-light dots -->
+  <g fill="currentColor" opacity="0.28">
+    <circle cx="82" cy="78" r="4"/>
+    <circle cx="100" cy="78" r="4"/>
+    <circle cx="118" cy="78" r="4"/>
+  </g>
+
+  <!-- Prompt lines -->
+  <g fill="currentColor" font-size="13">
+    <text x="88" y="140" opacity="0.5">$ figentra ls --available</text>
+    <text x="88" y="164" opacity="0.35">(no rows to show)</text>
+    <text x="88" y="228" fill="#00E5A0" opacity="0.85">$</text>
+  </g>
+
+  <!-- Blinking cursor -->
+  <rect x="108" y="216" width="14" height="16" fill="#00E5A0">
+    <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.5;0.5;1" dur="1s" repeatCount="indefinite"/>
+  </rect>
+
+  <!-- Caption -->
+  <text x="240" y="336" fill="currentColor" font-family="'Geist', 'Inter', system-ui, sans-serif" font-size="15" font-weight="500" text-anchor="middle" opacity="0.7">Nothing here yet.</text>
+</svg>

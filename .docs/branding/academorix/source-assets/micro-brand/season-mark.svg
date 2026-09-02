@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Academorix · micro-brand · season mark
+  ==================================================================
+  Circular badge for the season. A-Chevron mark centered; the season
+  name + year set on a circular path around it like a stamp / coin
+  motif. Track Orange accents on the top-of-arc apex bar + a set of
+  three chevron ticks at the bottom.
+
+  Variable slots (server-side substitution before render):
+    SAHARA PADEL ACADEMY  outer top arc  e.g. "SAHARA PADEL ACADEMY"
+    FALL SEASON         short label     e.g. "FALL SEASON"
+    2026 / 27         year            e.g. "2026 / 27"
+    U14 · SKILLS      inner mono tag  e.g. "U14 · SKILLS"
+
+  Use case: printed on kit tags, session cards, roster boards,
+  parent digest hero, matchday tickets. Prints in one Track Orange
+  spot or full-colour.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 600 600"
+     width="600" height="600"
+     role="img"
+     aria-label="Season mark · A-Chevron orbit stamp">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Geist:wght@500;600&amp;family=Geist+Mono:wght@500;600&amp;display=swap");
+    .body { font-family: "Geist", "Inter", sans-serif; font-weight: 500; }
+    .mono { font-family: "Geist Mono", ui-monospace, monospace; font-weight: 500; }
+  </style>
+
+  <!-- Circular text paths -->
+  <defs>
+    <!-- Outer top arc · academy name -->
+    <path id="orbit-top" d="M 88 300 A 212 212 0 0 1 512 300" fill="none"/>
+    <!-- Outer bottom arc · season year (mirrored so text runs left-to-right along the bottom) -->
+    <path id="orbit-bottom" d="M 92 316 A 208 208 0 0 0 508 316" fill="none"/>
+  </defs>
+
+  <!-- Outer double-ring · ink base + Track Orange tick ring -->
+  <circle cx="300" cy="300" r="252" fill="none" stroke="currentColor" stroke-width="1"/>
+  <circle cx="300" cy="300" r="244" fill="none" stroke="currentColor" stroke-width="0.5"/>
+  <circle cx="300" cy="300" r="180" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.4"/>
+
+  <!-- 12-tick minute ring (like a compass or scoreboard clock) · Track Orange at cardinal, ink elsewhere -->
+  <g stroke="currentColor" stroke-width="1.2">
+    <line x1="300" y1="48" x2="300" y2="60" stroke="#FF6B35" stroke-width="3"/>  <!-- top · Track Orange -->
+    <line x1="552" y1="300" x2="540" y2="300"/>
+    <line x1="300" y1="552" x2="300" y2="540"/>
+    <line x1="48"  y1="300" x2="60"  y2="300"/>
+    <!-- Diagonals (every 30°) · ink minor -->
+    <line x1="426" y1="82"  x2="422" y2="92"/>
+    <line x1="518" y1="174" x2="508" y2="178"/>
+    <line x1="518" y1="426" x2="508" y2="422"/>
+    <line x1="426" y1="518" x2="422" y2="508"/>
+    <line x1="174" y1="518" x2="178" y2="508"/>
+    <line x1="82"  y1="426" x2="92"  y2="422"/>
+    <line x1="82"  y1="174" x2="92"  y2="178"/>
+    <line x1="174" y1="82"  x2="178" y2="92"/>
+  </g>
+
+  <!-- Top-arc text · academy name -->
+  <text class="mono" font-size="18" fill="currentColor" letter-spacing="0.24em">
+    <textPath href="#orbit-top" startOffset="50%" text-anchor="middle">
+      SAHARA PADEL ACADEMY
+    </textPath>
+  </text>
+
+  <!-- Bottom-arc text · season year -->
+  <text class="mono" font-size="16" fill="currentColor" letter-spacing="0.22em" opacity="0.72">
+    <textPath href="#orbit-bottom" startOffset="50%" text-anchor="middle">
+      SEASON · 2026 / 27
+    </textPath>
+  </text>
+
+  <!-- Left + right separators · Track Orange bars between arcs -->
+  <rect x="52"  y="292" width="20" height="16" fill="#FF6B35"/>
+  <rect x="528" y="292" width="20" height="16" fill="#FF6B35"/>
+
+  <!-- A-Chevron mark · scaled up · centered -->
+  <g transform="translate(228, 178) scale(1.2)">
+    <line x1="60" y1="24" x2="30" y2="96" stroke="currentColor" stroke-width="10" stroke-linecap="square"/>
+    <line x1="60" y1="24" x2="90" y2="96" stroke="currentColor" stroke-width="10" stroke-linecap="square"/>
+    <rect x="40" y="60" width="40" height="10" fill="currentColor"/>
+    <rect x="56" y="14" width="8" height="6" fill="#FF6B35"/>
+  </g>
+
+  <!-- Season name band · under mark · Track Orange background -->
+  <g transform="translate(180, 348)">
+    <rect x="0" y="0" width="240" height="40" fill="#FF6B35"/>
+    <text x="120" y="26"
+          class="body"
+          font-size="19"
+          fill="currentColor"
+          text-anchor="middle"
+          letter-spacing="0.14em"
+          font-weight="600"
+          style="text-transform: uppercase;">
+      FALL SEASON
+    </text>
+  </g>
+
+  <!-- Discipline tag · below the season band -->
+  <text x="300" y="416" class="mono" font-size="12" fill="currentColor" text-anchor="middle" opacity="0.62" letter-spacing="0.18em">
+    U14 · SKILLS
+  </text>
+
+  <!-- Chevron cluster · bottom footer -->
+  <g stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M 274 452 L 282 446 L 290 452" opacity="0.55"/>
+    <path d="M 292 452 L 300 446 L 308 452"/>
+    <path d="M 310 452 L 318 446 L 326 452" opacity="0.55"/>
+  </g>
+
+  <!-- Bottom stamp mono · edition -->
+  <text x="300" y="484" class="mono" font-size="11" fill="currentColor" text-anchor="middle" opacity="0.5" letter-spacing="0.2em">
+    RECORDED · ACADEMORIX
+  </text>
+</svg>

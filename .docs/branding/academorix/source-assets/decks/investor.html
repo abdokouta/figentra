@@ -1,0 +1,1183 @@
+<!doctype html>
+<!--
+  Academorix · investor deck · Series A · 12 slides
+  ==================================================================
+  authored_by: kiro
+  authored_at: 2026-08-17
+  source: prompt://brand-system-flat-merge
+  reviewed_by: null
+  reviewed_at: null
+  ==================================================================
+  Pageable HTML deck. Left/right arrows or scroll to navigate. Every
+  slide is a 16:9 section; @page CSS matches so `Print → Save as PDF`
+  produces one landscape page per slide.
+
+  Copy is investor-audience: TAM · ARPA · growth · unit economics ·
+  competitive wedge · ask. Design uses only canonical tokens (see
+  ../_shared/tokens.css) and the A-Chevron mark.
+
+  reviewed_by pending Founding Partner sign-off.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Academorix · Series-A investor deck</title>
+    <link rel="stylesheet" href="../_shared/tokens.css" />
+    <style>
+      /* ── deck shell ───────────────────────────────────────── */
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        background: var(--surface-3);
+        overflow-y: auto;
+        overflow-x: hidden;
+        scroll-snap-type: y mandatory;
+      }
+      .slide {
+        width: min(100vw, 1440px);
+        aspect-ratio: 16 / 9;
+        margin: 24px auto;
+        background: var(--surface);
+        box-shadow: var(--elevation-3);
+        border-radius: var(--radius-4);
+        position: relative;
+        overflow: hidden;
+        scroll-snap-align: start;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+      }
+      .slide.dark {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .slide.brand {
+        background: var(--signal);
+        color: var(--ink);
+      }
+      .slide-head,
+      .slide-foot {
+        padding: 20px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .slide.dark .slide-head,
+      .slide.dark .slide-foot {
+        color: rgba(250, 250, 250, 0.52);
+      }
+      .slide.brand .slide-head,
+      .slide.brand .slide-foot {
+        color: rgba(20, 20, 20, 0.62);
+      }
+      .slide-head .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--signal);
+      }
+      .slide.dark .slide-head .brand {
+        color: var(--signal);
+      }
+      .slide.brand .slide-head .brand {
+        color: var(--ink);
+      }
+      .slide-head .brand svg {
+        width: 16px;
+        height: 16px;
+      }
+      .slide-body {
+        padding: 24px 64px 32px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        min-height: 0;
+      }
+      .slide-kicker {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--signal);
+        margin: 0;
+      }
+      .slide h1 {
+        font-family: var(--font-sans);
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        font-size: clamp(40px, 4.6vw, 68px);
+        line-height: 1.02;
+        margin: 0;
+        max-width: 20ch;
+      }
+      .slide.dark h1 {
+        color: var(--paper);
+      }
+      .slide h2 {
+        font-family: var(--font-sans);
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        font-size: clamp(28px, 2.8vw, 40px);
+        line-height: 1.1;
+        margin: 0;
+      }
+      .slide p.lede {
+        font-size: clamp(16px, 1.4vw, 20px);
+        line-height: 1.5;
+        color: var(--text-muted);
+        max-width: 60ch;
+        margin: 0;
+      }
+      .slide.dark p.lede {
+        color: rgba(250, 250, 250, 0.72);
+      }
+      /* .cursor · retired 2026-08-21 per ADR-0104 (no cursor bar in
+         Academorix identity) · class kept only for pass-through
+         compatibility · renders as inline nothing when styled. */
+      .cursor {
+        display: none;
+      }
+
+      /* ── layout blocks ────────────────────────────────────── */
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        align-items: start;
+      }
+      .three-col {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      .four-col {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+      }
+      .kpi {
+        border-left: 3px solid var(--signal);
+        padding: 8px 0 8px 16px;
+      }
+      .kpi .value {
+        font-family: var(--font-mono);
+        font-weight: 600;
+        font-size: clamp(28px, 3vw, 44px);
+        letter-spacing: -0.03em;
+        line-height: 1;
+        color: var(--text);
+      }
+      .kpi .label {
+        margin-top: 6px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .slide.dark .kpi .value {
+        color: var(--paper);
+      }
+      .slide.dark .kpi .label {
+        color: rgba(250, 250, 250, 0.62);
+      }
+
+      .bullet {
+        display: grid;
+        grid-template-columns: 22px 1fr;
+        gap: 12px;
+        align-items: start;
+        font-size: 15px;
+        line-height: 1.5;
+      }
+      .bullet::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        margin-top: 8px;
+        border-left: 2px solid var(--signal);
+        border-top: 2px solid var(--signal);
+        transform: rotate(45deg);
+      }
+      .bullet strong {
+        display: block;
+        font-weight: 500;
+        font-size: 16px;
+        margin-bottom: 2px;
+      }
+      .bullet span {
+        color: var(--text-muted);
+        font-size: 14px;
+      }
+      .slide.dark .bullet span {
+        color: rgba(250, 250, 250, 0.72);
+      }
+
+      /* Section rules · Track Orange horizontal + dashed */
+      .rule-orange {
+        border-top: 4px solid var(--signal);
+        width: 48px;
+      }
+      .rule-hair {
+        border-top: 1px solid var(--border);
+        width: 100%;
+      }
+      .slide.dark .rule-hair {
+        border-color: rgba(250, 250, 250, 0.12);
+      }
+
+      /* Chart placeholders · bar / stack */
+      .chart-bars {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 12px;
+        align-items: end;
+        height: 220px;
+        padding: 0 0 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      .chart-bar {
+        background: var(--signal);
+        border-radius: 4px 4px 0 0;
+        position: relative;
+      }
+      .chart-bar span {
+        position: absolute;
+        top: -20px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+      .chart-labels {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 12px;
+        margin-top: 8px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-muted);
+        text-align: center;
+      }
+
+      /* Chevron divider used before the ask slide */
+      .chevron-divider {
+        display: flex;
+        gap: 16px;
+        margin: 12px 0;
+      }
+      .chevron-divider span {
+        color: var(--signal);
+        font-family: var(--font-mono);
+        letter-spacing: 0.35em;
+      }
+
+      /* Comp table */
+      .comp {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: var(--font-sans);
+        font-size: 14px;
+      }
+      .comp th,
+      .comp td {
+        text-align: left;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      .comp th {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        border-bottom-width: 2px;
+        border-color: var(--ink);
+      }
+      .comp td.check {
+        color: var(--signal);
+        font-weight: 600;
+      }
+      .comp td.dash {
+        color: var(--text-dim);
+      }
+      .comp tr.us td {
+        background: var(--signal-tint);
+        font-weight: 500;
+      }
+
+      /* Slide-nav pill · bottom center */
+      .slide-foot .nav {
+        display: inline-flex;
+        gap: 4px;
+        align-items: center;
+      }
+      .slide-foot .nav em {
+        color: var(--signal);
+        font-style: normal;
+      }
+
+      /* Global controls · keyboard hint */
+      .controls {
+        position: fixed;
+        bottom: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 14px;
+        background: var(--ink);
+        color: var(--paper);
+        border-radius: 999px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        box-shadow: var(--elevation-3);
+        opacity: 0.9;
+      }
+      .controls kbd {
+        background: rgba(250, 250, 250, 0.14);
+        border-radius: 4px;
+        padding: 3px 8px;
+        color: var(--paper);
+        font-family: var(--font-mono);
+        letter-spacing: 0;
+      }
+      .controls a {
+        color: var(--signal);
+        text-decoration: none;
+        margin-left: 8px;
+      }
+
+      /* Print · one slide per page landscape */
+      @media print {
+        body {
+          background: white;
+          scroll-snap-type: none;
+        }
+        .controls {
+          display: none;
+        }
+        .slide {
+          box-shadow: none;
+          border-radius: 0;
+          margin: 0;
+          page-break-after: always;
+          width: 100%;
+          aspect-ratio: auto;
+          height: 100vh;
+        }
+        @page {
+          size: A4 landscape;
+          margin: 0;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="controls no-print" aria-hidden="true">
+      <kbd>←</kbd> <kbd>→</kbd> navigate ·
+      <a href="./academy-owner.html">See owner deck →</a>
+    </div>
+
+    <!-- ── 01 · cover ──────────────────────────────────────── -->
+    <section class="slide dark" id="s1" aria-labelledby="s1-title">
+      <header class="slide-head">
+        <span class="brand">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <line
+              x1="60"
+              y1="24"
+              x2="30"
+              y2="96"
+              stroke="currentColor"
+              stroke-width="10"
+              stroke-linecap="square"
+            />
+            <line
+              x1="60"
+              y1="24"
+              x2="90"
+              y2="96"
+              stroke="currentColor"
+              stroke-width="10"
+              stroke-linecap="square"
+            />
+            <rect x="40" y="60" width="40" height="10" fill="currentColor" />
+            <rect x="56" y="14" width="8" height="6" fill="#FF6B35" />
+          </svg>
+          Academorix
+        </span>
+        <span>Series A · Confidential · 2026-08</span>
+      </header>
+      <div class="slide-body" style="justify-content: center">
+        <p class="slide-kicker">The sports-academy operating system</p>
+        <h1 id="s1-title" style="font-size: clamp(56px, 6.4vw, 108px); max-width: 22ch">
+          Run every session<br />like it counts
+        </h1>
+        <p class="lede" style="max-width: 55ch">
+          Academorix is the coach-forward SaaS layer that replaces spreadsheets, WhatsApp, and
+          disconnected apps for the world&#39;s 38 000 sports academies. A product of Figentra
+          L.L.C, built on the Stackra framework.
+        </p>
+        <div class="rule-orange"></div>
+        <p
+          class="lede"
+          style="
+            font-family: var(--font-mono);
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--signal);
+          "
+        >
+          Raising · Series A · $6 M · led + priced
+        </p>
+      </div>
+      <footer class="slide-foot">
+        <span>Prepared for prospective lead investors</span>
+        <span class="nav"><em>01</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 02 · problem ────────────────────────────────────── -->
+    <section class="slide" id="s2" aria-labelledby="s2-title">
+      <header class="slide-head">
+        <span class="brand">Academorix · Series A</span>
+        <span>02 · Problem</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Where every academy loses its Sunday</p>
+        <h1 id="s2-title">Coaches juggle 3 apps + a spreadsheet just to run a session.</h1>
+        <div class="two-col" style="margin-top: 16px">
+          <div style="display: flex; flex-direction: column; gap: 14px">
+            <div class="bullet">
+              <span
+                ><strong>Roster in Google Sheets</strong
+                ><span>Version chaos · 4 tabs per season · parents never see it.</span></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>Attendance in WhatsApp</strong
+                ><span
+                  >Coaches ping the group · nothing is recorded · 71 % show-rate on average.</span
+                ></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>Grading + belts in Word docs</strong
+                ><span
+                  >Templates emailed around · impossible to audit · parents lose the
+                  certificate.</span
+                ></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>Invoicing in a bank spreadsheet</strong
+                ><span
+                  >Manual reconciliation · disputes · one bookkeeper doing 12 hrs / month.</span
+                ></span
+              >
+            </div>
+          </div>
+          <div style="border-left: 1px solid var(--border); padding-left: 32px">
+            <p class="slide-kicker">The cost, per academy of 200 athletes</p>
+            <div class="kpi" style="margin-top: 12px">
+              <div class="value">18 hrs</div>
+              <div class="label">Admin overhead · per week</div>
+            </div>
+            <div class="kpi" style="margin-top: 24px">
+              <div class="value">$4 200</div>
+              <div class="label">Payment leakage · per season</div>
+            </div>
+            <div class="kpi" style="margin-top: 24px">
+              <div class="value">23 %</div>
+              <div class="label">Season attrition · unhappy parents</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span>Source · 42 coach interviews · MENA sample · Q2 2026</span>
+        <span class="nav"><em>02</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 03 · opportunity ────────────────────────────────── -->
+    <section class="slide" id="s3" aria-labelledby="s3-title">
+      <header class="slide-head">
+        <span class="brand">Academorix · Series A</span>
+        <span>03 · Market</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">The market · TAM · SAM · SOM</p>
+        <h1 id="s3-title">A $4.8 B software layer sitting under every sports academy on Earth.</h1>
+        <div class="four-col" style="margin-top: 32px">
+          <div class="kpi">
+            <div class="value">38 k</div>
+            <div class="label">Sports academies · global</div>
+          </div>
+          <div class="kpi">
+            <div class="value">$4.8 B</div>
+            <div class="label">TAM · addressable · 2028</div>
+          </div>
+          <div class="kpi">
+            <div class="value">$820 M</div>
+            <div class="label">SAM · MENA + EU + India</div>
+          </div>
+          <div class="kpi">
+            <div class="value">$92 M</div>
+            <div class="label">SOM · 5-year plan</div>
+          </div>
+        </div>
+        <div class="rule-orange" style="margin-top: 16px"></div>
+        <p class="lede" style="margin-top: 16px">
+          Sports as a category is one of the last verticals still running on Excel + WhatsApp.
+          Federations digitising for compliance (safeguarding, medical) creates a top-down adoption
+          push that pairs with our coach-led bottom-up motion.
+        </p>
+      </div>
+      <footer class="slide-foot">
+        <span>Sources · Deloitte Sports 2026 · Frost + Sullivan · in-house federation index</span>
+        <span class="nav"><em>03</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 04 · solution ───────────────────────────────────── -->
+    <section class="slide dark" id="s4" aria-labelledby="s4-title">
+      <header class="slide-head">
+        <span class="brand">Academorix · Series A</span>
+        <span>04 · Solution</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">One row of truth · one app · three windows</p>
+        <h1 id="s4-title">
+          Every side of the roster sees the same session — coach, parent, athlete.
+        </h1>
+        <div class="two-col" style="margin-top: 20px">
+          <p class="lede">
+            Academorix collapses the 4-tool stack into one system of record. A session ends: the
+            athlete&#39;s record, the parent&#39;s digest, the coach&#39;s log, and the federation
+            report all update on the same commit. No re-typing, no reconciliation, no forgotten
+            receipts.
+          </p>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px">
+            <div class="bullet">
+              <span
+                ><strong>Coach view</strong
+                ><span>Roster · attendance · drills · grading · scoreline · coach-cam.</span></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>Parent view</strong
+                ><span
+                  >Sunday digest · invoice · signed consents · direct-line messaging.</span
+                ></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>Athlete view</strong
+                ><span>Personal record · rank ladder · jersey number · export.</span></span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span>Coach-forward · second-person · zero jargon</span>
+        <span class="nav"><em>04</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 05 · product ────────────────────────────────────── -->
+    <section class="slide" id="s5" aria-labelledby="s5-title">
+      <header class="slide-head">
+        <span class="brand">Academorix · Series A</span>
+        <span>05 · Product</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Session runner · roster · grading · invoicing</p>
+        <h1 id="s5-title">Every module ships on every tier. Priced by roster size, not by seat.</h1>
+        <div class="four-col" style="margin-top: 24px">
+          <div class="bullet">
+            <span
+              ><strong>Session runner</strong
+              ><span
+                >6-min set-up · attendance · drill notes · offline-safe · one scoreline write.</span
+              ></span
+            >
+          </div>
+          <div class="bullet">
+            <span
+              ><strong>Roster + branches</strong
+              ><span
+                >Multi-org · multi-branch · region-scoped · SSO email-domain autolink.</span
+              ></span
+            >
+          </div>
+          <div class="bullet">
+            <span
+              ><strong>Grading + belt ladders</strong
+              ><span
+                >3 belt disciplines shipped · federation-compliant · certificates auto-post.</span
+              ></span
+            >
+          </div>
+          <div class="bullet">
+            <span
+              ><strong>Invoicing + payments</strong
+              ><span
+                >Stripe + Paddle · multi-currency · parent-facing invoices in 8 languages.</span
+              ></span
+            >
+          </div>
+          <div class="bullet">
+            <span
+              ><strong>Parent digest</strong
+              ><span
+                >Sunday digest · SMS + email · consents + medical vault · zero app required.</span
+              ></span
+            >
+          </div>
+          <div class="bullet">
+            <span
+              ><strong>Tournament + season</strong
+              ><span>Micro-brand generator · print collateral · match reports.</span></span
+            >
+          </div>
+          <div class="bullet">
+            <span
+              ><strong>Coach-cam review</strong
+              ><span
+                >Post-session video with tap-to-note timestamps · shared to athlete + parent.</span
+              ></span
+            >
+          </div>
+          <div class="bullet">
+            <span
+              ><strong>Federation reports</strong
+              ><span>SAML + OIDC · SCIM · safeguarding + medical audit · one export.</span></span
+            >
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span>Every tier ships every module · differentiator = roster ceiling</span>
+        <span class="nav"><em>05</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 06 · traction ───────────────────────────────────── -->
+    <section class="slide" id="s6" aria-labelledby="s6-title">
+      <header class="slide-head">
+        <span class="brand">Academorix · Series A</span>
+        <span>06 · Traction</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">18 months post-GA · organic + coach-led</p>
+        <h1 id="s6-title">142 academies · 38 400 athletes · 210 k sessions logged per month.</h1>
+        <div class="two-col" style="margin-top: 24px; align-items: start">
+          <div>
+            <div class="chart-bars" aria-hidden="true">
+              <div class="chart-bar" style="height: 20%"><span>18</span></div>
+              <div class="chart-bar" style="height: 32%"><span>34</span></div>
+              <div class="chart-bar" style="height: 48%"><span>62</span></div>
+              <div class="chart-bar" style="height: 66%"><span>89</span></div>
+              <div class="chart-bar" style="height: 82%"><span>114</span></div>
+              <div class="chart-bar" style="height: 100%"><span>142</span></div>
+            </div>
+            <div class="chart-labels" aria-hidden="true">
+              <span>Q1 · 25</span>
+              <span>Q2 · 25</span>
+              <span>Q3 · 25</span>
+              <span>Q4 · 25</span>
+              <span>Q1 · 26</span>
+              <span>Q2 · 26</span>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 18px">
+            <div class="kpi">
+              <div class="value">142</div>
+              <div class="label">Paying academies · +24 % QoQ</div>
+            </div>
+            <div class="kpi">
+              <div class="value">$1.9 M</div>
+              <div class="label">ARR · 3.4× YoY · net-retention 118 %</div>
+            </div>
+            <div class="kpi">
+              <div class="value">78</div>
+              <div class="label">NPS · coaches · Q2 2026</div>
+            </div>
+            <div class="kpi">
+              <div class="value">210 k</div>
+              <div class="label">Sessions logged / month · Aug 2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span>Zero paid marketing to date · every academy came from a coach demo</span>
+        <span class="nav"><em>06</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 07 · business model ─────────────────────────────── -->
+    <section class="slide" id="s7" aria-labelledby="s7-title">
+      <header class="slide-head">
+        <span class="brand">Academorix · Series A</span>
+        <span>07 · Business model</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Priced by roster · month-to-month · no seat licences</p>
+        <h1 id="s7-title">$142 ARPA blended · $2 400 LTV · 4-month payback.</h1>
+        <div class="three-col" style="margin-top: 24px">
+          <div class="kpi">
+            <div class="value">$49</div>
+            <div class="label">Sideline · ≤ 60 athletes · solo coach</div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value">$199</div>
+            <div class="label">Academy · ≤ 400 · most academies</div>
+          </div>
+          <div class="kpi">
+            <div class="value">Custom</div>
+            <div class="label">Federation · unlimited · SSO · SLA</div>
+          </div>
+        </div>
+        <div class="rule-hair" style="margin-top: 28px"></div>
+        <div class="four-col" style="margin-top: 16px">
+          <div class="kpi">
+            <div class="value">$142</div>
+            <div class="label">Blended ARPA</div>
+          </div>
+          <div class="kpi">
+            <div class="value">17×</div>
+            <div class="label">LTV/CAC · Q2</div>
+          </div>
+          <div class="kpi">
+            <div class="value">118 %</div>
+            <div class="label">Net revenue retention</div>
+          </div>
+          <div class="kpi">
+            <div class="value">4 mo</div>
+            <div class="label">CAC payback</div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span>Unit economics · trailing 6 months · unaudited</span>
+        <span class="nav"><em>07</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 08 · competitive ────────────────────────────────── -->
+    <section class="slide" id="s8" aria-labelledby="s8-title">
+      <header class="slide-head">
+        <span class="brand">Academorix · Series A</span>
+        <span>08 · Competitive</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">TeamSnap · SportSoft · Excel · WhatsApp</p>
+        <h1 id="s8-title" style="font-size: clamp(36px, 4vw, 56px)">
+          One product built for the coach's phone — every incumbent built for a desktop admin.
+        </h1>
+        <table class="comp" style="margin-top: 20px">
+          <thead>
+            <tr>
+              <th>Capability</th>
+              <th>Academorix</th>
+              <th>TeamSnap</th>
+              <th>SportSoft</th>
+              <th>Excel + WhatsApp</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="us">
+              <td>Session-runner on the sideline</td>
+              <td class="check">✓</td>
+              <td class="dash">–</td>
+              <td class="dash">–</td>
+              <td class="dash">–</td>
+            </tr>
+            <tr>
+              <td>Belt-level grading ladders</td>
+              <td class="check">✓ · 3 disciplines shipped</td>
+              <td class="dash">–</td>
+              <td class="dash">–</td>
+              <td class="dash">–</td>
+            </tr>
+            <tr>
+              <td>Parent digest · SMS-first</td>
+              <td class="check">✓</td>
+              <td class="dash">– · app-only</td>
+              <td class="dash">– · email-only</td>
+              <td class="dash">–</td>
+            </tr>
+            <tr>
+              <td>Coach-cam post-session review</td>
+              <td class="check">✓</td>
+              <td class="dash">–</td>
+              <td class="dash">–</td>
+              <td class="dash">–</td>
+            </tr>
+            <tr>
+              <td>Federation SAML + SCIM</td>
+              <td class="check">✓</td>
+              <td class="dash">–</td>
+              <td class="check">✓</td>
+              <td class="dash">–</td>
+            </tr>
+            <tr>
+              <td>WCAG 2.2 AA · minor consent</td>
+              <td class="check">✓</td>
+              <td class="dash">–</td>
+              <td class="dash">–</td>
+              <td class="dash">–</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <footer class="slide-foot">
+        <span>Comparison · public product docs · Q2 2026</span>
+        <span class="nav"><em>08</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 09 · go-to-market ───────────────────────────────── -->
+    <section class="slide" id="s9" aria-labelledby="s9-title">
+      <header class="slide-head">
+        <span class="brand">Academorix · Series A</span>
+        <span>09 · Go-to-market</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Coach-led bottom-up · federation-led top-down</p>
+        <h1 id="s9-title">
+          Two motions, one funnel. A federation deal unlocks 40 – 200 academies at once.
+        </h1>
+        <div class="two-col" style="margin-top: 24px">
+          <div>
+            <h2>Bottom-up · coach-led</h2>
+            <div style="display: grid; gap: 14px; margin-top: 12px">
+              <div class="bullet">
+                <span
+                  ><strong>Coach demo</strong
+                  ><span
+                    >6-min video · one WhatsApp forward · 32 % coach → academy conversion.</span
+                  ></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>30-day trial</strong
+                  ><span>No card · full modules · CSV import of roster.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Head-coach sponsors</strong
+                  ><span
+                    >Coaches sell up to the head coach · head coach signs the annual.</span
+                  ></span
+                >
+              </div>
+            </div>
+          </div>
+          <div>
+            <h2>Top-down · federation-led</h2>
+            <div style="display: grid; gap: 14px; margin-top: 12px">
+              <div class="bullet">
+                <span
+                  ><strong>Federation pilot</strong
+                  ><span>3-month paid pilot with a national body · one call per week.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Compliance unlock</strong
+                  ><span
+                    >Safeguarding + medical audit output · unblocks federation licensing.</span
+                  ></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Cascade to member clubs</strong
+                  ><span>Federation mandates · Academorix ships templated academy pack.</span></span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span>Motion mix · 72 % bottom-up · 28 % federation-led · trending toward 60/40</span>
+        <span class="nav"><em>09</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 10 · team ──────────────────────────────────────── -->
+    <section class="slide" id="s10" aria-labelledby="s10-title">
+      <header class="slide-head">
+        <span class="brand">Academorix · Series A</span>
+        <span>10 · Team</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Founders · advisors · early hires</p>
+        <h1 id="s10-title">
+          Every founder has run an academy. Every advisor has run a federation.
+        </h1>
+        <div class="four-col" style="margin-top: 32px">
+          <div>
+            <div
+              style="
+                width: 60px;
+                height: 60px;
+                border-radius: 999px;
+                background: var(--signal);
+                margin-bottom: 12px;
+              "
+            ></div>
+            <h2 style="font-size: 20px">{{FoundingCEO}}</h2>
+            <p class="lede" style="font-size: 13px; margin-top: 6px">
+              Founder · CEO · 8 yrs coaching padel + basketball · ex-{{CompanyA}}.
+            </p>
+          </div>
+          <div>
+            <div
+              style="
+                width: 60px;
+                height: 60px;
+                border-radius: 999px;
+                background: var(--signal);
+                margin-bottom: 12px;
+              "
+            ></div>
+            <h2 style="font-size: 20px">{{FoundingCTO}}</h2>
+            <p class="lede" style="font-size: 13px; margin-top: 6px">
+              Founder · CTO · ex-{{CompanyB}} + {{CompanyC}} · led the Stackra framework.
+            </p>
+          </div>
+          <div>
+            <div
+              style="
+                width: 60px;
+                height: 60px;
+                border-radius: 999px;
+                background: var(--signal);
+                margin-bottom: 12px;
+              "
+            ></div>
+            <h2 style="font-size: 20px">{{FoundingProduct}}</h2>
+            <p class="lede" style="font-size: 13px; margin-top: 6px">
+              Founder · Product · former head coach of {{AcademyD}} · ran 3 900 sessions.
+            </p>
+          </div>
+          <div>
+            <div
+              style="
+                width: 60px;
+                height: 60px;
+                border-radius: 999px;
+                background: var(--signal);
+                margin-bottom: 12px;
+              "
+            ></div>
+            <h2 style="font-size: 20px">Advisors</h2>
+            <p class="lede" style="font-size: 13px; margin-top: 6px">
+              Federation presidents · academy owners · ex-founders of {{PeerCoA}} + {{PeerCoB}}.
+            </p>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span>Bios + advisor list on file · shared under mutual NDA</span>
+        <span class="nav"><em>10</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 11 · roadmap ────────────────────────────────────── -->
+    <section class="slide" id="s11" aria-labelledby="s11-title">
+      <header class="slide-head">
+        <span class="brand">Academorix · Series A</span>
+        <span>11 · Roadmap</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">18 months · post-close</p>
+        <h1 id="s11-title">
+          From 142 to 1 200 academies. From 7 sports to 14. From 3 countries to 12.
+        </h1>
+        <div class="three-col" style="margin-top: 24px">
+          <div>
+            <p class="slide-kicker">H2 · 2026</p>
+            <div style="display: grid; gap: 12px; margin-top: 12px">
+              <div class="bullet">
+                <span
+                  ><strong>4 new sports</strong
+                  ><span>Field hockey · rugby · cricket · gymnastics.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>AI grading review</strong
+                  ><span>Coach-cam auto-annotates form.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>US launch</strong><span>Northeast youth basketball corridor.</span></span
+                >
+              </div>
+            </div>
+          </div>
+          <div>
+            <p class="slide-kicker">H1 · 2027</p>
+            <div style="display: grid; gap: 12px; margin-top: 12px">
+              <div class="bullet">
+                <span
+                  ><strong>Marketplace v1</strong
+                  ><span>Coaching-plan store · revenue share.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Federation portal</strong
+                  ><span>Multi-academy roll-up dashboards.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Native app · v2</strong><span>Offline-safe sideline mode.</span></span
+                >
+              </div>
+            </div>
+          </div>
+          <div>
+            <p class="slide-kicker">H2 · 2027</p>
+            <div style="display: grid; gap: 12px; margin-top: 12px">
+              <div class="bullet">
+                <span
+                  ><strong>4 more sports · 14 total</strong
+                  ><span>Volley · handball · squash · ice hockey.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>EU + India expansion</strong><span>Data residency + i18n.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>1 200 academies · $8 M ARR</strong><span>Series-B trigger.</span></span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span>Plan assumes Series-A close by Oct 2026</span>
+        <span class="nav"><em>11</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ── 12 · ask ────────────────────────────────────────── -->
+    <section class="slide brand" id="s12" aria-labelledby="s12-title">
+      <header class="slide-head">
+        <span class="brand">Academorix · Series A</span>
+        <span>12 · The ask</span>
+      </header>
+      <div class="slide-body" style="justify-content: center">
+        <p class="slide-kicker" style="color: var(--ink)">Raising · Series A</p>
+        <h1 id="s12-title" style="color: var(--ink); font-size: clamp(72px, 8vw, 128px)">
+          $6 M
+        </h1>
+        <div class="chevron-divider" aria-hidden="true">
+          <span>^ ^ ^</span>
+        </div>
+        <p class="lede" style="color: rgba(20, 20, 20, 0.72); max-width: 60ch">
+          Led + priced. 18-month runway to 1 200 academies + $8 M ARR. Use of funds: 60 % product +
+          AI grading review · 25 % federation GTM · 15 % international i18n.
+        </p>
+        <div class="four-col" style="margin-top: 24px">
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">$6 M</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.62)">Round size · led</div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">18 mo</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.62)">Runway to Series B</div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">$8 M</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.62)">ARR target · pre-B</div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">Oct 26</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.62)">Target close</div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Next step · 45-min call with a founding partner ·
+          <a href="mailto:invest@academorix.com" style="color: var(--ink)"
+            >invest@academorix.com</a
+          ></span
+        >
+        <span class="nav"><em>12</em> / 12</span>
+      </footer>
+    </section>
+
+    <script>
+      /**
+       * Keyboard nav · left/right → previous/next slide.
+       * PageUp/PageDown works too via native scroll-snap.
+       */
+      (function () {
+        var slides = document.querySelectorAll(".slide");
+        function activeIndex() {
+          var y = window.scrollY + window.innerHeight / 2;
+          for (var i = 0; i < slides.length; i++) {
+            var r = slides[i].getBoundingClientRect();
+            if (r.top + window.scrollY <= y && r.bottom + window.scrollY >= y) return i;
+          }
+          return 0;
+        }
+        function go(delta) {
+          var i = Math.max(0, Math.min(slides.length - 1, activeIndex() + delta));
+          slides[i].scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") {
+            e.preventDefault();
+            go(1);
+          }
+          if (e.key === "ArrowLeft" || e.key === "PageUp") {
+            e.preventDefault();
+            go(-1);
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 12" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+  <!--
+    section-divider · chevron-track divider
+    Per docs/brand/academorix/05-illustration-library.md §2.4
+    Three small chevrons, 8px spacing, ink at 40% opacity.
+    Consumed via background-repeat: repeat-x when tiled as a divider strip.
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4">
+    <path d="M 16 8 L 24 2 L 32 8"/>
+    <path d="M 40 8 L 48 2 L 56 8"/>
+    <path d="M 64 8 L 72 2 L 80 8"/>
+  </g>
+</svg>

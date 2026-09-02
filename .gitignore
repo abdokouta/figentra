@@ -55,4 +55,3 @@ infrastructure/terraform/catalog.json
 .wrangler/
 .dev.vars
 .dev.vars.*
-.docs/branding/

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Concept C — Provenance-gate mark · signed F-Cursor.
+
+  Identical F geometry to the primary F-Cursor mark
+  (b-fsignal-mark.svg), with the live Signal cursor bar REPLACED
+  by a Signal check-tick. Reads as "F-Cursor mark, stamped /
+  signed / verified" — the visual grammar carries directly from
+  the primary identity into the compliance surface.
+
+  Reserved for section seals on `/governance` and `/trust`
+  pages per docs/brand/04-visual-identity.md §7. Never in
+  top-nav rotation.
+
+  Geometry
+  ────────
+  Grid            120 × 120
+  F strokes       weight 10 (matches primary mark exactly)
+  Check tick      M 84 30 → L 92 38 → L 108 22
+                  Stroke weight 6, mint fill, square caps +
+                  miter joins to keep architectural grammar.
+
+  The check occupies the same visual position band as the
+  primary cursor bar (x 84-108 vs old 88-102, y 22-38 vs old
+  26-32), giving provenance / primary lockup drop-in swap
+  safety in the landing-page <Brand> harness.
+
+  Color
+  ─────
+  F strokes read `currentColor` — inherits from the parent for
+  light/dark switch. Check-tick stays Signal mint. Root
+  `color="#fafafa"` sets the default fill for `<img>` embeds on
+  ink backgrounds.
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 120 120"
+  width="120"
+  height="120"
+  role="img"
+  aria-label="Figentra — provenance"
+  color="#fafafa"
+>
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+
+  <!-- Vertical spine -->
+  <rect x="30" y="24" width="10" height="72" fill="currentColor"/>
+  <!-- Top stroke -->
+  <rect x="30" y="24" width="52" height="10" fill="currentColor"/>
+  <!-- Middle stroke -->
+  <rect x="30" y="56" width="34" height="10" fill="currentColor"/>
+  <!-- Signal check-tick — the provenance / signed indicator -->
+  <path
+    d="M 84 30 L 92 38 L 108 22"
+    stroke="#00E5A0"
+    stroke-width="6"
+    fill="none"
+    stroke-linecap="square"
+    stroke-linejoin="miter"
+  />
+</svg>

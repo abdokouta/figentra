@@ -1,0 +1,1193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Figentra — F-Signal encoding × font exploration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- 5 candidate typefaces + JetBrains Mono for captions. All Google Fonts. -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Manrope:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #0a0f1c;
+        --signal: #00e5a0;
+        --paper: #fafaf7;
+        --graphite-100: #eeeef1;
+        --graphite-200: #dde0e8;
+        --graphite-300: #b4bac9;
+        --graphite-400: #8b93a8;
+        --graphite-500: #5a6478;
+        --graphite-600: #3a4256;
+        --graphite-700: #2a3348;
+        --graphite-800: #1a2136;
+        --graphite-900: #0f1424;
+        --ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+        --mono: "JetBrains Mono", ui-monospace, monospace;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        font-weight: 400;
+        line-height: 1.5;
+        color: var(--ink);
+        background: var(--paper);
+        padding: 40px 24px 96px;
+        transition:
+          background 200ms var(--ease),
+          color 200ms var(--ease);
+      }
+      body.dark {
+        background: var(--graphite-900);
+        color: var(--paper);
+      }
+      .container {
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+
+      /* ═══ Font classes ═══ */
+      .f-inter {
+        font-family: "Inter", system-ui, sans-serif;
+      }
+      .f-geist {
+        font-family: "Geist", "Inter", sans-serif;
+      }
+      .f-plex {
+        font-family: "IBM Plex Sans", "Inter", sans-serif;
+      }
+      .f-manrope {
+        font-family: "Manrope", "Inter", sans-serif;
+      }
+      .f-instrument {
+        font-family: "Instrument Sans", "Inter", sans-serif;
+      }
+      .wordmark {
+        font-weight: 500;
+        letter-spacing: -0.02em;
+      }
+      .wordmark--64 {
+        font-size: 64px;
+        line-height: 1;
+      }
+      .wordmark--40 {
+        font-size: 40px;
+      }
+      .wordmark--32 {
+        font-size: 32px;
+      }
+      .wordmark--24 {
+        font-size: 24px;
+      }
+      .wordmark--18 {
+        font-size: 18px;
+      }
+
+      /* ═══ Header ═══ */
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--graphite-200);
+        margin-bottom: 40px;
+      }
+      body.dark header {
+        border-color: var(--graphite-700);
+      }
+      header h1 {
+        font-family: "Inter", system-ui, sans-serif;
+        font-weight: 500;
+        font-size: 28px;
+        letter-spacing: -0.02em;
+      }
+      header .sub {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--graphite-500);
+        margin-top: 8px;
+      }
+      body.dark header .sub {
+        color: var(--graphite-400);
+      }
+
+      .theme-toggle {
+        background: var(--ink);
+        color: var(--paper);
+        border: none;
+        padding: 10px 18px;
+        font-weight: 500;
+        font-size: 13px;
+        cursor: pointer;
+        border-radius: 4px;
+        font-family: inherit;
+        transition: transform 200ms var(--ease);
+      }
+      .theme-toggle:hover {
+        transform: translateY(-1px);
+      }
+      body.dark .theme-toggle {
+        background: var(--paper);
+        color: var(--ink);
+      }
+
+      /* ═══ Sections ═══ */
+      section {
+        padding: 48px 0;
+        border-bottom: 1px solid var(--graphite-200);
+      }
+      body.dark section {
+        border-color: var(--graphite-700);
+      }
+      section:last-of-type {
+        border-bottom: none;
+      }
+      section h2 {
+        font-weight: 500;
+        font-size: 24px;
+        letter-spacing: -0.01em;
+        margin-bottom: 8px;
+      }
+      section .lede {
+        font-size: 15px;
+        color: var(--graphite-600);
+        max-width: 72ch;
+        margin-bottom: 32px;
+      }
+      body.dark section .lede {
+        color: var(--graphite-300);
+      }
+      section .sec-num {
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--graphite-500);
+        margin-bottom: 12px;
+      }
+      body.dark section .sec-num {
+        color: var(--graphite-400);
+      }
+
+      /* ═══ Cells ═══ */
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+      .grid-5 {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 16px;
+      }
+      @media (max-width: 1100px) {
+        .grid-5 {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .cell {
+        background: var(--paper);
+        border: 1px solid var(--graphite-200);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      body.dark .cell {
+        background: var(--graphite-900);
+        border-color: var(--graphite-700);
+      }
+      .cell--dark {
+        background: var(--graphite-900);
+        border-color: var(--graphite-700);
+        color: var(--paper);
+      }
+      .cell-label {
+        font-family: var(--mono);
+        font-size: 10px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--graphite-500);
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--graphite-200);
+      }
+      body.dark .cell-label,
+      .cell--dark .cell-label {
+        color: var(--graphite-400);
+        border-bottom-color: var(--graphite-700);
+      }
+      .cell-body {
+        padding: 40px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 160px;
+      }
+      .cell-note {
+        font-size: 12px;
+        color: var(--graphite-600);
+        padding: 12px 20px 16px;
+        border-top: 1px solid var(--graphite-200);
+      }
+      body.dark .cell-note,
+      .cell--dark .cell-note {
+        color: var(--graphite-300);
+        border-top-color: var(--graphite-700);
+      }
+
+      .rec {
+        background: var(--signal);
+        color: var(--ink);
+        padding: 2px 8px;
+        border-radius: 3px;
+        font-family: var(--mono);
+        font-size: 9px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-left: 6px;
+        vertical-align: 2px;
+      }
+
+      /* ═══ F-Signal encoding animations ═══ */
+      /* Style 1 — F-Dot (heartbeat scale + opacity) */
+      @keyframes heartbeat {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.28);
+          opacity: 0.65;
+        }
+      }
+      .dot-pulse {
+        transform-origin: center;
+        transform-box: fill-box;
+        animation: heartbeat 1.4s var(--ease) infinite;
+      }
+
+      /* Style 2 — F-Cursor (steps blink like an IDE terminal cursor) */
+      @keyframes cursor-blink {
+        0%,
+        49% {
+          opacity: 1;
+        }
+        50%,
+        100% {
+          opacity: 0;
+        }
+      }
+      .cursor-blink {
+        animation: cursor-blink 1s steps(1) infinite;
+      }
+
+      /* Style 3 — F-Bicolor (subtle mint-emphasis flash — restraint by design) */
+      @keyframes bicolor-glow {
+        0%,
+        100% {
+          fill: var(--signal);
+        }
+        50% {
+          fill: color-mix(in oklab, var(--signal) 80%, white);
+        }
+      }
+      .bicolor-cap {
+        animation: bicolor-glow 3s var(--ease) infinite;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .dot-pulse,
+        .cursor-blink,
+        .bicolor-cap {
+          animation: none;
+        }
+      }
+
+      /* ═══ Combined grid ═══ */
+      .matrix {
+        display: grid;
+        grid-template-columns: 200px repeat(5, 1fr);
+        gap: 1px;
+        background: var(--graphite-200);
+        border: 1px solid var(--graphite-200);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      body.dark .matrix {
+        background: var(--graphite-700);
+        border-color: var(--graphite-700);
+      }
+      .matrix > div {
+        background: var(--paper);
+        padding: 20px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      body.dark .matrix > div {
+        background: var(--graphite-900);
+      }
+      .m-head {
+        font-family: var(--mono);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--graphite-500);
+        background: var(--graphite-100);
+        padding: 14px 16px;
+        justify-content: flex-start;
+      }
+      body.dark .m-head {
+        background: var(--graphite-800);
+        color: var(--graphite-300);
+      }
+      .m-row {
+        font-family: var(--mono);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--graphite-500);
+        justify-content: flex-start;
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 4px;
+      }
+      body.dark .m-row {
+        color: var(--graphite-300);
+      }
+      .m-row .m-row-hint {
+        color: var(--graphite-400);
+        text-transform: none;
+        letter-spacing: 0;
+        font-size: 10px;
+      }
+
+      /* Lockup helper */
+      .lockup {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      /* Table */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--graphite-200);
+        vertical-align: top;
+      }
+      body.dark th,
+      body.dark td {
+        border-bottom-color: var(--graphite-700);
+      }
+      th {
+        font-family: var(--mono);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--graphite-500);
+        font-weight: 500;
+      }
+      body.dark th {
+        color: var(--graphite-400);
+      }
+      code {
+        font-family: var(--mono);
+        font-size: 11px;
+        background: var(--graphite-100);
+        padding: 2px 6px;
+        border-radius: 3px;
+      }
+      body.dark code {
+        background: var(--graphite-800);
+      }
+      .caution {
+        color: #b8341a;
+        font-family: var(--mono);
+      }
+      .ok {
+        color: #1a7a3f;
+        font-family: var(--mono);
+      }
+      body.dark .caution {
+        color: #ff8a5c;
+      }
+      body.dark .ok {
+        color: #4cc38a;
+      }
+
+      /* Font specimen — full paragraph in each candidate */
+      .specimen {
+        padding: 32px 40px;
+      }
+      .specimen p {
+        font-size: 15px;
+        line-height: 1.55;
+        color: var(--graphite-600);
+        max-width: 60ch;
+      }
+      body.dark .specimen p {
+        color: var(--graphite-300);
+      }
+
+      /* Nav mocks for in-context view */
+      .mocknav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 28px;
+        gap: 24px;
+      }
+      .mocknav.paper {
+        background: var(--paper);
+        color: var(--ink);
+      }
+      .mocknav.dark-bg {
+        background: var(--graphite-900);
+        color: var(--paper);
+      }
+      .mocknav nav {
+        display: flex;
+        gap: 24px;
+        font-size: 14px;
+        opacity: 0.7;
+      }
+      .mocknav .cta {
+        background: var(--signal);
+        color: var(--ink);
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-weight: 500;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div>
+          <h1>Figentra — F-Signal encoding × font exploration</h1>
+          <p class="sub">
+            3 signal styles &middot; 5 font candidates &middot; 15
+            combinations to review &middot; draft 2026-08-14
+          </p>
+        </div>
+        <button class="theme-toggle" onclick="document.body.classList.toggle('dark')">
+          Toggle theme
+        </button>
+      </header>
+
+      <!-- ═══════════════════════════════════════════════════════
+           §01 — 3 F-Signal encodings
+           ═══════════════════════════════════════════════════════ -->
+      <section>
+        <p class="sec-num">§01 &middot; The signal</p>
+        <h2>Three ways to encode "live in production"</h2>
+        <p class="lede">
+          The dot pulses. The cursor blinks. The bicolor cap does neither —
+          it encodes the signal into the letterform itself. Same F glyph
+          underneath all three; only the top-right terminator changes.
+          Every variant reads at 16&thinsp;px favicon size and inverts
+          cleanly on dark surfaces.
+        </p>
+
+        <div class="grid-3">
+          <!-- F-Dot -->
+          <div class="cell">
+            <div class="cell-label">F-Dot · pulsing heartbeat <span class="rec">current</span></div>
+            <div class="cell-body">
+              <svg width="120" height="120" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot-pulse" cx="92" cy="29" r="6" fill="var(--signal)" />
+              </svg>
+            </div>
+            <div class="cell-note">
+              Signal-mint dot at the top-right, 1.4&thinsp;s heartbeat cycle
+              (scale 1 → 1.28, opacity 1 → 0.65). Reads:
+              <strong>live / running / on air</strong>. Ties directly to the
+              deploy-pulse animation in the footer.
+            </div>
+          </div>
+
+          <!-- F-Cursor -->
+          <div class="cell">
+            <div class="cell-label">F-Cursor · IDE blink</div>
+            <div class="cell-body">
+              <svg width="120" height="120" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <rect class="cursor-blink" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+              </svg>
+            </div>
+            <div class="cell-note">
+              Signal-mint underscore where the dot was. Steps-based blink
+              (1&thinsp;s cycle, 50/50 on/off) — same rhythm as a real
+              terminal cursor. Reads:
+              <strong>command line / engineering / ready for input</strong>.
+              Native to Figentra's developer-tools DNA.
+            </div>
+          </div>
+
+          <!-- F-Bicolor -->
+          <div class="cell">
+            <div class="cell-label">F-Bicolor · monolithic terminator</div>
+            <div class="cell-body">
+              <svg width="120" height="120" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="42" height="10" fill="currentColor" />
+                <rect class="bicolor-cap" x="72" y="20" width="14" height="18" fill="var(--signal)" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              </svg>
+            </div>
+            <div class="cell-note">
+              No separate indicator — the top stroke terminates in a
+              slightly-taller mint block that reads as a
+              <strong>seal / stamp / audit cap</strong>. Static (or very
+              subtle 3&thinsp;s glow). Best legibility at 16&thinsp;px
+              favicon size — the mint block survives rasterization better
+              than a 1-pixel dot.
+            </div>
+          </div>
+        </div>
+
+        <!-- Same 3 on dark surfaces -->
+        <div class="grid-3" style="margin-top: 16px">
+          <div class="cell cell--dark">
+            <div class="cell-label">F-Dot · on dark</div>
+            <div class="cell-body">
+              <svg width="120" height="120" viewBox="0 0 120 120" style="color: var(--paper)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot-pulse" cx="92" cy="29" r="6" fill="var(--signal)" />
+              </svg>
+            </div>
+          </div>
+          <div class="cell cell--dark">
+            <div class="cell-label">F-Cursor · on dark</div>
+            <div class="cell-body">
+              <svg width="120" height="120" viewBox="0 0 120 120" style="color: var(--paper)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <rect class="cursor-blink" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+              </svg>
+            </div>
+          </div>
+          <div class="cell cell--dark">
+            <div class="cell-label">F-Bicolor · on dark</div>
+            <div class="cell-body">
+              <svg width="120" height="120" viewBox="0 0 120 120" style="color: var(--paper)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="42" height="10" fill="currentColor" />
+                <rect class="bicolor-cap" x="72" y="20" width="14" height="18" fill="var(--signal)" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Style</th>
+              <th>Reads as</th>
+              <th>Motion</th>
+              <th>16&thinsp;px legibility</th>
+              <th>Best for</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>F-Dot</strong></td>
+              <td>Live status LED / deploy heartbeat</td>
+              <td>Scale-pulse 1 → 1.28 over 1.4&thinsp;s</td>
+              <td>Adequate — 1 px mint pixel visible</td>
+              <td><span class="ok">Primary nav, hero, OG cards, PWA tiles</span></td>
+            </tr>
+            <tr>
+              <td><strong>F-Cursor</strong></td>
+              <td>Command prompt / IDE ready</td>
+              <td>Steps blink 50/50 over 1&thinsp;s</td>
+              <td>Marginal — a 14 × 6 rect scales to ~2 × 1 px at 16</td>
+              <td><span class="ok">Developer docs, CLI-adjacent surfaces, /how page</span></td>
+            </tr>
+            <tr>
+              <td><strong>F-Bicolor</strong></td>
+              <td>Signed / stamped / audit-capped</td>
+              <td>Static (or 3&thinsp;s subtle mint glow)</td>
+              <td><span class="ok">Best</span> — 14 × 18 mint block survives at 16 → ~2 × 2 px</td>
+              <td>Print, favicons, invoice headers, /trust page</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           §02 — 5 fonts
+           ═══════════════════════════════════════════════════════ -->
+      <section>
+        <p class="sec-num">§02 &middot; The typography</p>
+        <h2>Five candidate typefaces</h2>
+        <p class="lede">
+          Wordmark rendered at 40&thinsp;px in each. Same weight (500),
+          same tracking (-0.02em). All five available on Google Fonts —
+          zero licensing spend to ship any of them. Ordered
+          engineering-neutral → distinctive.
+        </p>
+
+        <div class="grid-5" style="grid-template-columns: 1fr; gap: 16px">
+          <!-- 1. Inter Display -->
+          <div class="cell">
+            <div class="cell-label">
+              Inter &middot; 500 &middot; Rasmus Andersson <span class="rec">current baseline</span>
+            </div>
+            <div class="cell-body specimen" style="min-height: auto; padding: 32px 40px; align-items: flex-start; flex-direction: column; gap: 20px">
+              <span class="f-inter wordmark wordmark--64" style="color: var(--ink)">Figentra</span>
+              <p class="f-inter">
+                Autonomous Engineering, running in production. 62 AI Engineers ship real SaaS through a governed SDLC.
+              </p>
+            </div>
+            <div class="cell-note">
+              The engineering-neutral workhorse. Stripe, Figma, Vercel, Linear, Notion all
+              use it. Zero surprises &mdash; reads exactly as "serious tech
+              company." Best all-around fit; nothing loud, nothing timid.
+            </div>
+          </div>
+
+          <!-- 2. Geist -->
+          <div class="cell">
+            <div class="cell-label">Geist &middot; 500 &middot; Vercel (2024)</div>
+            <div class="cell-body specimen" style="min-height: auto; padding: 32px 40px; align-items: flex-start; flex-direction: column; gap: 20px">
+              <span class="f-geist wordmark wordmark--64" style="color: var(--ink)">Figentra</span>
+              <p class="f-geist">
+                Autonomous Engineering, running in production. 62 AI Engineers ship real SaaS through a governed SDLC.
+              </p>
+            </div>
+            <div class="cell-note">
+              Vercel's in-house font shipped in 2024, adopted by Cloudflare + Turbo. Tighter than Inter, slightly more geometric, feels 2026-current.
+              Best if Figentra wants to signal
+              "we deploy on the modern stack" visually.
+            </div>
+          </div>
+
+          <!-- 3. IBM Plex Sans -->
+          <div class="cell">
+            <div class="cell-label">IBM Plex Sans &middot; 500 &middot; IBM (Bold Monday)</div>
+            <div class="cell-body specimen" style="min-height: auto; padding: 32px 40px; align-items: flex-start; flex-direction: column; gap: 20px">
+              <span class="f-plex wordmark wordmark--64" style="color: var(--ink)">Figentra</span>
+              <p class="f-plex">
+                Autonomous Engineering, running in production. 62 AI Engineers ship real SaaS through a governed SDLC.
+              </p>
+            </div>
+            <div class="cell-note">
+              IBM's corporate flagship. Blue-chip credibility &mdash; the
+              font a Fortune 500 CTO's own IT team probably ships in. Slight
+              slabby feel to the letterforms says "we've been shipping
+              enterprise for years."
+            </div>
+          </div>
+
+          <!-- 4. Manrope -->
+          <div class="cell">
+            <div class="cell-label">Manrope &middot; 500 &middot; Mikhail Sharanda</div>
+            <div class="cell-body specimen" style="min-height: auto; padding: 32px 40px; align-items: flex-start; flex-direction: column; gap: 20px">
+              <span class="f-manrope wordmark wordmark--64" style="color: var(--ink)">Figentra</span>
+              <p class="f-manrope">
+                Autonomous Engineering, running in production. 62 AI Engineers ship real SaaS through a governed SDLC.
+              </p>
+            </div>
+            <div class="cell-note">
+              Geometric-humanist, popular across the AI-startup bracket
+              (Anthropic-adjacent). Wider counters than Inter, more open
+              apertures. Reads <em>modern AI-native</em>. Slightly warmer
+              than Inter, without going full-Notion.
+            </div>
+          </div>
+
+          <!-- 5. Instrument Sans -->
+          <div class="cell">
+            <div class="cell-label">Instrument Sans &middot; 500 &middot; Instrument studio</div>
+            <div class="cell-body specimen" style="min-height: auto; padding: 32px 40px; align-items: flex-start; flex-direction: column; gap: 20px">
+              <span class="f-instrument wordmark wordmark--64" style="color: var(--ink)">Figentra</span>
+              <p class="f-instrument">
+                Autonomous Engineering, running in production. 62 AI Engineers ship real SaaS through a governed SDLC.
+              </p>
+            </div>
+            <div class="cell-note">
+              Editorial-refined sans from design studio Instrument. Reads
+              like a magazine masthead &mdash; carries authority. Closest free
+              approximation to Söhne's editorial-serious energy. Distinctive
+              without being loud.
+            </div>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Font</th>
+              <th>Mood</th>
+              <th>Comparable brands</th>
+              <th>Weight range</th>
+              <th>Fit for CTO tier</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Inter</strong></td>
+              <td>Engineering-neutral</td>
+              <td>Stripe, Figma, Vercel, Linear</td>
+              <td>100–900 variable</td>
+              <td><span class="ok">Strongest all-round</span> — the workhorse</td>
+            </tr>
+            <tr>
+              <td>Geist</td>
+              <td>Engineering-current, 2026-modern</td>
+              <td>Vercel, Cloudflare, Turbo</td>
+              <td>100–900 variable</td>
+              <td><span class="ok">Strong</span> — signals "on the modern stack"</td>
+            </tr>
+            <tr>
+              <td>IBM Plex Sans</td>
+              <td>Corporate blue-chip</td>
+              <td>IBM, Big-4 consulting</td>
+              <td>100–700</td>
+              <td><span class="ok">Strong for enterprise sales</span> — reads as "we know your world"</td>
+            </tr>
+            <tr>
+              <td>Manrope</td>
+              <td>Geometric-modern, AI-startup</td>
+              <td>Many AI startups; Anthropic-adjacent</td>
+              <td>200–800 variable</td>
+              <td><span class="ok">Good</span> — warm without going consumer</td>
+            </tr>
+            <tr>
+              <td>Instrument Sans</td>
+              <td>Editorial-refined</td>
+              <td>Design studios, portfolios</td>
+              <td>400–700</td>
+              <td>Distinctive &mdash; reads as <em>we hired a designer</em> which some CTOs read positively, some negatively</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           §03 — 15-combination matrix
+           ═══════════════════════════════════════════════════════ -->
+      <section>
+        <p class="sec-num">§03 &middot; The full grid</p>
+        <h2>Every combination · 3 signals × 5 fonts</h2>
+        <p class="lede">
+          Full lockup — mark + wordmark — at 32&thinsp;px mark size, 26&thinsp;px
+          wordmark. Row = signal encoding. Column = font family. This is
+          what would land in the nav for every combination.
+        </p>
+
+        <div class="matrix">
+          <!-- Header row -->
+          <div class="m-head">Row · signal / Column · font</div>
+          <div class="m-head">Inter</div>
+          <div class="m-head">Geist</div>
+          <div class="m-head">IBM Plex</div>
+          <div class="m-head">Manrope</div>
+          <div class="m-head">Instrument</div>
+
+          <!-- Row 1 — F-Dot -->
+          <div class="m-row">F-Dot<span class="m-row-hint">pulsing</span></div>
+          <div>
+            <span class="lockup">
+              <svg width="32" height="32" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot-pulse" cx="92" cy="29" r="6" fill="var(--signal)" />
+              </svg>
+              <span class="f-inter wordmark" style="font-size: 26px">Figentra</span>
+            </span>
+          </div>
+          <div>
+            <span class="lockup">
+              <svg width="32" height="32" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot-pulse" cx="92" cy="29" r="6" fill="var(--signal)" />
+              </svg>
+              <span class="f-geist wordmark" style="font-size: 26px">Figentra</span>
+            </span>
+          </div>
+          <div>
+            <span class="lockup">
+              <svg width="32" height="32" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot-pulse" cx="92" cy="29" r="6" fill="var(--signal)" />
+              </svg>
+              <span class="f-plex wordmark" style="font-size: 26px">Figentra</span>
+            </span>
+          </div>
+          <div>
+            <span class="lockup">
+              <svg width="32" height="32" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot-pulse" cx="92" cy="29" r="6" fill="var(--signal)" />
+              </svg>
+              <span class="f-manrope wordmark" style="font-size: 26px">Figentra</span>
+            </span>
+          </div>
+          <div>
+            <span class="lockup">
+              <svg width="32" height="32" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot-pulse" cx="92" cy="29" r="6" fill="var(--signal)" />
+              </svg>
+              <span class="f-instrument wordmark" style="font-size: 26px">Figentra</span>
+            </span>
+          </div>
+
+          <!-- Row 2 — F-Cursor -->
+          <div class="m-row">F-Cursor<span class="m-row-hint">blinking</span></div>
+          <div>
+            <span class="lockup">
+              <svg width="32" height="32" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <rect class="cursor-blink" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+              </svg>
+              <span class="f-inter wordmark" style="font-size: 26px">Figentra</span>
+            </span>
+          </div>
+          <div>
+            <span class="lockup">
+              <svg width="32" height="32" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <rect class="cursor-blink" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+              </svg>
+              <span class="f-geist wordmark" style="font-size: 26px">Figentra</span>
+            </span>
+          </div>
+          <div>
+            <span class="lockup">
+              <svg width="32" height="32" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <rect class="cursor-blink" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+              </svg>
+              <span class="f-plex wordmark" style="font-size: 26px">Figentra</span>
+            </span>
+          </div>
+          <div>
+            <span class="lockup">
+              <svg width="32" height="32" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <rect class="cursor-blink" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+              </svg>
+              <span class="f-manrope wordmark" style="font-size: 26px">Figentra</span>
+            </span>
+          </div>
+          <div>
+            <span class="lockup">
+              <svg width="32" height="32" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <rect class="cursor-blink" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+              </svg>
+              <span class="f-instrument wordmark" style="font-size: 26px">Figentra</span>
+            </span>
+          </div>
+
+          <!-- Row 3 — F-Bicolor -->
+          <div class="m-row">F-Bicolor<span class="m-row-hint">monolithic</span></div>
+          <div>
+            <span class="lockup">
+              <svg width="32" height="32" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="42" height="10" fill="currentColor" />
+                <rect x="72" y="20" width="14" height="18" fill="var(--signal)" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              </svg>
+              <span class="f-inter wordmark" style="font-size: 26px">Figentra</span>
+            </span>
+          </div>
+          <div>
+            <span class="lockup">
+              <svg width="32" height="32" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="42" height="10" fill="currentColor" />
+                <rect x="72" y="20" width="14" height="18" fill="var(--signal)" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              </svg>
+              <span class="f-geist wordmark" style="font-size: 26px">Figentra</span>
+            </span>
+          </div>
+          <div>
+            <span class="lockup">
+              <svg width="32" height="32" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="42" height="10" fill="currentColor" />
+                <rect x="72" y="20" width="14" height="18" fill="var(--signal)" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              </svg>
+              <span class="f-plex wordmark" style="font-size: 26px">Figentra</span>
+            </span>
+          </div>
+          <div>
+            <span class="lockup">
+              <svg width="32" height="32" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="42" height="10" fill="currentColor" />
+                <rect x="72" y="20" width="14" height="18" fill="var(--signal)" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              </svg>
+              <span class="f-manrope wordmark" style="font-size: 26px">Figentra</span>
+            </span>
+          </div>
+          <div>
+            <span class="lockup">
+              <svg width="32" height="32" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="42" height="10" fill="currentColor" />
+                <rect x="72" y="20" width="14" height="18" fill="var(--signal)" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              </svg>
+              <span class="f-instrument wordmark" style="font-size: 26px">Figentra</span>
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           §04 — Nav mocks with top 3 candidates
+           ═══════════════════════════════════════════════════════ -->
+      <section>
+        <p class="sec-num">§04 &middot; In-context</p>
+        <h2>The strongest three combinations in a real nav</h2>
+        <p class="lede">
+          My top-three picks rendered in the actual top-nav shape you'd
+          ship. Order below is my confidence ranking; see §05 for the
+          reasoning.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <!-- Pick 1: F-Dot + Inter -->
+          <div class="cell">
+            <div class="cell-label">
+              Pick 1 &middot; F-Dot × Inter &middot; the workhorse combination <span class="rec">recommended</span>
+            </div>
+            <div class="mocknav paper">
+              <span class="lockup">
+                <svg width="28" height="28" viewBox="0 0 120 120" style="color: var(--ink)">
+                  <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                  <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                  <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                  <circle class="dot-pulse" cx="92" cy="29" r="6" fill="var(--signal)" />
+                </svg>
+                <span class="f-inter wordmark" style="font-size: 18px">Figentra</span>
+              </span>
+              <nav><span>How we build</span><span>Team</span><span>Governance</span><span>Trust</span></nav>
+              <span class="cta">Talk to us →</span>
+            </div>
+            <div class="mocknav dark-bg">
+              <span class="lockup" style="color: var(--paper)">
+                <svg width="28" height="28" viewBox="0 0 120 120">
+                  <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                  <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                  <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                  <circle class="dot-pulse" cx="92" cy="29" r="6" fill="var(--signal)" />
+                </svg>
+                <span class="f-inter wordmark" style="font-size: 18px; color: var(--paper)">Figentra</span>
+              </span>
+              <nav><span>How we build</span><span>Team</span><span>Governance</span><span>Trust</span></nav>
+              <span class="cta">Talk to us →</span>
+            </div>
+          </div>
+
+          <!-- Pick 2: F-Cursor + Geist -->
+          <div class="cell">
+            <div class="cell-label">
+              Pick 2 &middot; F-Cursor × Geist &middot; the engineering-current combination
+            </div>
+            <div class="mocknav paper">
+              <span class="lockup">
+                <svg width="28" height="28" viewBox="0 0 120 120" style="color: var(--ink)">
+                  <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                  <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                  <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                  <rect class="cursor-blink" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+                </svg>
+                <span class="f-geist wordmark" style="font-size: 18px">Figentra</span>
+              </span>
+              <nav><span>How we build</span><span>Team</span><span>Governance</span><span>Trust</span></nav>
+              <span class="cta">Talk to us →</span>
+            </div>
+            <div class="mocknav dark-bg">
+              <span class="lockup" style="color: var(--paper)">
+                <svg width="28" height="28" viewBox="0 0 120 120">
+                  <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                  <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                  <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                  <rect class="cursor-blink" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+                </svg>
+                <span class="f-geist wordmark" style="font-size: 18px; color: var(--paper)">Figentra</span>
+              </span>
+              <nav><span>How we build</span><span>Team</span><span>Governance</span><span>Trust</span></nav>
+              <span class="cta">Talk to us →</span>
+            </div>
+          </div>
+
+          <!-- Pick 3: F-Bicolor + IBM Plex -->
+          <div class="cell">
+            <div class="cell-label">
+              Pick 3 &middot; F-Bicolor × IBM Plex &middot; the corporate blue-chip combination
+            </div>
+            <div class="mocknav paper">
+              <span class="lockup">
+                <svg width="28" height="28" viewBox="0 0 120 120" style="color: var(--ink)">
+                  <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                  <rect x="30" y="24" width="42" height="10" fill="currentColor" />
+                  <rect x="72" y="20" width="14" height="18" fill="var(--signal)" />
+                  <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                </svg>
+                <span class="f-plex wordmark" style="font-size: 18px">Figentra</span>
+              </span>
+              <nav><span>How we build</span><span>Team</span><span>Governance</span><span>Trust</span></nav>
+              <span class="cta">Talk to us →</span>
+            </div>
+            <div class="mocknav dark-bg">
+              <span class="lockup" style="color: var(--paper)">
+                <svg width="28" height="28" viewBox="0 0 120 120">
+                  <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                  <rect x="30" y="24" width="42" height="10" fill="currentColor" />
+                  <rect x="72" y="20" width="14" height="18" fill="var(--signal)" />
+                  <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                </svg>
+                <span class="f-plex wordmark" style="font-size: 18px; color: var(--paper)">Figentra</span>
+              </span>
+              <nav><span>How we build</span><span>Team</span><span>Governance</span><span>Trust</span></nav>
+              <span class="cta">Talk to us →</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           §05 — My read
+           ═══════════════════════════════════════════════════════ -->
+      <section>
+        <p class="sec-num">§05 &middot; My read</p>
+        <h2>Ranked recommendation</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Combination</th>
+              <th>Reads as</th>
+              <th>Confidence</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1st</strong></td>
+              <td>F-Dot × Inter Display 500</td>
+              <td>
+                Live / running / governed engineering. The Stripe /
+                Anthropic / Vanta pocket. Nobody scrolls past it wondering
+                what kind of company you are.
+              </td>
+              <td><span class="ok">High</span> — 100% within brand doc</td>
+            </tr>
+            <tr>
+              <td>2nd</td>
+              <td>F-Cursor × Geist Sans 500</td>
+              <td>
+                Command-line / on-the-modern-stack / developer-native. Reads
+                more distinctly as a 2026-current tech company. Slightly
+                narrower audience &mdash; developer-adjacent CTOs love it,
+                traditional CTOs find it a hair too edgy.
+              </td>
+              <td>Medium-high</td>
+            </tr>
+            <tr>
+              <td>3rd</td>
+              <td>F-Bicolor × IBM Plex Sans 500</td>
+              <td>
+                Sealed / signed / corporate-serious. Best print + favicon
+                legibility of any combination. Wins with traditional
+                enterprise buyers; the IBM Plex baggage cuts both ways
+                (some read it as "trusted incumbent," some as "IBM
+                clone").
+              </td>
+              <td>Medium</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="lede" style="margin-top: 24px">
+          <strong>The strategic question</strong> — every one of these is a
+          statement about who Figentra is. F-Dot × Inter says <em>we're the
+          reference implementation</em>. F-Cursor × Geist says <em>we're the
+          modern tech company you should be</em>. F-Bicolor × IBM Plex says
+          <em>we're the trusted engineering partner you can hire</em>. Same
+          product underneath. Very different first impressions.
+        </p>
+
+        <p class="lede" style="margin-top: 16px">
+          <strong>My call:</strong> ship F-Dot × Inter as the default (Pick
+          1). It carries the widest audience without pinning you to any
+          niche. If your enterprise-sales team explicitly asks for
+          <em>gravitas &middot; trust &middot; corporate-serious</em>, Pick 3.
+          If the founder instinct is <em>let's look like a 2026 tech
+          company, not a 2020 one</em>, Pick 2. Only ship one — the
+          decision cascades to every downstream artefact.
+        </p>
+      </section>
+
+      <footer style="margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--graphite-200); font-family: var(--mono); font-size: 11px; color: var(--graphite-500)">
+        <p>
+          Source · docs/brand/04-visual-identity.md · Google Fonts CDN (Inter · Geist · IBM Plex Sans · Manrope · Instrument Sans) · pulled 2026-08-14
+        </p>
+        <p style="margin-top: 8px">Draft location · .tmp/drafts/logos/variants.html (retired 2026-08-18) · not committed</p>
+      </footer>
+    </div>
+  </body>
+</html>

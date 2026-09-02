@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Academorix · icons/social/favicon.svg · 32×32 · v1.0 · 2026-08-21
+
+  Mirror of assets/favicons/favicon.svg. Kept here so social + PWA +
+  browser-chrome consumers reach the favicon through their own
+  canonical folder without needing to know about the raster queue
+  living under assets/favicons/.
+
+  Codified by ADR-0104.
+
+  If the two files diverge, brand/academorix/assets/favicons/favicon.svg
+  is the source of truth — this mirror updates in lockstep.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" role="img" aria-label="Academorix favicon">
+  <!-- Track Orange rounded-square background -->
+  <rect width="32" height="32" fill="#FF6B35" rx="6"/>
+
+  <!-- Paper-white 'a' Geist 700 · centered -->
+  <text
+    x="16"
+    y="23"
+    font-family="Geist, Inter, -apple-system, sans-serif"
+    font-weight="700"
+    font-size="24"
+    letter-spacing="-0.03em"
+    fill="#fafafa"
+    text-anchor="middle"
+  >a</text>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+  <!--
+    p-chevron-lanes · repeating chevron-lane pattern
+    Per docs/brand/academorix/05-illustration-library.md §2.5
+    32x32 tile · ink at 4% opacity · barely-visible surface texture.
+    Consumed via CSS background-image: url(...); background-repeat: repeat.
+  -->
+  <path d="M 8 20 L 16 12 L 24 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.04"/>
+</svg>

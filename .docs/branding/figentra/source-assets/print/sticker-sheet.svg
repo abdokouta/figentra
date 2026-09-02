@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Figentra — sticker sheet die-cut layout.
+  100 × 150 mm sheet, at 100 units per mm the viewBox becomes 1000 × 1500.
+  Every sticker is a separate <g> with a die-cut outline (0.25 mm cut).
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1500" width="1000" height="1500" role="img" aria-label="Figentra sticker sheet · 12 stickers · 100×150 mm">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+  <defs>
+    <style>
+      .sheet-bg { fill: #f0f0f0; }
+      .die-cut { fill: none; stroke: #ff00ff; stroke-width: 2; stroke-dasharray: 8 4; opacity: 0.5; }
+      .sticker-white { fill: #ffffff; stroke: #141414; stroke-width: 1; }
+      .ink { fill: #141414; }
+      .signal { fill: #00E5A0; }
+      .paper { fill: #fafafa; }
+      .legend-text { font-family: "Geist Mono", ui-monospace, monospace; font-size: 22px; fill: #666; letter-spacing: 0.06em; text-transform: uppercase; }
+      .backer-label { font-family: "Geist Mono", ui-monospace, monospace; font-size: 14px; fill: #999; letter-spacing: 0.06em; }
+    </style>
+  </defs>
+
+  <!-- Sheet backer -->
+  <rect width="1000" height="1500" class="sheet-bg"/>
+
+  <!-- Sheet title -->
+  <text x="500" y="60" class="legend-text" text-anchor="middle" font-size="28">$_ figentra · sticker sheet v1</text>
+  <text x="500" y="90" class="backer-label" text-anchor="middle">Die-cut in magenta · not printed</text>
+
+  <!-- Row 1 · 4 × F-Cursor mark stickers · 200 × 200 (=20mm) each -->
+  <text x="60" y="160" class="backer-label">01–04 · F-Cursor mark · 20 × 20 mm</text>
+
+  <g id="sticker-01" transform="translate(80 180)">
+    <circle cx="100" cy="100" r="95" class="sticker-white"/>
+    <circle cx="100" cy="100" r="98" class="die-cut"/>
+    <!-- F-Cursor mark centered in the sticker -->
+    <g transform="translate(50 40) scale(0.83)">
+      <rect x="30" y="24" width="10" height="72" class="ink"/>
+      <rect x="30" y="24" width="52" height="10" class="ink"/>
+      <rect x="30" y="56" width="34" height="10" class="ink"/>
+      <rect x="88" y="26" width="14" height="6" class="signal"/>
+    </g>
+  </g>
+
+  <g id="sticker-02" transform="translate(300 180)">
+    <circle cx="100" cy="100" r="95" class="sticker-white"/>
+    <circle cx="100" cy="100" r="98" class="die-cut"/>
+    <g transform="translate(50 40) scale(0.83)">
+      <rect x="30" y="24" width="10" height="72" class="ink"/>
+      <rect x="30" y="24" width="52" height="10" class="ink"/>
+      <rect x="30" y="56" width="34" height="10" class="ink"/>
+      <rect x="88" y="26" width="14" height="6" class="signal"/>
+    </g>
+  </g>
+
+  <g id="sticker-03" transform="translate(520 180)">
+    <circle cx="100" cy="100" r="95" fill="currentColor"/>
+    <circle cx="100" cy="100" r="98" class="die-cut"/>
+    <g transform="translate(50 40) scale(0.83)">
+      <rect x="30" y="24" width="10" height="72" class="paper"/>
+      <rect x="30" y="24" width="52" height="10" class="paper"/>
+      <rect x="30" y="56" width="34" height="10" class="paper"/>
+      <rect x="88" y="26" width="14" height="6" class="signal"/>
+    </g>
+  </g>
+
+  <g id="sticker-04" transform="translate(740 180)">
+    <circle cx="100" cy="100" r="95" fill="currentColor"/>
+    <circle cx="100" cy="100" r="98" class="die-cut"/>
+    <g transform="translate(50 40) scale(0.83)">
+      <rect x="30" y="24" width="10" height="72" class="paper"/>
+      <rect x="30" y="24" width="52" height="10" class="paper"/>
+      <rect x="30" y="56" width="34" height="10" class="paper"/>
+      <rect x="88" y="26" width="14" height="6" class="signal"/>
+    </g>
+  </g>
+
+  <!-- Row 2 · 2 × wordmark rectangles · 400 × 150 -->
+  <text x="60" y="480" class="backer-label">05–06 · Wordmark · 40 × 15 mm</text>
+  <g id="sticker-05" transform="translate(80 500)">
+    <rect width="400" height="150" rx="16" class="sticker-white"/>
+    <rect width="400" height="150" rx="16" class="die-cut"/>
+    <text x="30" y="98" font-family="Geist" font-size="72" font-weight="500" fill="currentColor" letter-spacing="-3">figentra</text>
+    <rect x="322" y="42" width="20" height="8" class="signal"/>
+  </g>
+  <g id="sticker-06" transform="translate(520 500)">
+    <rect width="400" height="150" rx="16" fill="currentColor"/>
+    <rect width="400" height="150" rx="16" class="die-cut"/>
+    <text x="30" y="98" font-family="Geist" font-size="72" font-weight="500" fill="#fafafa" letter-spacing="-3">figentra</text>
+    <rect x="322" y="42" width="20" height="8" class="signal"/>
+  </g>
+
+  <!-- Row 3 · 2 × prompt stickers · 250 × 120 -->
+  <text x="60" y="720" class="backer-label">07–08 · Prompt tag · 25 × 12 mm</text>
+  <g id="sticker-07" transform="translate(180 740)">
+    <rect width="250" height="120" rx="10" class="sticker-white"/>
+    <rect width="250" height="120" rx="10" class="die-cut"/>
+    <text x="30" y="78" font-family="Geist Mono" font-size="52" font-weight="500" fill="currentColor" letter-spacing="4">$_ ship</text>
+  </g>
+  <g id="sticker-08" transform="translate(560 740)">
+    <rect width="250" height="120" rx="10" fill="currentColor"/>
+    <rect width="250" height="120" rx="10" class="die-cut"/>
+    <text x="30" y="78" font-family="Geist Mono" font-size="52" font-weight="500" fill="#00E5A0" letter-spacing="4">$_ ship</text>
+  </g>
+
+  <!-- Row 4 · terminal window · 600 × 400 -->
+  <text x="60" y="920" class="backer-label">09 · Terminal window · 60 × 40 mm</text>
+  <g id="sticker-09" transform="translate(200 940)">
+    <rect width="600" height="400" rx="24" fill="currentColor"/>
+    <rect width="600" height="400" rx="24" class="die-cut"/>
+    <!-- Traffic lights -->
+    <circle cx="40" cy="40" r="12" fill="#FF6B6B"/>
+    <circle cx="80" cy="40" r="12" fill="#FFD93D"/>
+    <circle cx="120" cy="40" r="12" fill="#00E5A0"/>
+    <!-- Title bar divider -->
+    <line x1="0" y1="72" x2="600" y2="72" stroke="rgba(250,250,250,0.14)" stroke-width="1"/>
+    <!-- Prompt lines -->
+    <text x="40" y="150" font-family="Geist Mono" font-size="28" fill="#00E5A0">$_ figentra deploy</text>
+    <text x="40" y="200" font-family="Geist Mono" font-size="22" fill="rgba(250,250,250,0.72)">→ agent authored 3 changes</text>
+    <text x="40" y="240" font-family="Geist Mono" font-size="22" fill="rgba(250,250,250,0.72)">→ tests passing</text>
+    <text x="40" y="280" font-family="Geist Mono" font-size="22" fill="rgba(250,250,250,0.72)">→ deployed to production</text>
+    <text x="40" y="320" font-family="Geist Mono" font-size="28" fill="#fafafa">$_ <tspan font-size="28" fill="#00E5A0">▊</tspan></text>
+  </g>
+
+  <!-- Row 5 · 3 × provenance tick · 150 × 150 -->
+  <text x="60" y="1400" class="backer-label">10–12 · Provenance tick · 15 × 15 mm</text>
+  <g id="sticker-10" transform="translate(80 1420)">
+    <circle cx="75" cy="75" r="70" class="sticker-white"/>
+    <circle cx="75" cy="75" r="72" class="die-cut"/>
+    <path d="M 40 78 L 65 100 L 110 55" fill="none" stroke="#00E5A0" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g id="sticker-11" transform="translate(280 1420)">
+    <circle cx="75" cy="75" r="70" class="sticker-white"/>
+    <circle cx="75" cy="75" r="72" class="die-cut"/>
+    <path d="M 40 78 L 65 100 L 110 55" fill="none" stroke="#00E5A0" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g id="sticker-12" transform="translate(480 1420)">
+    <circle cx="75" cy="75" r="70" fill="currentColor"/>
+    <circle cx="75" cy="75" r="72" class="die-cut"/>
+    <path d="M 40 78 L 65 100 L 110 55" fill="none" stroke="#00E5A0" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

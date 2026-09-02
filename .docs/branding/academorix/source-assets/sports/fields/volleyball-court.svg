@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 460" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Volleyball court diagram">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+
+  <title>Volleyball court</title>
+  <desc>Line-art volleyball court — outer boundary, centre net line, 3m attack lines, service zones each end, and net posts. Track Orange accent on the centre spot + net posts. Academorix v0.1.</desc>
+
+  <!-- Outer court (9m × 18m proportional to 760 × 380) -->
+  <rect x="20" y="40" width="760" height="380" rx="2"/>
+
+  <!-- Centre net line (heavier + dashed to imply net) -->
+  <line x1="400" y1="40" x2="400" y2="420" stroke-dasharray="4 6"/>
+
+  <!-- Attack lines (3m from centre net · 3/9 of half-court = ~127px offset) -->
+  <line x1="273" y1="40" x2="273" y2="420"/>
+  <line x1="527" y1="40" x2="527" y2="420"/>
+
+  <!-- Left service zone (behind end line · dashed) -->
+  <line x1="10" y1="60" x2="10" y2="400" stroke-dasharray="4 4"/>
+  <!-- Right service zone -->
+  <line x1="790" y1="60" x2="790" y2="400" stroke-dasharray="4 4"/>
+
+  <!-- Corner ticks (top + bottom · both sides) -->
+  <line x1="20" y1="40" x2="30" y2="40"/>
+  <line x1="20" y1="420" x2="30" y2="420"/>
+  <line x1="770" y1="40" x2="780" y2="40"/>
+  <line x1="770" y1="420" x2="780" y2="420"/>
+
+  <!-- Net posts + centre spot (Track Orange fills) -->
+  <circle cx="400" cy="30" r="4" fill="#FF6B35" stroke="none"/>
+  <circle cx="400" cy="430" r="4" fill="#FF6B35" stroke="none"/>
+  <circle cx="400" cy="230" r="4" fill="#FF6B35" stroke="none"/>
+
+  <!-- Service marker dots -->
+  <circle cx="200" cy="230" r="3" fill="#FF6B35" stroke="none"/>
+  <circle cx="600" cy="230" r="3" fill="#FF6B35" stroke="none"/>
+</svg>

@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Figentra × HeroUI Pro "mouve" theme — compatibility check</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ────────────────────────────────────────────────────────
+         REAL HeroUI Pro "mouve" theme variables — pulled live
+         from the HeroUI Pro MCP on 2026-08-14. Every oklch()
+         below is verbatim from the theme's variables.css.
+         ──────────────────────────────────────────────────────── */
+      :root {
+        /* Figentra brand-doc tokens (docs/brand/04-visual-identity.md §1) */
+        --fig-ink: #0a0f1c;
+        --fig-signal: #00e5a0;
+        --fig-paper: #fafaf7;
+        --fig-graphite-900: #0f1424;
+
+        /* HeroUI Pro "mouve" light — verbatim */
+        --mouve-l-background: oklch(0.955 0.012 300);
+        --mouve-l-surface: oklch(0.975 0.008 300);
+        --mouve-l-surface-secondary: oklch(0.95 0.012 300);
+        --mouve-l-foreground: oklch(0.25 0.02 300); /* --eclipse */
+        --mouve-l-accent: oklch(0.55 0.18 300); /* THE mouv color */
+        --mouve-l-accent-foreground: oklch(0.9911 0 0); /* snow */
+        --mouve-l-muted: oklch(0.58 0.03 300);
+        --mouve-l-border: oklch(0.88 0.015 300);
+        --mouve-l-radius: 0.54rem;
+        --mouve-l-field-radius: 1.5rem; /* 24px — CONTRA brand doc */
+
+        /* HeroUI Pro "mouve" dark — verbatim */
+        --mouve-d-background: oklch(0.16 0.02 300);
+        --mouve-d-surface: oklch(0.2 0.02 300);
+        --mouve-d-surface-secondary: oklch(0.24 0.02 300);
+        --mouve-d-foreground: oklch(0.9911 0 0);
+        --mouve-d-accent: oklch(0.7 0.16 300);
+        --mouve-d-accent-foreground: oklch(0.15 0.02 300);
+        --mouve-d-muted: oklch(0.65 0.02 300);
+        --mouve-d-border: oklch(0.3 0.02 300);
+
+        /* HeroUI Pro "mouve" — the softer aesthetic knobs */
+        --mouve-radius: 0.54rem;
+        --mouve-surface-shadow-light:
+          0 0 5px 0 rgba(0, 0, 0, 0.02), 0 2px 10px 0 rgba(0, 0, 0, 0.06),
+          0 0 1px 0 rgba(0, 0, 0, 0.2);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        font-weight: 400;
+        line-height: 1.5;
+        background: var(--fig-paper);
+        color: var(--fig-ink);
+        padding: 40px 24px 96px;
+      }
+      .container {
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+
+      header {
+        padding-bottom: 24px;
+        border-bottom: 1px solid #dde0e8;
+        margin-bottom: 40px;
+      }
+      header h1 {
+        font-size: 26px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+      }
+      header .sub {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        color: #5a6478;
+        margin-top: 8px;
+      }
+      header .tag {
+        display: inline-block;
+        background: var(--mouve-l-accent);
+        color: white;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        border-radius: 4px;
+        margin-left: 8px;
+        vertical-align: 4px;
+      }
+
+      section {
+        padding: 40px 0;
+        border-bottom: 1px solid #dde0e8;
+      }
+      section h2 {
+        font-size: 22px;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        margin-bottom: 8px;
+      }
+      section .lede {
+        font-size: 15px;
+        color: #3a4256;
+        max-width: 72ch;
+        margin-bottom: 24px;
+      }
+
+      /* ── Real mouve surfaces + accent ── */
+      .surface-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+      .mouve-light {
+        background: var(--mouve-l-background);
+        color: var(--mouve-l-foreground);
+        padding: 32px 28px;
+        border: 1px solid var(--mouve-l-border);
+        border-radius: var(--mouve-l-radius);
+        box-shadow: var(--mouve-surface-shadow-light);
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .mouve-dark {
+        background: var(--mouve-d-background);
+        color: var(--mouve-d-foreground);
+        padding: 32px 28px;
+        border: 1px solid var(--mouve-d-border);
+        border-radius: var(--mouve-l-radius);
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .surface-label {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .mouve-light .surface-label {
+        color: var(--mouve-l-muted);
+      }
+      .mouve-dark .surface-label {
+        color: var(--mouve-d-muted);
+      }
+
+      .lockup {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .wordmark {
+        letter-spacing: -0.02em;
+        font-weight: 500;
+        font-size: 32px;
+      }
+
+      /* Mouve-styled button (per mouve theme's rounded + gradient aesthetic) */
+      .mouve-btn-l {
+        background: linear-gradient(
+          180deg,
+          color-mix(in oklab, var(--mouve-l-accent) 92%, white) 0%,
+          var(--mouve-l-accent) 100%
+        );
+        color: var(--mouve-l-accent-foreground);
+        border-radius: var(--mouve-l-field-radius);
+        padding: 10px 20px;
+        font-weight: 500;
+        font-size: 13px;
+        font-family: inherit;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow:
+          0 1px 2px -0.5px rgba(255, 255, 255, 0.12) inset,
+          0 0.5px 0.5px rgba(255, 255, 255, 0.16) inset,
+          0 8px 24px -4px rgba(255, 255, 255, 0.16) inset,
+          0 8px 8px -3px rgba(0, 0, 0, 0.03),
+          0 5px 5px -2.5px rgba(0, 0, 0, 0.03),
+          0 3px 3px -1.5px rgba(0, 0, 0, 0.03);
+        cursor: pointer;
+      }
+
+      .mouve-btn-d {
+        background: linear-gradient(
+          180deg,
+          color-mix(in oklab, var(--mouve-d-accent) 92%, white) 0%,
+          var(--mouve-d-accent) 100%
+        );
+        color: var(--mouve-d-accent-foreground);
+        border-radius: 24px;
+        padding: 10px 20px;
+        font-weight: 500;
+        font-size: 13px;
+        font-family: inherit;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow:
+          inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
+          inset 0 1px 2px -0.5px rgba(255, 255, 255, 0.14),
+          inset 0 8px 24px -4px rgba(255, 255, 255, 0.1),
+          0 0 0 1px rgba(0, 0, 0, 0.4),
+          0 1px 1px -0.5px #0000004d,
+          0 3px 3px -1.5px #0000004d,
+          0 6px 6px -3px #0000004d;
+        cursor: pointer;
+      }
+
+      /* Figentra brand-doc's own button style (per §7 sample components) */
+      .fig-btn {
+        background: var(--fig-signal);
+        color: var(--fig-ink);
+        border-radius: 4px;
+        padding: 10px 20px;
+        font-weight: 500;
+        font-size: 13px;
+        font-family: inherit;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 1px 2px rgb(0 0 0 / 8%);
+      }
+
+      /* ═══ Diff table ═══ */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin-top: 12px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 12px 14px;
+        border-bottom: 1px solid #dde0e8;
+        vertical-align: top;
+      }
+      th {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #5a6478;
+        font-weight: 500;
+        background: #eeeef1;
+      }
+      code {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        background: #eeeef1;
+        padding: 2px 6px;
+        border-radius: 3px;
+      }
+      .cross {
+        color: #b8341a;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 500;
+      }
+      .check {
+        color: #1a7a3f;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 500;
+      }
+      .neutral {
+        color: #5a6478;
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      /* Direct color chip */
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-right: 24px;
+      }
+      .swatch {
+        width: 40px;
+        height: 40px;
+        border-radius: 6px;
+        border: 1px solid #dde0e8;
+      }
+      .swatch-lg {
+        width: 72px;
+        height: 72px;
+      }
+      .swatch-signal {
+        background: var(--fig-signal);
+      }
+      .swatch-mouve-l {
+        background: var(--mouve-l-accent);
+      }
+      .swatch-mouve-d {
+        background: var(--mouve-d-accent);
+      }
+      .swatch-info {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        color: #3a4256;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      /* ═══ F-Signal mark rendering ═══ */
+      @keyframes fig-pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.28);
+          opacity: 0.65;
+        }
+      }
+      .dot {
+        transform-origin: center;
+        transform-box: fill-box;
+        animation: fig-pulse 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .dot {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>
+          Figentra × HeroUI Pro "mouve" theme
+          <span class="tag">real values</span>
+        </h1>
+        <p class="sub">
+          Live from HeroUI Pro MCP · 2026-08-14 · every oklch() below verbatim
+          from mouve/variables.css
+        </p>
+      </header>
+
+      <!-- ═══════════════════════════════════════════════════════
+           Section 1 — What "mouv" actually is
+           ═══════════════════════════════════════════════════════ -->
+      <section>
+        <h2>Question — is HeroUI Pro's "mouve" theme right for Figentra?</h2>
+        <p class="lede">
+          The MCP returned the full "mouve" theme. It's a comprehensive design
+          system, not just an accent color — with its own shadows, radii,
+          gradient overlays, and hue system centered on oklch hue 300
+          (warm-purple). Here's what mouve actually gives you:
+        </p>
+
+        <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap">
+          <span class="chip">
+            <span class="swatch swatch-lg swatch-signal"></span>
+            <span class="swatch-info">
+              <strong>Figentra Signal</strong>
+              <code>#00E5A0</code>
+              <span>oklch(0.85 0.15 158)</span>
+            </span>
+          </span>
+          <span class="chip">
+            <span class="swatch swatch-lg swatch-mouve-l"></span>
+            <span class="swatch-info">
+              <strong>mouve accent (light)</strong>
+              <code>oklch(0.55 0.18 300)</code>
+              <span>≈ warm purple</span>
+            </span>
+          </span>
+          <span class="chip">
+            <span class="swatch swatch-lg swatch-mouve-d"></span>
+            <span class="swatch-info">
+              <strong>mouve accent (dark)</strong>
+              <code>oklch(0.7 0.16 300)</code>
+              <span>≈ lighter for dark bg</span>
+            </span>
+          </span>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           Section 2 — F-Signal mark ON mouve theme surfaces
+           ═══════════════════════════════════════════════════════ -->
+      <section>
+        <h2>The F-Signal mark rendered on real mouve surfaces</h2>
+        <p class="lede">
+          Below: your mark literally dropped onto mouve theme surfaces
+          (background + accent + radii + shadows verbatim). Left = mouve
+          light, right = mouve dark. The mark inherits the mouve accent color
+          via the CSS var — so the dot IS the mouve accent, not the Signal
+          mint.
+        </p>
+
+        <div class="surface-row">
+          <div class="mouve-light">
+            <span class="surface-label">mouve · light</span>
+            <span class="lockup">
+              <svg
+                width="40"
+                height="40"
+                viewBox="0 0 120 120"
+                style="color: var(--mouve-l-foreground)"
+              >
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot" cx="92" cy="29" r="6" fill="var(--mouve-l-accent)" />
+              </svg>
+              <span class="wordmark">Figentra</span>
+            </span>
+            <p style="font-size: 14px; color: var(--mouve-l-muted); max-width: 40ch">
+              Autonomous Engineering, running in production.
+            </p>
+            <div>
+              <button class="mouve-btn-l">Talk to us →</button>
+            </div>
+          </div>
+
+          <div class="mouve-dark">
+            <span class="surface-label">mouve · dark</span>
+            <span class="lockup">
+              <svg
+                width="40"
+                height="40"
+                viewBox="0 0 120 120"
+                style="color: var(--mouve-d-foreground)"
+              >
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot" cx="92" cy="29" r="6" fill="var(--mouve-d-accent)" />
+              </svg>
+              <span class="wordmark">Figentra</span>
+            </span>
+            <p style="font-size: 14px; color: var(--mouve-d-muted); max-width: 40ch">
+              Autonomous Engineering, running in production.
+            </p>
+            <div>
+              <button class="mouve-btn-d">Talk to us →</button>
+            </div>
+          </div>
+        </div>
+
+        <p class="lede" style="margin-top: 20px">
+          Now the same mark on Figentra's own brand-doc surfaces for comparison:
+        </p>
+
+        <div class="surface-row">
+          <div
+            style="
+              background: var(--fig-paper);
+              color: var(--fig-ink);
+              padding: 32px 28px;
+              border: 1px solid #dde0e8;
+              border-radius: 4px;
+              min-height: 200px;
+              display: flex;
+              flex-direction: column;
+              gap: 20px;
+              box-shadow: 0 1px 2px rgb(0 0 0 / 8%);
+            "
+          >
+            <span class="surface-label" style="color: #5a6478">figentra · Paper</span>
+            <span class="lockup">
+              <svg width="40" height="40" viewBox="0 0 120 120" style="color: var(--fig-ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot" cx="92" cy="29" r="6" fill="var(--fig-signal)" />
+              </svg>
+              <span class="wordmark">Figentra</span>
+            </span>
+            <p style="font-size: 14px; color: #3a4256; max-width: 40ch">
+              Autonomous Engineering, running in production.
+            </p>
+            <div>
+              <button class="fig-btn">Talk to us →</button>
+            </div>
+          </div>
+
+          <div
+            style="
+              background: var(--fig-graphite-900);
+              color: var(--fig-paper);
+              padding: 32px 28px;
+              border-radius: 4px;
+              min-height: 200px;
+              display: flex;
+              flex-direction: column;
+              gap: 20px;
+            "
+          >
+            <span class="surface-label" style="color: #8b93a8">figentra · Graphite 900</span>
+            <span class="lockup">
+              <svg width="40" height="40" viewBox="0 0 120 120" style="color: var(--fig-paper)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot" cx="92" cy="29" r="6" fill="var(--fig-signal)" />
+              </svg>
+              <span class="wordmark">Figentra</span>
+            </span>
+            <p style="font-size: 14px; color: #8b93a8; max-width: 40ch">
+              Autonomous Engineering, running in production.
+            </p>
+            <div>
+              <button class="fig-btn">Talk to us →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           Section 3 — The diff table
+           ═══════════════════════════════════════════════════════ -->
+      <section>
+        <h2>Diff — HeroUI Pro "mouve" theme vs. Figentra brand doc</h2>
+        <p class="lede">
+          Every row below is a specific spec value from HeroUI Pro's
+          <code>mouve/variables.css</code> compared against
+          <code>docs/brand/04-visual-identity.md</code>. Green rows agree.
+          Red rows conflict.
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Concern</th>
+              <th>mouve theme value</th>
+              <th>Figentra brand-doc rule</th>
+              <th>Verdict</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Accent color</td>
+              <td><code>oklch(0.55 0.18 300)</code> — warm purple</td>
+              <td>Signal mint <code>#00E5A0</code> — the ONE accent (§1)</td>
+              <td><span class="cross">✗ conflicts</span> — different hue family entirely</td>
+            </tr>
+            <tr>
+              <td>Gradients on interactive elements</td>
+              <td>
+                Buttons carry <code>linear-gradient</code> overlay + inset
+                specular highlight ("gradient button overlays")
+              </td>
+              <td>
+                "<strong>No gradients. Ever.</strong> Solid colours only."
+                (§1 &sect; colour usage rules)
+              </td>
+              <td><span class="cross">✗ direct contradiction</span></td>
+            </tr>
+            <tr>
+              <td>Corner radius on fields/buttons</td>
+              <td>
+                <code>--field-radius: 1.5rem</code> = <strong>24px</strong>,
+                "rounded interactive affordances"
+              </td>
+              <td>"4px utility, 8px content, 12px hero, <strong>16px MAX</strong>. Never 24px+ — reads too consumer-playful." (§4)</td>
+              <td><span class="cross">✗ direct contradiction</span></td>
+            </tr>
+            <tr>
+              <td>Shadow system</td>
+              <td>
+                Multi-layer inset+drop shadows on every raised surface — 6+
+                layered stops per shadow token
+              </td>
+              <td>"<strong>No shadows deeper than <code>0 1px 2px rgb(0 0 0 / 8%)</code></strong>. Every elevation is a border, not a shadow." (§1)</td>
+              <td><span class="cross">✗ direct contradiction</span></td>
+            </tr>
+            <tr>
+              <td>Overall vibe</td>
+              <td>"Soft layered shadows, refined, contemporary, backdrop-blurred overlays"</td>
+              <td>"Engineering laboratory. Serious. Precise. Data-forward. Zero ornament." (§direction)</td>
+              <td><span class="cross">✗ opposite direction</span></td>
+            </tr>
+            <tr>
+              <td>Background tint</td>
+              <td>Every neutral tinted at hue 300 (purple undertone even in "white")</td>
+              <td>Paper is <strong>warm off-white</strong> <code>#FAFAF7</code> (yellow undertone, no chroma)</td>
+              <td><span class="cross">✗ conflicts</span></td>
+            </tr>
+            <tr>
+              <td>Semantic status colors</td>
+              <td>Success <code>oklch(0.73 0.19 150)</code>, Warning <code>oklch(0.78 0.16 72)</code>, Danger <code>oklch(0.65 0.23 26)</code></td>
+              <td>OK <code>#4CC38A</code>, Warn <code>#F5A623</code>, Fail <code>#E5484D</code> (§1 semantic accents)</td>
+              <td><span class="check">≈ similar</span> — different hex but same roles + close hues</td>
+            </tr>
+            <tr>
+              <td>Radius baseline</td>
+              <td><code>--radius: 0.54rem</code> = 8.64px (light) / <code>0.75rem</code> = 12px (dark)</td>
+              <td>4px utility, 8px content, 12px hero (§4)</td>
+              <td><span class="check">≈ compatible</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           Section 4 — What HeroUI Pro theme fits
+           ═══════════════════════════════════════════════════════ -->
+      <section>
+        <h2>Which HeroUI Pro theme actually fits Figentra?</h2>
+        <p class="lede">
+          HeroUI Pro ships four themes: <code>default</code>,
+          <code>brutalism</code>, <code>glass</code>, <code>mouve</code>. Only
+          <code>default</code> aligns with Figentra's brand doc — and even
+          then, you override its accent.
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Theme</th>
+              <th>Aesthetic</th>
+              <th>Accent</th>
+              <th>Fit for Figentra</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>default</strong></td>
+              <td>Neutral, restrained, single-layer shadows, 8px radius</td>
+              <td><code>oklch(0.62 0.20 254)</code> — mid-blue</td>
+              <td><span class="check">✓ closest fit</span> — override accent to Signal mint <code>#00E5A0</code></td>
+            </tr>
+            <tr>
+              <td>brutalism</td>
+              <td>Heavy strokes, hard corners, high-contrast</td>
+              <td>Loud primary</td>
+              <td><span class="neutral">≈ interesting but too loud</span> — reads YC/crypto</td>
+            </tr>
+            <tr>
+              <td>glass</td>
+              <td>Frosted surfaces, translucency, backdrop-blur</td>
+              <td>Muted</td>
+              <td><span class="cross">✗ contra brand doc</span> — no backdrop-blurred overlays per §1</td>
+            </tr>
+            <tr>
+              <td>mouve</td>
+              <td>Soft-refined, gradients, rounded, purple-tinted</td>
+              <td>Warm purple <code>oklch(0.55 0.18 300)</code></td>
+              <td><span class="cross">✗ 5 direct brand-doc conflicts</span> (see diff above)</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           Section 5 — Verdict
+           ═══════════════════════════════════════════════════════ -->
+      <section>
+        <h2>Verdict</h2>
+        <p class="lede">
+          "mouve" is a beautiful, cohesive design system — but it's designed
+          for a <strong>different tone</strong> than Figentra's. It's built
+          for refined, contemporary, soft-luxury consumer or design-forward
+          B2B (think: Notion, Framer, Superhuman). Every one of its
+          signature moves — gradient buttons, 24px pill corners, layered
+          shadows, purple hue — is exactly the kind of ornament your brand
+          doc §direction explicitly forbids.
+        </p>
+
+        <p class="lede">
+          Where this leaves you:
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>You want to…</th>
+              <th>Then…</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Stay on-brand per your written strategy</td>
+              <td>
+                Use HeroUI Pro <code>default</code> theme with the accent
+                overridden to Signal mint <code>#00E5A0</code>. Ship
+                Concept B in mint. Delete "mouve" from the theme options.
+              </td>
+            </tr>
+            <tr>
+              <td>Adopt the mouve aesthetic wholesale</td>
+              <td>
+                Update <code>docs/brand/04-visual-identity.md</code> to
+                match: allow gradients, 24px radius, layered shadows,
+                purple palette. That's a brand-strategy pivot, not a color
+                swap. Founding Partners' call.
+              </td>
+            </tr>
+            <tr>
+              <td>Cherry-pick just the mauve accent, keep the rest</td>
+              <td>
+                Ship Concept B with the dot in <code>oklch(0.55 0.18 300)</code>
+                instead of mint. Keep flat surfaces, 4-8px radii,
+                single-layer shadows. You get 1 conflict resolved and 5
+                still in place — not recommended.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p style="margin-top: 24px; font-size: 15px; color: #3a4256; max-width: 72ch">
+          <strong>My read:</strong> The mouve theme's visual language and
+          Figentra's positioning are aiming at different customers.
+          Figentra's ICP is a Fortune 500 CTO who wants to see
+          "engineering discipline, governance, receipts." Mouve's visual
+          language says "refined product, considered aesthetic, premium
+          consumer." Both are valid design targets — but you can't be both
+          at once, and you already wrote your answer in
+          <code>docs/brand/00-foundation.md §1</code>.
+        </p>
+
+        <p style="margin-top: 16px; font-size: 15px; color: #3a4256; max-width: 72ch">
+          Stick with Signal mint. Use HeroUI Pro's <code>default</code>
+          theme as the substrate. Ship Concept B unchanged.
+        </p>
+      </section>
+
+      <footer
+        style="
+          margin-top: 48px;
+          padding-top: 32px;
+          border-top: 1px solid #dde0e8;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 11px;
+          color: #5a6478;
+        "
+      >
+        <p>
+          Sources · HeroUI Pro MCP · mouve/variables.css · pro-base/tokens.css ·
+          docs/brand/04-visual-identity.md · pulled 2026-08-14
+        </p>
+        <p style="margin-top: 8px">
+          Draft location · .tmp/drafts/logos/mouv-check.html (retired 2026-08-18) · not committed
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

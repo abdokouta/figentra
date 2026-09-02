@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Figentra vertical video · shape 02 · Feature callout.
+  9:16 · 1080×1920. Lower-third callout · text runs over a mid-frame
+  video pane. Used mid-clip to highlight one product feature or one
+  section of a longer narrative.
+
+  Content zones inside safe area:
+    - Video pane     · 206..1040 y · full-width · 60% of frame
+    - Callout card   · 1080..1360 y · translucent glass over video
+    - Kicker         · Signal-mint · mono · uppercase · top-left of card
+    - Headline slot  · Geist 64 px · 2-line max
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920" role="img" aria-label="Feature callout · vertical video shape template" color="#141414">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+
+  <!-- Ink field · full-bleed background -->
+  <rect x="0" y="0" width="1080" height="1920" fill="#0b0f14"/>
+
+  <!-- Top safe-zone marker -->
+  <line x1="0" y1="206" x2="1080" y2="206" stroke="#fafafa" stroke-width="1" stroke-dasharray="6 6" opacity="0.14"/>
+
+  <!-- VIDEO PANE placeholder · dashed rectangle indicating live footage -->
+  <rect x="40" y="240" width="1000" height="800" fill="none" stroke="#00e5a0" stroke-width="1" stroke-dasharray="8 6" opacity="0.35"/>
+  <text x="540" y="640" text-anchor="middle" font-family="'Geist Mono', ui-monospace, monospace" font-size="26" fill="#fafafa" opacity="0.32" letter-spacing="0.12em">
+    LIVE VIDEO PANE · 1000 × 800
+  </text>
+  <text x="540" y="676" text-anchor="middle" font-family="'Geist Mono', ui-monospace, monospace" font-size="20" fill="#fafafa" opacity="0.24" letter-spacing="0.1em">
+    product screen · demo capture · terminal cast
+  </text>
+
+  <!-- Callout card · glass surface below the video pane -->
+  <rect x="40" y="1080" width="1000" height="280" rx="16" fill="rgba(255,255,255,0.04)" stroke="rgba(0,229,160,0.25)" stroke-width="1"/>
+
+  <!-- Kicker · Signal Mint mono -->
+  <text x="80" y="1150" font-family="'Geist Mono', ui-monospace, monospace" font-size="24" fill="#00e5a0" letter-spacing="0.18em">
+    FEATURE · 03 · REVIEW LANES
+  </text>
+
+  <!-- Headline · Geist 64 px · 2-line placeholder -->
+  <text x="80" y="1220" font-family="'Geist', 'Inter', sans-serif" font-weight="500" font-size="60" fill="#fafafa" letter-spacing="-0.02em">
+    <tspan x="80" dy="0">Every merge to main runs</tspan>
+    <tspan x="80" dy="72">through eleven review lanes.</tspan>
+  </text>
+
+  <!-- Bottom safe-zone marker -->
+  <line x1="0" y1="1400" x2="1080" y2="1400" stroke="#fafafa" stroke-width="1" stroke-dasharray="6 6" opacity="0.14"/>
+  <text x="40" y="1440" font-family="'Geist Mono', ui-monospace, monospace" font-size="20" fill="#fafafa" opacity="0.32" letter-spacing="0.14em">BOTTOM SAFE · 520 PX RESERVED</text>
+
+  <!-- f_ mark · bottom-right of card -->
+  <g transform="translate(920, 1236)">
+    <rect x="44" y="18" width="8" height="76" fill="#fafafa"/>
+    <rect x="44" y="18" width="30" height="8" fill="#fafafa"/>
+    <rect x="28" y="52" width="36" height="8" fill="#fafafa"/>
+    <rect x="28" y="102" width="64" height="8" fill="#00e5a0"/>
+  </g>
+</svg>

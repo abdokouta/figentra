@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!--
+      Figentra docs microsite chrome · v1.0 · 2026-08-19.
+
+      Static HTML mockup for docs.figentra.cloud — the developer
+      documentation surface that ships every @stackra/* package
+      reference, every ADR narrative, every steering-file guide,
+      every runbook the workspace publishes. Composes from the
+      shipped Figentra tokens (Ink · Paper · Signal Mint · Geist
+      + Geist Mono) — never introduces new brand primitives.
+
+      This file is a REFERENCE — the actual docs runtime ships
+      via Vite/Vitepress with these tokens applied.
+
+      authored_by: kiro
+      authored_at: 2026-08-19
+      source:      prompt://v11-docs-microsite
+      reviewed_by: null
+      reviewed_at: null
+    -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Docs · Figentra</title>
+
+    <link rel="preconnect" href="https://rsms.me/" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://rsms.me/inter/inter.css"
+    />
+
+    <style>
+      :root {
+        /* Ink · paper · signal (mirrors brand-system.html §01) */
+        --ink: #141414;
+        --paper: #fafafa;
+        --surface: #ffffff;
+        --surface-2: #f7f7f7;
+        --signal: #00e5a0;
+        --text: #141414;
+        --text-muted: rgba(20, 20, 20, 0.62);
+        --text-dim: rgba(20, 20, 20, 0.42);
+        --border: rgba(20, 20, 20, 0.1);
+        --border-strong: rgba(20, 20, 20, 0.18);
+        --font-sans: "Geist", "Inter", system-ui, -apple-system,
+          sans-serif;
+        --font-mono: "Geist Mono", "SF Mono", ui-monospace, "Menlo",
+          monospace;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --ink: #fafafa;
+          --paper: #0b0f14;
+          --surface: #10151d;
+          --surface-2: #161c25;
+          --text: #fafafa;
+          --text-muted: rgba(250, 250, 250, 0.65);
+          --text-dim: rgba(250, 250, 250, 0.42);
+          --border: rgba(250, 250, 250, 0.12);
+          --border-strong: rgba(250, 250, 250, 0.22);
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--paper);
+        color: var(--text);
+        font-family: var(--font-sans);
+        font-size: 15px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      code,
+      pre,
+      kbd {
+        font-family: var(--font-mono);
+        font-size: 0.9em;
+      }
+
+      /* ── Top nav ─────────────────────────────────────────────── */
+      .top-nav {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        background: color-mix(in oklab, var(--paper) 92%, transparent);
+        backdrop-filter: blur(12px) saturate(140%);
+        border-bottom: 1px solid var(--border);
+        height: 56px;
+        display: flex;
+        align-items: center;
+        padding: 0 24px;
+        gap: 24px;
+      }
+
+      .brand-lockup {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 15px;
+      }
+
+      .brand-lockup svg {
+        width: 22px;
+        height: 22px;
+      }
+
+      .brand-lockup .docs-badge {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        padding: 2px 8px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        color: var(--text-muted);
+      }
+
+      .top-nav .search {
+        flex: 1;
+        max-width: 480px;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 6px 10px 6px 32px;
+        display: flex;
+        align-items: center;
+        color: var(--text-muted);
+        font-family: var(--font-sans);
+        font-size: 13px;
+        position: relative;
+      }
+
+      .top-nav .search::before {
+        content: "";
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 12px;
+        height: 12px;
+        border: 1.5px solid currentColor;
+        border-radius: 50%;
+        opacity: 0.55;
+      }
+
+      .top-nav .search::after {
+        content: "";
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-25%) rotate(45deg);
+        width: 4px;
+        height: 1.5px;
+        background: currentColor;
+        opacity: 0.55;
+      }
+
+      .top-nav .search kbd {
+        margin-left: auto;
+        font-size: 10px;
+        padding: 2px 6px;
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        background: var(--surface);
+      }
+
+      .top-nav .actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin-left: auto;
+      }
+
+      .top-nav .actions a {
+        font-family: var(--font-sans);
+        font-size: 13px;
+        color: var(--text-muted);
+        text-decoration: none;
+      }
+
+      .top-nav .actions a:hover {
+        color: var(--text);
+      }
+
+      .top-nav .actions .cta {
+        font-family: var(--font-sans);
+        font-size: 13px;
+        padding: 6px 12px;
+        background: var(--signal);
+        color: var(--ink);
+        border-radius: 5px;
+        font-weight: 500;
+      }
+
+      /* ── Shell layout ────────────────────────────────────────── */
+      .shell {
+        display: grid;
+        grid-template-columns: 244px minmax(0, 1fr) 220px;
+        max-width: 1440px;
+        margin: 0 auto;
+        min-height: calc(100vh - 56px);
+      }
+
+      /* ── Sidebar (left) ──────────────────────────────────────── */
+      .sidebar {
+        border-right: 1px solid var(--border);
+        padding: 32px 20px;
+        position: sticky;
+        top: 56px;
+        height: calc(100vh - 56px);
+        overflow-y: auto;
+      }
+
+      .sidebar-group {
+        margin-bottom: 24px;
+      }
+
+      .sidebar-group-title {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin: 0 0 8px;
+      }
+
+      .sidebar-group ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .sidebar-group li {
+        margin: 0;
+      }
+
+      .sidebar-group a {
+        display: block;
+        padding: 5px 10px;
+        margin: 1px 0;
+        border-radius: 5px;
+        color: var(--text-muted);
+        text-decoration: none;
+        font-size: 13px;
+      }
+
+      .sidebar-group a:hover {
+        background: var(--surface-2);
+        color: var(--text);
+      }
+
+      .sidebar-group a.active {
+        color: var(--text);
+        background: color-mix(in oklab, var(--signal) 12%, transparent);
+        border-left: 2px solid var(--signal);
+        padding-left: 8px;
+      }
+
+      /* ── Main content ────────────────────────────────────────── */
+      main.content {
+        padding: 48px 56px 96px;
+        max-width: 780px;
+      }
+
+      .breadcrumbs {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin-bottom: 8px;
+      }
+
+      .breadcrumbs a {
+        color: var(--text-dim);
+        text-decoration: none;
+      }
+
+      .breadcrumbs a:hover {
+        color: var(--text-muted);
+      }
+
+      h1 {
+        font-size: 36px;
+        font-weight: 500;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        margin: 4px 0 12px;
+        color: var(--text);
+      }
+
+      .lede {
+        font-size: 17px;
+        line-height: 1.55;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+      }
+
+      .meta-row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin: 24px 0 40px;
+        padding: 12px 14px;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-muted);
+        letter-spacing: 0.04em;
+      }
+
+      .meta-row .dot {
+        width: 6px;
+        height: 6px;
+        background: var(--signal);
+        border-radius: 50%;
+      }
+
+      .meta-row span + span::before {
+        content: "·";
+        margin: 0 6px;
+        color: var(--text-dim);
+      }
+
+      h2 {
+        font-size: 22px;
+        font-weight: 500;
+        line-height: 1.3;
+        letter-spacing: -0.01em;
+        margin: 48px 0 16px;
+        padding-top: 4px;
+        color: var(--text);
+      }
+
+      h3 {
+        font-size: 17px;
+        font-weight: 500;
+        margin: 32px 0 12px;
+        color: var(--text);
+      }
+
+      p {
+        margin: 0 0 16px;
+        color: var(--text);
+      }
+
+      p code {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 1px 6px;
+        font-size: 13px;
+      }
+
+      pre {
+        background: color-mix(in oklab, var(--ink) 8%, var(--paper));
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 16px 18px;
+        overflow-x: auto;
+        font-size: 13px;
+        line-height: 1.55;
+        margin: 16px 0 20px;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        pre {
+          background: #06090d;
+        }
+      }
+
+      pre .kw {
+        color: var(--signal);
+      }
+
+      pre .str {
+        color: #ff9e40;
+      }
+
+      pre .cm {
+        color: var(--text-dim);
+      }
+
+      /* Callouts */
+      .callout {
+        border-left: 3px solid var(--signal);
+        background: color-mix(in oklab, var(--signal) 6%, transparent);
+        padding: 12px 16px;
+        margin: 20px 0;
+        border-radius: 0 6px 6px 0;
+      }
+
+      .callout .callout-title {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--signal);
+        margin: 0 0 4px;
+        font-weight: 500;
+      }
+
+      .callout p {
+        margin: 0;
+        font-size: 14px;
+        color: var(--text-muted);
+      }
+
+      /* API rows */
+      .api-row {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 24px;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .api-row:last-child {
+        border-bottom: 0;
+      }
+
+      .api-row .api-name {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--text);
+      }
+
+      .api-row .api-type {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--signal);
+        margin-left: 6px;
+      }
+
+      .api-row .api-desc {
+        font-size: 14px;
+        color: var(--text-muted);
+        line-height: 1.55;
+      }
+
+      /* ── Right rail (TOC) ────────────────────────────────────── */
+      .toc {
+        border-left: 1px solid var(--border);
+        padding: 48px 20px;
+        position: sticky;
+        top: 56px;
+        height: calc(100vh - 56px);
+        overflow-y: auto;
+      }
+
+      .toc-title {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin: 0 0 12px;
+      }
+
+      .toc ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .toc li {
+        margin: 0;
+      }
+
+      .toc a {
+        display: block;
+        padding: 3px 8px;
+        border-left: 2px solid transparent;
+        color: var(--text-muted);
+        text-decoration: none;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .toc a.active {
+        border-left-color: var(--signal);
+        color: var(--text);
+      }
+
+      .toc a:hover {
+        color: var(--text);
+      }
+
+      .toc-l2 {
+        padding-left: 20px !important;
+      }
+
+      /* ── Responsive · collapse rails ─────────────────────────── */
+      @media (max-width: 1024px) {
+        .shell {
+          grid-template-columns: 220px minmax(0, 1fr);
+        }
+        .toc {
+          display: none;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .shell {
+          grid-template-columns: 1fr;
+        }
+        .sidebar {
+          display: none;
+        }
+        main.content {
+          padding: 32px 24px 64px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ── Top nav ───────────────────────────────────────────────── -->
+    <nav class="top-nav">
+      <a href="/" class="brand-lockup">
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <rect x="44" y="18" width="8" height="76" fill="currentColor" />
+          <rect x="44" y="18" width="30" height="8" fill="currentColor" />
+          <rect x="28" y="52" width="36" height="8" fill="currentColor" />
+          <rect x="28" y="102" width="64" height="8" fill="#00e5a0" />
+        </svg>
+        Figentra
+        <span class="docs-badge">DOCS</span>
+      </a>
+      <div class="search">
+        Search docs, packages, ADRs…
+        <kbd>⌘K</kbd>
+      </div>
+      <div class="actions">
+        <a href="/">figentra.com</a>
+        <a href="/how">How we build</a>
+        <a href="/products">Products</a>
+        <a href="/contact" class="cta">Talk to us</a>
+      </div>
+    </nav>
+
+    <!-- ── Shell ─────────────────────────────────────────────────── -->
+    <div class="shell">
+      <!-- Sidebar (left) -->
+      <aside class="sidebar">
+        <div class="sidebar-group">
+          <p class="sidebar-group-title">Get started</p>
+          <ul>
+            <li><a href="#">Introduction</a></li>
+            <li><a href="#">Quick start</a></li>
+            <li><a href="#">Governance model</a></li>
+            <li><a href="#">Provenance frontmatter</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-group">
+          <p class="sidebar-group-title">Framework · @stackra/*</p>
+          <ul>
+            <li><a href="#" class="active">@stackra/container</a></li>
+            <li><a href="#">@stackra/routing</a></li>
+            <li><a href="#">@stackra/http</a></li>
+            <li><a href="#">@figentra/queue</a></li>
+            <li><a href="#">@stackra/cache</a></li>
+            <li><a href="#">@stackra/events</a></li>
+            <li><a href="#">@stackra/logger</a></li>
+            <li><a href="#">@stackra/network</a></li>
+            <li><a href="#">@stackra/support</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-group">
+          <p class="sidebar-group-title">Backend · stackra/*</p>
+          <ul>
+            <li><a href="#">stackra/foundation</a></li>
+            <li><a href="#">stackra/service-provider</a></li>
+            <li><a href="#">stackra/tenancy</a></li>
+            <li><a href="#">stackra/authorization</a></li>
+            <li><a href="#">stackra/scope</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-group">
+          <p class="sidebar-group-title">Steering · governance</p>
+          <ul>
+            <li><a href="#">Actions-only doctrine</a></li>
+            <li><a href="#">Tenancy columns</a></li>
+            <li><a href="#">Third-party integrations</a></li>
+            <li><a href="#">Commit conventions</a></li>
+            <li><a href="#">AI-agent governance</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-group">
+          <p class="sidebar-group-title">Reference</p>
+          <ul>
+            <li><a href="#">ADR index</a></li>
+            <li><a href="#">Runbook catalog</a></li>
+            <li><a href="#">Changelog</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Main content -->
+      <main class="content">
+        <p class="breadcrumbs">
+          <a href="#">Docs</a> · <a href="#">Framework</a> · @stackra/container
+        </p>
+        <h1>@stackra/container</h1>
+        <p class="lede">
+          NestJS-compatible dependency injection for the workspace's
+          TypeScript packages. Runs identically in Node, Vite,
+          React Native, and web-workers — one container primitive,
+          every runtime.
+        </p>
+        <div class="meta-row">
+          <span class="dot" aria-hidden="true"></span>
+          <span>Version 1.4.0</span>
+          <span>Framework tier</span>
+          <span>Maturity · stable</span>
+          <span>Owner · framework-core-builder</span>
+        </div>
+
+        <p>
+          <code>@stackra/container</code> ships the DI runtime every
+          <code>@stackra/*</code> feature package depends on. It composes on
+          top of <code>reflect-metadata</code> and follows the NestJS
+          Provider + DynamicModule + lifecycle-hook contract exactly —
+          engineers moving from a NestJS backend recognise every primitive.
+        </p>
+
+        <h2 id="install">Install</h2>
+        <pre><span class="cm"># pnpm</span>
+pnpm add <span class="str">@stackra/container reflect-metadata</span>
+
+<span class="cm"># peer requirement — every workspace app imports this once</span>
+<span class="cm"># at the entry point BEFORE the container boots.</span>
+<span class="kw">import</span> <span class="str">"reflect-metadata"</span>;</pre>
+
+        <h2 id="quick-start">Quick start</h2>
+        <p>
+          A minimal module + service + top-level composition looks like this:
+        </p>
+        <pre><span class="kw">import</span> { Module, Injectable } <span class="kw">from</span> <span class="str">"@stackra/container"</span>;
+
+<span class="kw">@Injectable</span>()
+<span class="kw">class</span> LoggerService {
+  info(msg: <span class="kw">string</span>) {
+    console.log(<span class="str">`[log]`</span>, msg);
+  }
+}
+
+<span class="kw">@Module</span>({ providers: [LoggerService], exports: [LoggerService] })
+<span class="kw">class</span> AppModule {}
+
+<span class="kw">const</span> app = <span class="kw">await</span> Container.create(AppModule);
+<span class="kw">const</span> logger = app.get(LoggerService);
+logger.info(<span class="str">"container booted"</span>);</pre>
+
+        <div class="callout">
+          <p class="callout-title">Lifecycle</p>
+          <p>
+            Services extending <code>OnModuleInit</code> run their
+            <code>onModuleInit</code> hook after every dependency has been
+            resolved. Discovery loaders extend
+            <code>OnApplicationBootstrap</code> — the phase after every
+            module has finished init. Never do side-effect work inside a
+            constructor.
+          </p>
+        </div>
+
+        <h2 id="api">API reference</h2>
+
+        <div class="api-row">
+          <div class="api-name">
+            <code>@Module(options)</code>
+            <span class="api-type">decorator</span>
+          </div>
+          <div class="api-desc">
+            Declares a container module. Options: <code>providers</code>,
+            <code>imports</code>, <code>exports</code>, <code>global</code>.
+          </div>
+        </div>
+        <div class="api-row">
+          <div class="api-name">
+            <code>@Injectable()</code>
+            <span class="api-type">decorator</span>
+          </div>
+          <div class="api-desc">
+            Marks a class as injectable. Reflects constructor parameter
+            types for DI resolution.
+          </div>
+        </div>
+        <div class="api-row">
+          <div class="api-name">
+            <code>@Inject(token)</code>
+            <span class="api-type">parameter decorator</span>
+          </div>
+          <div class="api-desc">
+            Overrides the reflected type with an explicit DI token (string
+            or symbol) — used for interfaces and cross-package contracts.
+          </div>
+        </div>
+        <div class="api-row">
+          <div class="api-name">
+            <code>Container.create(RootModule)</code>
+            <span class="api-type">async factory</span>
+          </div>
+          <div class="api-desc">
+            Boots the container. Runs every module's <code>onModuleInit</code>,
+            then every service's <code>onApplicationBootstrap</code>. Returns
+            an application instance with <code>.get(ClassOrToken)</code>.
+          </div>
+        </div>
+
+        <h2 id="lifecycle">Lifecycle hooks</h2>
+        <p>
+          Every provider MAY implement one or more lifecycle interfaces.
+          Hooks fire in the order Container.create resolves them.
+        </p>
+        <h3 id="on-module-init">OnModuleInit</h3>
+        <p>
+          Fires once per provider after its dependencies are resolved.
+          Use for module-local initialisation — seeding a registry with
+          config-driven values, warming a memoisation cache.
+        </p>
+
+        <h3 id="on-application-bootstrap">OnApplicationBootstrap</h3>
+        <p>
+          Fires once per provider AFTER every module has finished
+          <code>onModuleInit</code>. Use for cross-module coordination —
+          discovery loaders scan the container for
+          <code>@AsController</code>-marked classes; feature registrars
+          extend base registries with per-feature contributions.
+        </p>
+
+        <div class="callout">
+          <p class="callout-title">See also</p>
+          <p>
+            <a href="#">Discovery vs Loader convention</a> · the naming
+            rule that separates the framework primitive from the domain
+            adapter · <a href="#">Module lifecycle steering</a> · the
+            forbidden patterns list.
+          </p>
+        </div>
+      </main>
+
+      <!-- Right rail (TOC) -->
+      <aside class="toc">
+        <p class="toc-title">On this page</p>
+        <ul>
+          <li><a href="#install" class="active">Install</a></li>
+          <li><a href="#quick-start">Quick start</a></li>
+          <li><a href="#api">API reference</a></li>
+          <li class="toc-l2">
+            <a href="#" class="toc-l2">@Module</a>
+          </li>
+          <li class="toc-l2">
+            <a href="#" class="toc-l2">@Injectable</a>
+          </li>
+          <li class="toc-l2">
+            <a href="#" class="toc-l2">@Inject</a>
+          </li>
+          <li class="toc-l2">
+            <a href="#" class="toc-l2">Container.create</a>
+          </li>
+          <li><a href="#lifecycle">Lifecycle hooks</a></li>
+          <li class="toc-l2">
+            <a href="#on-module-init" class="toc-l2">OnModuleInit</a>
+          </li>
+          <li class="toc-l2">
+            <a href="#on-application-bootstrap" class="toc-l2"
+              >OnApplicationBootstrap</a
+            >
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </body>
+</html>

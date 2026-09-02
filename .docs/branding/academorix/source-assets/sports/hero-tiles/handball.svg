@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sport HERO tile — handball.
+  Full court top-down · IHF proportions (20m × 40m mapped to 800×500).
+  Includes: 6m goal-area semicircles · 9m free-throw arcs (dashed) ·
+  7m penalty spots · halfway line · goals + goalposts.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Handball court — top-down">
+  <defs>
+    <style>
+      .field { fill: #141414; }
+      .line { fill: none; stroke: #FF6B35; stroke-width: 3; stroke-linejoin: miter; opacity: 0.9; }
+      .line-thin { fill: none; stroke: #FF6B35; stroke-width: 2; stroke-linejoin: miter; opacity: 0.6; }
+      .line-dash { fill: none; stroke: #FF6B35; stroke-width: 2; stroke-dasharray: 6 4; opacity: 0.7; }
+      .dot { fill: #FF6B35; }
+    </style>
+  </defs>
+
+  <!-- Court surface -->
+  <rect width="800" height="500" class="field"/>
+
+  <!-- Court outline · 40m × 20m proportional to 720 × 360 -->
+  <rect x="40" y="70" width="720" height="360" class="line"/>
+
+  <!-- Halfway line -->
+  <line x1="400" y1="70" x2="400" y2="430" class="line"/>
+
+  <!-- Centre dot -->
+  <circle cx="400" cy="250" r="3" class="dot"/>
+
+  <!-- LEFT goal-area (6m arc · semicircle from goal-line) -->
+  <!-- Goal-line x=40, goal centre y=250, arc radius scaled: 6m/20m of half-height = 108px -->
+  <path d="M 40 142 A 108 108 0 0 1 40 358" class="line"/>
+
+  <!-- LEFT free-throw arc (9m · dashed) -->
+  <path d="M 40 88 A 162 162 0 0 1 40 412" class="line-dash"/>
+
+  <!-- LEFT 7m penalty line (short segment) -->
+  <line x1="164" y1="238" x2="164" y2="262" class="line"/>
+
+  <!-- LEFT goal -->
+  <rect x="26" y="230" width="14" height="40" class="line"/>
+
+  <!-- RIGHT goal-area · mirror -->
+  <path d="M 760 142 A 108 108 0 0 0 760 358" class="line"/>
+  <path d="M 760 88 A 162 162 0 0 0 760 412" class="line-dash"/>
+  <line x1="636" y1="238" x2="636" y2="262" class="line"/>
+  <rect x="760" y="230" width="14" height="40" class="line"/>
+
+  <!-- 4m goalkeeper restraining line marker (thin, right of left goal) -->
+  <line x1="120" y1="245" x2="120" y2="255" class="line-thin"/>
+  <line x1="680" y1="245" x2="680" y2="255" class="line-thin"/>
+
+  <!-- Substitution line markers (small ticks at centre of each side) -->
+  <line x1="380" y1="66" x2="380" y2="76" class="line-thin"/>
+  <line x1="420" y1="66" x2="420" y2="76" class="line-thin"/>
+</svg>

@@ -1,0 +1,536 @@
+<!doctype html>
+<!--
+  Academorix · micro-brand generator · v1.1 draft
+  ------------------------------------------------------------------
+  Interactive walkthrough for the season-mark + tournament-crest
+  templates. Type into the variable-slot fields on the left; the SVGs
+  on the right update live. Export via the browser's "Save image as"
+  (right-click) or the buttons at the bottom (SVG + copy-to-clipboard).
+
+  Both marks live in this page as inline <svg> so slot substitution
+  is DOM manipulation, no server round-trip. When the runtime lands,
+  the same substitution logic runs server-side via
+  `Stackra\Storage\Actions\RenderSeasonMark`.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Academorix · season + tournament generator</title>
+    <link rel="stylesheet" href="../_shared/tokens.css" />
+    <style>
+      body {
+        min-height: 100vh;
+        padding: 48px 32px 96px;
+      }
+      .page {
+        max-width: 1440px;
+        margin: 0 auto;
+      }
+      header.hd {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 40px;
+      }
+      header.hd h1 {
+        font-family: var(--font-sans);
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        font-size: clamp(32px, 3.6vw, 48px);
+        line-height: 1.05;
+        margin: 0;
+      }
+      header.hd .kicker {
+        margin: 0 0 4px;
+      }
+      header.hd p {
+        max-width: 640px;
+        color: var(--text-muted);
+        line-height: 1.55;
+        margin: 8px 0 0;
+      }
+
+      /* Two-tab layout · season | tournament */
+      .tabs {
+        display: inline-flex;
+        gap: 4px;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-3);
+        padding: 4px;
+        margin-bottom: 32px;
+      }
+      .tabs button {
+        border: 0;
+        background: transparent;
+        color: var(--text);
+        font-family: var(--font-sans);
+        font-weight: 500;
+        font-size: 13px;
+        padding: 8px 14px;
+        border-radius: var(--radius-2);
+        cursor: pointer;
+      }
+      .tabs button[aria-selected="true"] {
+        background: var(--ink);
+        color: var(--paper);
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 40px;
+      }
+
+      /* left · form */
+      .form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 24px;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-4);
+        box-shadow: var(--elevation-1);
+        align-self: start;
+      }
+      .form h2 {
+        font-family: var(--font-sans);
+        font-weight: 500;
+        font-size: 18px;
+        letter-spacing: -0.02em;
+        margin: 0 0 4px;
+      }
+      .form p {
+        margin: 0;
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+      .field {
+        display: grid;
+        gap: 6px;
+      }
+      .field label {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--signal);
+      }
+      .field input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-2);
+        font-family: var(--font-sans);
+        font-size: 14px;
+        color: var(--text);
+        background: var(--surface);
+      }
+      .field input:focus {
+        outline: 2px solid var(--signal);
+        outline-offset: 2px;
+        border-color: var(--signal);
+      }
+      .field .hint {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--text-muted);
+        letter-spacing: 0.08em;
+      }
+
+      .actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+      }
+      .actions button {
+        flex: 1;
+        justify-content: center;
+      }
+
+      /* right · preview */
+      .preview {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+      .preview .canvas {
+        background: var(--surface-3);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-4);
+        padding: 40px;
+        display: grid;
+        place-items: center;
+        aspect-ratio: 1 / 1;
+        box-shadow: var(--elevation-1);
+      }
+      .preview .canvas svg {
+        width: 100%;
+        height: 100%;
+        max-width: 480px;
+        max-height: 480px;
+      }
+      .preview .anatomy {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-4);
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .preview .anatomy h3 {
+        font-family: var(--font-sans);
+        font-weight: 500;
+        font-size: 16px;
+        letter-spacing: -0.01em;
+        margin: 0;
+      }
+      .anatomy ol {
+        list-style: none;
+        counter-reset: an;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 8px;
+      }
+      .anatomy ol li {
+        counter-increment: an;
+        padding-left: 32px;
+        position: relative;
+        font-size: 13px;
+        line-height: 1.5;
+        color: var(--text);
+      }
+      .anatomy ol li::before {
+        content: counter(an, decimal-leading-zero);
+        position: absolute;
+        left: 0;
+        top: 1px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--signal);
+        letter-spacing: 0.1em;
+      }
+
+      /* hide the tournament view when season is selected + vice-versa */
+      .view { display: none; }
+      .view[data-active="true"] { display: grid; }
+
+      /* export tooltip */
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 12px 20px;
+        background: var(--ink);
+        color: var(--paper);
+        border-radius: var(--radius-3);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        box-shadow: var(--elevation-3);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 200ms var(--ease-out-quart);
+      }
+      .toast[data-visible="true"] { opacity: 1; }
+
+      @media (max-width: 900px) {
+        .layout { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="page">
+      <header class="hd">
+        <p class="kicker">Micro-brand · season + tournament</p>
+        <h1>Generate a season mark or tournament crest.</h1>
+        <p>
+          Two templates, one recipe. Type into the variable-slot fields
+          on the left; the mark updates live on the right. Right-click
+          the mark to save it, or use the export buttons at the bottom
+          of the form. The same substitution logic runs server-side
+          when the runtime lands.
+        </p>
+      </header>
+
+      <!-- ── tab bar ─────────────────────────────────────── -->
+      <div class="tabs" role="tablist" aria-label="Mark type">
+        <button
+          role="tab"
+          aria-selected="true"
+          data-tab="season"
+        >
+          Season mark
+        </button>
+        <button role="tab" aria-selected="false" data-tab="tournament">
+          Tournament crest
+        </button>
+      </div>
+
+      <!-- ─────────────────── SEASON VIEW ───────────────── -->
+      <section class="layout view" data-view="season" data-active="true" aria-label="Season mark generator">
+        <div class="form">
+          <div>
+            <h2>Season mark</h2>
+            <p>Coin-stamp mark for a season. Ships on kit tags, session cards, roster boards.</p>
+          </div>
+          <div class="field">
+            <label for="s-academy">Academy orbit text</label>
+            <input id="s-academy" data-slot="ACADEMY_ORBIT_TEXT" value="SAHARA PADEL ACADEMY" />
+            <span class="hint">ALL CAPS · mono orbit</span>
+          </div>
+          <div class="field">
+            <label for="s-name">Season name</label>
+            <input id="s-name" data-slot="SEASON_NAME" value="FALL SEASON" />
+            <span class="hint">2 – 3 words · uppercase display</span>
+          </div>
+          <div class="field">
+            <label for="s-year">Season year</label>
+            <input id="s-year" data-slot="SEASON_YEAR" value="2026 / 27" />
+            <span class="hint">Format · YYYY / YY</span>
+          </div>
+          <div class="field">
+            <label for="s-tag">Discipline tag</label>
+            <input id="s-tag" data-slot="DISCIPLINE_TAG" value="U14 · SKILLS" />
+            <span class="hint">Optional · leave blank for a generic season mark</span>
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary" data-export="season">Copy SVG</button>
+            <button class="btn btn-ghost" data-download="season">Download</button>
+          </div>
+        </div>
+
+        <div class="preview">
+          <div class="canvas" id="season-canvas">
+            <!-- Inline SVG loaded via fetch on boot -->
+          </div>
+          <div class="anatomy">
+            <h3>Anatomy</h3>
+            <ol>
+              <li><strong>Outer double ring</strong> — ink hairlines + 12-tick minute marks; top tick painted Track Orange.</li>
+              <li><strong>Top arc</strong> — academy name in Geist Mono, letter-spacing 0.24em.</li>
+              <li><strong>Bottom arc</strong> — season + year in Geist Mono at 72% opacity.</li>
+              <li><strong>A-Chevron mark</strong> — 1.2× default scale, ink strokes, Track Orange apex marker.</li>
+              <li><strong>Season plate</strong> — Track Orange band with the season name centred.</li>
+              <li><strong>Discipline tag</strong> — mono caption at 62% opacity.</li>
+              <li><strong>Chevron cluster</strong> — 3 chevrons descending in opacity, decorative footer.</li>
+              <li><strong>Provenance stamp</strong> — "RECORDED · ACADEMORIX" mono at 50% opacity.</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─────────────────── TOURNAMENT VIEW ───────────── -->
+      <section class="layout view" data-view="tournament" aria-label="Tournament crest generator">
+        <div class="form">
+          <div>
+            <h2>Tournament crest</h2>
+            <p>Shield crest with the tournament title on a Track Orange plate. Ships on programme covers, match reports, medal ribbons.</p>
+          </div>
+          <div class="field">
+            <label for="t-title">Tournament title</label>
+            <input id="t-title" data-slot="TOURNAMENT_TITLE" value="AIN DIAB OPEN" />
+            <span class="hint">2 – 4 words · display · ALL CAPS looks best</span>
+          </div>
+          <div class="field">
+            <label for="t-edition">Edition</label>
+            <input id="t-edition" data-slot="TOURNAMENT_EDITION" value="XIV · 2026" />
+            <span class="hint">Roman-numeral + year · e.g. "IX · 2026"</span>
+          </div>
+          <div class="field">
+            <label for="t-host">Host academy</label>
+            <input id="t-host" data-slot="HOST_ACADEMY" value="SAHARA PADEL ACADEMY" />
+            <span class="hint">Mono line · reads "HOSTED · ..."</span>
+          </div>
+          <div class="field">
+            <label for="t-city">Host city</label>
+            <input id="t-city" data-slot="HOST_CITY" value="CASABLANCA · MAROC" />
+            <span class="hint">Arc top · mono</span>
+          </div>
+          <div class="field">
+            <label for="t-discipline">Discipline row</label>
+            <input id="t-discipline" data-slot="DISCIPLINE_ROW" value="PADEL · YOUTH U14 · DOUBLES" />
+            <span class="hint">Footer mono · dot-separated</span>
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary" data-export="tournament">Copy SVG</button>
+            <button class="btn btn-ghost" data-download="tournament">Download</button>
+          </div>
+        </div>
+
+        <div class="preview">
+          <div class="canvas" id="tournament-canvas" style="aspect-ratio: 5 / 7;">
+            <!-- Inline SVG loaded via fetch on boot -->
+          </div>
+          <div class="anatomy">
+            <h3>Anatomy</h3>
+            <ol>
+              <li><strong>Shield outline</strong> — ink 4px stroke, inset hairline at 42% opacity.</li>
+              <li><strong>Track Orange rank pin</strong> — top of the shield · echoes the A-Chevron apex marker.</li>
+              <li><strong>Chevron rank stack</strong> — 3 chevrons descending in weight + opacity through the shield face.</li>
+              <li><strong>Top arc</strong> — host city / country in Geist Mono at 72%.</li>
+              <li><strong>Title plate</strong> — Track Orange band with the tournament title, ink chevron tick-marks at each edge.</li>
+              <li><strong>Edition</strong> — Roman-numeral + year in Geist Mono, weight 600.</li>
+              <li><strong>Host academy</strong> — mono line · "HOSTED · ..." at 62%.</li>
+              <li><strong>Discipline row</strong> — dot-separated mono at 72%.</li>
+              <li><strong>Provenance stamp</strong> — small A-Chevron mark + "RECORDED · ACADEMORIX".</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite">Copied SVG to clipboard</div>
+
+    <script>
+      /**
+       * Micro-brand generator runtime.
+       * ------------------------------------------------------------
+       * 1. Load season-mark.svg + tournament-crest.svg on boot into
+       *    their inline canvas containers.
+       * 2. Bind each `<input data-slot="X">` to the corresponding
+       *    `24` token in the SVG's text nodes.
+       * 3. Update the DOM on every keystroke.
+       * 4. Copy/download buttons serialize the live inline SVG.
+       */
+
+      const SLOT_RE = new RegExp("\\{\\{\\s*([A-Z_][A-Z0-9_]*)\\s*\\}\\}", "g");
+      const svgSources = {
+        season: "./season-mark.svg",
+        tournament: "./tournament-crest.svg",
+      };
+      const canvases = {
+        season: document.getElementById("season-canvas"),
+        tournament: document.getElementById("tournament-canvas"),
+      };
+
+      /** Load an SVG file, inject into the canvas, return its root element. */
+      async function loadSvg(key) {
+        const res = await fetch(svgSources[key]);
+        const text = await res.text();
+        canvases[key].innerHTML = text;
+        return canvases[key].querySelector("svg");
+      }
+
+      /**
+       * Walk every text node inside the SVG. For each node whose text
+       * still contains a `ax_2026_t3`, remember the original template
+       * on the DOM node so we can re-substitute on every input.
+       */
+      function bindTemplateNodes(svgRoot) {
+        const walker = document.createTreeWalker(
+          svgRoot,
+          NodeFilter.SHOW_TEXT,
+          null,
+        );
+        const templated = [];
+        while (walker.nextNode()) {
+          const node = walker.currentNode;
+          if (SLOT_RE.test(node.nodeValue)) {
+            node.__template = node.nodeValue;
+            templated.push(node);
+          }
+        }
+        return templated;
+      }
+
+      function renderView(view, values) {
+        const nodes = view.__nodes || [];
+        for (const node of nodes) {
+          node.nodeValue = node.__template.replace(
+            SLOT_RE,
+            (_, key) => values[key] ?? `{{${key}}}`,
+          );
+        }
+      }
+
+      function collectValues(viewEl) {
+        const values = {};
+        viewEl.querySelectorAll("input[data-slot]").forEach((input) => {
+          values[input.dataset.slot] = input.value.trim();
+        });
+        return values;
+      }
+
+      async function boot() {
+        for (const key of ["season", "tournament"]) {
+          const root = await loadSvg(key);
+          const view = document.querySelector(`[data-view="${key}"]`);
+          view.__svgRoot = root;
+          view.__nodes = bindTemplateNodes(root);
+          renderView(view, collectValues(view));
+
+          view.querySelectorAll("input[data-slot]").forEach((input) => {
+            input.addEventListener("input", () => {
+              renderView(view, collectValues(view));
+            });
+          });
+        }
+
+        // Tab switching
+        document.querySelectorAll(".tabs button").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const tab = btn.dataset.tab;
+            document.querySelectorAll(".tabs button").forEach((b) => {
+              b.setAttribute("aria-selected", b === btn ? "true" : "false");
+            });
+            document.querySelectorAll(".view").forEach((v) => {
+              v.dataset.active = v.dataset.view === tab ? "true" : "false";
+            });
+          });
+        });
+
+        // Copy button
+        document.querySelectorAll("[data-export]").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            const key = btn.dataset.export;
+            const view = document.querySelector(`[data-view="${key}"]`);
+            const xml = new XMLSerializer().serializeToString(view.__svgRoot);
+            await navigator.clipboard.writeText(xml);
+            showToast(`Copied ${key} SVG to clipboard`);
+          });
+        });
+
+        // Download button
+        document.querySelectorAll("[data-download]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const key = btn.dataset.download;
+            const view = document.querySelector(`[data-view="${key}"]`);
+            const xml = new XMLSerializer().serializeToString(view.__svgRoot);
+            const blob = new Blob([xml], { type: "image/svg+xml" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `academorix-${key}-${Date.now()}.svg`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast(`Downloaded ${key} SVG`);
+          });
+        });
+      }
+
+      let toastTimer;
+      function showToast(text) {
+        const el = document.getElementById("toast");
+        el.textContent = text;
+        el.dataset.visible = "true";
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => (el.dataset.visible = "false"), 1800);
+      }
+
+      boot().catch((err) => {
+        console.error("Failed to boot micro-brand generator:", err);
+        document.querySelectorAll(".canvas").forEach((c) => {
+          c.textContent = "Preview unavailable · open the SVG file directly.";
+        });
+      });
+    </script>
+  </body>
+</html>

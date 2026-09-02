@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Icon — app-icon.svg
+  512×512 rounded square (rx=112 ≈ Apple's icon corner radius). Ships
+  as the PWA maskable icon + iOS/Android app icon. Cursor carries the
+  1s blink animation for web contexts; native platforms render frame-0.
+  Export to PNG at 192, 512, 1024 via sharp-cli.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+  <rect width="512" height="512" fill="currentColor" rx="112"/>
+  <g fill="#fafafa">
+    <rect x="128" y="100" width="42" height="312"/>
+    <rect x="128" y="100" width="222" height="42"/>
+    <rect x="128" y="236" width="146" height="42"/>
+  </g>
+  <rect x="374" y="112" width="60" height="26" fill="#00E5A0">
+    <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.5;0.5;1" dur="1s" repeatCount="indefinite"/>
+  </rect>
+</svg>

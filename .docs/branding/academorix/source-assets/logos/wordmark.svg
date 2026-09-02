@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Academorix · wordmark · v1.0 · 2026-08-21
+
+  The canonical Academorix mark — "academorix" set in Geist Medium
+  all-lowercase, letter-spacing -0.03em. Consumed as the primary
+  mark on every surface (hero blocks, footer signature, deck title
+  cards, favicon derivation, social avatar). Codified by ADR-0104.
+
+  Design choices
+  ──────────────
+  · Wordmark-only identity. Zero cursor bar · zero apex marker ·
+    zero animation. Draws a clean line from Figentra's F-Cursor
+    (which retains its cursor blink). Academorix motion signature
+    is a steady frame — motion punctuates content, never IS content.
+  · currentColor fill — the mark theme-adapts through the parent
+    `color` property. Renders as #141414 (ink) on paper, #fafafa
+    (paper) on ink, or Track Orange (#FF6B35) when the consumer
+    sets color inline for accent surfaces.
+  · Geist Medium 48/56 (font-size / baseline) — matches the shared
+    workspace type stack. Letter-spacing -0.03em is Geist's own
+    display-scale correction.
+
+  Geometry
+  ────────
+  ViewBox    0 0 320 80
+  Baseline   y=56 (x-height + descender clearance)
+  Font size  48 (cap-height reference)
+  Fill       currentColor · theme-adaptive
+
+  Consumers
+  ─────────
+  See brand-system.html §02 (Wordmark · every surface) + §03 (Primary
+  mark · wordmark) + §04 (Mono wordmark · currentColor discipline).
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 320 80"
+  width="320"
+  height="80"
+  role="img"
+  aria-label="academorix"
+>
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+    text {
+      font-family: "Geist", "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-weight: 500;
+      font-size: 48px;
+      letter-spacing: -0.03em;
+      fill: currentColor;
+    }
+  </style>
+  <text x="0" y="56">academorix</text>
+</svg>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="Loading">
+  <!--
+    loading-spinner · 3-chevron staggered
+    Per docs/brand/academorix/05-illustration-library.md §2.3
+    Bottom → middle → top fills in Track Orange, 900ms cycle.
+    Honors prefers-reduced-motion via CSS media query (freeze on first frame).
+  -->
+  <style>
+    .chev { stroke: #141414; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .chev.filled { animation: chevPulse 900ms infinite ease-in-out; }
+    #chev-bottom { animation-delay: 0ms; }
+    #chev-middle { animation-delay: 300ms; }
+    #chev-top { animation-delay: 600ms; }
+
+    @keyframes chevPulse {
+      0%, 66%, 100% { stroke: #141414; }
+      33% { stroke: #FF6B35; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .chev.filled { animation: none; }
+    }
+  </style>
+
+  <path id="chev-bottom" class="chev filled" d="M 12 40 L 24 30 L 36 40"/>
+  <path id="chev-middle" class="chev filled" d="M 12 30 L 24 20 L 36 30"/>
+  <path id="chev-top"    class="chev filled" d="M 12 20 L 24 10 L 36 20"/>
+</svg>

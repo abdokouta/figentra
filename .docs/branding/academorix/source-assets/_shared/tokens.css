@@ -1,0 +1,144 @@
+/*!
+ * @file tokens.css
+ * @module brand/academorix/assets/_shared
+ * @description Shared design-token stylesheet consumed by every
+ *   Academorix HTML preview asset — errors, print, decks, landing,
+ *   micro-brand generator, and the jersey-numbers preview. Ships the
+ *   same neutrals + Track Orange accent + Geist/Geist Mono type stack
+ *   the parent `brand-system.html` uses, so every iframe preview and
+ *   standalone open-in-browser view renders with the correct brand
+ *   language.
+ *
+ *   Consumers reference this file with `<link rel="stylesheet"
+ *   href="../_shared/tokens.css">` — the `../` resolves relative to
+ *   any surface folder under `brand/academorix/assets/<surface>/`.
+ */
+
+:root {
+  /* Neutrals — brand-fixed, do NOT flip with theme */
+  --ink: #141414;
+  --ink-2: #1a1a1a;
+  --paper: #fafafa;
+  --paper-2: #f0f0f0;
+
+  /* Track Orange — the Academorix signal accent + its tint */
+  --signal: #ff6b35;
+  --signal-100: #ffe1d4;
+  --signal-300: #ffb090;
+  --signal-500: #ff6b35;
+  --signal-700: #d84a1c;
+  --signal-900: #7f2a10;
+  --signal-tint: rgba(255, 107, 53, 0.12);
+
+  /* Theme-role tokens · light default */
+  --surface: #ffffff;
+  --surface-2: #ffffff;
+  --surface-3: #f4f4f4;
+  --text: #141414;
+  --text-muted: rgba(20, 20, 20, 0.62);
+  --text-dim: rgba(20, 20, 20, 0.42);
+  --muted: rgba(20, 20, 20, 0.55);
+  --border: rgba(20, 20, 20, 0.12);
+  --border-strong: rgba(20, 20, 20, 0.24);
+  --hair: rgba(20, 20, 20, 0.08);
+
+  /* Radii · 4px scale */
+  --radius-2: 8px;
+  --radius-3: 12px;
+  --radius-4: 16px;
+
+  /* Elevation · 4-step scale */
+  --elevation-1: 0 1px 2px rgba(20, 20, 20, 0.06);
+  --elevation-2: 0 4px 12px rgba(20, 20, 20, 0.08);
+  --elevation-3: 0 12px 32px rgba(20, 20, 20, 0.12);
+
+  /* Type stacks · Geist family with system fallbacks */
+  --font-sans:
+    "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  --font-mono:
+    "Geist Mono", "JetBrains Mono", "SF Mono", ui-monospace, "Fira Code", "Menlo", "Consolas",
+    monospace;
+
+  /* Motion · easing library
+     Academorix ships a steady motion signature — hover 150ms · theme
+     250ms · route 260/180ms · scoreboard stinger 600ms · social outro
+     1200ms. Zero cursor blink (see ADR-0104 + brand-system.html §27). */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+
+  /* Propagate manual theme toggle into embedded SVGs */
+  color-scheme: light;
+}
+
+[data-theme="dark"],
+:root:has(html[data-theme="dark"]) {
+  --surface: #0f0f0f;
+  --surface-2: #1a1a1a;
+  --surface-3: #232323;
+  --text: #fafafa;
+  --text-muted: rgba(250, 250, 250, 0.65);
+  --text-dim: rgba(250, 250, 250, 0.4);
+  --muted: rgba(250, 250, 250, 0.55);
+  --border: rgba(250, 250, 250, 0.14);
+  --border-strong: rgba(250, 250, 250, 0.28);
+  --hair: rgba(250, 250, 250, 0.08);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface: #0f0f0f;
+    --surface-2: #1a1a1a;
+    --surface-3: #232323;
+    --text: #fafafa;
+    --text-muted: rgba(250, 250, 250, 0.65);
+    --text-dim: rgba(250, 250, 250, 0.4);
+    --muted: rgba(250, 250, 250, 0.55);
+    --border: rgba(250, 250, 250, 0.14);
+    --border-strong: rgba(250, 250, 250, 0.28);
+    --hair: rgba(250, 250, 250, 0.08);
+    color-scheme: dark;
+  }
+}
+
+/* Base body reset so every embedded preview inherits Geist + surface */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--signal);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+a:hover {
+  color: var(--signal-700);
+}
+
+code,
+pre,
+kbd {
+  font-family: var(--font-mono);
+}
+
+/* Focus ring — accessible everywhere */
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Print stubs shared across print/*.html */
+@page {
+  size: A4 portrait;
+  margin: 12mm;
+}

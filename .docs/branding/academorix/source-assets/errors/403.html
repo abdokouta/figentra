@@ -1,0 +1,129 @@
+<!doctype html>
+<!--
+  Academorix · error page · 403 forbidden
+  ------------------------------------------------------------------
+  Fires when a signed-in user hits a resource their role/scope doesn't
+  reach. The page never leaks WHY (no role name, no permission
+  string) — copy just points at the roster owner + a request-access
+  path.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>403 · Coach-only room · Academorix</title>
+    <meta
+      name="description"
+      content="This part of the academy is reserved for a different tier. Ask your head coach to add you to the roster for this area."
+    />
+    <link rel="stylesheet" href="../_shared/tokens.css" />
+    <style>
+      body {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 48px 24px;
+      }
+      .err {
+        max-width: 720px;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        align-items: center;
+      }
+      .err-code .kicker { margin: 0; }
+      .err-code .code {
+        font-family: var(--font-mono);
+        font-weight: 600;
+        font-size: clamp(96px, 12vw, 160px);
+        letter-spacing: -0.06em;
+        line-height: 0.9;
+        color: var(--ink);
+      }
+      .err-code .code em { font-style: normal; color: var(--signal); }
+      .err-title {
+        font-size: clamp(28px, 3vw, 40px);
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+        margin: 24px 0 12px;
+      }
+      .err-body {
+        color: var(--text-muted);
+        line-height: 1.55;
+        margin: 0 0 24px;
+        max-width: 480px;
+      }
+      .err-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+      .err-illo {
+        display: grid; place-items: center;
+        aspect-ratio: 4 / 3;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-4);
+        padding: 32px;
+      }
+      .err-illo img { width: 100%; height: auto; }
+      .who {
+        margin-top: 20px;
+        padding: 14px 16px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-3);
+        font-size: 13px;
+        color: var(--text);
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .who-avatar {
+        width: 36px; height: 36px;
+        border-radius: 999px;
+        background: var(--signal);
+        display: grid; place-items: center;
+        color: var(--ink);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .who-role { color: var(--text-muted); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+      @media (max-width: 720px) {
+        .err { grid-template-columns: 1fr; }
+        .err-illo { order: -1; max-width: 320px; margin: 0 auto; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="err" role="main">
+      <section>
+        <div class="err-code">
+          <p class="kicker">Coach-only room</p>
+          <div class="code" aria-hidden="true"><em>4</em>0<em>3</em></div>
+        </div>
+        <h1 class="err-title">
+          Your roster doesn&#39;t reach<br />into this room yet.
+        </h1>
+        <p class="err-body">
+          You&#39;re signed in — the resource just sits on a shelf your
+          role can&#39;t reach. Nothing&#39;s broken. Ask the head coach
+          for your academy to add you to the roster for this area, or
+          bounce back to what you&#39;re rostered on.
+        </p>
+        <div class="err-cta">
+          <a class="btn btn-primary" href="/access/request?resource=this-one">Request access</a>
+          <a class="btn btn-ghost" href="/">Back to your dashboard</a>
+        </div>
+        <div class="who" aria-label="Access owner">
+          <div class="who-avatar" aria-hidden="true">LF</div>
+          <div>
+            <div>Layla Farid</div>
+            <div class="who-role">Head coach · Sahara Padel Academy</div>
+          </div>
+        </div>
+      </section>
+      <figure class="err-illo" aria-hidden="true">
+        <img src="./illustrations/403-locker-locked.svg" alt="" />
+      </figure>
+    </main>
+  </body>
+</html>

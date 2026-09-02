@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Illustration — hero-bg.svg
+  1600×900 hero backdrop. Ink field with a soft Signal-mint radial glow
+  from top-left, dot-matrix texture across the field, one circuit trace
+  arc through the mid-section, and a lone blinking cursor near the
+  center-right acting as a "live" anchor. Drop behind marketing hero
+  sections as `background-image` or an inline `<svg>
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>` at
+  aspect-ratio: 16 / 9. See docs/brand/13-patterns-and-assets.md §Hero background.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <radialGradient id="glow" cx="18%" cy="22%" r="55%">
+      <stop offset="0%" stop-color="#00E5A0" stop-opacity="0.24"/>
+      <stop offset="40%" stop-color="#00E5A0" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#00E5A0" stop-opacity="0"/>
+    </radialGradient>
+
+    <pattern id="dots" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="14" cy="14" r="1" fill="#fafafa" opacity="0.05"/>
+    </pattern>
+  </defs>
+
+  <!-- Base ink field -->
+  <rect width="1600" height="900" fill="currentColor"/>
+
+  <!-- Dot texture -->
+  <rect width="1600" height="900" fill="url(#dots)"/>
+
+  <!-- Signal glow -->
+  <rect width="1600" height="900" fill="url(#glow)"/>
+
+  <!-- Circuit trace arc -->
+  <g fill="none" stroke="#00E5A0" stroke-width="1" opacity="0.35">
+    <path d="M-40 640 L280 640 L280 480 L560 480 L560 320 L920 320"/>
+    <path d="M920 320 L920 200 L1240 200 L1240 96 L1560 96"/>
+    <circle cx="280" cy="640" r="3" fill="#00E5A0" stroke="none"/>
+    <circle cx="280" cy="480" r="3" fill="#00E5A0" stroke="none"/>
+    <circle cx="560" cy="480" r="3" fill="#00E5A0" stroke="none"/>
+    <circle cx="560" cy="320" r="3" fill="#00E5A0" stroke="none"/>
+    <circle cx="920" cy="320" r="3" fill="#00E5A0" stroke="none"/>
+    <circle cx="920" cy="200" r="3" fill="#00E5A0" stroke="none"/>
+    <circle cx="1240" cy="200" r="3" fill="#00E5A0" stroke="none"/>
+    <circle cx="1240" cy="96" r="3" fill="#00E5A0" stroke="none"/>
+  </g>
+
+  <!-- Anchor cursor (blinks) -->
+  <rect x="1200" y="620" width="72" height="14" fill="#00E5A0" opacity="0.9">
+    <animate attributeName="opacity" values="0.9;0.9;0;0" keyTimes="0;0.5;0.5;1" dur="1s" repeatCount="indefinite"/>
+  </rect>
+  <rect x="1200" y="640" width="120" height="2" fill="#00E5A0" opacity="0.4"/>
+</svg>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Concept C — Provenance-gate horizontal lockup · Geist wordmark.
+
+  Same 220 × 48 canvas as b-fsignal-lockup so both marks share a
+  swap-in-swap-out contract in the landing-page <Brand />
+  component. Wordmark: Geist 500 with -0.02em tracking. The mark
+  block scales 0.267× (32 × 32 optical) with the Signal check-
+  tick geometry from c-provenance-mark.svg.
+
+  Ships on section-opening headers of `/governance` and `/trust`
+  only. Never in top-nav rotation.
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 220 48"
+  width="220"
+  height="48"
+  role="img"
+  aria-label="Figentra"
+  color="#fafafa"
+>
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+
+  <!-- Mark at 32 × 32 (scale 0.267 = 32/120) -->
+  <g transform="translate(8, 8) scale(0.267)">
+    <rect x="30" y="24" width="10" height="72" fill="currentColor"/>
+    <rect x="30" y="24" width="52" height="10" fill="currentColor"/>
+    <rect x="30" y="56" width="34" height="10" fill="currentColor"/>
+    <path
+      d="M 84 30 L 92 38 L 108 22"
+      stroke="#00E5A0"
+      stroke-width="6"
+      fill="none"
+      stroke-linecap="square"
+      stroke-linejoin="miter"
+    />
+  </g>
+  <!-- Wordmark — Geist -->
+  <text
+    x="52"
+    y="33"
+    font-family="'Geist', 'Inter', system-ui, sans-serif"
+    font-weight="500"
+    font-size="26"
+    letter-spacing="-0.52"
+    fill="currentColor"
+  >Figentra</text>
+</svg>

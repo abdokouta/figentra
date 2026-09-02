@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Figentra f_ · primary mark · v3 · 2026-08-19.
+
+  Lowercase geometric `f` (the developer's letter — function) with
+  a Signal-mint underscore bar at the baseline (the shell prompt
+  cursor awaiting execution). Combined reading: "function ready
+  to run" — encodes the Figentra brand story (figment engineered)
+  directly into the letterform.
+
+  ## v3 revision (2026-08-19)
+
+  Retires v2's uppercase F-Cursor (F glyph + cursor block at
+  bottom-right baseline). The uppercase F read as "notification-
+  bubble" once shipped in the landing header; the lowercase f_
+  recovers the developer-tech signal + reads as terminal-native
+  at 16px favicon size.
+
+  ## Geometry (8-stroke ink primitives, Geist-parity)
+
+    - Spine:     x=44, y=18, w=8, h=76 (top to just above baseline)
+    - Top hook:  x=44, y=18, w=30, h=8 (right-tick — the f's curl)
+    - Crossbar:  x=28, y=52, w=36, h=8 (mid-body horizontal)
+    - Underscore: x=28, y=102, w=64, h=8 (Signal-mint, blinks)
+
+  Ink strokes read `currentColor` — inherit from parent so the
+  mark inverts cleanly Ink↔Paper on dark surfaces. The underscore
+  stays mint in every context.
+
+  ## Motion
+
+  1000 ms cursor blink · `steps(1)` — hard on/off. Honours
+  `prefers-reduced-motion: reduce` (animation disabled).
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Figentra" color="#141414">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+  <style>
+    @keyframes figentra-cursor-blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    .fs-cursor {
+      animation: figentra-cursor-blink 1s steps(1) infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .fs-cursor { animation: none; }
+    }
+  </style>
+  <!-- Lowercase f · spine (44..52, 18..94) -->
+  <rect x="44" y="18" width="8" height="76" fill="currentColor" />
+  <!-- Lowercase f · top hook (44..74, 18..26) -->
+  <rect x="44" y="18" width="30" height="8" fill="currentColor" />
+  <!-- Lowercase f · crossbar (28..64, 52..60) -->
+  <rect x="28" y="52" width="36" height="8" fill="currentColor" />
+  <!-- Signal-mint underscore · shell prompt (28..92, 102..110) -->
+  <rect class="fs-cursor" x="28" y="102" width="64" height="8" fill="#00E5A0" />
+</svg>

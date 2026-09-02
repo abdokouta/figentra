@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Illustration — loading-spinner.svg
+  80×80 three-cursor blink spinner. Each cursor blinks at a 0.25s offset
+  producing a "three-dot loading" cadence. Signal-mint fills, no ambient
+  ink so it drops onto either paper or ink backgrounds. Falls back to a
+  static "···" when prefers-reduced-motion is honoured by the wrapping
+  <picture> tag. See docs/brand/13-patterns-and-assets.md §Loading.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+  <title>Loading</title>
+
+  <rect x="12" y="36" width="14" height="8" fill="#00E5A0">
+    <animate attributeName="opacity" values="1;1;0.35;0.35;1;1" keyTimes="0;0.16;0.34;0.66;0.84;1" dur="1.2s" repeatCount="indefinite"/>
+  </rect>
+  <rect x="33" y="36" width="14" height="8" fill="#00E5A0">
+    <animate attributeName="opacity" values="0.35;1;1;0.35;0.35;0.35" keyTimes="0;0.16;0.34;0.5;0.84;1" dur="1.2s" repeatCount="indefinite"/>
+  </rect>
+  <rect x="54" y="36" width="14" height="8" fill="#00E5A0">
+    <animate attributeName="opacity" values="0.35;0.35;1;1;0.35;0.35" keyTimes="0;0.32;0.5;0.66;0.84;1" dur="1.2s" repeatCount="indefinite"/>
+  </rect>
+</svg>

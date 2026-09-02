@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Academorix · micro-brand · tournament crest
+  ==================================================================
+  Shield crest for a named tournament. Six chevron ranks stack down
+  the shield face like the A-Chevron mark scaled + repeated; the
+  tournament title crosses the middle in a Track Orange plate.
+
+  Variable slots:
+    Sahara Regional Cup — 12th Edition    display line     e.g. "AIN DIAB OPEN"
+    12th Edition  short mono       e.g. "XIV · 2026"
+    Sahara Padel Academy        subline mono     e.g. "SAHARA PADEL ACADEMY"
+    Padel · Doubles · U14      bottom mono      e.g. "PADEL · YOUTH U14 · DOUBLES"
+    Rabat           top-arc mono     e.g. "CASABLANCA · MAROC"
+
+  Use case: match report letterhead, tournament programme cover,
+  medal ribbon centre, digital signage, social post crest.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 560 720"
+     width="560" height="720"
+     role="img"
+     aria-label="Tournament crest · chevron shield">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Geist:wght@500;600;700&amp;family=Geist+Mono:wght@500;600&amp;display=swap");
+    .body { font-family: "Geist", "Inter", sans-serif; }
+    .mono { font-family: "Geist Mono", ui-monospace, monospace; }
+    .display { font-family: "Geist", "Inter", sans-serif; font-weight: 600; letter-spacing: -0.03em; }
+  </style>
+
+  <defs>
+    <!-- Shield clip -->
+    <clipPath id="shield-clip">
+      <path d="M 80 88
+               L 480 88
+               L 480 480
+               Q 480 620 280 700
+               Q 80 620 80 480
+               Z"/>
+    </clipPath>
+    <!-- Host-city arc · top -->
+    <path id="crest-arc" d="M 128 128 A 152 152 0 0 1 432 128" fill="none"/>
+  </defs>
+
+  <!-- Shield outline · ink -->
+  <path d="M 80 88
+           L 480 88
+           L 480 480
+           Q 480 620 280 700
+           Q 80 620 80 480
+           Z"
+        fill="#fafafa"
+        stroke="currentColor"
+        stroke-width="4"/>
+
+  <!-- Inner shield · inset ink rule -->
+  <path d="M 96 104
+           L 464 104
+           L 464 480
+           Q 464 604 280 680
+           Q 96 604 96 480
+           Z"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="0.8"
+        opacity="0.42"/>
+
+  <!-- Chevron rank stack · six chevrons stepped down the shield face -->
+  <g stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" clip-path="url(#shield-clip)">
+    <path d="M 148 250 L 280 172 L 412 250"  stroke-width="6" opacity="0.85"/>
+    <path d="M 148 300 L 280 222 L 412 300"  stroke-width="5" opacity="0.6"/>
+    <path d="M 148 350 L 280 272 L 412 350"  stroke-width="4" opacity="0.36"/>
+  </g>
+
+  <!-- Track Orange rank pin · above top chevron · echoes b-mark.svg -->
+  <rect x="270" y="148" width="20" height="10" fill="#FF6B35"/>
+
+  <!-- Top arc · host city -->
+  <text class="mono" font-size="12" fill="currentColor" letter-spacing="0.24em" opacity="0.72">
+    <textPath href="#crest-arc" startOffset="50%" text-anchor="middle">
+      Rabat
+    </textPath>
+  </text>
+
+  <!-- Middle plate · tournament title band · Track Orange -->
+  <g transform="translate(48, 428)">
+    <rect x="0" y="0" width="464" height="72" fill="#FF6B35"/>
+    <!-- Chevron tick marks · edges -->
+    <path d="M 24 36 L 40 20 L 40 52 Z" fill="currentColor"/>
+    <path d="M 440 36 L 424 20 L 424 52 Z" fill="currentColor"/>
+    <text x="232" y="46"
+          class="display"
+          font-size="30"
+          fill="currentColor"
+          text-anchor="middle"
+          letter-spacing="-0.03em">
+      Sahara Regional Cup — 12th Edition
+    </text>
+  </g>
+
+  <!-- Edition mono · below plate -->
+  <text x="280" y="536" class="mono" font-size="18" font-weight="600" fill="currentColor" text-anchor="middle" letter-spacing="0.16em">
+    12th Edition
+  </text>
+
+  <!-- Host academy · below edition -->
+  <text x="280" y="568" class="mono" font-size="12" fill="currentColor" text-anchor="middle" opacity="0.62" letter-spacing="0.2em">
+    HOSTED · Sahara Padel Academy
+  </text>
+
+  <!-- Discipline · footer -->
+  <line x1="176" y1="600" x2="384" y2="600" stroke="currentColor" stroke-width="0.8" opacity="0.32"/>
+  <text x="280" y="628" class="mono" font-size="11" fill="currentColor" text-anchor="middle" opacity="0.72" letter-spacing="0.22em">
+    Padel · Doubles · U14
+  </text>
+
+  <!-- Academorix stamp · very bottom -->
+  <g transform="translate(240, 646)">
+    <g transform="scale(0.24)">
+      <line x1="60" y1="24" x2="30" y2="96" stroke="currentColor" stroke-width="10" stroke-linecap="square"/>
+      <line x1="60" y1="24" x2="90" y2="96" stroke="currentColor" stroke-width="10" stroke-linecap="square"/>
+      <rect x="40" y="60" width="40" height="10" fill="currentColor"/>
+      <rect x="56" y="14" width="8" height="6" fill="#FF6B35"/>
+    </g>
+    <text x="50" y="24" class="mono" font-size="10" fill="currentColor" opacity="0.55" letter-spacing="0.2em">RECORDED · ACADEMORIX</text>
+  </g>
+</svg>

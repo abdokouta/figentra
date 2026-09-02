@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Figentra f_ · MONOCHROME variant (v3 · 2026-08-19).
+
+  Same lowercase-f + underscore geometry as `mark-primary.svg` but
+  the underscore renders in `currentColor` instead of Signal Mint.
+  Reserved for:
+
+    - Print (invoices, DPA cover pages, embossed stationery)
+    - Single-colour contexts (embroidery, laser etching, one-plate
+      offset)
+    - Adverse surfaces (mint on mint, mint on yellow — signal
+      fights the substrate)
+
+  No animation — underscore is a static rectangle in the same ink
+  colour as the f strokes.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Figentra" color="#141414">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+  <!-- f · spine -->
+  <rect x="44" y="18" width="8" height="76" fill="currentColor" />
+  <!-- f · top hook -->
+  <rect x="44" y="18" width="30" height="8" fill="currentColor" />
+  <!-- f · crossbar -->
+  <rect x="28" y="52" width="36" height="8" fill="currentColor" />
+  <!-- underscore · monochrome variant (no blink, currentColor) -->
+  <rect x="28" y="102" width="64" height="8" fill="currentColor" />
+</svg>

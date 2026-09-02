@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sport HERO tile — padel.
+  Full court top-down · 20m × 10m proportions (2:1) mapped to 800×500 with margins.
+  Distinct from tennis: glass back walls (dashed borders), NO alleys,
+  service boxes closer to the net, smaller court.
+  NEW illustration — the landing didn't have padel.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Padel court — top-down">
+  <defs>
+    <style>
+      .field { fill: #141414; }
+      .line { fill: none; stroke: #FF6B35; stroke-width: 3; opacity: 0.9; }
+      .glass { fill: none; stroke: #FF6B35; stroke-width: 3; stroke-dasharray: 6 4; opacity: 0.6; }
+      .line-thin { fill: none; stroke: #FF6B35; stroke-width: 2; opacity: 0.55; }
+      .net { stroke: #FF6B35; stroke-width: 4; opacity: 1; }
+      .dot { fill: #FF6B35; }
+    </style>
+  </defs>
+
+  <!-- Field surface -->
+  <rect width="800" height="500" class="field"/>
+
+  <!-- Playing court — solid lines (10 x 20 proportions · 660 wide × 340 tall) -->
+  <rect x="70" y="80" width="660" height="340" class="line"/>
+
+  <!-- Back-wall glass (both ends) — dashed to convey transparency -->
+  <line x1="70"  y1="66"  x2="730" y2="66"  class="glass"/>
+  <line x1="70"  y1="434" x2="730" y2="434" class="glass"/>
+  <!-- Side wall glass (partial) — 4m near each end -->
+  <line x1="60"  y1="80"  x2="60"  y2="180" class="glass"/>
+  <line x1="60"  y1="320" x2="60"  y2="420" class="glass"/>
+  <line x1="740" y1="80"  x2="740" y2="180" class="glass"/>
+  <line x1="740" y1="320" x2="740" y2="420" class="glass"/>
+
+  <!-- Net -->
+  <line x1="400" y1="80" x2="400" y2="420" class="net"/>
+  <circle cx="400" cy="80"  r="4" class="dot"/>
+  <circle cx="400" cy="420" r="4" class="dot"/>
+
+  <!-- Service lines (3m from net on each side) — hence 400 ± 100 -->
+  <line x1="300" y1="80" x2="300" y2="420" class="line"/>
+  <line x1="500" y1="80" x2="500" y2="420" class="line"/>
+
+  <!-- Center service line — perpendicular between service line and back wall -->
+  <line x1="70"  y1="250" x2="300" y2="250" class="line"/>
+  <line x1="500" y1="250" x2="730" y2="250" class="line"/>
+
+  <!-- Corner-connection ticks (T-marks at the corners) -->
+  <line x1="70"  y1="245" x2="70"  y2="255" class="line-thin"/>
+  <line x1="730" y1="245" x2="730" y2="255" class="line-thin"/>
+</svg>

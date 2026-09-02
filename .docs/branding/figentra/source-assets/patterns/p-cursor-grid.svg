@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Pattern — Cursor Grid
+  Tileable 40×40. Tiny Signal-mint cursor at low opacity, laid out in a
+  rectangular lattice. Use behind hero sections at 50-70% opacity for a
+  "live IDE" backdrop. See docs/brand/13-patterns-and-assets.md §Cursor Grid.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+  <rect x="17" y="18" width="6" height="3" fill="#00E5A0" opacity="0.4"/>
+</svg>

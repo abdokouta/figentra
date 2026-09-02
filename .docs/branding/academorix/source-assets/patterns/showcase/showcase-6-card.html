@@ -1,0 +1,357 @@
+<!doctype html>
+<!--
+  @file showcase-6-card.html
+  @module brand/academorix/assets/patterns/showcase
+  @description AcademorixShowcase mockup — 2×3 card grid inspired by
+    the Dribbble references (Nemuta / Rentener / M@KA / Outcrowd
+    social-media-identity shots). Each card is a photo-driven,
+    bold-copy, single-focus block. Landing renders this as the
+    "Explore Academorix" hero mosaic; carousel on mobile (horizontal
+    swipe via embla-carousel-react); static grid on desktop.
+
+    Card variants shown:
+    - Photo-hero (Meet our athletes)
+    - Metric-bold (30% conversion)
+    - Product-focus (Match summary)
+    - Testimonial-quote (Coach voice)
+    - Fresh-news (Latest tournament)
+    - CTA-close (Book a walkthrough)
+
+  authored_by: kiro
+  authored_at: 2026-08-18
+  source: prompt://w5-showcase-slider
+  reviewed_by: null
+  reviewed_at: null
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Academorix · Showcase (6-card grid mockup)</title>
+    <style>
+      :root {
+        /* Track Orange single accent (ADR-0104) · was --turf + --track dual */
+        --track: #ff6b35;
+        --track-deep: #d14a1a;
+        --ink: #141414;
+        --paper: #fdfaf6;
+        --surface: #fff6ee;
+        --line: #e8dfd3;
+        --muted: #8a7f72;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "Geist", system-ui, sans-serif;
+        font-size: 15px;
+        line-height: 1.5;
+      }
+      .wrap {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 40px 32px;
+      }
+      h1 {
+        font-size: 40px;
+        font-weight: 600;
+        letter-spacing: -0.03em;
+        margin-bottom: 8px;
+      }
+      .lede {
+        color: var(--muted);
+        font-size: 17px;
+        margin-bottom: 32px;
+        max-width: 640px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 320px);
+        gap: 16px;
+      }
+      .card {
+        border-radius: 14px;
+        overflow: hidden;
+        position: relative;
+      }
+      .card-kicker {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        right: 20px;
+        font:
+          600 11px "Geist Mono",
+          monospace;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .card-body {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+      }
+      .card-body h3 {
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        margin-bottom: 6px;
+        line-height: 1.15;
+      }
+      .card-body p {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      /* 1 · Photo hero — athletes training */
+      .card-1 {
+        background:
+          linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.65) 100%),
+          url("https://images.unsplash.com/photo-1522032827-c1c33e0d0d75?auto=format&fit=crop&w=800&q=80")
+            center/cover;
+        color: #fff;
+        grid-column: span 1;
+        grid-row: span 2;
+      }
+      .card-1 .card-kicker {
+        color: var(--track);
+      }
+      .card-1 h3 {
+        font-size: 32px;
+      }
+
+      /* 2 · Metric-bold · Track Orange gradient */
+      .card-2 {
+        background: linear-gradient(135deg, var(--track), var(--track-deep));
+        color: #fff;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .card-2 .kicker {
+        font:
+          600 11px "Geist Mono",
+          monospace;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        opacity: 0.85;
+      }
+      .card-2 .metric {
+        font-size: 72px;
+        font-weight: 600;
+        letter-spacing: -0.03em;
+        line-height: 1;
+        margin-top: auto;
+      }
+      .card-2 .label {
+        font-size: 14px;
+        margin-top: 8px;
+        opacity: 0.9;
+      }
+
+      /* 3 · Match summary — dark w/ orange accent */
+      .card-3 {
+        background: var(--ink);
+        color: #fff;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .card-3 .kicker {
+        font:
+          600 11px "Geist Mono",
+          monospace;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--track);
+      }
+      .card-3 .teams {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-top: auto;
+      }
+      .card-3 .team-name {
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .card-3 .score {
+        font-size: 48px;
+        font-weight: 600;
+        letter-spacing: -0.03em;
+        line-height: 1;
+      }
+      .card-3 .score .dot {
+        color: rgba(255, 255, 255, 0.35);
+        margin: 0 8px;
+      }
+      .card-3 .details {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.65);
+        margin-top: 12px;
+      }
+
+      /* 4 · Testimonial */
+      .card-4 {
+        background: var(--surface);
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 1px solid var(--line);
+      }
+      .card-4 .kicker {
+        font:
+          600 11px "Geist Mono",
+          monospace;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--track);
+      }
+      .card-4 blockquote {
+        font-size: 17px;
+        font-weight: 500;
+        line-height: 1.4;
+        margin: 16px 0;
+      }
+      .card-4 .attrib {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      /* 5 · Fresh news — photo card */
+      .card-5 {
+        background:
+          linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.7) 100%),
+          url("https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=800&q=80")
+            center/cover;
+        color: #fff;
+      }
+      .card-5 .card-kicker {
+        color: var(--track);
+      }
+
+      /* 6 · CTA close */
+      .card-6 {
+        background: var(--ink);
+        color: #fff;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .card-6 .kicker {
+        font:
+          600 11px "Geist Mono",
+          monospace;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--track);
+      }
+      .card-6 h3 {
+        font-size: 22px;
+        margin-top: auto;
+        margin-bottom: 12px;
+      }
+      .card-6 .btn {
+        align-self: flex-start;
+        padding: 10px 18px;
+        border-radius: 8px;
+        background: var(--track);
+        color: var(--ink);
+        font-weight: 500;
+        text-decoration: none;
+        font-size: 13px;
+      }
+
+      @media (max-width: 900px) {
+        .grid {
+          grid-template-columns: 1fr;
+          grid-template-rows: repeat(6, 280px);
+        }
+        .card-1 {
+          grid-column: span 1;
+          grid-row: span 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Explore Academorix</h1>
+      <p class="lede">
+        Six moments · one platform. Every card is a real thing you can do in Academorix today — from
+        meeting the athletes to closing the medal.
+      </p>
+
+      <section class="grid" aria-label="Showcase mosaic">
+        <!-- Card 1 · Photo hero (spans 2 rows on desktop) -->
+        <article class="card card-1" data-image-source="unsplash-placeholder">
+          <p class="card-kicker">Meet our athletes</p>
+          <div class="card-body">
+            <h3>Real athletes. Real progress. Real records.</h3>
+            <p>
+              Every athlete's development is tracked from day one — and every parent sees it live.
+            </p>
+          </div>
+        </article>
+
+        <!-- Card 2 · Metric-bold -->
+        <article class="card card-2">
+          <p class="kicker">Growth · YoY</p>
+          <div>
+            <div class="metric">+30%</div>
+            <div class="label">enrollments across the pilot academies · month 6</div>
+          </div>
+        </article>
+
+        <!-- Card 3 · Match summary -->
+        <article class="card card-3">
+          <p class="kicker">Live · Q3 12:47</p>
+          <div>
+            <div class="teams">
+              <div class="team-name">Al Ahli</div>
+              <div class="score">2<span class="dot">·</span>1</div>
+              <div class="team-name">Wydad</div>
+            </div>
+            <div class="details">Goal · A. Karim · 42' · assist Bennani</div>
+          </div>
+        </article>
+
+        <!-- Card 4 · Testimonial -->
+        <article class="card card-4">
+          <p class="kicker">Coach voice</p>
+          <blockquote>
+            "We stopped losing 2 hours a week to spreadsheets. That's coaching time we get back."
+          </blockquote>
+          <p class="attrib">— Yasmine Bennani · Head Coach · Casablanca Sports Institute</p>
+        </article>
+
+        <!-- Card 5 · Fresh news -->
+        <article class="card card-5" data-image-source="unsplash-placeholder">
+          <p class="card-kicker">This week</p>
+          <div class="card-body">
+            <h3>Barcelona Padel Academy takes regional cup</h3>
+            <p>17 athletes qualified · 3 podium finishes · one national scout signed.</p>
+          </div>
+        </article>
+
+        <!-- Card 6 · CTA close -->
+        <article class="card card-6">
+          <p class="kicker">Book a walkthrough</p>
+          <h3>See how your programs would run on Academorix.</h3>
+          <a href="/demo" class="btn">Book a 30-min call →</a>
+        </article>
+      </section>
+    </div>
+  </body>
+</html>

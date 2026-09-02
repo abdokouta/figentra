@@ -1,0 +1,546 @@
+<!doctype html>
+<!--
+  Academorix · print collateral · registration form · A4 portrait × 2 pages
+  ------------------------------------------------------------------
+  Fillable 2-page registration form. Page 1 = athlete + guardian +
+  membership + emergency contact. Page 2 = medical + safeguarding +
+  photo consent + signatures.
+
+  Renders on-screen for review; @page CSS breaks the two pages
+  cleanly when the parent prints. Every input is <input> so the
+  form is fillable digitally OR printable + hand-completable.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Registration form · Academorix</title>
+    <link rel="stylesheet" href="../_shared/tokens.css" />
+    <style>
+      body {
+        background: var(--surface-3);
+        display: grid;
+        place-items: start center;
+        padding: 32px 24px 96px;
+        gap: 24px;
+      }
+      .print-nav {
+        position: sticky;
+        top: 16px;
+        z-index: 20;
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        padding: 8px 14px;
+        background: var(--ink);
+        color: var(--paper);
+        border-radius: 999px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        box-shadow: var(--elevation-2);
+      }
+      .print-nav button {
+        border: 0;
+        background: var(--signal);
+        color: var(--ink);
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-family: inherit;
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .sheet {
+        width: 210mm;
+        min-height: 297mm;
+        background: white;
+        color: var(--ink);
+        padding: 14mm 12mm;
+        box-shadow: var(--elevation-3);
+        display: flex;
+        flex-direction: column;
+        gap: 8mm;
+      }
+      @media print {
+        body { padding: 0; background: white; gap: 0; }
+        .print-nav { display: none; }
+        .sheet {
+          box-shadow: none;
+          width: auto;
+          min-height: 0;
+          padding: 0;
+          page-break-after: always;
+        }
+        .sheet:last-of-type { page-break-after: auto; }
+      }
+
+      /* ── page header · brand + form-title ─────────── */
+      .rh {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        justify-content: space-between;
+        border-bottom: 2px solid var(--ink);
+        padding-bottom: 10px;
+      }
+      .rh-brand { display: flex; align-items: center; gap: 10px; }
+      .rh-brand svg { width: 26px; height: 26px; }
+      .rh-brand strong { font-size: 16px; letter-spacing: -0.02em; font-weight: 500; }
+      .rh-brand .subline {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--text-muted);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .rh-meta { text-align: right; }
+      .rh-meta .kicker {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--signal);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+      .rh-meta h1 { font-size: 20px; font-weight: 500; letter-spacing: -0.02em; margin: 0; }
+      .rh-meta .stamp {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--text-muted);
+      }
+      .page-of {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--signal);
+        letter-spacing: 0.14em;
+      }
+
+      /* ── section titles ──────────────────────────── */
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--signal);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        margin: 2mm 0 1mm;
+      }
+      .section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      /* ── field grid ───────────────────────────────── */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6mm 5mm;
+      }
+      .grid .col-2 { grid-column: span 2; }
+      .grid .col-3 { grid-column: span 3; }
+      .grid .col-4 { grid-column: span 4; }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .field label {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        color: var(--text-muted);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .field label .req { color: var(--signal); margin-left: 4px; }
+      .field .fill {
+        border: 0;
+        border-bottom: 1px solid var(--ink);
+        font-family: var(--font-sans);
+        font-size: 11px;
+        color: var(--ink);
+        padding: 6px 4px 4px;
+        background: transparent;
+        outline: none;
+      }
+      .field .fill:focus {
+        border-bottom: 2px solid var(--signal);
+        padding-bottom: 3px;
+      }
+
+      /* ── checkbox row ─────────────────────────────── */
+      .checks {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 3mm;
+      }
+      .check {
+        display: grid;
+        grid-template-columns: 16px 1fr;
+        gap: 8px;
+        align-items: start;
+        font-family: var(--font-sans);
+        font-size: 11px;
+        line-height: 1.5;
+      }
+      .check .box {
+        width: 12px;
+        height: 12px;
+        border: 1.5px solid var(--ink);
+        border-radius: 2px;
+        margin-top: 3px;
+      }
+      .check .body { color: var(--ink); }
+      .check .body strong { display: block; font-weight: 500; font-size: 12px; margin-bottom: 2px; }
+      .check .body span {
+        display: block;
+        color: var(--text-muted);
+        font-family: var(--font-mono);
+        font-size: 9px;
+        margin-top: 2px;
+      }
+
+      /* ── medical block ────────────────────────────── */
+      .medical {
+        border: 1px solid var(--ink);
+        padding: 4mm 4mm 3mm;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3mm;
+      }
+      .medical .lines {
+        border-bottom: 1px solid var(--ink);
+        margin: 8px 0;
+        height: 10px;
+      }
+
+      /* ── signature block ─────────────────────────── */
+      .signature {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8mm;
+        margin-top: auto;
+        padding-top: 6mm;
+        border-top: 2px solid var(--ink);
+      }
+      .signature .box {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .signature .line {
+        height: 14mm;
+        border-bottom: 1.5px solid var(--ink);
+      }
+      .signature .caption {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        color: var(--text-muted);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .signature .name {
+        font-family: var(--font-sans);
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      /* ── footer note · every page ─────────────────── */
+      .footer-note {
+        font-family: var(--font-mono);
+        font-size: 8px;
+        color: var(--text-muted);
+        letter-spacing: 0.08em;
+        border-top: 1px solid var(--border);
+        padding-top: 4mm;
+        margin-top: 4mm;
+        display: flex;
+        justify-content: space-between;
+      }
+      .footer-note .provenance {
+        color: var(--signal);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="print-nav" role="toolbar">
+      Registration form · 2 pages ·
+      <button onclick="window.print()">Print / Save as PDF</button>
+    </div>
+
+    <!-- ─────────────────────── PAGE 1 ─────────────────────── -->
+    <article class="sheet" aria-labelledby="p1-title">
+      <header class="rh">
+        <div class="rh-brand">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <line x1="60" y1="24" x2="30" y2="96" stroke="currentColor" stroke-width="10" stroke-linecap="square"/>
+            <line x1="60" y1="24" x2="90" y2="96" stroke="currentColor" stroke-width="10" stroke-linecap="square"/>
+            <rect x="40" y="60" width="40" height="10" fill="currentColor"/>
+            <rect x="56" y="14" width="8" height="6" fill="#FF6B35"/>
+          </svg>
+          <div>
+            <strong>Academorix</strong>
+            <div class="subline">Sahara Padel Academy</div>
+          </div>
+        </div>
+        <div class="rh-meta">
+          <span class="kicker">Registration · Fall 2026 / 27</span>
+          <h1 id="p1-title">Athlete registration</h1>
+          <span class="stamp">Application no. APP-2026-000512</span>
+          <span class="page-of">Page 1 / 2</span>
+        </div>
+      </header>
+
+      <!-- ── athlete section ────────────────────────── -->
+      <h2 class="section-title">Athlete · required</h2>
+      <div class="grid">
+        <div class="field col-2">
+          <label>Full legal name <span class="req">*</span></label>
+          <input class="fill" name="athlete_name" />
+        </div>
+        <div class="field">
+          <label>Date of birth <span class="req">*</span></label>
+          <input class="fill" name="athlete_dob" placeholder="YYYY-MM-DD" />
+        </div>
+        <div class="field">
+          <label>Gender</label>
+          <input class="fill" name="athlete_gender" />
+        </div>
+        <div class="field col-2">
+          <label>Nationality <span class="req">*</span></label>
+          <input class="fill" name="athlete_nationality" />
+        </div>
+        <div class="field col-2">
+          <label>ID / passport no.</label>
+          <input class="fill" name="athlete_id" />
+        </div>
+        <div class="field col-4">
+          <label>Home address</label>
+          <input class="fill" name="athlete_address" />
+        </div>
+        <div class="field col-2">
+          <label>City</label>
+          <input class="fill" name="athlete_city" />
+        </div>
+        <div class="field">
+          <label>Postal code</label>
+          <input class="fill" name="athlete_zip" />
+        </div>
+        <div class="field">
+          <label>Country</label>
+          <input class="fill" name="athlete_country" />
+        </div>
+      </div>
+
+      <!-- ── guardian section ───────────────────────── -->
+      <h2 class="section-title">Primary guardian · required for minors</h2>
+      <div class="grid">
+        <div class="field col-2">
+          <label>Full name <span class="req">*</span></label>
+          <input class="fill" name="guardian_name" />
+        </div>
+        <div class="field col-2">
+          <label>Relationship to athlete <span class="req">*</span></label>
+          <input class="fill" name="guardian_rel" />
+        </div>
+        <div class="field col-2">
+          <label>Mobile · WhatsApp preferred <span class="req">*</span></label>
+          <input class="fill" name="guardian_phone" placeholder="+212 6 __ __ __ __" />
+        </div>
+        <div class="field col-2">
+          <label>Email · digest recipient <span class="req">*</span></label>
+          <input class="fill" name="guardian_email" />
+        </div>
+      </div>
+
+      <!-- ── membership plan section ────────────────── -->
+      <h2 class="section-title">Membership plan</h2>
+      <div class="grid">
+        <div class="field col-2">
+          <label>Discipline</label>
+          <input class="fill" name="plan_discipline" value="Padel" />
+        </div>
+        <div class="field">
+          <label>Level / squad</label>
+          <input class="fill" name="plan_level" />
+        </div>
+        <div class="field">
+          <label>Sessions / week</label>
+          <input class="fill" name="plan_freq" />
+        </div>
+        <div class="field col-2">
+          <label>Preferred venue</label>
+          <input class="fill" name="plan_venue" value="Rabat Padel Club" />
+        </div>
+        <div class="field col-2">
+          <label>Preferred coach (optional)</label>
+          <input class="fill" name="plan_coach" />
+        </div>
+      </div>
+
+      <!-- ── emergency contact ─────────────────────── -->
+      <h2 class="section-title">Emergency contact · not the primary guardian</h2>
+      <div class="grid">
+        <div class="field col-2">
+          <label>Full name</label>
+          <input class="fill" name="emerg_name" />
+        </div>
+        <div class="field col-2">
+          <label>Relationship</label>
+          <input class="fill" name="emerg_rel" />
+        </div>
+        <div class="field col-2">
+          <label>Mobile</label>
+          <input class="fill" name="emerg_phone" />
+        </div>
+        <div class="field col-2">
+          <label>Preferred language</label>
+          <input class="fill" name="emerg_lang" />
+        </div>
+      </div>
+
+      <div class="footer-note">
+        <span>Every field marked <span style="color: var(--signal);">*</span> is required to open the file.</span>
+        <span class="provenance">Sahara Padel Academy · Application APP-2026-000512</span>
+        <span>Page 1 / 2</span>
+      </div>
+    </article>
+
+    <!-- ─────────────────────── PAGE 2 ─────────────────────── -->
+    <article class="sheet" aria-labelledby="p2-title">
+      <header class="rh">
+        <div class="rh-brand">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <line x1="60" y1="24" x2="30" y2="96" stroke="currentColor" stroke-width="10" stroke-linecap="square"/>
+            <line x1="60" y1="24" x2="90" y2="96" stroke="currentColor" stroke-width="10" stroke-linecap="square"/>
+            <rect x="40" y="60" width="40" height="10" fill="currentColor"/>
+            <rect x="56" y="14" width="8" height="6" fill="#FF6B35"/>
+          </svg>
+          <div>
+            <strong>Academorix</strong>
+            <div class="subline">Sahara Padel Academy</div>
+          </div>
+        </div>
+        <div class="rh-meta">
+          <span class="kicker">Registration · Fall 2026 / 27</span>
+          <h1 id="p2-title">Medical + consents</h1>
+          <span class="stamp">Application no. APP-2026-000512</span>
+          <span class="page-of">Page 2 / 2</span>
+        </div>
+      </header>
+
+      <!-- ── medical block ────────────────────────── -->
+      <h2 class="section-title">Medical · required</h2>
+      <div class="medical">
+        <div>
+          <div class="field">
+            <label>Blood group</label>
+            <input class="fill" name="med_blood" />
+          </div>
+          <div class="field" style="margin-top: 6mm;">
+            <label>Allergies · list all</label>
+            <div class="lines"></div>
+            <div class="lines"></div>
+            <div class="lines"></div>
+          </div>
+          <div class="field" style="margin-top: 6mm;">
+            <label>Chronic conditions</label>
+            <div class="lines"></div>
+            <div class="lines"></div>
+          </div>
+        </div>
+        <div>
+          <div class="field">
+            <label>Regular medication</label>
+            <div class="lines"></div>
+            <div class="lines"></div>
+          </div>
+          <div class="field" style="margin-top: 6mm;">
+            <label>Doctor of record · name + phone</label>
+            <div class="lines"></div>
+            <div class="lines"></div>
+          </div>
+          <div class="field" style="margin-top: 6mm;">
+            <label>Health insurer · policy no.</label>
+            <div class="lines"></div>
+            <div class="lines"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── consents · check-list ────────────────── -->
+      <h2 class="section-title">Consents · initial each box</h2>
+      <div class="checks">
+        <label class="check">
+          <span class="box"></span>
+          <span class="body">
+            <strong>Safeguarding + code of conduct</strong>
+            I&#39;ve read the academy&#39;s safeguarding policy and code
+            of conduct. I understand it and I agree the athlete will
+            follow it during every session, match, and tournament.
+            <span>Sahara Padel Academy · Safeguarding v3.2 · Sep 2026</span>
+          </span>
+        </label>
+        <label class="check">
+          <span class="box"></span>
+          <span class="body">
+            <strong>Medical release</strong>
+            I authorise the head coach or academy medical officer to
+            administer basic first aid and to seek emergency medical
+            care if I&#39;m unreachable at the time.
+          </span>
+        </label>
+        <label class="check">
+          <span class="box"></span>
+          <span class="body">
+            <strong>Photo + video consent</strong>
+            I agree that photos + video of the athlete may be used
+            internally for coaching review and externally on academy
+            social channels. I understand I can revoke this consent
+            at any time via <em>academorix.com/consent</em>.
+            <span>GDPR Art. 8 · minor consent · CAN-SPAM</span>
+          </span>
+        </label>
+        <label class="check">
+          <span class="box"></span>
+          <span class="body">
+            <strong>Data + parent digest</strong>
+            I agree the academy stores the data on this form in
+            Academorix (a service of Figentra L.L.C, operated on the
+            Stackra framework). I agree to receive a weekly session
+            digest by SMS + email. I can unsubscribe on any message.
+            <span>Sub-processor list · academorix.com/trust/subprocessors</span>
+          </span>
+        </label>
+      </div>
+
+      <!-- ── signature block ─────────────────────── -->
+      <section class="signature">
+        <div class="box">
+          <div class="line"></div>
+          <div class="caption">Primary guardian signature · date</div>
+          <div class="name">Mounia Belaid</div>
+        </div>
+        <div class="box">
+          <div class="line"></div>
+          <div class="caption">Academy officer · date</div>
+          <div class="name">Layla Farid</div>
+        </div>
+      </section>
+
+      <div class="footer-note">
+        <span>File complete once every consent box is initialled + both signatures are on the page.</span>
+        <span class="provenance">Verify · academorix.com/registrations/APP-2026-000512</span>
+        <span>Page 2 / 2</span>
+      </div>
+    </article>
+  </body>
+</html>

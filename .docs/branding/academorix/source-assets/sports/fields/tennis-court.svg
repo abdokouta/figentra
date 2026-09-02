@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Tennis court diagram">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+
+  <title>Tennis court</title>
+  <desc>Line-art tennis court — doubles + singles sidelines, service boxes, baseline, center marks, and net. Track Orange accent on the net cord. Academorix v0.1.</desc>
+
+  <!-- Doubles outer -->
+  <rect x="20" y="60" width="760" height="280" rx="1"/>
+
+  <!-- Singles sidelines -->
+  <line x1="20" y1="90" x2="780" y2="90"/>
+  <line x1="20" y1="310" x2="780" y2="310"/>
+
+  <!-- Baselines -->
+  <line x1="20" y1="60" x2="20" y2="340"/>
+  <line x1="780" y1="60" x2="780" y2="340"/>
+
+  <!-- Service lines -->
+  <line x1="200" y1="90" x2="200" y2="310"/>
+  <line x1="600" y1="90" x2="600" y2="310"/>
+
+  <!-- Center service line -->
+  <line x1="200" y1="200" x2="600" y2="200"/>
+
+  <!-- Center marks (baseline notches) -->
+  <line x1="20" y1="197" x2="30" y2="197"/>
+  <line x1="20" y1="203" x2="30" y2="203"/>
+  <line x1="770" y1="197" x2="780" y2="197"/>
+  <line x1="770" y1="203" x2="780" y2="203"/>
+
+  <!-- Net -->
+  <line x1="400" y1="30" x2="400" y2="370" stroke="#FF6B35" stroke-width="3"/>
+  <line x1="380" y1="60" x2="420" y2="60"/>
+  <line x1="380" y1="340" x2="420" y2="340"/>
+
+  <!-- Net posts -->
+  <circle cx="400" cy="30" r="4" fill="#FF6B35" stroke="none"/>
+  <circle cx="400" cy="370" r="4" fill="#FF6B35" stroke="none"/>
+</svg>

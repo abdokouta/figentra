@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Academorix · merch + apparel · sponsor slot grid
+  ==================================================================
+  Placement reference for every printable position across the training
+  kit. Front + back tee shown side by side with six numbered positions
+  marked at their canonical dimensions; a right-column spec table
+  restates each position as (tier · size · clearance · hierarchy) so a
+  supplier can quote a full kit without a follow-up email.
+
+  This file is the source-of-truth reference for BOTH t-shirt-tech.svg
+  and warmup-jacket.svg — every safe-area rect on those sheets is a
+  literal projection of the corresponding row here.
+
+  Sprint 1 lineage:
+    · A-Chevron mark  — inlined verbatim (Position 1)
+    · Track Orange    — accent only (safe-area outlines + numeric dots)
+    · Geist 500 /-.03 — display type
+    · Geist Mono 500  — mm callouts
+
+  Positions:
+    1  Left chest · A-Chevron mark        30×30mm     mandatory
+    2  Right chest · tier-2 sponsor       115×80mm    optional
+    3  Sleeve (both) · tier-3 sponsor     80×60mm     symmetrical
+    4  Back yoke · athlete last name      260×40mm    mandatory (jersey)
+    5  Back centre · number OR panel      200×290mm (jersey)
+                                          240×250mm (warmup)
+    6  Cuff / hem tab · tier-4 accent     60×30mm     rare
+
+  Renders in a browser at 1400×1000 for review; print at 100%.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 1400 1000"
+     width="1400" height="1000"
+     role="img"
+     aria-label="Academorix sponsor slot grid · six positions across the training kit">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Geist:wght@500;600;700;800&amp;family=Geist+Mono:wght@500;600&amp;display=swap");
+    .title      { font-family: "Geist", "Inter", sans-serif; font-weight: 700; font-size: 26px; letter-spacing: -0.03em; fill: #141414; }
+    .subtitle   { font-family: "Geist", "Inter", sans-serif; font-weight: 600; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; fill: rgba(20,20,20,0.62); }
+    .view-label { font-family: "Geist", "Inter", sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; fill: rgba(20,20,20,0.72); }
+    .row-tier   { font-family: "Geist Mono", ui-monospace, monospace; font-weight: 600; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; fill: #ff6b35; }
+    .row-name   { font-family: "Geist", "Inter", sans-serif; font-weight: 600; font-size: 13px; letter-spacing: -0.01em; fill: #141414; }
+    .row-dim    { font-family: "Geist Mono", ui-monospace, monospace; font-weight: 500; font-size: 12px; fill: rgba(20,20,20,0.72); }
+    .row-hint   { font-family: "Geist", "Inter", sans-serif; font-weight: 400; font-size: 11px; fill: rgba(20,20,20,0.55); }
+    .num-badge  { fill: #ff6b35; }
+    .num-text   { font-family: "Geist", "Inter", sans-serif; font-weight: 700; font-size: 12px; fill: #fafafa; }
+    .fabric     { fill: #f4f4f4; stroke: rgba(20,20,20,0.14); stroke-width: 1.5; stroke-linejoin: round; }
+    .stitch     { fill: none; stroke: rgba(20,20,20,0.28); stroke-width: 1; stroke-dasharray: 4 3; }
+    .safe       { fill: rgba(255,107,53,0.10); stroke: #ff6b35; stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .safe-big   { fill: rgba(255,107,53,0.08); stroke: #ff6b35; stroke-width: 1.4; stroke-dasharray: 6 5; }
+    .leader     { fill: none; stroke: rgba(20,20,20,0.30); stroke-width: 0.8; stroke-dasharray: 2 2; }
+    .kicker     { font-family: "Geist", "Inter", sans-serif; font-weight: 600; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; fill: #ff6b35; }
+    .rule       { fill: none; stroke: rgba(20,20,20,0.14); stroke-width: 1; }
+    .rule-strong{ fill: none; stroke: rgba(20,20,20,0.28); stroke-width: 1; }
+    .tag        { font-family: "Geist Mono", ui-monospace, monospace; font-weight: 500; font-size: 10px; letter-spacing: 0.06em; fill: rgba(20,20,20,0.55); }
+  </style>
+
+  <!-- ── header ────────────────────────────────────────── -->
+  <text x="60" y="52" class="title">Sponsor slot grid · training kit</text>
+  <text x="60" y="78" class="subtitle">Six positions · tier hierarchy · safe-area references</text>
+  <line class="rule" x1="60" y1="98" x2="1340" y2="98"/>
+
+  <!-- ═══════════════════ FRONT TEE (positions 1, 2, 3, 6) ═══════════════════ -->
+  <g transform="translate(80 130)">
+    <text x="230" y="24" class="view-label" text-anchor="middle">Front</text>
+
+    <!-- silhouette -->
+    <path class="fabric" d="
+      M 140 100
+      Q 280 148 420 100
+      L 500 112
+      L 560 232
+      L 486 258
+      L 420 140
+      L 420 668
+      L 140 668
+      L 140 140
+      L 74 258
+      L 0 232
+      L 60 112
+      Z"/>
+    <path class="stitch" d="M 200 108 Q 280 150 360 108"/>
+    <path class="stitch" d="M 60 112 L 140 105"/>
+    <path class="stitch" d="M 500 112 L 420 105"/>
+    <path class="stitch" d="M 140 665 L 420 665"/>
+
+    <!-- Position 1 · left chest · A-Chevron -->
+    <rect class="safe" x="176" y="200" width="46" height="46" rx="2"/>
+    <circle class="num-badge" cx="199" cy="180" r="12"/>
+    <text x="199" y="184" class="num-text" text-anchor="middle">1</text>
+
+    <!-- Position 2 · right chest · tier-2 sponsor -->
+    <rect class="safe" x="298" y="200" width="115" height="80" rx="2"/>
+    <circle class="num-badge" cx="355" cy="178" r="12"/>
+    <text x="355" y="182" class="num-text" text-anchor="middle">2</text>
+
+    <!-- Position 3 · right sleeve · tier-3 sponsor -->
+    <rect class="safe" x="472" y="140" width="80" height="60" rx="2"
+          transform="rotate(-14 512 170)"/>
+    <circle class="num-badge" cx="512" cy="128" r="12"/>
+    <text x="512" y="132" class="num-text" text-anchor="middle">3</text>
+
+    <!-- Position 6 · cuff / hem tab · tier-4 accent -->
+    <rect class="safe" x="150" y="628" width="60" height="30" rx="2"/>
+    <circle class="num-badge" cx="180" cy="612" r="12"/>
+    <text x="180" y="616" class="num-text" text-anchor="middle">6</text>
+
+    <text x="230" y="704" class="tag" text-anchor="middle">front · 1 · 2 · 3 · 6</text>
+  </g>
+
+  <!-- ═══════════════════ BACK TEE (positions 3, 4, 5) ═══════════════════ -->
+  <g transform="translate(560 130)">
+    <text x="230" y="24" class="view-label" text-anchor="middle">Back</text>
+
+    <path class="fabric" d="
+      M 140 100
+      Q 280 118 420 100
+      L 500 112
+      L 560 232
+      L 486 258
+      L 420 140
+      L 420 668
+      L 140 668
+      L 140 140
+      L 74 258
+      L 0 232
+      L 60 112
+      Z"/>
+    <path class="stitch" d="M 200 108 Q 280 122 360 108"/>
+    <path class="stitch" d="M 60 112 L 140 105"/>
+    <path class="stitch" d="M 500 112 L 420 105"/>
+    <path class="stitch" d="M 140 665 L 420 665"/>
+
+    <!-- Position 4 · back yoke · athlete last name -->
+    <rect class="safe" x="150" y="180" width="260" height="40" rx="1"/>
+    <circle class="num-badge" cx="280" cy="164" r="12"/>
+    <text x="280" y="168" class="num-text" text-anchor="middle">4</text>
+
+    <!-- Position 5 · back centre · number OR panel -->
+    <rect class="safe-big" x="180" y="240" width="200" height="290" rx="2"/>
+    <circle class="num-badge" cx="410" cy="240" r="12"/>
+    <text x="410" y="244" class="num-text" text-anchor="middle">5</text>
+
+    <!-- Position 3 · left sleeve (mirror of front) · tier-3 sponsor -->
+    <rect class="safe" x="8" y="140" width="80" height="60" rx="2"
+          transform="rotate(14 48 170)"/>
+    <circle class="num-badge" cx="48" cy="128" r="12"/>
+    <text x="48" y="132" class="num-text" text-anchor="middle">3</text>
+
+    <text x="230" y="704" class="tag" text-anchor="middle">back · 3 · 4 · 5</text>
+  </g>
+
+  <!-- ═══════════════════ SPEC TABLE ═══════════════════ -->
+  <g transform="translate(1050 130)">
+    <text x="0" y="24" class="view-label">Specification table</text>
+    <line class="rule-strong" x1="0" y1="40" x2="290" y2="40"/>
+
+    <!-- headers -->
+    <text x="0" y="60" class="tag">#</text>
+    <text x="30" y="60" class="tag">tier · position</text>
+    <text x="0" y="76" class="tag" style="fill:transparent">.</text>
+
+    <!-- row 1 · Position 1 -->
+    <g transform="translate(0 92)">
+      <circle class="num-badge" cx="10" cy="4" r="10"/>
+      <text x="10" y="8" class="num-text" text-anchor="middle" style="font-size:11px">1</text>
+      <text x="30" y="0" class="row-tier">Mandatory · academy</text>
+      <text x="30" y="16" class="row-name">Left chest · A-Chevron mark</text>
+      <text x="30" y="34" class="row-dim">30×30mm · 40mm below shoulder</text>
+      <text x="30" y="50" class="row-hint">never a sponsor — reserved for the academy mark</text>
+      <line class="rule" x1="0" y1="62" x2="290" y2="62"/>
+    </g>
+
+    <!-- row 2 · Position 2 -->
+    <g transform="translate(0 168)">
+      <circle class="num-badge" cx="10" cy="4" r="10"/>
+      <text x="10" y="8" class="num-text" text-anchor="middle" style="font-size:11px">2</text>
+      <text x="30" y="0" class="row-tier">Tier-2 · chest sponsor</text>
+      <text x="30" y="16" class="row-name">Right chest · sponsor wordmark</text>
+      <text x="30" y="34" class="row-dim">115×80mm · 40mm from neckline</text>
+      <text x="30" y="50" class="row-hint">the FIRST sponsor slot most people see</text>
+      <line class="rule" x1="0" y1="62" x2="290" y2="62"/>
+    </g>
+
+    <!-- row 3 · Position 3 -->
+    <g transform="translate(0 244)">
+      <circle class="num-badge" cx="10" cy="4" r="10"/>
+      <text x="10" y="8" class="num-text" text-anchor="middle" style="font-size:11px">3</text>
+      <text x="30" y="0" class="row-tier">Tier-3 · sleeve sponsor</text>
+      <text x="30" y="16" class="row-name">Both sleeves · symmetrical</text>
+      <text x="30" y="34" class="row-dim">80×60mm · 30mm from shoulder seam</text>
+      <text x="30" y="50" class="row-hint">MUST be printed on both sleeves — one is odd</text>
+      <line class="rule" x1="0" y1="62" x2="290" y2="62"/>
+    </g>
+
+    <!-- row 4 · Position 4 -->
+    <g transform="translate(0 320)">
+      <circle class="num-badge" cx="10" cy="4" r="10"/>
+      <text x="10" y="8" class="num-text" text-anchor="middle" style="font-size:11px">4</text>
+      <text x="30" y="0" class="row-tier">Mandatory · athlete</text>
+      <text x="30" y="16" class="row-name">Back yoke · last name curve</text>
+      <text x="30" y="34" class="row-dim">260×40mm · Geist 600 · 24pt tracking</text>
+      <text x="30" y="50" class="row-hint">the name arcs slightly · flat baseline OK</text>
+      <line class="rule" x1="0" y1="62" x2="290" y2="62"/>
+    </g>
+
+    <!-- row 5 · Position 5 -->
+    <g transform="translate(0 396)">
+      <circle class="num-badge" cx="10" cy="4" r="10"/>
+      <text x="10" y="8" class="num-text" text-anchor="middle" style="font-size:11px">5</text>
+      <text x="30" y="0" class="row-tier">Tier-1 · back centre</text>
+      <text x="30" y="16" class="row-name">Number (jersey) OR panel (warmup)</text>
+      <text x="30" y="34" class="row-dim">jersey 200×290mm · warmup 240×250mm</text>
+      <text x="30" y="50" class="row-hint">the SAME slot flips role by garment type</text>
+      <line class="rule" x1="0" y1="62" x2="290" y2="62"/>
+    </g>
+
+    <!-- row 6 · Position 6 -->
+    <g transform="translate(0 472)">
+      <circle class="num-badge" cx="10" cy="4" r="10"/>
+      <text x="10" y="8" class="num-text" text-anchor="middle" style="font-size:11px">6</text>
+      <text x="30" y="0" class="row-tier">Tier-4 · hem / cuff tab</text>
+      <text x="30" y="16" class="row-name">Woven label OR heat-seal tab</text>
+      <text x="30" y="34" class="row-dim">60×30mm · applied at hem or cuff seam</text>
+      <text x="30" y="50" class="row-hint">rare · reserved for a season / edition credit</text>
+    </g>
+  </g>
+
+  <!-- ═══════════════════ BRAND HIERARCHY LEGEND ═══════════════════ -->
+  <line class="rule" x1="60" y1="866" x2="1340" y2="866"/>
+  <text x="60" y="894" class="subtitle">Brand hierarchy — the order sponsors sit in</text>
+
+  <!-- five horizontal boxes showing the hierarchy top-to-bottom -->
+  <g transform="translate(60 908)">
+    <!-- Academy · fixed -->
+    <rect x="0" y="0" width="250" height="60" rx="4" fill="currentColor"/>
+    <text x="16" y="20" class="kicker" style="fill:#ff6b35">Rank 1 · fixed</text>
+    <text x="16" y="42" class="row-name" style="fill:#fafafa">Academorix · A-Chevron</text>
+
+    <!-- Academy identity · fixed -->
+    <rect x="266" y="0" width="250" height="60" rx="4" fill="rgba(20,20,20,0.85)"/>
+    <text x="282" y="20" class="kicker">Rank 2 · fixed</text>
+    <text x="282" y="42" class="row-name" style="fill:#fafafa">Academy · club identity</text>
+
+    <!-- Tier-1 sponsor -->
+    <rect x="532" y="0" width="250" height="60" rx="4" fill="rgba(20,20,20,0.60)"/>
+    <text x="548" y="20" class="kicker">Rank 3 · sponsor</text>
+    <text x="548" y="42" class="row-name" style="fill:#fafafa">Tier-1 · back panel</text>
+
+    <!-- Tier-2 sponsor -->
+    <rect x="798" y="0" width="250" height="60" rx="4" fill="rgba(20,20,20,0.40)"/>
+    <text x="814" y="20" class="kicker">Rank 4 · sponsor</text>
+    <text x="814" y="42" class="row-name" style="fill:#fafafa">Tier-2 · right chest</text>
+
+    <!-- Tier-3 sponsor -->
+    <rect x="1064" y="0" width="216" height="60" rx="4" fill="rgba(20,20,20,0.24)"/>
+    <text x="1080" y="20" class="kicker">Rank 5 · sponsor</text>
+    <text x="1080" y="42" class="row-name" style="fill:#141414">Tier-3 · sleeves</text>
+  </g>
+
+  <text x="1340" y="988" class="tag" text-anchor="end">Academorix · sponsor slot grid · v1.1 · Sprint 2</text>
+</svg>

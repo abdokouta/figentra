@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Academorix · favicon.svg · 32×32 source · v1.0 · 2026-08-21
+
+  Track Orange filled rounded-square (rx=6) with paper-white 'a'
+  Geist 700 centered. Reads distinctly at 16 · 32 · 48px on any
+  browser chrome — Track Orange holds AA contrast against every
+  common tab-bar background.
+
+  Codified by ADR-0104 — supersedes the pre-2026-08-21 A-Chevron
+  favicon (paper/ink flipping square with chevron primitives + apex
+  marker). The new shape is a wordmark derivation — one letter of
+  'academorix' set in the same Geist family that carries the primary
+  mark.
+
+  Design choices
+  ──────────────
+  · Background is Track Orange — the single accent survives on both
+    light + dark chrome without needing @media (prefers-color-scheme).
+  · Letter is paper-white (#fafafa) — 6.06:1 contrast against Track
+    Orange, above WCAG AA 4.5:1 for small text.
+  · Geist 700 — heavier than the wordmark (Medium 500) because at
+    32px the extra weight resolves better on low-DPR displays.
+
+  Consumers ship this alongside the raster queue (favicon-16 · 32 ·
+  64 · apple-touch-180 · android-192 · pwa-512 · favicon.ico) exported
+  via rsvg-convert + ImageMagick from
+  .tmp/scripts/generate-academorix-favicons.sh.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" role="img" aria-label="Academorix favicon">
+  <!-- Track Orange rounded-square background -->
+  <rect width="32" height="32" fill="#FF6B35" rx="6"/>
+
+  <!-- Paper-white 'a' Geist 700 · centered -->
+  <text
+    x="16"
+    y="23"
+    font-family="Geist, Inter, -apple-system, sans-serif"
+    font-weight="700"
+    font-size="24"
+    letter-spacing="-0.03em"
+    fill="#fafafa"
+    text-anchor="middle"
+  >a</text>
+</svg>

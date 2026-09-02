@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sport HERO tile — tennis.
+  Full court top-down · ITF singles + doubles proportions.
+  Baseline · service boxes · center service line · net · alleys · center marks.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Tennis court — top-down">
+  <defs>
+    <style>
+      .field { fill: #141414; }
+      .line { fill: none; stroke: #FF6B35; stroke-width: 3; opacity: 0.9; }
+      .line-thin { fill: none; stroke: #FF6B35; stroke-width: 2; opacity: 0.55; }
+      .net { stroke: #FF6B35; stroke-width: 4; opacity: 1; }
+      .dot { fill: #FF6B35; }
+    </style>
+  </defs>
+
+  <!-- Field surface -->
+  <rect width="800" height="500" class="field"/>
+
+  <!-- Court outer (doubles) -->
+  <rect x="60" y="80" width="680" height="340" class="line"/>
+
+  <!-- Singles sidelines (inset ~35 units each side) -->
+  <line x1="60"  y1="115" x2="740" y2="115" class="line-thin"/>
+  <line x1="60"  y1="385" x2="740" y2="385" class="line-thin"/>
+
+  <!-- Net — vertical solid line at center + short posts extending outside the court -->
+  <line x1="400" y1="60"  x2="400" y2="440" class="net"/>
+  <circle cx="400" cy="60"  r="4" class="dot"/>
+  <circle cx="400" cy="440" r="4" class="dot"/>
+
+  <!-- Service lines (baselines-inset lines running horizontally) -->
+  <line x1="200" y1="115" x2="200" y2="385" class="line"/>
+  <line x1="600" y1="115" x2="600" y2="385" class="line"/>
+
+  <!-- Center service line (only between service lines) -->
+  <line x1="200" y1="250" x2="600" y2="250" class="line"/>
+
+  <!-- Center marks on baselines (small tick) -->
+  <line x1="60"  y1="245" x2="60"  y2="255" class="line"/>
+  <line x1="740" y1="245" x2="740" y2="255" class="line"/>
+
+  <!-- Alleys are the singles-sideline → doubles-sideline strips (visual clarity) -->
+  <line x1="60"  y1="80"  x2="60"  y2="420" class="line"/>
+  <line x1="740" y1="80"  x2="740" y2="420" class="line"/>
+</svg>

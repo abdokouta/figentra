@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Figentra vertical video · shape 06 · Testimonial.
+  9:16 · 1080×1920. Talking-head + name + role + short quote overlay.
+  For customer-interview Reels + short soundbites cut from longer
+  interviews.
+
+  Content zones inside safe area:
+    - Headshot pane   · 360..960 y · centred · 600 × 600 rounded
+    - Name            · 1040 y · Geist 60 px semibold
+    - Role            · 1100 y · Geist 32 px muted
+    - Quote pull-out  · lower-third strip · bottom-anchored quote
+    - f_ mark         · bottom-left
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920" role="img" aria-label="Testimonial · vertical video shape template" color="#141414">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+
+  <!-- Ink field -->
+  <rect x="0" y="0" width="1080" height="1920" fill="#0b0f14"/>
+
+  <!-- Top safe-zone marker -->
+  <line x1="0" y1="206" x2="1080" y2="206" stroke="#fafafa" stroke-width="1" stroke-dasharray="6 6" opacity="0.14"/>
+
+  <!-- Kicker · Signal-mint mono · top-center -->
+  <text x="540" y="290" text-anchor="middle" font-family="'Geist Mono', ui-monospace, monospace" font-size="26" fill="#00e5a0" letter-spacing="0.18em">
+    THE VOICE · 06
+  </text>
+
+  <!-- Headshot pane · rounded square · placeholder -->
+  <clipPath id="head-clip">
+    <rect x="240" y="360" width="600" height="600" rx="24"/>
+  </clipPath>
+  <rect x="240" y="360" width="600" height="600" rx="24" fill="rgba(255,255,255,0.06)" stroke="rgba(0,229,160,0.35)" stroke-width="1" stroke-dasharray="8 6"/>
+  <text x="540" y="660" text-anchor="middle" font-family="'Geist Mono', ui-monospace, monospace" font-size="22" fill="#fafafa" opacity="0.32" letter-spacing="0.12em">
+    HEADSHOT · 600×600
+  </text>
+  <text x="540" y="694" text-anchor="middle" font-family="'Geist Mono', ui-monospace, monospace" font-size="18" fill="#fafafa" opacity="0.24" letter-spacing="0.08em">
+    talking head · interview capture
+  </text>
+
+  <!-- Signal-mint underscore beneath the headshot · brand tie -->
+  <rect x="440" y="980" width="200" height="4" fill="#00e5a0"/>
+
+  <!-- Name -->
+  <text x="540" y="1060" text-anchor="middle" font-family="'Geist', 'Inter', sans-serif" font-weight="500" font-size="60" fill="#fafafa" letter-spacing="-0.01em">
+    Head of Digital
+  </text>
+  <!-- Role -->
+  <text x="540" y="1108" text-anchor="middle" font-family="'Geist', 'Inter', sans-serif" font-weight="400" font-size="30" fill="#fafafa" opacity="0.6">
+    Sports academy · UAE
+  </text>
+
+  <!-- Quote pull-out strip · lower-third -->
+  <rect x="40" y="1200" width="1000" height="140" rx="16" fill="rgba(0,229,160,0.10)" stroke="rgba(0,229,160,0.35)" stroke-width="1"/>
+  <text x="80" y="1252" font-family="'Geist', 'Inter', sans-serif" font-weight="500" font-size="36" fill="#fafafa" letter-spacing="-0.01em">
+    <tspan x="80" dy="0">&#8220;Governance was what we needed.</tspan>
+    <tspan x="80" dy="44">Every regulator's question is answered.&#8221;</tspan>
+  </text>
+
+  <!-- Bottom safe-zone marker -->
+  <line x1="0" y1="1368" x2="1080" y2="1368" stroke="#fafafa" stroke-width="1" stroke-dasharray="6 6" opacity="0.14"/>
+
+  <!-- f_ mark · bottom-left -->
+  <g transform="translate(60, 1440)">
+    <rect x="44" y="18" width="8" height="76" fill="#fafafa"/>
+    <rect x="44" y="18" width="30" height="8" fill="#fafafa"/>
+    <rect x="28" y="52" width="36" height="8" fill="#fafafa"/>
+    <rect x="28" y="102" width="64" height="8" fill="#00e5a0"/>
+  </g>
+</svg>

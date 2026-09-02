@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Academorix · certificate · belt-level promotion · A4 landscape
+  ==================================================================
+  Awarded when an athlete promotes to a new rank. Distinct from
+  grading-event.svg — that certificate says "you sat for the test",
+  this one says "you passed + you now hold this rank".
+
+  Variable slots:
+    Amir Belaid     e.g. "Youssef Hakim"
+    Padel · Doubles         e.g. "Karate · Shotokan"
+    Blue Belt          e.g. "Green Belt · 5th Kyu"
+    #1e69b8    hex e.g. "#00A651" (green) · "#141414" (black)
+    #fafafa  optional secondary stripe · hex or "none"
+    Yellow Belt     e.g. "Yellow Belt · 8th Kyu"
+    Sahara Padel Academy       e.g. "Atlas Combat Club"
+    24 Sep 26         e.g. "22 September 2026"
+    24 Sep 27        e.g. "22 September 2027" · or "Permanent"
+    Layla Farid    e.g. "Sensei Karim Bennani"
+    Black Belt · 3rd Dan e.g. "6th Dan · WKF"
+    Reda El Mansouri  e.g. "Nadia Rachidi"
+    Federation Officer    e.g. "Kingdom Federation of Karate · Chief Referee"
+    GRD-2026-000247          e.g. "AXB-2026-09-0142"
+
+  reviewed_by: null · pending Founding Partner sign-off.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 1188 840"
+     width="297mm" height="210mm"
+     preserveAspectRatio="xMidYMid meet"
+     role="img"
+     aria-label="Belt-level promotion certificate">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+
+  <style>
+    .body { font-family: "Geist", "Inter", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+    .mono { font-family: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+    .display { font-family: "Geist", "Inter", sans-serif; font-weight: 500; letter-spacing: -0.03em; }
+    .kicker { font-family: "Geist Mono", ui-monospace, monospace; letter-spacing: 0.16em; text-transform: uppercase; }
+  </style>
+
+  <!-- ── paper ────────────────────────────────────────────── -->
+  <rect x="0" y="0" width="1188" height="840" fill="#fafafa"/>
+
+  <!-- ── outer border ─────────────────────────────────────── -->
+  <rect x="48" y="48" width="1092" height="744" fill="none" stroke="currentColor" stroke-width="2"/>
+  <rect x="56" y="56" width="1076" height="728" fill="none" stroke="currentColor" stroke-width="0.5"/>
+  <g fill="#FF6B35">
+    <rect x="48"   y="48"  width="24" height="4"/>
+    <rect x="48"   y="48"  width="4"  height="24"/>
+    <rect x="1116" y="48"  width="24" height="4"/>
+    <rect x="1136" y="48"  width="4"  height="24"/>
+    <rect x="48"   y="788" width="24" height="4"/>
+    <rect x="48"   y="768" width="4"  height="24"/>
+    <rect x="1116" y="788" width="24" height="4"/>
+    <rect x="1136" y="768" width="4"  height="24"/>
+  </g>
+
+  <!-- ── A-Chevron mark ──────────────────────────────────── -->
+  <g transform="translate(556, 90) scale(0.66)">
+    <line x1="60" y1="24" x2="30" y2="96" stroke="currentColor" stroke-width="10" stroke-linecap="square"/>
+    <line x1="60" y1="24" x2="90" y2="96" stroke="currentColor" stroke-width="10" stroke-linecap="square"/>
+    <rect x="40" y="60" width="40" height="10" fill="currentColor"/>
+    <rect x="56" y="14" width="8" height="6" fill="#FF6B35"/>
+  </g>
+
+  <text x="594" y="210" text-anchor="middle" class="mono" font-size="12" fill="currentColor" letter-spacing="0.28em">A · C · A · D · E · M · O · R · I · X</text>
+  <text x="594" y="252" text-anchor="middle" class="kicker" font-size="15" fill="#FF6B35">CERTIFICATE · BELT PROMOTION</text>
+
+  <!-- ── awarded to ──────────────────────────────────────── -->
+  <text x="594" y="298" text-anchor="middle" class="mono" font-size="11" fill="currentColor" opacity="0.62" letter-spacing="0.2em">THIS PROMOTES</text>
+  <text x="594" y="378" text-anchor="middle" class="display" font-size="60" fill="currentColor">Amir Belaid</text>
+
+  <!-- ── belt bar · centered · the star of the certificate ── -->
+  <g transform="translate(324, 428)">
+    <!-- Belt background — draws with fill = rank belt color -->
+    <rect x="0" y="0" width="540" height="52" fill="#1e69b8" stroke="currentColor" stroke-width="1"/>
+    <!-- Optional secondary stripe · third-height accent bar -->
+    <rect x="0" y="18" width="540" height="16" fill="#fafafa" opacity="0.85"/>
+    <!-- Twill stitching · dashed edges -->
+    <line x1="0" y1="8"  x2="540" y2="8"  stroke="currentColor" stroke-width="0.5" stroke-dasharray="4 3" opacity="0.28"/>
+    <line x1="0" y1="44" x2="540" y2="44" stroke="currentColor" stroke-width="0.5" stroke-dasharray="4 3" opacity="0.28"/>
+    <!-- Track Orange rank pin · left tip -->
+    <rect x="14" y="4" width="16" height="6" fill="#FF6B35"/>
+    <rect x="14" y="42" width="16" height="6" fill="#FF6B35"/>
+  </g>
+
+  <!-- ── rank name ───────────────────────────────────────── -->
+  <text x="594" y="524" text-anchor="middle" class="display" font-size="32" fill="currentColor">Blue Belt</text>
+
+  <!-- ── promotion line ──────────────────────────────────── -->
+  <text x="594" y="558" text-anchor="middle" class="body" font-size="15" fill="currentColor" opacity="0.72">
+    promoted from <tspan font-weight="500" opacity="1">Yellow Belt</tspan>
+    on <tspan font-weight="500" opacity="1">24 Sep 26</tspan>
+    · discipline · <tspan font-weight="500" opacity="1">Padel · Doubles</tspan>
+  </text>
+  <text x="594" y="584" text-anchor="middle" class="body" font-size="14" fill="currentColor" opacity="0.6">
+    at Sahara Padel Academy · valid <tspan font-weight="500">24 Sep 27</tspan>
+  </text>
+
+  <!-- ── signatures ──────────────────────────────────────── -->
+  <g transform="translate(180, 668)">
+    <line x1="0" y1="0" x2="280" y2="0" stroke="currentColor" stroke-width="1"/>
+    <text x="140" y="24" text-anchor="middle" class="body" font-size="15" font-weight="500" fill="currentColor">Layla Farid</text>
+    <text x="140" y="44" text-anchor="middle" class="mono" font-size="10" fill="currentColor" opacity="0.62" letter-spacing="0.14em">Black Belt · 3rd Dan</text>
+  </g>
+  <g transform="translate(728, 668)">
+    <line x1="0" y1="0" x2="280" y2="0" stroke="currentColor" stroke-width="1"/>
+    <text x="140" y="24" text-anchor="middle" class="body" font-size="15" font-weight="500" fill="currentColor">Reda El Mansouri</text>
+    <text x="140" y="44" text-anchor="middle" class="mono" font-size="10" fill="currentColor" opacity="0.62" letter-spacing="0.14em">Federation Officer</text>
+  </g>
+
+  <!-- ── serial + verify ─────────────────────────────────── -->
+  <g transform="translate(72, 750)">
+    <text x="0" y="0" class="mono" font-size="10" fill="currentColor" opacity="0.62" letter-spacing="0.16em">SERIAL</text>
+    <text x="0" y="18" class="mono" font-size="13" fill="currentColor" font-weight="500">GRD-2026-000247</text>
+  </g>
+  <text x="1116" y="768" text-anchor="end" class="mono" font-size="9" fill="currentColor" opacity="0.5" letter-spacing="0.14em">VERIFY · ACADEMORIX.COM/VERIFY/GRD-2026-000247</text>
+</svg>

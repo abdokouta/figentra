@@ -1,0 +1,1822 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Figentra — mark spec · F-Cursor × Geist · draft 2026-08-14</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ══════════════════════════════════════════════════════════
+         Tokens · verbatim from docs/brand/04-visual-identity.md §1
+         ══════════════════════════════════════════════════════════ */
+      :root {
+        --ink: #0a0f1c;
+        --signal: #00e5a0;
+        --paper: #fafaf7;
+
+        --graphite-100: #eeeef1;
+        --graphite-200: #dde0e8;
+        --graphite-300: #b4bac9;
+        --graphite-400: #8b93a8;
+        --graphite-500: #5a6478;
+        --graphite-600: #3a4256;
+        --graphite-700: #2a3348;
+        --graphite-800: #1a2136;
+        --graphite-900: #0f1424;
+
+        --shadow-card: 0 1px 2px rgb(0 0 0 / 8%);
+        --ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+        --font-display: "Geist", "Inter", system-ui, sans-serif;
+        --font-mono: "JetBrains Mono", ui-monospace, monospace;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: var(--font-display);
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 1.5;
+        color: var(--ink);
+        background: var(--paper);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        transition:
+          background 200ms var(--ease),
+          color 200ms var(--ease);
+      }
+      body.dark {
+        background: var(--graphite-900);
+        color: var(--paper);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 32px;
+      }
+
+      section {
+        padding: 96px 0;
+        border-top: 1px solid var(--graphite-200);
+      }
+      body.dark section {
+        border-top-color: var(--graphite-700);
+      }
+      section:first-of-type {
+        border-top: none;
+      }
+
+      /* ══ Typography · from §2 type-scale ══ */
+      .display-l {
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: 48px;
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+      }
+      .display-m {
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: 32px;
+        line-height: 1.12;
+        letter-spacing: -0.01em;
+      }
+      .heading {
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: 24px;
+        line-height: 1.16;
+        letter-spacing: -0.01em;
+      }
+      .subheading {
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 1.33;
+      }
+      .body {
+        font-family: var(--font-display);
+        font-size: 16px;
+        line-height: 1.5;
+      }
+      .small {
+        font-family: var(--font-display);
+        font-size: 14px;
+        line-height: 1.42;
+      }
+      .micro {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        line-height: 1.33;
+        letter-spacing: 0.02em;
+      }
+      .mono {
+        font-family: var(--font-mono);
+      }
+
+      .muted {
+        color: var(--graphite-500);
+      }
+      body.dark .muted {
+        color: var(--graphite-400);
+      }
+      .lede {
+        max-width: 68ch;
+        color: var(--graphite-600);
+      }
+      body.dark .lede {
+        color: var(--graphite-300);
+      }
+
+      /* ══ Masthead ══ */
+      .masthead {
+        border-bottom: 1px solid var(--graphite-200);
+        padding: 16px 0;
+        background: var(--paper);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        transition: background 200ms var(--ease);
+      }
+      body.dark .masthead {
+        background: var(--graphite-900);
+        border-bottom-color: var(--graphite-700);
+      }
+      .masthead-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 32px;
+      }
+      .masthead-left {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+      }
+      .masthead-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .masthead-brand .wordmark {
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: 16px;
+        letter-spacing: -0.02em;
+      }
+      .masthead-meta {
+        display: flex;
+        gap: 24px;
+        color: var(--graphite-500);
+      }
+      body.dark .masthead-meta {
+        color: var(--graphite-400);
+      }
+      .status-live {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .status-live-cursor {
+        display: inline-block;
+        width: 12px;
+        height: 4px;
+        background: var(--signal);
+        animation: cursor-blink 1s steps(1) infinite;
+      }
+      .theme-toggle {
+        appearance: none;
+        border: 1px solid var(--graphite-200);
+        background: transparent;
+        color: inherit;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        cursor: pointer;
+        transition: border-color 200ms var(--ease);
+      }
+      .theme-toggle:hover {
+        border-color: var(--graphite-400);
+      }
+      body.dark .theme-toggle {
+        border-color: var(--graphite-700);
+      }
+
+      /* ══ Hero ══ */
+      .hero {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 80px;
+        align-items: center;
+        min-height: 60vh;
+      }
+      @media (max-width: 900px) {
+        .hero {
+          grid-template-columns: 1fr;
+          gap: 40px;
+        }
+      }
+      .hero-eyebrow {
+        color: var(--graphite-500);
+        margin-bottom: 24px;
+        text-transform: uppercase;
+      }
+      body.dark .hero-eyebrow {
+        color: var(--graphite-400);
+      }
+      .hero-title {
+        margin-bottom: 24px;
+        max-width: 18ch;
+      }
+      .hero-mark {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 48px;
+      }
+
+      /* ══ Table of contents ══ */
+      .toc {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        background: var(--graphite-200);
+        border: 1px solid var(--graphite-200);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      body.dark .toc {
+        background: var(--graphite-700);
+        border-color: var(--graphite-700);
+      }
+      @media (max-width: 720px) {
+        .toc {
+          grid-template-columns: 1fr;
+        }
+      }
+      .toc a {
+        display: block;
+        padding: 20px 24px;
+        background: var(--paper);
+        color: inherit;
+        text-decoration: none;
+        transition: background 200ms var(--ease);
+      }
+      body.dark .toc a {
+        background: var(--graphite-900);
+      }
+      .toc a:hover {
+        background: var(--graphite-100);
+      }
+      body.dark .toc a:hover {
+        background: var(--graphite-800);
+      }
+      .toc-num {
+        display: block;
+        color: var(--graphite-500);
+        margin-bottom: 4px;
+      }
+      body.dark .toc-num {
+        color: var(--graphite-400);
+      }
+      .toc-title {
+        font-weight: 500;
+      }
+
+      /* ══ Section headers ══ */
+      .section-num {
+        color: var(--graphite-500);
+        margin-bottom: 16px;
+      }
+      body.dark .section-num {
+        color: var(--graphite-400);
+      }
+      .section-title {
+        margin-bottom: 12px;
+      }
+      .section-lede {
+        margin-bottom: 48px;
+      }
+
+      /* ══ Mark + cursor blink animation ══ */
+      .mark {
+        color: currentColor;
+      }
+      @keyframes cursor-blink {
+        0%,
+        49% {
+          opacity: 1;
+        }
+        50%,
+        100% {
+          opacity: 0;
+        }
+      }
+      .mark .cursor {
+        animation: cursor-blink 1s steps(1) infinite;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .mark .cursor,
+        .status-live-cursor {
+          animation: none;
+        }
+      }
+      .lockup {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .lockup .wordmark {
+        font-family: var(--font-display);
+        font-weight: 500;
+        letter-spacing: -0.02em;
+      }
+
+      /* ══ Spec sheet ══ */
+      .spec {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        border: 1px solid var(--graphite-200);
+        border-radius: 12px 12px 0 0;
+        overflow: hidden;
+      }
+      body.dark .spec {
+        border-color: var(--graphite-700);
+      }
+      @media (max-width: 900px) {
+        .spec {
+          grid-template-columns: 1fr;
+        }
+      }
+      .spec-canvas {
+        background: var(--paper);
+        color: var(--ink);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 96px 32px;
+        min-height: 360px;
+        position: relative;
+      }
+      .spec-canvas.on-dark {
+        background: var(--graphite-900);
+        color: var(--paper);
+      }
+      .spec-details {
+        padding: 40px 40px 48px;
+        background: var(--paper);
+        border: 1px solid var(--graphite-200);
+        border-top: none;
+        border-radius: 0 0 12px 12px;
+      }
+      body.dark .spec-details {
+        background: var(--graphite-900);
+        border-color: var(--graphite-700);
+      }
+      .spec-details h3 {
+        margin-bottom: 8px;
+      }
+
+      /* ══ Attribute list ══ */
+      .attrs {
+        list-style: none;
+        margin-top: 24px;
+      }
+      .attrs > li {
+        display: grid;
+        grid-template-columns: 140px 1fr;
+        gap: 24px;
+        padding: 12px 0;
+        border-top: 1px solid var(--graphite-200);
+      }
+      body.dark .attrs > li {
+        border-top-color: var(--graphite-700);
+      }
+      .attrs .label {
+        color: var(--graphite-500);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        padding-top: 2px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      body.dark .attrs .label {
+        color: var(--graphite-400);
+      }
+
+      code.tok {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        background: var(--graphite-100);
+        padding: 2px 6px;
+        border-radius: 3px;
+      }
+      body.dark code.tok {
+        background: var(--graphite-800);
+      }
+
+      /* ══ Size ladder + motion filmstrip ══ */
+      .ladder {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        gap: 1px;
+        background: var(--graphite-200);
+        border: 1px solid var(--graphite-200);
+        border-radius: 8px;
+        overflow: hidden;
+        margin-top: 32px;
+      }
+      body.dark .ladder {
+        background: var(--graphite-700);
+        border-color: var(--graphite-700);
+      }
+      @media (max-width: 900px) {
+        .ladder {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+      .ladder-cell {
+        background: var(--paper);
+        padding: 32px 16px 16px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 12px;
+        min-height: 140px;
+      }
+      body.dark .ladder-cell {
+        background: var(--graphite-900);
+      }
+      .ladder-label {
+        color: var(--graphite-500);
+      }
+      body.dark .ladder-label {
+        color: var(--graphite-400);
+      }
+
+      .filmstrip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-top: 32px;
+      }
+      @media (max-width: 720px) {
+        .filmstrip {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      .frame {
+        background: var(--paper);
+        border: 1px solid var(--graphite-200);
+        border-radius: 8px;
+        padding: 32px 16px 16px;
+        text-align: center;
+      }
+      body.dark .frame {
+        background: var(--graphite-900);
+        border-color: var(--graphite-700);
+      }
+      .frame-label {
+        display: block;
+        margin-top: 16px;
+        color: var(--graphite-500);
+      }
+      body.dark .frame-label {
+        color: var(--graphite-400);
+      }
+
+      /* ══ In-situ mocks ══ */
+      .surfaces {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      @media (max-width: 720px) {
+        .surfaces {
+          grid-template-columns: 1fr;
+        }
+      }
+      .surface {
+        border: 1px solid var(--graphite-200);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      body.dark .surface {
+        border-color: var(--graphite-700);
+      }
+      .surface-caption {
+        padding: 12px 20px;
+        background: var(--graphite-100);
+        color: var(--graphite-600);
+        border-bottom: 1px solid var(--graphite-200);
+      }
+      body.dark .surface-caption {
+        background: var(--graphite-800);
+        color: var(--graphite-300);
+        border-bottom-color: var(--graphite-700);
+      }
+
+      .mock-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 28px;
+        gap: 24px;
+      }
+      .mock-nav.paper {
+        background: var(--paper);
+        color: var(--ink);
+      }
+      .mock-nav.graphite {
+        background: var(--graphite-900);
+        color: var(--paper);
+      }
+      .mock-nav nav {
+        display: flex;
+        gap: 24px;
+        color: inherit;
+        opacity: 0.7;
+        font-size: 14px;
+      }
+      .mock-nav .cta {
+        background: var(--signal);
+        color: var(--ink);
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-weight: 500;
+        font-size: 13px;
+      }
+
+      .favicons {
+        display: flex;
+        gap: 24px;
+        align-items: center;
+        padding: 32px;
+        background: var(--paper);
+      }
+      body.dark .favicons {
+        background: var(--graphite-900);
+      }
+      .favicon-tile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+      .favicon-frame {
+        border: 1px dashed var(--graphite-300);
+        padding: 6px;
+        border-radius: 4px;
+      }
+
+      .mock-og {
+        aspect-ratio: 1.91 / 1;
+        background: var(--graphite-900);
+        color: var(--paper);
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .mock-og .og-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .mock-og .og-title {
+        font-family: var(--font-display);
+        font-size: 32px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        max-width: 24ch;
+      }
+      .mock-og .og-caption {
+        color: var(--graphite-400);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .mock-sig {
+        padding: 28px 32px;
+        background: var(--paper);
+        color: var(--ink);
+      }
+      .mock-sig .sig-name {
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: 15px;
+      }
+      .mock-sig .sig-role {
+        color: var(--graphite-600);
+        font-size: 14px;
+        margin-bottom: 12px;
+      }
+      .mock-sig .sig-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 4px;
+      }
+      .mock-sig .sig-links {
+        color: var(--graphite-500);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        margin-top: 8px;
+      }
+
+      .mock-invoice {
+        padding: 32px;
+        background: var(--paper);
+        color: var(--ink);
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 24px;
+        align-items: start;
+      }
+      .mock-invoice .inv-meta {
+        text-align: right;
+        color: var(--graphite-500);
+        font-family: var(--font-mono);
+        font-size: 12px;
+      }
+
+      .mock-card {
+        aspect-ratio: 85 / 55;
+        background: var(--paper);
+        color: var(--ink);
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .mock-card.on-dark {
+        background: var(--graphite-900);
+        color: var(--paper);
+      }
+      .mock-card .card-name {
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: 15px;
+      }
+      .mock-card .card-role {
+        color: var(--graphite-600);
+        font-size: 13px;
+      }
+      .mock-card.on-dark .card-role {
+        color: var(--graphite-400);
+      }
+
+      /* ══ Palette + type ══ */
+      .swatches {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+      }
+      @media (max-width: 720px) {
+        .swatches {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      .swatch-card {
+        border: 1px solid var(--graphite-200);
+        border-radius: 8px;
+        overflow: hidden;
+        background: var(--paper);
+      }
+      body.dark .swatch-card {
+        background: var(--graphite-900);
+        border-color: var(--graphite-700);
+      }
+      .swatch-fill {
+        height: 88px;
+        display: block;
+      }
+      .swatch-meta {
+        padding: 16px 20px;
+        border-top: 1px solid var(--graphite-200);
+      }
+      body.dark .swatch-meta {
+        border-top-color: var(--graphite-700);
+      }
+      .swatch-name {
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: 15px;
+      }
+      .swatch-hex {
+        color: var(--graphite-500);
+      }
+      body.dark .swatch-hex {
+        color: var(--graphite-400);
+      }
+
+      .type-specimen {
+        border: 1px solid var(--graphite-200);
+        border-radius: 8px;
+        padding: 40px;
+        background: var(--paper);
+      }
+      body.dark .type-specimen {
+        background: var(--graphite-900);
+        border-color: var(--graphite-700);
+      }
+      .type-row {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: 32px;
+        padding: 16px 0;
+        border-top: 1px solid var(--graphite-200);
+        align-items: baseline;
+      }
+      body.dark .type-row {
+        border-top-color: var(--graphite-700);
+      }
+      .type-row:first-child {
+        border-top: none;
+      }
+
+      /* ══ Alternates ══ */
+      .alternates {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      @media (max-width: 720px) {
+        .alternates {
+          grid-template-columns: 1fr;
+        }
+      }
+      .alt-card {
+        border: 1px solid var(--graphite-200);
+        border-radius: 8px;
+        overflow: hidden;
+        background: var(--paper);
+      }
+      body.dark .alt-card {
+        background: var(--graphite-900);
+        border-color: var(--graphite-700);
+      }
+      .alt-canvas {
+        padding: 56px 32px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-bottom: 1px solid var(--graphite-200);
+        min-height: 200px;
+      }
+      body.dark .alt-canvas {
+        border-bottom-color: var(--graphite-700);
+      }
+      .alt-details {
+        padding: 24px 28px;
+      }
+      .alt-role {
+        color: var(--graphite-500);
+        margin-bottom: 8px;
+      }
+      body.dark .alt-role {
+        color: var(--graphite-400);
+      }
+
+      /* ══ Ship plan ══ */
+      .steps {
+        list-style: none;
+        counter-reset: step;
+      }
+      .steps > li {
+        counter-increment: step;
+        display: grid;
+        grid-template-columns: 40px 1fr auto;
+        gap: 24px;
+        padding: 20px 0;
+        border-top: 1px solid var(--graphite-200);
+        align-items: baseline;
+      }
+      body.dark .steps > li {
+        border-top-color: var(--graphite-700);
+      }
+      .steps > li:first-child {
+        border-top: none;
+      }
+      .steps > li::before {
+        content: counter(step, decimal-leading-zero);
+        color: var(--graphite-500);
+        font-family: var(--font-mono);
+        font-size: 12px;
+      }
+      body.dark .steps > li::before {
+        color: var(--graphite-400);
+      }
+      .step-title {
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: 16px;
+      }
+      .step-title .badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 3px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        vertical-align: 2px;
+        margin-left: 8px;
+      }
+      .step-title .badge.done {
+        background: var(--signal);
+        color: var(--ink);
+      }
+      .step-title .badge.pending {
+        border: 1px solid var(--graphite-300);
+        color: var(--graphite-500);
+      }
+      body.dark .step-title .badge.pending {
+        border-color: var(--graphite-600);
+        color: var(--graphite-400);
+      }
+      .step-note {
+        color: var(--graphite-600);
+        font-size: 14px;
+        margin-top: 4px;
+      }
+      body.dark .step-note {
+        color: var(--graphite-300);
+      }
+      .step-owner {
+        color: var(--graphite-500);
+        font-family: var(--font-mono);
+        font-size: 11px;
+      }
+      body.dark .step-owner {
+        color: var(--graphite-400);
+      }
+
+      footer {
+        border-top: 1px solid var(--graphite-200);
+        padding: 48px 0 96px;
+        color: var(--graphite-500);
+      }
+      body.dark footer {
+        border-top-color: var(--graphite-700);
+        color: var(--graphite-400);
+      }
+      footer .foot-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 32px;
+        flex-wrap: wrap;
+      }
+      footer .foot-title {
+        color: inherit;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      footer .foot-list {
+        list-style: none;
+      }
+      footer .foot-list > li {
+        margin-bottom: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="container">
+        <div class="masthead-inner">
+          <div class="masthead-left">
+            <span class="masthead-brand mark">
+              <svg width="24" height="24" viewBox="0 0 120 120" style="color: inherit">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+              </svg>
+              <span class="wordmark">Figentra</span>
+            </span>
+            <span class="micro muted">Mark spec &middot; F-Cursor × Geist &middot; 2026-08-14</span>
+          </div>
+          <div class="masthead-meta micro">
+            <span class="status-live"
+              ><span class="status-live-cursor"></span> Live &middot; deploy signed 2m ago</span
+            >
+            <button class="theme-toggle" onclick="document.body.classList.toggle('dark')">
+              Toggle theme
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <section>
+      <div class="container">
+        <div class="hero">
+          <div>
+            <p class="hero-eyebrow micro">Decision &middot; F-Cursor &middot; Signal mint &middot; Geist 500</p>
+            <h1 class="display-l hero-title">
+              A mark that blinks in the rhythm you deploy from.
+            </h1>
+            <p class="lede body">
+              We ship <strong>Concept B</strong> — the F-Cursor mark, rendered
+              in a single ink weight, with a Signal-mint cursor bar that blinks
+              on a 1&thinsp;s steps cycle. Same rhythm every developer knows
+              from their terminal. Paired with <strong>Geist 500</strong>: the
+              typeface Vercel released in 2024 that Cloudflare and Turbo
+              adopted. The mark reads at 16&thinsp;px favicon, inverts cleanly
+              on dark surfaces, and costs zero external font license to ship.
+              It encodes what our positioning already says out loud: this
+              company is the one you deploy on.
+            </p>
+          </div>
+          <div class="hero-mark mark">
+            <svg width="240" height="240" viewBox="0 0 120 120" aria-hidden="true">
+              <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+              <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+              <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Table of contents -->
+    <section>
+      <div class="container">
+        <p class="section-num micro">Contents</p>
+        <h2 class="display-m section-title">What's in this document</h2>
+        <p class="lede body section-lede">
+          Sections in order. Each is a specific artefact the decision produces
+          — the geometry, the sizing rules, the motion contract, the in-context
+          proof, the substrate tokens, the alternates reserved for other
+          surfaces, and the shipping plan.
+        </p>
+        <nav class="toc">
+          <a href="#s1"
+            ><span class="toc-num micro">01</span
+            ><span class="toc-title">The mark, at spec</span></a
+          >
+          <a href="#s2"
+            ><span class="toc-num micro">02</span
+            ><span class="toc-title">Scale &mdash; 16&thinsp;px → 240&thinsp;px</span></a
+          >
+          <a href="#s3"
+            ><span class="toc-num micro">03</span
+            ><span class="toc-title">Motion &mdash; the terminal blink</span></a
+          >
+          <a href="#s4"
+            ><span class="toc-num micro">04</span
+            ><span class="toc-title">In situ &mdash; real surfaces</span></a
+          >
+          <a href="#s5"
+            ><span class="toc-num micro">05</span
+            ><span class="toc-title">Substrate &mdash; palette + type</span></a
+          >
+          <a href="#s6"
+            ><span class="toc-num micro">06</span
+            ><span class="toc-title">Alternates &mdash; A + C</span></a
+          >
+          <a href="#s7"
+            ><span class="toc-num micro">07</span
+            ><span class="toc-title">Tagline surgery</span></a
+          >
+          <a href="#s8"
+            ><span class="toc-num micro">08</span
+            ><span class="toc-title">What shipped, what's pending</span></a
+          >
+          <a href="#s9"
+            ><span class="toc-num micro">09</span
+            ><span class="toc-title">Provenance</span></a
+          >
+        </nav>
+      </div>
+    </section>
+
+    <!-- §01 -->
+    <section id="s1">
+      <div class="container">
+        <p class="section-num micro">§01</p>
+        <h2 class="display-m section-title">The mark, at spec</h2>
+        <p class="lede body section-lede">
+          Two canvases below, one card. Left canvas renders the mark on Paper;
+          right canvas renders it on Graphite&nbsp;900. Ink strokes inherit via
+          <code class="tok">currentColor</code>; the Signal-mint cursor stays
+          mint on every surface. No gradients, no stroke tapers, no shadows
+          on the mark itself.
+        </p>
+
+        <div class="spec">
+          <div class="spec-canvas">
+            <span class="micro muted" style="position: absolute; top: 20px; left: 24px"
+              >Paper &middot; #FAFAF7</span
+            >
+            <svg width="200" height="200" viewBox="0 0 120 120" class="mark" aria-hidden="true">
+              <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+              <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+              <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+            </svg>
+          </div>
+          <div class="spec-canvas on-dark">
+            <span class="micro muted" style="position: absolute; top: 20px; left: 24px; color: var(--graphite-400)"
+              >Graphite&nbsp;900 &middot; #0F1424</span
+            >
+            <svg width="200" height="200" viewBox="0 0 120 120" class="mark" style="color: var(--paper)" aria-hidden="true">
+              <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+              <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+              <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="spec-details">
+          <h3 class="heading">F-Cursor &mdash; geometry</h3>
+          <p class="small muted" style="margin-top: 8px">
+            A geometric F with three orthogonal strokes on a 120-unit grid,
+            terminating in a Signal-mint cursor bar at its top-right. The
+            cursor blinks live on a 1&thinsp;s steps cycle, encoding
+            <em>engineering / command prompt / ready for input</em> into the
+            letterform itself.
+          </p>
+          <ul class="attrs">
+            <li>
+              <span class="label">viewBox</span>
+              <span class="small mono">0 0 120 120</span>
+            </li>
+            <li>
+              <span class="label">Cap height</span>
+              <span class="small">72 units &middot; ~60% of canvas &middot; y = 24 → 96</span>
+            </li>
+            <li>
+              <span class="label">Stroke weight</span>
+              <span class="small">10 units &middot; ≈ 14% of cap &middot; matches Geist 500's letter weight</span>
+            </li>
+            <li>
+              <span class="label">Middle-bar ratio</span>
+              <span class="small">34 / 52 ≈ 65% &middot; classical geometric-sans proportion</span>
+            </li>
+            <li>
+              <span class="label">Signal cursor</span>
+              <span class="small">14 × 6 units at (88, 26) &middot; 6-unit gap from top-stroke end &middot; fill <code class="tok">#00E5A0</code></span>
+            </li>
+            <li>
+              <span class="label">Ink</span>
+              <span class="small"><code class="tok">currentColor</code> &middot; inherits Ink on Paper, Paper on Graphite</span>
+            </li>
+            <li>
+              <span class="label">Clearspace</span>
+              <span class="small">1× stroke weight (10 units) on all sides &middot; ≥ 16&thinsp;px margin in every render context</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- §02 -->
+    <section id="s2">
+      <div class="container">
+        <p class="section-num micro">§02</p>
+        <h2 class="display-m section-title">Every size the mark renders at</h2>
+        <p class="lede body section-lede">
+          The mark holds at 16&thinsp;px favicon size because the stroke
+          weight is 10&thinsp;units — thin enough for hero-scale clarity,
+          thick enough to survive the smallest rasteriser. Below
+          16&thinsp;px, drop to Concept A (wordmark only). Above
+          240&thinsp;px, the mark can carry the full lockup at hero scale.
+        </p>
+
+        <div class="ladder">
+          <div class="ladder-cell">
+            <svg width="16" height="16" viewBox="0 0 120 120" class="mark">
+              <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+              <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+              <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+            </svg>
+            <span class="micro ladder-label">16&thinsp;px</span>
+          </div>
+          <div class="ladder-cell">
+            <svg width="20" height="20" viewBox="0 0 120 120" class="mark">
+              <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+              <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+              <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+            </svg>
+            <span class="micro ladder-label">20&thinsp;px</span>
+          </div>
+          <div class="ladder-cell">
+            <svg width="24" height="24" viewBox="0 0 120 120" class="mark">
+              <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+              <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+              <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+            </svg>
+            <span class="micro ladder-label">24&thinsp;px</span>
+          </div>
+          <div class="ladder-cell">
+            <svg width="32" height="32" viewBox="0 0 120 120" class="mark">
+              <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+              <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+              <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+            </svg>
+            <span class="micro ladder-label">32&thinsp;px &middot; nav</span>
+          </div>
+          <div class="ladder-cell">
+            <svg width="48" height="48" viewBox="0 0 120 120" class="mark">
+              <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+              <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+              <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+            </svg>
+            <span class="micro ladder-label">48&thinsp;px</span>
+          </div>
+          <div class="ladder-cell">
+            <svg width="64" height="64" viewBox="0 0 120 120" class="mark">
+              <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+              <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+              <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+            </svg>
+            <span class="micro ladder-label">64&thinsp;px</span>
+          </div>
+          <div class="ladder-cell">
+            <svg width="96" height="96" viewBox="0 0 120 120" class="mark">
+              <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+              <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+              <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+            </svg>
+            <span class="micro ladder-label">96&thinsp;px</span>
+          </div>
+          <div class="ladder-cell">
+            <svg width="120" height="120" viewBox="0 0 120 120" class="mark">
+              <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+              <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+              <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+            </svg>
+            <span class="micro ladder-label">120&thinsp;px &middot; hero</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- §03 -->
+    <section id="s3">
+      <div class="container">
+        <p class="section-num micro">§03</p>
+        <h2 class="display-m section-title">The terminal blink</h2>
+        <p class="lede body section-lede">
+          Every cycle is 1000&thinsp;ms on a <code class="tok">steps(1)</code>
+          timing function — hard on, hard off. The cursor is fully opaque
+          from 0-49% of the cycle, then fully invisible from 50-100%. Same
+          rhythm every developer's IDE ships. Slower than a heartbeat,
+          because the mark is not a live indicator — it is a
+          <em>waiting-for-input</em> prompt. <code class="tok">prefers-reduced-motion</code>
+          disables the animation; the cursor stays visible.
+        </p>
+
+        <div class="filmstrip">
+          <div class="frame">
+            <svg width="72" height="72" viewBox="0 0 120 120" class="mark">
+              <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+              <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+              <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              <rect x="88" y="26" width="14" height="6" fill="var(--signal)" />
+            </svg>
+            <span class="micro frame-label">0 → 49% &middot; opacity 1 &middot; visible</span>
+          </div>
+          <div class="frame">
+            <svg width="72" height="72" viewBox="0 0 120 120" class="mark">
+              <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+              <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+              <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              <rect x="88" y="26" width="14" height="6" fill="var(--signal)" opacity="0.5" />
+            </svg>
+            <span class="micro frame-label">49% → 50% &middot; hard cut &middot; steps(1)</span>
+          </div>
+          <div class="frame">
+            <svg width="72" height="72" viewBox="0 0 120 120" class="mark">
+              <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+              <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+              <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              <rect x="88" y="26" width="14" height="6" fill="var(--signal)" opacity="0" />
+            </svg>
+            <span class="micro frame-label">50 → 100% &middot; opacity 0 &middot; invisible</span>
+          </div>
+          <div class="frame">
+            <svg width="72" height="72" viewBox="0 0 120 120" class="mark">
+              <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+              <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+              <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+              <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+            </svg>
+            <span class="micro frame-label">Live &middot; 1&thinsp;s cycle</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- §04 -->
+    <section id="s4">
+      <div class="container">
+        <p class="section-num micro">§04</p>
+        <h2 class="display-m section-title">The mark on real surfaces</h2>
+        <p class="lede body section-lede">
+          Every touchpoint the mark actually lands on. Nav bar, favicon,
+          social OG card, email signature, invoice header, business card —
+          each rendered at real dimensions so the mark's clearspace + weight
+          hold up when you see them side by side.
+        </p>
+
+        <div class="surfaces" style="margin-top: 32px">
+          <div class="surface">
+            <div class="surface-caption micro">Top nav &middot; Paper</div>
+            <div class="mock-nav paper">
+              <span class="lockup mark">
+                <svg width="24" height="24" viewBox="0 0 120 120">
+                  <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                  <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                  <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                  <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+                </svg>
+                <span class="wordmark">Figentra</span>
+              </span>
+              <nav class="small"><span>How we build</span><span>Team</span><span>Governance</span><span>Trust</span></nav>
+              <span class="cta">Talk to us →</span>
+            </div>
+          </div>
+
+          <div class="surface">
+            <div class="surface-caption micro">Top nav &middot; Graphite 900</div>
+            <div class="mock-nav graphite">
+              <span class="lockup mark" style="color: var(--paper)">
+                <svg width="24" height="24" viewBox="0 0 120 120">
+                  <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                  <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                  <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                  <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+                </svg>
+                <span class="wordmark">Figentra</span>
+              </span>
+              <nav class="small"><span>How we build</span><span>Team</span><span>Governance</span><span>Trust</span></nav>
+              <span class="cta">Talk to us →</span>
+            </div>
+          </div>
+
+          <div class="surface">
+            <div class="surface-caption micro">Favicon &middot; 16 / 32 / 48 / 180 px</div>
+            <div class="favicons">
+              <div class="favicon-tile">
+                <div class="favicon-frame">
+                  <svg width="16" height="16" viewBox="0 0 120 120" class="mark">
+                    <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                    <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                    <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                    <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+                  </svg>
+                </div>
+                <span class="micro muted">16</span>
+              </div>
+              <div class="favicon-tile">
+                <div class="favicon-frame">
+                  <svg width="32" height="32" viewBox="0 0 120 120" class="mark">
+                    <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                    <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                    <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                    <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+                  </svg>
+                </div>
+                <span class="micro muted">32</span>
+              </div>
+              <div class="favicon-tile">
+                <div class="favicon-frame">
+                  <svg width="48" height="48" viewBox="0 0 120 120" class="mark">
+                    <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                    <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                    <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                    <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+                  </svg>
+                </div>
+                <span class="micro muted">48</span>
+              </div>
+              <div class="favicon-tile">
+                <div class="favicon-frame">
+                  <svg width="80" height="80" viewBox="0 0 120 120" class="mark">
+                    <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                    <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                    <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                    <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+                  </svg>
+                </div>
+                <span class="micro muted">180</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="surface">
+            <div class="surface-caption micro">PWA tile &middot; 512 × 512 &middot; Graphite 900 background</div>
+            <div style="padding: 32px; background: var(--paper); display: flex; justify-content: center;">
+              <div style="width: 160px; height: 160px; background: var(--graphite-900); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 2px rgb(0 0 0 / 8%);">
+                <svg width="80" height="80" viewBox="0 0 120 120" class="mark" style="color: var(--paper)">
+                  <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                  <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                  <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                  <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="surface" style="grid-column: 1 / -1">
+            <div class="surface-caption micro">Social OG card &middot; 1200 × 630</div>
+            <div class="mock-og">
+              <span class="og-brand mark" style="color: var(--paper)">
+                <svg width="28" height="28" viewBox="0 0 120 120">
+                  <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                  <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                  <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                  <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+                </svg>
+                <span class="wordmark" style="font-size: 15px">Figentra</span>
+              </span>
+              <p class="og-title">Autonomous Engineering, running in production.</p>
+              <p class="og-caption">62 AI Engineers &middot; one governed process &middot; enterprise SaaS end-to-end</p>
+            </div>
+          </div>
+
+          <div class="surface">
+            <div class="surface-caption micro">Email signature</div>
+            <div class="mock-sig">
+              <p class="sig-name">Abdelrhman Kouta</p>
+              <p class="sig-role">Founding Partner &middot; Figentra Technologies</p>
+              <span class="sig-brand mark">
+                <svg width="16" height="16" viewBox="0 0 120 120">
+                  <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                  <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                  <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                  <rect x="88" y="26" width="14" height="6" fill="var(--signal)" />
+                </svg>
+                <span class="micro" style="font-family: var(--font-display); font-size: 13px; font-weight: 500">Figentra</span>
+              </span>
+              <p class="sig-links">figentra.com &middot; +1 (___) ___-____</p>
+            </div>
+          </div>
+
+          <div class="surface">
+            <div class="surface-caption micro">Business card &middot; 85 × 55 mm</div>
+            <div style="padding: 24px; background: var(--graphite-100);">
+              <div class="mock-card on-dark" style="border-radius: 6px; box-shadow: 0 1px 2px rgb(0 0 0 / 8%);">
+                <span class="mark" style="color: var(--paper)">
+                  <svg width="24" height="24" viewBox="0 0 120 120">
+                    <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                    <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                    <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                    <rect class="cursor" x="88" y="26" width="14" height="6" fill="var(--signal)" />
+                  </svg>
+                </span>
+                <div>
+                  <p class="card-name">Qossai Alqawasmi</p>
+                  <p class="card-role">Founding Partner</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="surface" style="grid-column: 1 / -1">
+            <div class="surface-caption micro">Invoice header &middot; A4 print (monochrome variant)</div>
+            <div class="mock-invoice">
+              <span class="lockup mark">
+                <svg width="32" height="32" viewBox="0 0 120 120">
+                  <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                  <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                  <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                  <rect x="88" y="26" width="14" height="6" fill="currentColor" />
+                </svg>
+                <span class="wordmark" style="font-size: 22px">Figentra</span>
+              </span>
+              <div class="inv-meta">
+                <p>INVOICE #INV-2026-0042</p>
+                <p>Issue date &middot; 2026-08-14</p>
+                <p>Figentra Technologies L.L.C.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- §05 -->
+    <section id="s5">
+      <div class="container">
+        <p class="section-num micro">§05</p>
+        <h2 class="display-m section-title">The substrate the mark hooks into</h2>
+        <p class="lede body section-lede">
+          Every token below comes from
+          <code class="tok">docs/brand/04-visual-identity.md</code>. The mark's
+          ink strokes read <code class="tok">currentColor</code>, so it
+          inherits Ink on Paper surfaces and Paper on Graphite&nbsp;900. The
+          Signal-mint cursor stays mint in every context — it is the one
+          fixed color in the entire system.
+        </p>
+
+        <div class="swatches" style="margin-bottom: 40px">
+          <div class="swatch-card">
+            <span class="swatch-fill" style="background: var(--ink)"></span>
+            <div class="swatch-meta">
+              <p class="swatch-name">Ink</p>
+              <p class="small swatch-hex mono">#0A0F1C</p>
+            </div>
+          </div>
+          <div class="swatch-card">
+            <span class="swatch-fill" style="background: var(--signal)"></span>
+            <div class="swatch-meta">
+              <p class="swatch-name">Signal</p>
+              <p class="small swatch-hex mono">#00E5A0</p>
+            </div>
+          </div>
+          <div class="swatch-card">
+            <span class="swatch-fill" style="background: var(--paper); border-bottom: 1px solid var(--graphite-200)"></span>
+            <div class="swatch-meta">
+              <p class="swatch-name">Paper</p>
+              <p class="small swatch-hex mono">#FAFAF7</p>
+            </div>
+          </div>
+          <div class="swatch-card">
+            <span class="swatch-fill" style="background: var(--graphite-900)"></span>
+            <div class="swatch-meta">
+              <p class="swatch-name">Graphite 900</p>
+              <p class="small swatch-hex mono">#0F1424</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="type-specimen">
+          <div class="type-row">
+            <span class="micro muted">Display L &middot; 48px</span>
+            <span class="display-l" style="font-size: 40px">Figentra</span>
+          </div>
+          <div class="type-row">
+            <span class="micro muted">Display M &middot; 32px</span>
+            <span class="display-m">Figentra</span>
+          </div>
+          <div class="type-row">
+            <span class="micro muted">Heading &middot; 24px</span>
+            <span class="heading">Figentra</span>
+          </div>
+          <div class="type-row">
+            <span class="micro muted">Subheading &middot; 18px</span>
+            <span class="subheading">Figentra</span>
+          </div>
+          <div class="type-row">
+            <span class="micro muted">Body &middot; 16px · Geist 500</span>
+            <span class="body" style="font-weight: 500">Figentra</span>
+          </div>
+          <div class="type-row">
+            <span class="micro muted">Mono &middot; 12px · JetBrains Mono</span>
+            <span class="micro">figentra.com &middot; provenance signed 2026-08-14T14:22:00Z</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- §06 -->
+    <section id="s6">
+      <div class="container">
+        <p class="section-num micro">§06</p>
+        <h2 class="display-m section-title">Sanctioned alternates</h2>
+        <p class="lede body section-lede">
+          Two secondary marks reserved for surfaces where the F-Cursor doesn't
+          fit. <strong>Concept A</strong> ships on print, email signatures
+          under 14&thinsp;px, and any static context where the blink cannot
+          animate. <strong>Concept C</strong> ships as the section-opening
+          seal on <code class="tok">/governance</code> and
+          <code class="tok">/trust</code> only.
+        </p>
+
+        <div class="alternates">
+          <div class="alt-card">
+            <div class="alt-canvas">
+              <span class="wordmark display-m" style="font-size: 44px">Figentra</span>
+            </div>
+            <div class="alt-details">
+              <p class="micro alt-role">Concept A &middot; wordmark only</p>
+              <p class="subheading" style="margin-bottom: 12px">Print, static, small sizes.</p>
+              <p class="small muted">
+                Pure Geist 500 wordmark. Reserved for print (invoice header,
+                DPA cover), email signatures below 14&thinsp;px, and social
+                profile art where the blink cannot render.
+              </p>
+            </div>
+          </div>
+
+          <div class="alt-card">
+            <div class="alt-canvas">
+              <svg width="88" height="88" viewBox="0 0 120 120" class="mark">
+                <rect x="30" y="24" width="8" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="8" fill="currentColor" />
+                <path
+                  d="M 34 60 L 46 72 L 68 48"
+                  stroke="var(--signal)"
+                  stroke-width="8"
+                  fill="none"
+                  stroke-linecap="square"
+                  stroke-linejoin="miter"
+                />
+              </svg>
+            </div>
+            <div class="alt-details">
+              <p class="micro alt-role">Concept C &middot; provenance gate</p>
+              <p class="subheading" style="margin-bottom: 12px">Governance seals only.</p>
+              <p class="small muted">
+                An F reduced to a spine plus top stroke; the middle-bar slot
+                is occupied by a Signal-mint check tick. Ships as the
+                section-opening seal on the governance and trust pages.
+                Never the primary nav mark.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- §07 -->
+    <section id="s7">
+      <div class="container">
+        <p class="section-num micro">§07</p>
+        <h2 class="display-m section-title">Tagline surgery</h2>
+        <p class="lede body section-lede">
+          <em>Smart Solutions. Integrated. Fast.</em> lived only in the
+          retired image logo &mdash; a workspace-wide grep on 2026-08-14
+          returned zero matches across every code file. Retired the moment
+          the mark image is replaced. Sanctioned taglines from
+          <code class="tok">docs/brand/00-foundation.md §5</code> ship in
+          hero copy only &mdash; never next to the wordmark in the top nav.
+        </p>
+
+        <p class="lede body">
+          <strong>Primary (CTO):</strong> <em>"Autonomous Engineering, running in production."</em><br />
+          <strong>Enterprise buyer:</strong> <em>"Enterprise SaaS, built the way it should be."</em><br />
+          <strong>Press &middot; investor &middot; partner:</strong> <em>"First Autonomous Engineering company. Shipped."</em>
+        </p>
+      </div>
+    </section>
+
+    <!-- §08 -->
+    <section id="s8">
+      <div class="container">
+        <p class="section-num micro">§08</p>
+        <h2 class="display-m section-title">What shipped, what's pending</h2>
+        <p class="lede body section-lede">
+          Ship-plan status. Every done step is landed; every pending step is
+          named with its owning agent lane. All done + pending items are
+          reversible via git.
+        </p>
+
+        <ol class="steps">
+          <li>
+            <div>
+              <p class="step-title">
+                Regenerated the 6 SVG assets against F-Cursor × Geist
+                <span class="badge done">Done</span>
+              </p>
+              <p class="step-note">
+                <code class="tok">a-wordmark.svg</code>,
+                <code class="tok">b-fsignal-mark.svg</code>,
+                <code class="tok">b-fsignal-lockup.svg</code>,
+                <code class="tok">b-fsignal-mono.svg</code> (new),
+                <code class="tok">c-provenance-mark.svg</code>,
+                <code class="tok">c-provenance-lockup.svg</code> — all in
+                <code class="tok">.tmp/drafts/logos/ (retired 2026-08-18)</code>.
+              </p>
+            </div>
+            <span class="step-owner">kiro</span>
+          </li>
+          <li>
+            <div>
+              <p class="step-title">
+                Updated the landing-page &lt;Brand /&gt; component
+                <span class="badge done">Done</span>
+              </p>
+              <p class="step-note">
+                <code class="tok">figentra-inc/landing-page/src/components/marketing/brand/brand.component.tsx</code>
+                now renders the inline F-Cursor SVG + Geist wordmark.
+                Bypasses <code class="tok">&lt;BrandLink&gt;</code> — the
+                framework primitive's <code class="tok">mark="A"</code>
+                API doesn't accommodate the F-Cursor geometry.
+              </p>
+            </div>
+            <span class="step-owner">kiro</span>
+          </li>
+          <li>
+            <div>
+              <p class="step-title">
+                Corrected the theme substrate
+                <span class="badge done">Done</span>
+              </p>
+              <p class="step-note">
+                <code class="tok">theme.css</code> — <code class="tok">--accent</code>
+                corrected from oklch(76.97% 0.2124 148.67) → oklch(85.14% 0.1897 158.05)
+                (exact Signal mint). Added <code class="tok">--font-display</code>
+                for Geist. Added <code class="tok">.figentra-cursor</code>
+                keyframe. <code class="tok">index.html</code> now loads Geist
+                alongside Inter.
+              </p>
+            </div>
+            <span class="step-owner">kiro</span>
+          </li>
+          <li>
+            <div>
+              <p class="step-title">
+                Deleted orphan public/academorix-icon-tile.png
+                <span class="badge done">Done</span>
+              </p>
+              <p class="step-note">
+                Zero code references confirmed via grep before delete.
+                Retired without impact.
+              </p>
+            </div>
+            <span class="step-owner">kiro</span>
+          </li>
+          <li>
+            <div>
+              <p class="step-title">
+                Killed the fig-fruit tagline everywhere
+                <span class="badge done">Done · no-op</span>
+              </p>
+              <p class="step-note">
+                <em>Smart Solutions. Integrated. Fast.</em> lived only in the
+                retired image logo. Workspace-wide grep returned zero matches
+                in any code file. Nothing to sweep.
+              </p>
+            </div>
+            <span class="step-owner">kiro</span>
+          </li>
+          <li>
+            <div>
+              <p class="step-title">
+                Locked the mark spec
+                <span class="badge done">Done</span>
+              </p>
+              <p class="step-note">
+                <code class="tok">docs/brand/12-logo-spec.md</code> shipped
+                as the permanent spec. Provenance frontmatter carries
+                <code class="tok">reviewed_by: null</code> pending
+                Founding-Partner countersign.
+              </p>
+            </div>
+            <span class="step-owner">kiro</span>
+          </li>
+          <li>
+            <div>
+              <p class="step-title">
+                Regenerate favicon + PWA tiles from the SVG
+                <span class="badge pending">Pending</span>
+              </p>
+              <p class="step-note">
+                Requires sharp-cli or an equivalent SVG-to-PNG pipeline.
+                Six PNG assets under <code class="tok">public/</code>:
+                <code class="tok">pwa-64x64.png</code>,
+                <code class="tok">pwa-192x192.png</code>,
+                <code class="tok">pwa-512x512.png</code> (with Graphite 900 background),
+                <code class="tok">maskable-icon-512x512.png</code>,
+                <code class="tok">apple-touch-icon-180x180.png</code>,
+                and <code class="tok">favicon.ico</code>. Every regenerated
+                asset must preserve the mark's clearspace.
+              </p>
+            </div>
+            <span class="step-owner">heroui-ui-builder</span>
+          </li>
+          <li>
+            <div>
+              <p class="step-title">
+                Full workspace orphan sweep
+                <span class="badge pending">Pending</span>
+              </p>
+              <p class="step-note">
+                Sales deck, pitch deck, LinkedIn / X / GitHub profile art,
+                cached OG images at CDN edges. Founding Partners to
+                coordinate the external-surface sweep.
+              </p>
+            </div>
+            <span class="step-owner">context-gatherer</span>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- §09 -->
+    <section id="s9">
+      <div class="container">
+        <p class="section-num micro">§09</p>
+        <h2 class="display-m section-title">Provenance</h2>
+        <p class="lede body section-lede">
+          Every artefact this document produces carries the workspace's
+          standard provenance frontmatter per
+          <code class="tok">.kiro/steering/provenance-frontmatter.md</code>.
+          The permanent spec at
+          <code class="tok">docs/brand/12-logo-spec.md</code> waits on
+          Founding-Partner sign-off before
+          <code class="tok">reviewed_by</code> populates.
+        </p>
+
+        <div class="type-specimen" style="padding: 32px 40px">
+          <div class="type-row">
+            <span class="micro muted">Authored by</span>
+            <span class="small mono">kiro &middot; 2026-08-14</span>
+          </div>
+          <div class="type-row">
+            <span class="micro muted">Source prompt</span>
+            <span class="small mono">figentra-logo-audit</span>
+          </div>
+          <div class="type-row">
+            <span class="micro muted">Reviewed by</span>
+            <span class="small mono muted">pending Founding Partner sign-off</span>
+          </div>
+          <div class="type-row">
+            <span class="micro muted">Location</span>
+            <span class="small mono">.tmp/drafts/logos/preview.html</span>
+          </div>
+          <div class="type-row">
+            <span class="micro muted">Companion files</span>
+            <span class="small mono">
+              matrix.html · mouv-check.html · variants.html · a-wordmark.svg · b-fsignal-mark.svg · b-fsignal-lockup.svg · b-fsignal-mono.svg · c-provenance-mark.svg · c-provenance-lockup.svg
+            </span>
+          </div>
+          <div class="type-row">
+            <span class="micro muted">Permanent spec</span>
+            <span class="small mono">docs/brand/12-logo-spec.md</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <div class="foot-row">
+          <div>
+            <p class="foot-title">Sources</p>
+            <ul class="foot-list micro">
+              <li>docs/brand/00-foundation.md</li>
+              <li>docs/brand/01-terminology.md</li>
+              <li>docs/brand/02-audiences.md</li>
+              <li>docs/brand/04-visual-identity.md</li>
+              <li>docs/brand/12-logo-spec.md</li>
+              <li>.kiro/steering/brand-hierarchy.md</li>
+              <li>.kiro/steering/ui-components.md</li>
+            </ul>
+          </div>
+          <div>
+            <p class="foot-title">Analysis archives</p>
+            <ul class="foot-list micro">
+              <li>matrix.html &mdash; palette × font × weight</li>
+              <li>mouv-check.html &mdash; HeroUI Pro mouve theme diff</li>
+              <li>variants.html &mdash; F-Signal encoding × font grid</li>
+              <li>README.md &mdash; file map + inventory</li>
+            </ul>
+          </div>
+          <div>
+            <p class="foot-title">Status</p>
+            <ul class="foot-list micro">
+              <li>Draft preview &middot; not committed</li>
+              <li>Location .tmp/drafts/logos/</li>
+              <li>Permanent spec at docs/brand/12-logo-spec.md</li>
+              <li>reviewed_by null &middot; pending sign-off</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

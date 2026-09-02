@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Concept A — Figentra wordmark (sanctioned alternate).
+
+  Pure typographic mark. No glyph. Font: Geist 500, letter-
+  spacing -0.02em, one ink color inherited from parent. Reserved
+  for print, favicons under 16px, email signatures, and any
+  surface where the F-Cursor mark won't render cleanly.
+
+  Font resolution stack:
+  - Production landing page: Geist loaded via Google Fonts CDN.
+  - Standalone / print: falls through Inter → system-ui.
+
+  This alternate keeps parity with the primary F-Cursor × Geist
+  lockup on typographic voice — same family, same weight, same
+  tracking. The only difference is the presence or absence of
+  the F glyph.
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 360 80"
+  width="360"
+  height="80"
+  role="img"
+  aria-label="Figentra"
+  color="#141414"
+>
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+
+  <text
+    x="0"
+    y="58"
+    font-family="'Geist', 'Inter', system-ui, sans-serif"
+    font-weight="500"
+    font-size="64"
+    letter-spacing="-1.28"
+    fill="currentColor"
+  >Figentra</text>
+</svg>

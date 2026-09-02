@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sport HERO tile — athletics.
+  Full oval track top-down · 400m standard · 6 lanes · finish line · start marks ·
+  infield rectangle (field-events zone). Improves landing's TrackLines by:
+  correct 400m oval proportions (2:1 straightaway with 2 curves), lane count
+  correct (6 not 4), finish line clearly marked, brand-consistent color.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Athletics track — top-down">
+  <defs>
+    <style>
+      .field { fill: #141414; }
+      .line { fill: none; stroke: #FF6B35; stroke-width: 3; opacity: 0.9; }
+      .line-thin { fill: none; stroke: #FF6B35; stroke-width: 2; opacity: 0.5; }
+      .dash { fill: none; stroke: #FF6B35; stroke-width: 2; stroke-dasharray: 6 4; opacity: 0.5; }
+      .dot { fill: #FF6B35; }
+    </style>
+  </defs>
+
+  <!-- Field surface -->
+  <rect width="800" height="500" class="field"/>
+
+  <!-- Outer track edge — full oval -->
+  <path d="M 200 50 L 600 50 A 200 200 0 0 1 600 450 L 200 450 A 200 200 0 0 1 200 50 Z"
+        class="line"/>
+
+  <!-- Inner track edge -->
+  <path d="M 200 130 L 600 130 A 120 120 0 0 1 600 370 L 200 370 A 120 120 0 0 1 200 130 Z"
+        class="line"/>
+
+  <!-- Lane dividers — 5 dashed lines making 6 lanes -->
+  <path d="M 200 63 L 600 63 A 187 187 0 0 1 600 437 L 200 437 A 187 187 0 0 1 200 63 Z"
+        class="dash"/>
+  <path d="M 200 76 L 600 76 A 174 174 0 0 1 600 424 L 200 424 A 174 174 0 0 1 200 76 Z"
+        class="dash"/>
+  <path d="M 200 89 L 600 89 A 161 161 0 0 1 600 411 L 200 411 A 161 161 0 0 1 200 89 Z"
+        class="dash"/>
+  <path d="M 200 103 L 600 103 A 147 147 0 0 1 600 397 L 200 397 A 147 147 0 0 1 200 103 Z"
+        class="dash"/>
+  <path d="M 200 117 L 600 117 A 133 133 0 0 1 600 383 L 200 383 A 133 133 0 0 1 200 117 Z"
+        class="dash"/>
+
+  <!-- Finish line — vertical line at center of straightaway (top) -->
+  <line x1="400" y1="50" x2="400" y2="130" class="line" stroke-width="4"/>
+
+  <!-- Start marks — 200m/400m stagger dashes on far turns -->
+  <line x1="540" y1="52" x2="540" y2="60" class="line-thin"/>
+  <line x1="260" y1="440" x2="260" y2="448" class="line-thin"/>
+  <line x1="540" y1="440" x2="540" y2="448" class="line-thin"/>
+
+  <!-- Infield rectangle (field-events zone — javelin runway, long-jump pit) -->
+  <rect x="260" y="180" width="280" height="140" class="line-thin"/>
+  <!-- Javelin arc (short curve inside infield) -->
+  <path d="M 300 320 A 100 100 0 0 1 500 320" class="line-thin"/>
+  <!-- Long-jump pit indicator -->
+  <rect x="380" y="200" width="40" height="20" class="line-thin"/>
+
+  <!-- Center-of-track dot -->
+  <circle cx="400" cy="250" r="3" class="dot"/>
+</svg>

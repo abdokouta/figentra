@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-label="Scoreboard glitched · 500 internal server error">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+  <!--
+    500-broken-scoreboard · scoreboard displaying scrambled digits
+    Composes the Sprint 1 empty-state scoreboard with cracked pane +
+    scrambled digits. Track Orange spark says "power fault".
+  -->
+
+  <!-- Scoreboard body -->
+  <rect x="40" y="60" width="240" height="140" rx="12" fill="none" stroke="currentColor" stroke-width="2.5"/>
+
+  <!-- Divider between two number panels -->
+  <line x1="160" y1="76" x2="160" y2="184" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3" opacity="0.4"/>
+
+  <!-- Cracked-glass polyline overlay -->
+  <g stroke="currentColor" stroke-width="1.2" fill="none" opacity="0.55">
+    <polyline points="40 100 80 118 140 96 190 130 260 106 280 132"/>
+    <polyline points="80 118 92 148 128 156 140 96"/>
+    <polyline points="190 130 220 154 260 106"/>
+    <polyline points="128 156 172 178 220 154"/>
+  </g>
+
+  <!-- Left digits · scrambled (Track Orange · signal fault) -->
+  <text x="100" y="146" font-family="Geist Mono, ui-monospace, monospace" font-size="56" font-weight="600" text-anchor="middle" dominant-baseline="central" fill="#FF6B35" letter-spacing="-0.03em">##</text>
+
+  <!-- Right digits · normal ink but half-lit -->
+  <text x="220" y="146" font-family="Geist Mono, ui-monospace, monospace" font-size="56" font-weight="600" text-anchor="middle" dominant-baseline="central" fill="currentColor" opacity="0.32" letter-spacing="-0.03em">50</text>
+
+  <!-- Blown-out corner mark · Track Orange spark -->
+  <g transform="translate(268, 74)">
+    <path d="M 0 -6 L 3 -1 L 8 0 L 3 1 L 0 6 L -3 1 L -8 0 L -3 -1 Z" fill="#FF6B35"/>
+  </g>
+
+  <!-- Wiring · loose cable dangling from bottom -->
+  <g stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round">
+    <path d="M 60 200 Q 56 214 68 220 Q 82 226 76 212"/>
+    <circle cx="60" cy="200" r="2" fill="currentColor"/>
+  </g>
+
+  <!-- Status kicker · top -->
+  <g transform="translate(40, 44)">
+    <text x="0" y="0" font-family="Geist Mono, ui-monospace, monospace" font-size="10" fill="currentColor" letter-spacing="0.16em" opacity="0.6">SCOREBOARD FAULT · POWER SUPPLY</text>
+  </g>
+</svg>

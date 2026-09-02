@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" fill="none">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+  <circle cx="24" cy="24" r="22" fill="none" stroke="currentColor" stroke-width="2"/>
+  <path d="M18 24 L22 28 L30 20" fill="none" stroke="#00e5a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="24" y="40" text-anchor="middle" font-family="Geist Mono, monospace" font-size="7" letter-spacing="1.5" fill="currentColor">V1.0</text>
+</svg>

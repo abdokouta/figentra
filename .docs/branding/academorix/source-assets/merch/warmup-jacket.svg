@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Academorix · merch + apparel · warmup jacket
+  ==================================================================
+  Full-zip warmup with stand collar. Front carries the zipper down
+  the centreline (which forces sponsor placement on left OR right
+  chest — never a chest-band that crosses the zip). The back is one
+  continuous panel: the biggest single sponsor surface in the entire
+  kit. Sleeves on both sides carry secondary-tier sponsor / club
+  wordmark slots.
+
+  This is the technical spec for a supplier — every printable area is
+  annotated in millimetres. Sponsor slot proportions match the
+  sponsor-slot-grid.svg (sibling file) so the tier system is legible
+  across the kit.
+
+  Sprint 1 lineage:
+    · A-Chevron mark    — inlined verbatim over left chest
+    · Track Orange      — accent only (safe-area outlines, apex mark)
+    · Geist 500 /-.03   — display type
+    · Geist Mono 500    — mm callouts + slot names
+    · Sprint 2 sibling  — t-shirt-tech.svg (same silhouette language)
+
+  Variable slots:
+    SAHARA       right chest wordmark   ~90×70mm
+    SAHARA PADEL ACADEMY  centre back panel      ~240×250mm
+    SPONSOR L    wearer's left sleeve   ~80×60mm
+    SPONSOR R    wearer's right sleeve  ~80×60mm
+    BELAID   back yoke curve        ~260×40mm
+
+  Renders in a browser at 1400×1000 for review; print at 100% for
+  supplier communication.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 1400 1000"
+     width="1400" height="1000"
+     role="img"
+     aria-label="Academorix warmup jacket · front + back with sponsor slots">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Geist:wght@500;600;700&amp;family=Geist+Mono:wght@500;600&amp;display=swap");
+    .title      { font-family: "Geist", "Inter", sans-serif; font-weight: 700; font-size: 26px; letter-spacing: -0.03em; fill: #141414; }
+    .subtitle   { font-family: "Geist", "Inter", sans-serif; font-weight: 600; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; fill: rgba(20,20,20,0.62); }
+    .view-label { font-family: "Geist", "Inter", sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; fill: rgba(20,20,20,0.72); }
+    .callout-lbl{ font-family: "Geist", "Inter", sans-serif; font-weight: 500; font-size: 11px; fill: rgba(20,20,20,0.72); }
+    .slot       { font-family: "Geist Mono", ui-monospace, monospace; font-weight: 500; font-size: 11px; letter-spacing: 0.04em; fill: rgba(20,20,20,0.52); }
+    .mm         { font-family: "Geist Mono", ui-monospace, monospace; font-weight: 500; font-size: 11px; fill: rgba(20,20,20,0.72); }
+    .kicker     { font-family: "Geist", "Inter", sans-serif; font-weight: 600; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; fill: #ff6b35; }
+    .fabric     { fill: #f0f0f0; stroke: rgba(20,20,20,0.16); stroke-width: 1.5; stroke-linejoin: round; }
+    .collar     { fill: #e6e6e6; stroke: rgba(20,20,20,0.20); stroke-width: 1.5; }
+    .stitch     { fill: none; stroke: rgba(20,20,20,0.28); stroke-width: 1; stroke-dasharray: 4 3; }
+    .zip        { fill: none; stroke: rgba(20,20,20,0.55); stroke-width: 1.4; }
+    .zip-tick   { stroke: rgba(20,20,20,0.55); stroke-width: 1.4; }
+    .safe       { fill: rgba(255,107,53,0.06); stroke: #ff6b35; stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .safe-big   { fill: rgba(255,107,53,0.05); stroke: #ff6b35; stroke-width: 1.4; stroke-dasharray: 6 5; }
+    .leader     { fill: none; stroke: rgba(20,20,20,0.38); stroke-width: 0.8; }
+    .leader-dot { fill: #ff6b35; }
+    .name-ghost { font-family: "Geist", "Inter", sans-serif; font-weight: 600; font-size: 22px; letter-spacing: 0.24em; fill: rgba(20,20,20,0.32); }
+    .slot-ghost { font-family: "Geist Mono", ui-monospace, monospace; font-weight: 500; font-size: 14px; letter-spacing: 0.06em; fill: rgba(20,20,20,0.40); }
+    .rule       { fill: none; stroke: rgba(20,20,20,0.14); stroke-width: 1; }
+  </style>
+
+  <!-- ── header ────────────────────────────────────────── -->
+  <text x="60" y="52" class="title">Warmup jacket · training kit</text>
+  <text x="60" y="78" class="subtitle">Full-zip · stand collar · sponsor tiers · millimetre callouts</text>
+  <line class="rule" x1="60" y1="98" x2="1340" y2="98"/>
+
+  <!-- ═══════════════════ FRONT VIEW ═══════════════════ -->
+  <g transform="translate(100 130)">
+    <text x="290" y="24" class="view-label" text-anchor="middle">Front · zipper centreline</text>
+
+    <!-- LEFT sleeve (wearer's right, on viewer's left) -->
+    <path class="fabric" d="
+      M 140 115
+      L 60 145
+      L 30 420
+      L 4 700
+      L 76 722
+      L 108 450
+      L 140 165
+      Z"/>
+
+    <!-- RIGHT sleeve -->
+    <path class="fabric" d="
+      M 440 115
+      L 520 145
+      L 550 420
+      L 576 700
+      L 504 722
+      L 472 450
+      L 440 165
+      Z"/>
+
+    <!-- BODY -->
+    <path class="fabric" d="
+      M 140 115
+      L 440 115
+      L 440 740
+      L 140 740
+      Z"/>
+
+    <!-- collar (stand collar, straight top) -->
+    <rect class="collar" x="200" y="60" width="180" height="55" rx="3"/>
+
+    <!-- zipper centre line + teeth marks -->
+    <line class="zip" x1="290" y1="60" x2="290" y2="740"/>
+    <g class="zip-tick">
+      <line x1="286" y1="140" x2="294" y2="140"/>
+      <line x1="286" y1="200" x2="294" y2="200"/>
+      <line x1="286" y1="260" x2="294" y2="260"/>
+      <line x1="286" y1="320" x2="294" y2="320"/>
+      <line x1="286" y1="380" x2="294" y2="380"/>
+      <line x1="286" y1="440" x2="294" y2="440"/>
+      <line x1="286" y1="500" x2="294" y2="500"/>
+      <line x1="286" y1="560" x2="294" y2="560"/>
+      <line x1="286" y1="620" x2="294" y2="620"/>
+      <line x1="286" y1="680" x2="294" y2="680"/>
+    </g>
+    <!-- zipper pull -->
+    <rect x="284" y="70" width="12" height="18" rx="2" fill="rgba(20,20,20,0.55)"/>
+
+    <!-- topstitching · shoulder / armpit / hem / cuff -->
+    <path class="stitch" d="M 60 145 L 140 118"/>
+    <path class="stitch" d="M 520 145 L 440 118"/>
+    <path class="stitch" d="M 140 165 L 108 450"/>
+    <path class="stitch" d="M 440 165 L 472 450"/>
+    <path class="stitch" d="M 140 738 L 440 738"/>
+    <path class="stitch" d="M 4 700 L 76 722"/>
+    <path class="stitch" d="M 576 700 L 504 722"/>
+
+    <!-- A-Chevron mini over LEFT chest (wearer's right = viewer's LEFT of zipper) -->
+    <g transform="translate(190 210) scale(0.30)">
+      <path d="M 30 90 L 60 30" stroke="currentColor" stroke-width="10" fill="none"/>
+      <path d="M 60 30 L 90 90" stroke="currentColor" stroke-width="10" fill="none"/>
+      <rect x="40" y="60" width="40" height="10" fill="currentColor"/>
+      <rect x="56" y="14" width="8" height="6" fill="#ff6b35"/>
+    </g>
+    <text x="208" y="272" class="slot" text-anchor="middle">A-mark · 40mm</text>
+
+    <!-- CHEST_SPONSOR slot (wearer's LEFT = viewer's RIGHT of zipper) -->
+    <rect class="safe" x="315" y="200" width="115" height="80" rx="2"/>
+    <text x="372" y="245" class="slot-ghost" text-anchor="middle">SAHARA</text>
+
+    <!-- SLEEVE_SPONSOR_L slot (left sleeve on view) -->
+    <rect class="safe" x="24" y="220" width="80" height="70" rx="2"/>
+    <text x="64" y="260" class="slot-ghost" text-anchor="middle">SPONSOR L</text>
+
+    <!-- SLEEVE_SPONSOR_R slot (right sleeve on view) -->
+    <rect class="safe" x="476" y="220" width="80" height="70" rx="2"/>
+    <text x="516" y="260" class="slot-ghost" text-anchor="middle">SPONSOR R</text>
+
+    <!-- callouts · front -->
+    <g class="leader">
+      <line x1="315" y1="200" x2="315" y2="180"/>
+      <line x1="315" y1="180" x2="440" y2="180"/>
+    </g>
+    <circle class="leader-dot" cx="440" cy="180" r="2.5"/>
+    <text x="446" y="184" class="mm">115×80mm · chest sponsor</text>
+
+    <g class="leader">
+      <line x1="104" y1="290" x2="104" y2="308"/>
+      <line x1="104" y1="308" x2="60" y2="308"/>
+    </g>
+    <circle class="leader-dot" cx="60" cy="308" r="2.5"/>
+    <text x="54" y="304" class="mm" text-anchor="end">80×70mm · sleeve</text>
+
+    <g class="leader">
+      <line x1="290" y1="740" x2="290" y2="758"/>
+      <line x1="290" y1="758" x2="200" y2="758"/>
+    </g>
+    <circle class="leader-dot" cx="200" cy="758" r="2.5"/>
+    <text x="194" y="762" class="mm" text-anchor="end">zipper · YKK #5 or eq.</text>
+
+    <text x="290" y="806" class="kicker" text-anchor="middle">French terry · 300gsm · Track Orange piping optional</text>
+  </g>
+
+  <!-- ═══════════════════ BACK VIEW ═══════════════════ -->
+  <g transform="translate(760 130)">
+    <text x="290" y="24" class="view-label" text-anchor="middle">Back · full panel sponsor surface</text>
+
+    <!-- LEFT sleeve (mirror) -->
+    <path class="fabric" d="
+      M 140 115
+      L 60 145
+      L 30 420
+      L 4 700
+      L 76 722
+      L 108 450
+      L 140 165
+      Z"/>
+
+    <!-- RIGHT sleeve -->
+    <path class="fabric" d="
+      M 440 115
+      L 520 145
+      L 550 420
+      L 576 700
+      L 504 722
+      L 472 450
+      L 440 165
+      Z"/>
+
+    <!-- BODY (no zipper on back) -->
+    <path class="fabric" d="
+      M 140 115
+      L 440 115
+      L 440 740
+      L 140 740
+      Z"/>
+
+    <!-- collar back -->
+    <rect class="collar" x="200" y="60" width="180" height="55" rx="3"/>
+    <!-- collar back centre notch (visible label anchor) -->
+    <path class="stitch" d="M 270 90 L 310 90"/>
+
+    <!-- topstitching -->
+    <path class="stitch" d="M 60 145 L 140 118"/>
+    <path class="stitch" d="M 520 145 L 440 118"/>
+    <path class="stitch" d="M 140 165 L 108 450"/>
+    <path class="stitch" d="M 440 165 L 472 450"/>
+    <path class="stitch" d="M 140 738 L 440 738"/>
+
+    <!-- athlete last-name yoke curve -->
+    <text x="290" y="200" class="name-ghost" text-anchor="middle">BELAID</text>
+    <rect class="safe" x="160" y="170" width="260" height="40"/>
+
+    <!-- BACK_PANEL_SPONSOR big slot -->
+    <rect class="safe-big" x="170" y="240" width="240" height="250" rx="2"/>
+    <text x="290" y="380" class="slot-ghost" text-anchor="middle">SAHARA PADEL ACADEMY</text>
+
+    <!-- sleeve slots (mirrored) -->
+    <rect class="safe" x="24" y="220" width="80" height="70" rx="2"/>
+    <text x="64" y="260" class="slot-ghost" text-anchor="middle">SPONSOR R</text>
+    <rect class="safe" x="476" y="220" width="80" height="70" rx="2"/>
+    <text x="516" y="260" class="slot-ghost" text-anchor="middle">SPONSOR L</text>
+
+    <!-- callouts · back -->
+    <g class="leader">
+      <line x1="160" y1="170" x2="160" y2="158"/>
+      <line x1="160" y1="158" x2="20" y2="158"/>
+    </g>
+    <circle class="leader-dot" cx="20" cy="158" r="2.5"/>
+    <text x="20" y="150" class="mm">260×40mm · name curve</text>
+
+    <g class="leader">
+      <line x1="410" y1="240" x2="500" y2="240"/>
+      <line x1="500" y1="240" x2="500" y2="228"/>
+    </g>
+    <circle class="leader-dot" cx="500" cy="228" r="2.5"/>
+    <text x="500" y="220" class="mm" text-anchor="end">240×250mm · back panel</text>
+
+    <g class="leader">
+      <line x1="290" y1="490" x2="290" y2="530"/>
+      <line x1="290" y1="530" x2="410" y2="530"/>
+    </g>
+    <circle class="leader-dot" cx="410" cy="530" r="2.5"/>
+    <text x="416" y="534" class="mm">250mm · min from hem</text>
+
+    <text x="290" y="806" class="kicker" text-anchor="middle">back-panel = tier-1 sponsor · everyone else stops at 80×60mm</text>
+  </g>
+
+  <!-- ═══════════════════ LEGEND ═══════════════════ -->
+  <line class="rule" x1="60" y1="880" x2="1340" y2="880"/>
+  <text x="60" y="908" class="subtitle">Sponsor tier reference</text>
+
+  <g transform="translate(60 924)" class="callout-lbl">
+    <rect class="safe-big" x="0" y="0" width="26" height="16"/>
+    <text x="36" y="12" class="slot">tier-1 · back panel</text>
+    <text x="220" y="12">240×250mm · one placement per garment</text>
+  </g>
+  <g transform="translate(560 924)" class="callout-lbl">
+    <rect class="safe" x="0" y="0" width="26" height="16"/>
+    <text x="36" y="12" class="slot">tier-2 · chest</text>
+    <text x="188" y="12">115×80mm · right chest of zipped garments</text>
+  </g>
+  <g transform="translate(60 954)" class="callout-lbl">
+    <rect class="safe" x="0" y="0" width="26" height="16"/>
+    <text x="36" y="12" class="slot">tier-3 · sleeve</text>
+    <text x="188" y="12">80×70mm · both sleeves symmetrical</text>
+  </g>
+  <g transform="translate(560 954)" class="callout-lbl">
+    <text x="0" y="12" class="slot">safety clearance</text>
+    <text x="188" y="12">60mm min from any seam · 250mm from hem on back panel</text>
+  </g>
+
+  <text x="1340" y="978" class="slot" text-anchor="end">Academorix · warmup · v1.1 · Sprint 2</text>
+</svg>

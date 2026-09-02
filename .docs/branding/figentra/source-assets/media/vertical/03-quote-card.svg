@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Figentra vertical video · shape 03 · Quote card.
+  9:16 · 1080×1920. Full-frame testimonial slide · large mark-up quote
+  with attribution stack + f_ signature. Rendered as a still card that
+  motion-graphics operators animate with a slow zoom or fade-in.
+
+  Content zones inside safe area:
+    - Signal-mint open-quote glyph · top-center · 220 y
+    - Quote body · Geist 72 px · 4-line max
+    - Attribution stack · name + role + org
+    - f_ signature · bottom-right
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920" role="img" aria-label="Quote card · vertical video shape template" color="#141414">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+
+  <!-- Ink field -->
+  <rect x="0" y="0" width="1080" height="1920" fill="#0b0f14"/>
+
+  <!-- Top safe-zone marker -->
+  <line x1="0" y1="206" x2="1080" y2="206" stroke="#fafafa" stroke-width="1" stroke-dasharray="6 6" opacity="0.14"/>
+
+  <!-- Open-quote glyph · Signal Mint · 220 px anchor -->
+  <text x="540" y="380" text-anchor="middle" font-family="'Geist', 'Inter', serif" font-weight="500" font-size="240" fill="#00e5a0" opacity="0.9" letter-spacing="-0.03em">
+    &#8220;
+  </text>
+
+  <!-- Quote body · Geist 72 · 4 lines · placeholder -->
+  <text x="80" y="620" font-family="'Geist', 'Inter', sans-serif" font-weight="500" font-size="66" fill="#fafafa" letter-spacing="-0.02em">
+    <tspan x="80" dy="0">The moment we understood the</tspan>
+    <tspan x="80" dy="80">governance was written before</tspan>
+    <tspan x="80" dy="80">the code — ADRs, human signatures</tspan>
+    <tspan x="80" dy="80">at merge — the DPA was over.</tspan>
+  </text>
+
+  <!-- Close-quote glyph · Signal Mint · bottom of quote -->
+  <text x="1010" y="1050" text-anchor="end" font-family="'Geist', 'Inter', serif" font-weight="500" font-size="120" fill="#00e5a0" opacity="0.72" letter-spacing="-0.03em">
+    &#8221;
+  </text>
+
+  <!-- Attribution stack -->
+  <line x1="80" y1="1180" x2="200" y2="1180" stroke="#00e5a0" stroke-width="3"/>
+  <text x="80" y="1240" font-family="'Geist', 'Inter', sans-serif" font-weight="500" font-size="40" fill="#fafafa" letter-spacing="-0.01em">
+    Head of Digital
+  </text>
+  <text x="80" y="1290" font-family="'Geist', 'Inter', sans-serif" font-weight="400" font-size="30" fill="#fafafa" opacity="0.6" letter-spacing="0">
+    Sports academy · UAE
+  </text>
+
+  <!-- Bottom safe-zone marker -->
+  <line x1="0" y1="1368" x2="1080" y2="1368" stroke="#fafafa" stroke-width="1" stroke-dasharray="6 6" opacity="0.14"/>
+
+  <!-- f_ signature · bottom-right -->
+  <g transform="translate(880, 1440)">
+    <rect x="44" y="18" width="8" height="76" fill="#fafafa"/>
+    <rect x="44" y="18" width="30" height="8" fill="#fafafa"/>
+    <rect x="28" y="52" width="36" height="8" fill="#fafafa"/>
+    <rect x="28" y="102" width="64" height="8" fill="#00e5a0"/>
+  </g>
+</svg>

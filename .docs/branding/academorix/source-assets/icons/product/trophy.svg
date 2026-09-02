@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" role="img" fill="none">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+  <path d="M8 4 H16 V10 A4 4 0 0 1 8 10 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M8 5 H4 V7 C4 9 6 10 8 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M16 5 H20 V7 C20 9 18 10 16 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+  <line x1="12" y1="14" x2="12" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <rect x="8" y="17" width="8" height="3" fill="#FF6B35"/>
+</svg>

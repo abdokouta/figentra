@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" fill="none">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+  <path d="M24 4 L44 40 L4 40 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M14 32 L20 24 L26 30 L34 18" fill="none" stroke="#00e5a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="34" cy="18" r="2" fill="#00e5a0"/>
+</svg>

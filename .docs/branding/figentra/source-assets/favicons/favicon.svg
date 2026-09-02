@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Figentra F-Cursor · favicon master (v2 · 2026-08-18).
+
+  Rendered from mark-primary.svg. Every raster export (favicon-16,
+  32, 64, 96, 128 · apple-touch-180 · android-192 · pwa-512 · .ico)
+  derives from this file via rsvg-convert + ImageMagick.
+
+  Simplified for 16-32px legibility:
+    - Solid ink field (no theme adapt — favicons are theme-fixed by
+      OS convention)
+    - Cursor block at bottom-right sized to survive 16px raster
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Figentra favicon">
+  <rect x="0" y="0" width="120" height="120" fill="#141414" />
+  <rect x="28" y="18" width="8" height="84" fill="#fafafa" />
+  <rect x="28" y="18" width="52" height="8" fill="#fafafa" />
+  <rect x="28" y="54" width="36" height="8" fill="#fafafa" />
+  <rect x="48" y="90" width="20" height="12" fill="#00E5A0" />
+</svg>

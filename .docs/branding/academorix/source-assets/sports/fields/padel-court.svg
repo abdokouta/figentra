@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Padel court diagram">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+
+  <title>Padel court</title>
+  <desc>Line-art padel court — 20m × 10m enclosed court with glass back walls (dashed), side glass panels, service boxes, and net. Track Orange accent on the net cord + net posts. Academorix v0.1.</desc>
+
+  <!-- Court boundary -->
+  <rect x="20" y="60" width="760" height="280" rx="2"/>
+
+  <!-- Glass back walls (dashed to signal glass) -->
+  <line x1="20" y1="60" x2="20" y2="340" stroke-dasharray="10 4" stroke-width="3"/>
+  <line x1="780" y1="60" x2="780" y2="340" stroke-dasharray="10 4" stroke-width="3"/>
+
+  <!-- Glass side walls upper half (partial, dashed) -->
+  <line x1="20" y1="60" x2="240" y2="60" stroke-dasharray="6 4"/>
+  <line x1="560" y1="60" x2="780" y2="60" stroke-dasharray="6 4"/>
+  <line x1="20" y1="340" x2="240" y2="340" stroke-dasharray="6 4"/>
+  <line x1="560" y1="340" x2="780" y2="340" stroke-dasharray="6 4"/>
+
+  <!-- Fence side walls middle (mesh) -->
+  <line x1="240" y1="60" x2="560" y2="60"/>
+  <line x1="240" y1="340" x2="560" y2="340"/>
+
+  <!-- Service lines (perpendicular to net, 3m from net) -->
+  <line x1="280" y1="60" x2="280" y2="340"/>
+  <line x1="520" y1="60" x2="520" y2="340"/>
+
+  <!-- Center service line -->
+  <line x1="280" y1="200" x2="520" y2="200"/>
+
+  <!-- Net -->
+  <line x1="400" y1="30" x2="400" y2="370" stroke="#FF6B35" stroke-width="3"/>
+  <line x1="380" y1="60" x2="420" y2="60"/>
+  <line x1="380" y1="340" x2="420" y2="340"/>
+
+  <!-- Net posts -->
+  <circle cx="400" cy="30" r="4" fill="#FF6B35" stroke="none"/>
+  <circle cx="400" cy="370" r="4" fill="#FF6B35" stroke="none"/>
+</svg>

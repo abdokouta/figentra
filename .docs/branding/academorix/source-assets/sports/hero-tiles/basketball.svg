@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sport HERO tile — basketball.
+  Full court top-down · FIBA proportions (28×15m mapped to 800×500 with margins).
+  Includes: 3-point arc · free-throw lane · restricted-area · center circle ·
+  backboards. NEW illustration — the landing didn't have basketball.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Basketball court — top-down">
+  <defs>
+    <style>
+      .field { fill: #141414; }
+      .line { fill: none; stroke: #FF6B35; stroke-width: 3; stroke-linejoin: miter; opacity: 0.9; }
+      .line-thin { fill: none; stroke: #FF6B35; stroke-width: 2; stroke-linejoin: miter; opacity: 0.6; }
+      .dot { fill: #FF6B35; }
+    </style>
+  </defs>
+
+  <!-- Court surface -->
+  <rect width="800" height="500" class="field"/>
+
+  <!-- Court outline -->
+  <rect x="40" y="40" width="720" height="420" class="line"/>
+
+  <!-- Halfway line -->
+  <line x1="400" y1="40" x2="400" y2="460" class="line"/>
+
+  <!-- Center circle -->
+  <circle cx="400" cy="250" r="60" class="line"/>
+  <circle cx="400" cy="250" r="24" class="line-thin"/>
+
+  <!-- LEFT half — 3-point arc (from baseline corners inward) -->
+  <path d="M 40 100 L 100 100 A 180 180 0 0 1 100 400 L 40 400" class="line"/>
+
+  <!-- LEFT half — free-throw lane (the key) -->
+  <rect x="40" y="170" width="180" height="160" class="line-thin"/>
+
+  <!-- LEFT half — free-throw arc -->
+  <path d="M 220 190 A 45 60 0 0 1 220 310" class="line-thin"/>
+
+  <!-- LEFT half — restricted area under the basket -->
+  <path d="M 40 226 L 60 226 A 20 24 0 0 1 60 274 L 40 274" class="line-thin"/>
+
+  <!-- LEFT — backboard + basket -->
+  <line x1="60" y1="230" x2="60" y2="270" class="line" stroke-width="4"/>
+  <circle cx="72" cy="250" r="6" class="line-thin"/>
+
+  <!-- RIGHT half — mirror -->
+  <path d="M 760 100 L 700 100 A 180 180 0 0 0 700 400 L 760 400" class="line"/>
+  <rect x="580" y="170" width="180" height="160" class="line-thin"/>
+  <path d="M 580 190 A 45 60 0 0 0 580 310" class="line-thin"/>
+  <path d="M 760 226 L 740 226 A 20 24 0 0 0 740 274 L 760 274" class="line-thin"/>
+  <line x1="740" y1="230" x2="740" y2="270" class="line" stroke-width="4"/>
+  <circle cx="728" cy="250" r="6" class="line-thin"/>
+
+  <!-- Center dot -->
+  <circle cx="400" cy="250" r="3" class="dot"/>
+</svg>

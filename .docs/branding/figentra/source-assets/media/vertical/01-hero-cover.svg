@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Figentra vertical video · shape 01 · Hero cover.
+  9:16 · 1080×1920. Opening shot / thumbnail for Reels + Shorts + TikTok.
+
+  Safe zones per Instagram Reels + TikTok overlays:
+    - Top:    206 px reserved (username + system chrome)
+    - Bottom: 552 px reserved (caption, controls, hashtags)
+    - Left:   40 px minimum
+    - Right:  40 px minimum
+
+  Content zones inside safe area:
+    - Kicker slot   · 240..280 y · Signal-mint · mono · uppercase
+    - Headline slot · 320..680 y · Geist · 96 px · max 3 lines
+    - Sub slot      · 700..900 y · Geist · 32 px · max 2 lines
+    - f_ mark       · bottom-left of safe area, above bottom overlay
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920" role="img" aria-label="Hero cover · vertical video shape template" color="#141414">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+
+  <!-- Full-bleed ink field · dark background for max contrast -->
+  <rect x="0" y="0" width="1080" height="1920" fill="#0b0f14"/>
+
+  <!-- Signal-mint radial glow · upper-right anchor -->
+  <defs>
+    <radialGradient id="hero-glow" cx="80%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#00e5a0" stop-opacity="0.28"/>
+      <stop offset="60%" stop-color="#00e5a0" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#00e5a0" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect x="0" y="0" width="1080" height="1920" fill="url(#hero-glow)"/>
+
+  <!-- Top safe-zone marker · dashed line · 206px reserved -->
+  <line x1="0" y1="206" x2="1080" y2="206" stroke="#fafafa" stroke-width="1" stroke-dasharray="6 6" opacity="0.14"/>
+  <text x="1040" y="196" text-anchor="end" font-family="'Geist Mono', ui-monospace, monospace" font-size="20" fill="#fafafa" opacity="0.32" letter-spacing="0.14em">TOP SAFE · 206 PX</text>
+
+  <!-- Bottom safe-zone marker -->
+  <line x1="0" y1="1368" x2="1080" y2="1368" stroke="#fafafa" stroke-width="1" stroke-dasharray="6 6" opacity="0.14"/>
+  <text x="40" y="1408" font-family="'Geist Mono', ui-monospace, monospace" font-size="20" fill="#fafafa" opacity="0.32" letter-spacing="0.14em">BOTTOM SAFE · 552 PX RESERVED</text>
+
+  <!-- Kicker · Signal-mint mono -->
+  <text x="60" y="280" font-family="'Geist Mono', ui-monospace, monospace" font-size="28" fill="#00e5a0" letter-spacing="0.18em" text-transform="uppercase">
+    THE DOCTRINE · 01
+  </text>
+
+  <!-- Headline · Geist Semibold · 96px · placeholder -->
+  <text x="60" y="440" font-family="'Geist', 'Inter', sans-serif" font-weight="500" font-size="96" fill="#fafafa" letter-spacing="-0.02em">
+    <tspan x="60" dy="0">Governance</tspan>
+    <tspan x="60" dy="112">is the product.</tspan>
+  </text>
+
+  <!-- Sub · Geist 32 · muted -->
+  <text x="60" y="800" font-family="'Geist', 'Inter', sans-serif" font-weight="400" font-size="32" fill="#fafafa" opacity="0.72" letter-spacing="-0.01em">
+    <tspan x="60" dy="0">Signed commits · ADR-first ·</tspan>
+    <tspan x="60" dy="40">provenance frontmatter.</tspan>
+  </text>
+
+  <!-- f_ mark · bottom-left · above the bottom safe zone -->
+  <g transform="translate(60, 1260)">
+    <rect x="44" y="18" width="8" height="76" fill="#fafafa"/>
+    <rect x="44" y="18" width="30" height="8" fill="#fafafa"/>
+    <rect x="28" y="52" width="36" height="8" fill="#fafafa"/>
+    <rect x="28" y="102" width="64" height="8" fill="#00e5a0"/>
+  </g>
+  <text x="176" y="1330" font-family="'Geist', 'Inter', sans-serif" font-weight="500" font-size="30" fill="#fafafa" letter-spacing="-0.02em">Figentra</text>
+</svg>

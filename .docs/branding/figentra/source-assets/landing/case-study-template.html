@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!--
+      Figentra case-study template · v1.0 · 2026-08-19.
+
+      Canonical layout for figentra.com/customers/{{SLUG}}. One
+      template, N deploys — every case study inherits from this
+      shape. Every placeholder is {{DOUBLE_BRACED}} for the
+      static-site generator to swap at build.
+
+      Composes from Figentra tokens (Ink · Paper · Signal Mint
+      · Geist + Geist Mono). Section shape mirrors the landing:
+      dark hero band · dark bg + kicker + h2 + content-block
+      throughout. Never a bare-prose wall.
+
+      Sections (5 slots):
+      01 · Hero  — customer name · vertical · headline · at-a-
+                   glance metrics band.
+      02 · Frame — the business context · why the work
+                   mattered · 3-card grid (Objective · Constraint
+                   · Bar to clear).
+      03 · Shape — what shipped · how the doctrine landed ·
+                   6-card artefact grid tied to the SDLC lanes.
+      04 · Numbers — measurable outcomes · 4 anchor metrics ·
+                   BigStatsRow shape.
+      05 · Voice — a single customer testimonial · signed +
+                   role + tenure.
+
+      authored_by: kiro
+      authored_at: 2026-08-19
+      source:      prompt://v11-case-study-template
+      reviewed_by: null
+      reviewed_at: null
+    -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>{{CUSTOMER_NAME}} · Case study · Figentra</title>
+
+    <style>
+      :root {
+        --ink: #141414;
+        --paper: #fafafa;
+        --surface: #ffffff;
+        --surface-2: #f4f4f4;
+        --signal: #00e5a0;
+        --text: #141414;
+        --text-muted: rgba(20, 20, 20, 0.62);
+        --text-dim: rgba(20, 20, 20, 0.42);
+        --border: rgba(20, 20, 20, 0.1);
+        --font-sans: "Geist", "Inter", system-ui, sans-serif;
+        --font-mono: "Geist Mono", "SF Mono", ui-monospace, monospace;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --ink: #fafafa;
+          --paper: #0b0f14;
+          --surface: #10151d;
+          --surface-2: #161c25;
+          --text: #fafafa;
+          --text-muted: rgba(250, 250, 250, 0.65);
+          --text-dim: rgba(250, 250, 250, 0.42);
+          --border: rgba(250, 250, 250, 0.12);
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--paper);
+        color: var(--text);
+        font-family: var(--font-sans);
+        line-height: 1.6;
+      }
+      code,
+      pre,
+      .mono {
+        font-family: var(--font-mono);
+      }
+
+      /* ── Hero band ────────────────────────────────────────── */
+      .hero {
+        background: var(--ink);
+        color: var(--paper);
+        padding: 96px 24px 72px;
+        border-bottom: 1px solid var(--border);
+        --text: var(--paper);
+        --text-muted: rgba(250, 250, 250, 0.65);
+      }
+      .hero-inner {
+        max-width: 1080px;
+        margin: 0 auto;
+      }
+      .kicker {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--signal);
+        margin: 0 0 20px;
+      }
+      .hero h1 {
+        font-size: clamp(38px, 5vw, 60px);
+        font-weight: 500;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        max-width: 20ch;
+        margin: 0 0 16px;
+      }
+      .hero .lede {
+        font-size: 18px;
+        line-height: 1.55;
+        color: var(--text-muted);
+        max-width: 60ch;
+        margin: 0 0 40px;
+      }
+      .metrics-strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 40px;
+        margin-top: 48px;
+        padding-top: 32px;
+        border-top: 1px solid rgba(250, 250, 250, 0.14);
+      }
+      .metrics-strip .stat-value {
+        font-family: var(--font-mono);
+        font-size: 28px;
+        color: var(--paper);
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        display: block;
+      }
+      .metrics-strip .stat-label {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: rgba(250, 250, 250, 0.5);
+        margin-top: 4px;
+        display: block;
+      }
+      .customer-meta {
+        display: flex;
+        gap: 16px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: rgba(250, 250, 250, 0.55);
+        margin-bottom: 24px;
+      }
+      .customer-meta span + span::before {
+        content: "·";
+        margin-right: 16px;
+        color: rgba(250, 250, 250, 0.3);
+      }
+
+      /* ── Section ─────────────────────────────────────────── */
+      section.frame,
+      section.shape,
+      section.numbers,
+      section.voice {
+        padding: 96px 24px;
+      }
+      section.shape {
+        background: var(--surface-2);
+      }
+      section.numbers {
+        background: var(--ink);
+        color: var(--paper);
+        --text: var(--paper);
+      }
+      .section-inner {
+        max-width: 1080px;
+        margin: 0 auto;
+      }
+      .section-head {
+        margin-bottom: 40px;
+      }
+      .section-head p.kicker {
+        color: var(--signal);
+      }
+      .section-head h2 {
+        font-size: clamp(28px, 3.5vw, 40px);
+        font-weight: 500;
+        line-height: 1.15;
+        letter-spacing: -0.015em;
+        max-width: 28ch;
+        margin: 8px 0 12px;
+        color: var(--text);
+      }
+      .section-head .sub {
+        font-size: 16px;
+        color: var(--text-muted);
+        max-width: 60ch;
+        margin: 0;
+      }
+
+      /* ── Cards ───────────────────────────────────────────── */
+      .cards-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      .cards-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+      .cards-6 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+
+      article.card {
+        border: 1px solid var(--border);
+        background: var(--surface);
+        border-radius: 10px;
+        padding: 24px;
+      }
+      section.shape article.card {
+        background: var(--paper);
+      }
+      section.numbers article.card {
+        border-color: rgba(250, 250, 250, 0.14);
+        background: transparent;
+      }
+      article.card .card-eyebrow {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--signal);
+        margin: 0 0 8px;
+      }
+      article.card h3 {
+        font-size: 17px;
+        font-weight: 600;
+        line-height: 1.3;
+        margin: 0 0 8px;
+        color: var(--text);
+      }
+      article.card .card-body {
+        font-size: 14px;
+        line-height: 1.55;
+        color: var(--text-muted);
+        margin: 0;
+      }
+
+      .bigstat {
+        text-align: left;
+      }
+      .bigstat .bigstat-value {
+        font-family: var(--font-mono);
+        font-size: 48px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        color: var(--paper);
+        display: block;
+        line-height: 1;
+      }
+      .bigstat .bigstat-label {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: rgba(250, 250, 250, 0.55);
+        margin: 12px 0 8px;
+        display: block;
+      }
+      .bigstat .bigstat-hint {
+        font-size: 13px;
+        color: rgba(250, 250, 250, 0.72);
+        line-height: 1.5;
+      }
+
+      /* ── Voice ───────────────────────────────────────────── */
+      section.voice {
+        border-top: 1px solid var(--border);
+      }
+      .voice-block {
+        max-width: 780px;
+        margin: 0 auto;
+      }
+      .voice-block blockquote {
+        font-family: var(--font-sans);
+        font-size: clamp(22px, 2.4vw, 28px);
+        line-height: 1.35;
+        color: var(--text);
+        margin: 0 0 24px;
+        letter-spacing: -0.01em;
+        border: 0;
+        padding: 0;
+      }
+      .voice-block blockquote::before {
+        content: "“";
+        color: var(--signal);
+        margin-right: 4px;
+      }
+      .voice-block blockquote::after {
+        content: "”";
+        color: var(--signal);
+      }
+      .voice-attr {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--text-muted);
+        letter-spacing: 0.04em;
+      }
+      .voice-attr .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+      }
+      .voice-attr strong {
+        color: var(--text);
+        font-weight: 500;
+        font-family: var(--font-sans);
+        font-size: 14px;
+      }
+
+      /* ── Footer bar ──────────────────────────────────────── */
+      footer.cta {
+        padding: 72px 24px;
+        text-align: center;
+      }
+      footer.cta a {
+        display: inline-block;
+        background: var(--signal);
+        color: var(--ink);
+        padding: 12px 28px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-family: var(--font-sans);
+        font-weight: 500;
+        margin-top: 20px;
+      }
+
+      /* ── Responsive ──────────────────────────────────────── */
+      @media (max-width: 768px) {
+        .cards-3,
+        .cards-2,
+        .cards-6,
+        .metrics-strip {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        .metrics-strip {
+          gap: 24px;
+        }
+        .hero {
+          padding: 64px 24px 56px;
+        }
+        section.frame,
+        section.shape,
+        section.numbers,
+        section.voice {
+          padding: 64px 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ═════ 01 · HERO BAND ══════════════════════════════════ -->
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="kicker">Case study · {{VERTICAL}}</p>
+        <div class="customer-meta">
+          <span>{{CUSTOMER_LOCATION}}</span>
+          <span>{{DEPLOYMENT_YEAR}}</span>
+          <span>{{TENURE}} in production</span>
+        </div>
+        <h1>{{CASE_HEADLINE}}</h1>
+        <p class="lede">{{CASE_LEDE}}</p>
+
+        <div class="metrics-strip">
+          <div>
+            <span class="stat-value">{{METRIC_1_VALUE}}</span>
+            <span class="stat-label">{{METRIC_1_LABEL}}</span>
+          </div>
+          <div>
+            <span class="stat-value">{{METRIC_2_VALUE}}</span>
+            <span class="stat-label">{{METRIC_2_LABEL}}</span>
+          </div>
+          <div>
+            <span class="stat-value">{{METRIC_3_VALUE}}</span>
+            <span class="stat-label">{{METRIC_3_LABEL}}</span>
+          </div>
+          <div>
+            <span class="stat-value">{{METRIC_4_VALUE}}</span>
+            <span class="stat-label">{{METRIC_4_LABEL}}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═════ 02 · FRAME — the business context ═══════════════ -->
+    <section class="frame">
+      <div class="section-inner">
+        <div class="section-head">
+          <p class="kicker">The frame</p>
+          <h2>{{FRAME_HEADLINE}}</h2>
+          <p class="sub">{{FRAME_SUB}}</p>
+        </div>
+
+        <div class="cards-3">
+          <article class="card">
+            <p class="card-eyebrow">01 · Objective</p>
+            <h3>{{FRAME_OBJECTIVE_TITLE}}</h3>
+            <p class="card-body">{{FRAME_OBJECTIVE_BODY}}</p>
+          </article>
+          <article class="card">
+            <p class="card-eyebrow">02 · Constraint</p>
+            <h3>{{FRAME_CONSTRAINT_TITLE}}</h3>
+            <p class="card-body">{{FRAME_CONSTRAINT_BODY}}</p>
+          </article>
+          <article class="card">
+            <p class="card-eyebrow">03 · Bar to clear</p>
+            <h3>{{FRAME_BAR_TITLE}}</h3>
+            <p class="card-body">{{FRAME_BAR_BODY}}</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═════ 03 · SHAPE — what shipped through the doctrine ══ -->
+    <section class="shape">
+      <div class="section-inner">
+        <div class="section-head">
+          <p class="kicker">What shipped</p>
+          <h2>{{SHAPE_HEADLINE}}</h2>
+          <p class="sub">{{SHAPE_SUB}}</p>
+        </div>
+
+        <div class="cards-6">
+          <article class="card">
+            <p class="card-eyebrow">01 · ADRs</p>
+            <h3>{{SHAPE_ADR_TITLE}}</h3>
+            <p class="card-body">{{SHAPE_ADR_BODY}}</p>
+          </article>
+          <article class="card">
+            <p class="card-eyebrow">02 · Migrations</p>
+            <h3>{{SHAPE_MIG_TITLE}}</h3>
+            <p class="card-body">{{SHAPE_MIG_BODY}}</p>
+          </article>
+          <article class="card">
+            <p class="card-eyebrow">03 · Tests</p>
+            <h3>{{SHAPE_TEST_TITLE}}</h3>
+            <p class="card-body">{{SHAPE_TEST_BODY}}</p>
+          </article>
+          <article class="card">
+            <p class="card-eyebrow">04 · Reviews</p>
+            <h3>{{SHAPE_REV_TITLE}}</h3>
+            <p class="card-body">{{SHAPE_REV_BODY}}</p>
+          </article>
+          <article class="card">
+            <p class="card-eyebrow">05 · Release notes</p>
+            <h3>{{SHAPE_REL_TITLE}}</h3>
+            <p class="card-body">{{SHAPE_REL_BODY}}</p>
+          </article>
+          <article class="card">
+            <p class="card-eyebrow">06 · Dashboards</p>
+            <h3>{{SHAPE_DASH_TITLE}}</h3>
+            <p class="card-body">{{SHAPE_DASH_BODY}}</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═════ 04 · NUMBERS — measurable outcomes ══════════════ -->
+    <section class="numbers">
+      <div class="section-inner">
+        <div class="section-head">
+          <p class="kicker">The numbers</p>
+          <h2>{{NUMBERS_HEADLINE}}</h2>
+          <p class="sub">{{NUMBERS_SUB}}</p>
+        </div>
+
+        <div class="metrics-strip">
+          <div class="bigstat">
+            <span class="bigstat-value">{{OUTCOME_1_VALUE}}</span>
+            <span class="bigstat-label">{{OUTCOME_1_LABEL}}</span>
+            <span class="bigstat-hint">{{OUTCOME_1_HINT}}</span>
+          </div>
+          <div class="bigstat">
+            <span class="bigstat-value">{{OUTCOME_2_VALUE}}</span>
+            <span class="bigstat-label">{{OUTCOME_2_LABEL}}</span>
+            <span class="bigstat-hint">{{OUTCOME_2_HINT}}</span>
+          </div>
+          <div class="bigstat">
+            <span class="bigstat-value">{{OUTCOME_3_VALUE}}</span>
+            <span class="bigstat-label">{{OUTCOME_3_LABEL}}</span>
+            <span class="bigstat-hint">{{OUTCOME_3_HINT}}</span>
+          </div>
+          <div class="bigstat">
+            <span class="bigstat-value">{{OUTCOME_4_VALUE}}</span>
+            <span class="bigstat-label">{{OUTCOME_4_LABEL}}</span>
+            <span class="bigstat-hint">{{OUTCOME_4_HINT}}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═════ 05 · VOICE — customer testimonial ══════════════ -->
+    <section class="voice">
+      <div class="section-inner">
+        <div class="voice-block">
+          <p class="kicker" style="color: var(--signal)">The voice</p>
+          <blockquote>{{TESTIMONIAL_QUOTE}}</blockquote>
+          <div class="voice-attr">
+            <div class="avatar" aria-hidden="true"></div>
+            <div>
+              <strong>{{TESTIMONIAL_NAME}}</strong> ·
+              {{TESTIMONIAL_ROLE}} · {{TESTIMONIAL_ORG}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═════ Footer CTA ══════════════════════════════════════ -->
+    <footer class="cta">
+      <p class="kicker" style="color: var(--signal)">Want the same shape?</p>
+      <h2 style="font-size: 26px; margin: 12px 0 0; font-weight: 500">
+        Governance-first is a 60-minute conversation.
+      </h2>
+      <a href="/contact">Book the intake call →</a>
+    </footer>
+  </body>
+</html>

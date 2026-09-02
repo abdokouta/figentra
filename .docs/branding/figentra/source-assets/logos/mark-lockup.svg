@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Figentra f_ × wordmark · horizontal lockup (v3 · 2026-08-19).
+
+  Mark at 32 × 32 optical, 12px gap, wordmark "Figentra" at 26px
+  Geist 500 with -0.02em tracking. Total canvas 220 × 48 — the
+  drop-in shape the landing-page <Brand /> component consumes.
+
+  Underscore sits at the mark's baseline matching the wordmark's
+  baseline. The whole lockup reads on one baseline.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 48" width="220" height="48" role="img" aria-label="Figentra" color="#141414">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+  <style>
+    @keyframes figentra-cursor-blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    .fs-cursor {
+      animation: figentra-cursor-blink 1s steps(1) infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .fs-cursor { animation: none; }
+    }
+  </style>
+  <!-- Mark at 32 × 32 (scale 0.267 = 32/120) — lowercase f_ geometry v3 -->
+  <g transform="translate(6, 8) scale(0.267)">
+    <rect x="44" y="18" width="8" height="76" fill="currentColor" />
+    <rect x="44" y="18" width="30" height="8" fill="currentColor" />
+    <rect x="28" y="52" width="36" height="8" fill="currentColor" />
+    <rect class="fs-cursor" x="28" y="102" width="64" height="8" fill="#00E5A0" />
+  </g>
+  <!-- Wordmark · 12px gap after mark (30 + 12 = 42) · baseline aligned -->
+  <text x="42" y="34"
+    font-family="'Geist', 'Inter', system-ui, sans-serif"
+    font-weight="500"
+    font-size="26"
+    letter-spacing="-0.52"
+    fill="currentColor">Figentra</text>
+</svg>

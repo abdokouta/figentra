@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 460" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Rugby pitch diagram">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+
+  <title>Rugby pitch</title>
+  <desc>Line-art rugby pitch — outer touch + dead-ball lines, try lines, 22m lines, 10m dashed lines each side of halfway, 5m and 15m touchline stripes (dashed), halfway line, and goalposts. Track Orange accent on the centre kickoff spot + goalposts. Academorix v0.1.</desc>
+
+  <!-- Outer pitch (100m + 2×6m in-goal = 112m × 68m proportional to 760 × 380) -->
+  <rect x="20" y="40" width="760" height="380" rx="2"/>
+
+  <!-- Try lines (6m/112m = ~41px from each end) -->
+  <line x1="61" y1="40" x2="61" y2="420"/>
+  <line x1="739" y1="40" x2="739" y2="420"/>
+
+  <!-- Halfway line -->
+  <line x1="400" y1="40" x2="400" y2="420"/>
+
+  <!-- 22m lines (22m from each try line = ~149px in from try line) -->
+  <line x1="210" y1="40" x2="210" y2="420"/>
+  <line x1="590" y1="40" x2="590" y2="420"/>
+
+  <!-- 10m lines (dashed · 10m each side of halfway = ~68px) -->
+  <line x1="332" y1="40" x2="332" y2="420" stroke-dasharray="6 4"/>
+  <line x1="468" y1="40" x2="468" y2="420" stroke-dasharray="6 4"/>
+
+  <!-- 5m touchline stripes (dashed · 5m from each touch = ~34px in) -->
+  <line x1="61" y1="74" x2="739" y2="74" stroke-dasharray="6 4"/>
+  <line x1="61" y1="386" x2="739" y2="386" stroke-dasharray="6 4"/>
+
+  <!-- 15m touchline stripes (dashed · 15m from each touch = ~102px in) -->
+  <line x1="61" y1="142" x2="739" y2="142" stroke-dasharray="6 4"/>
+  <line x1="61" y1="318" x2="739" y2="318" stroke-dasharray="6 4"/>
+
+  <!-- LEFT goalposts (H-shape · try-line at x=61 · posts 5.6m apart ≈ 38px) -->
+  <line x1="61" y1="211" x2="61" y2="249" stroke-width="3"/>
+  <circle cx="61" cy="211" r="4" fill="#FF6B35" stroke="none"/>
+  <circle cx="61" cy="249" r="4" fill="#FF6B35" stroke="none"/>
+
+  <!-- RIGHT goalposts -->
+  <line x1="739" y1="211" x2="739" y2="249" stroke-width="3"/>
+  <circle cx="739" cy="211" r="4" fill="#FF6B35" stroke="none"/>
+  <circle cx="739" cy="249" r="4" fill="#FF6B35" stroke="none"/>
+
+  <!-- Centre kickoff -->
+  <circle cx="400" cy="230" r="4" fill="#FF6B35" stroke="none"/>
+</svg>

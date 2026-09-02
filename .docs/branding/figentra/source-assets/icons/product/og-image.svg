@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Icon — og-image.svg
+  1200×630 Open Graph / Twitter Card template. Ink field, F-Cursor mark
+  on the left, Geist wordmark on the right, a monospace kicker above,
+  and a Signal-mint underline that echoes the cursor. Export to PNG
+  at 1200×630 via sharp-cli for og:image meta tags.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" font-family="'Geist', 'Inter', system-ui, sans-serif">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+  <!-- Background -->
+  <rect width="1200" height="630" fill="currentColor"/>
+
+  <!-- Subtle dot-matrix backdrop -->
+  <defs>
+    <pattern id="dots" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="12" cy="12" r="1" fill="#fafafa" opacity="0.05"/>
+    </pattern>
+    <pattern id="circuit" x="0" y="0" width="160" height="160" patternUnits="userSpaceOnUse">
+      <path d="M0 32 L48 32 L48 80 L96 80" stroke="#00E5A0" stroke-width="0.6" opacity="0.14" fill="none"/>
+      <circle cx="48" cy="32" r="1.5" fill="#00E5A0" opacity="0.4"/>
+      <circle cx="48" cy="80" r="1.5" fill="#00E5A0" opacity="0.4"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#dots)"/>
+  <rect x="800" y="0" width="400" height="630" fill="url(#circuit)"/>
+
+  <!-- F-Cursor mark (left, 240×240 centered vertically) -->
+  <g transform="translate(96, 195) scale(2)">
+    <g fill="#fafafa">
+      <rect x="30" y="24" width="10" height="72"/>
+      <rect x="30" y="24" width="52" height="10"/>
+      <rect x="30" y="56" width="34" height="10"/>
+    </g>
+    <rect x="88" y="26" width="14" height="6" fill="#00E5A0"/>
+  </g>
+
+  <!-- Kicker -->
+  <text x="400" y="248" fill="#00E5A0" font-family="'Geist Mono', 'JetBrains Mono', ui-monospace, monospace" font-size="20" letter-spacing="0.12em">$_ figentra</text>
+
+  <!-- Wordmark -->
+  <text x="400" y="360" fill="#fafafa" font-size="132" font-weight="500" letter-spacing="-0.03em">figentra</text>
+
+  <!-- Signal underline -->
+  <rect x="400" y="380" width="120" height="8" fill="#00E5A0"/>
+
+  <!-- Tagline -->
+  <text x="400" y="450" fill="#fafafa" font-size="30" font-weight="400" opacity="0.72" letter-spacing="-0.01em">AI-agent-first infrastructure.</text>
+
+  <!-- Footer badge -->
+  <text x="400" y="518" fill="#fafafa" font-family="'Geist Mono', 'JetBrains Mono', ui-monospace, monospace" font-size="16" opacity="0.5" letter-spacing="0.08em">STACKRA · FIGENTRA · ACADEMORIX</text>
+</svg>

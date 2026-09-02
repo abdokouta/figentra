@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Pattern — Signal Stripes
+  Tileable 24×24. Diagonal Signal-mint hairlines at 15% opacity. Use for
+  "in progress / building" section backgrounds, empty states,
+  progress-bar interiors. See docs/brand/13-patterns-and-assets.md.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <path d="M-6 30 L30 -6 M-6 42 L42 -6 M6 30 L30 6" stroke="#00E5A0" stroke-width="1" opacity="0.18" fill="none"/>
+</svg>

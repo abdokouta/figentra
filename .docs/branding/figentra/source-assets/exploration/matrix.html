@@ -1,0 +1,930 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Figentra — palette × font × weight matrix</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!--
+      Every font loaded fresh so we compare at parity — Inter (current spec),
+      Plus Jakarta Sans (asked about), Space Grotesk (tech-geometric), Geist
+      unavailable on Google Fonts so not tested here. JetBrains Mono for
+      captions.
+    -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #0a0f1c;
+        --paper: #fafaf7;
+        --graphite-100: #eeeef1;
+        --graphite-200: #dde0e8;
+        --graphite-300: #b4bac9;
+        --graphite-500: #5a6478;
+        --graphite-600: #3a4256;
+        --graphite-700: #2a3348;
+        --graphite-900: #0f1424;
+
+        /* Palette options under test */
+        --signal-mint: #00e5a0; /* brand-doc default */
+        --heroui-mauve: #7828c8; /* HeroUI secondary — the "mouv" */
+        --figentra-purple: #6633cc; /* current-logo purple */
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        font-weight: 400;
+        line-height: 1.5;
+        background: var(--paper);
+        color: var(--ink);
+        padding: 40px 24px 96px;
+      }
+      body.dark {
+        background: var(--graphite-900);
+        color: var(--paper);
+      }
+      .container {
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding-bottom: 24px;
+        border-bottom: 1px solid var(--graphite-200);
+        margin-bottom: 40px;
+      }
+      body.dark header {
+        border-color: var(--graphite-700);
+      }
+      header h1 {
+        font-size: 26px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+      }
+      header .sub {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        color: var(--graphite-500);
+        margin-top: 8px;
+      }
+
+      .toggle-btn {
+        background: var(--ink);
+        color: var(--paper);
+        border: none;
+        padding: 10px 18px;
+        font-weight: 500;
+        font-size: 13px;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+      body.dark .toggle-btn {
+        background: var(--paper);
+        color: var(--ink);
+      }
+
+      section {
+        padding: 40px 0;
+        border-bottom: 1px solid var(--graphite-200);
+      }
+      body.dark section {
+        border-color: var(--graphite-700);
+      }
+      section h2 {
+        font-size: 22px;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        margin-bottom: 8px;
+      }
+      section .lede {
+        font-size: 15px;
+        color: var(--graphite-600);
+        max-width: 68ch;
+        margin-bottom: 28px;
+      }
+      body.dark section .lede {
+        color: var(--graphite-300);
+      }
+
+      /* ═══ Grid layouts ═══ */
+      .palette-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      @media (max-width: 900px) {
+        .palette-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .cell {
+        border: 1px solid var(--graphite-200);
+        border-radius: 8px;
+        overflow: hidden;
+        background: var(--paper);
+      }
+      body.dark .cell {
+        background: var(--graphite-900);
+        border-color: var(--graphite-700);
+      }
+
+      .cell .label {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--graphite-500);
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--graphite-200);
+      }
+      body.dark .cell .label {
+        color: var(--graphite-300);
+        border-bottom-color: var(--graphite-700);
+      }
+      .cell .body {
+        padding: 32px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 140px;
+      }
+      .cell .note {
+        font-size: 12px;
+        color: var(--graphite-600);
+        padding: 10px 16px 14px;
+        border-top: 1px solid var(--graphite-200);
+      }
+      body.dark .cell .note {
+        color: var(--graphite-300);
+        border-top-color: var(--graphite-700);
+      }
+
+      /* ═══ Fonts ═══ */
+      .f-inter {
+        font-family: "Inter", system-ui, sans-serif;
+      }
+      .f-jakarta {
+        font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+      }
+      .f-grotesk {
+        font-family: "Space Grotesk", system-ui, sans-serif;
+      }
+
+      .wordmark {
+        letter-spacing: -0.02em;
+      }
+      .wordmark--40 {
+        font-size: 40px;
+      }
+      .wordmark--32 {
+        font-size: 32px;
+      }
+      .wordmark--26 {
+        font-size: 26px;
+      }
+      .wordmark--18 {
+        font-size: 18px;
+      }
+
+      /* ═══ Heartbeat animation ═══ */
+      @keyframes fig-heartbeat {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.28);
+          opacity: 0.65;
+        }
+      }
+      .dot {
+        transform-origin: center;
+        transform-box: fill-box;
+        animation: fig-heartbeat 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .dot {
+          animation: none;
+        }
+      }
+
+      .lockup {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      /* ═══ Tables ═══ */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--graphite-200);
+        vertical-align: top;
+      }
+      body.dark th,
+      body.dark td {
+        border-bottom-color: var(--graphite-700);
+      }
+      th {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--graphite-500);
+        font-weight: 500;
+      }
+      code {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        background: var(--graphite-100);
+        padding: 2px 6px;
+        border-radius: 3px;
+      }
+      body.dark code {
+        background: var(--graphite-700);
+      }
+      .rec {
+        background: var(--signal-mint);
+        color: var(--ink);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .caution {
+        color: #b8341a;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .ok {
+        color: #1a7a3f;
+        font-family: "JetBrains Mono", monospace;
+      }
+      body.dark .caution {
+        color: #ff8a5c;
+      }
+      body.dark .ok {
+        color: #4cc38a;
+      }
+
+      /* ═══ Combined matrix — palette × font ═══ */
+      .matrix {
+        display: grid;
+        grid-template-columns: 140px repeat(3, 1fr);
+        gap: 1px;
+        background: var(--graphite-200);
+        border: 1px solid var(--graphite-200);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      body.dark .matrix {
+        background: var(--graphite-700);
+        border-color: var(--graphite-700);
+      }
+      .matrix > div {
+        background: var(--paper);
+        padding: 20px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      body.dark .matrix > div {
+        background: var(--graphite-900);
+      }
+      .matrix .m-header {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--graphite-500);
+        background: var(--graphite-100);
+        padding: 12px 16px;
+        justify-content: flex-start;
+      }
+      body.dark .matrix .m-header {
+        background: var(--graphite-800);
+        color: var(--graphite-300);
+      }
+      .matrix .m-row-label {
+        justify-content: flex-start;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--graphite-500);
+      }
+      body.dark .matrix .m-row-label {
+        color: var(--graphite-300);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div>
+          <h1>Figentra — palette · font · weight</h1>
+          <p class="sub">
+            Systematic comparison against your three questions · draft ·
+            2026-08-14
+          </p>
+        </div>
+        <button class="toggle-btn" onclick="document.body.classList.toggle('dark')">
+          Toggle light/dark
+        </button>
+      </header>
+
+      <!-- ═══════════════════════════════════════════════════════
+           Q1 — Palette (Signal vs mauve vs mono)
+           ═══════════════════════════════════════════════════════ -->
+      <section>
+        <h2>Question 1 — which accent color?</h2>
+        <p class="lede">
+          Four candidates. Same F-Signal mark, different dot. HeroUI's
+          <code>secondary</code> role is <code>#7828C8</code> — that's the
+          "mouv/mauve" from your current mark. Signal mint <code>#00E5A0</code>
+          is what your brand doc §1 declares as the ONE accent. Pure mono
+          removes the dot entirely.
+        </p>
+
+        <div class="palette-grid">
+          <!-- Signal mint (brand doc) -->
+          <div class="cell">
+            <div class="label">Signal mint · brand-doc default</div>
+            <div class="body">
+              <svg width="72" height="72" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot" cx="92" cy="29" r="6" fill="#00e5a0" />
+              </svg>
+            </div>
+            <div class="note">
+              <code>#00E5A0</code> · reads as "live / on / running." Ties to the
+              deploy-pulse animation the site already uses in the footer badge.
+              <span class="rec">recommended</span>
+            </div>
+          </div>
+
+          <!-- HeroUI mauve/secondary -->
+          <div class="cell">
+            <div class="label">HeroUI secondary · "mouv"</div>
+            <div class="body">
+              <svg width="72" height="72" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot" cx="92" cy="29" r="6" fill="#7828c8" />
+              </svg>
+            </div>
+            <div class="note">
+              <code>#7828C8</code> · HeroUI theme's default secondary. Reads
+              as "premium / creative." Loses the live-in-prod association.
+            </div>
+          </div>
+
+          <!-- Figentra current purple -->
+          <div class="cell">
+            <div class="label">Current logo purple</div>
+            <div class="body">
+              <svg width="72" height="72" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot" cx="92" cy="29" r="6" fill="#6633cc" />
+              </svg>
+            </div>
+            <div class="note">
+              <code>#6633CC</code> · continuity with the current fig
+              wordmark's dominant purple. Same tradeoffs as HeroUI mauve.
+            </div>
+          </div>
+
+          <!-- Pure mono -->
+          <div class="cell">
+            <div class="label">Pure mono · no accent</div>
+            <div class="body">
+              <svg width="72" height="72" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle cx="92" cy="29" r="6" fill="currentColor" />
+              </svg>
+            </div>
+            <div class="note">
+              Anthropic / Vercel discipline. Maximum seriousness. Loses the
+              deploy-heartbeat animation entirely — the dot becomes decoration.
+            </div>
+          </div>
+        </div>
+
+        <!-- Same 4 on dark surface -->
+        <div class="palette-grid">
+          <div class="cell" style="background: var(--graphite-900); border-color: var(--graphite-700)">
+            <div class="label" style="color: var(--graphite-300); border-bottom-color: var(--graphite-700)">Signal mint · dark</div>
+            <div class="body">
+              <svg width="72" height="72" viewBox="0 0 120 120" style="color: var(--paper)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot" cx="92" cy="29" r="6" fill="#00e5a0" />
+              </svg>
+            </div>
+          </div>
+          <div class="cell" style="background: var(--graphite-900); border-color: var(--graphite-700)">
+            <div class="label" style="color: var(--graphite-300); border-bottom-color: var(--graphite-700)">Mauve · dark</div>
+            <div class="body">
+              <svg width="72" height="72" viewBox="0 0 120 120" style="color: var(--paper)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot" cx="92" cy="29" r="6" fill="#9353d3" />
+              </svg>
+            </div>
+          </div>
+          <div class="cell" style="background: var(--graphite-900); border-color: var(--graphite-700)">
+            <div class="label" style="color: var(--graphite-300); border-bottom-color: var(--graphite-700)">Purple · dark</div>
+            <div class="body">
+              <svg width="72" height="72" viewBox="0 0 120 120" style="color: var(--paper)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot" cx="92" cy="29" r="6" fill="#8a5cff" />
+              </svg>
+            </div>
+          </div>
+          <div class="cell" style="background: var(--graphite-900); border-color: var(--graphite-700)">
+            <div class="label" style="color: var(--graphite-300); border-bottom-color: var(--graphite-700)">Mono · dark</div>
+            <div class="body">
+              <svg width="72" height="72" viewBox="0 0 120 120" style="color: var(--paper)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle cx="92" cy="29" r="6" fill="currentColor" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Palette</th>
+              <th>Reads as</th>
+              <th>Pros</th>
+              <th>Cons</th>
+              <th>Fit for positioning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Signal mint <code>#00E5A0</code></strong></td>
+              <td>Live / on / running / deployed</td>
+              <td>Ties to deploy-pulse. Reads as "in production." Rare in the space (no big competitor owns mint). Passes AA against Ink at large text.</td>
+              <td>Contrast against Paper only 2.0:1 — CTA-only sizes.</td>
+              <td><span class="ok">strongest fit</span> — matches "Autonomous Engineering, running in production."</td>
+            </tr>
+            <tr>
+              <td>HeroUI secondary <code>#7828C8</code></td>
+              <td>Premium / creative / distinct</td>
+              <td>Aligns with HeroUI theme out of the box. Some continuity with the current logo.</td>
+              <td>Purple is crowded in dev tooling (GitLab, Twitch, Vercel accents). Doesn't say "engineering." Zero connection to deploy-heartbeat semantics.</td>
+              <td><span class="caution">weaker fit</span> — reads consumer/creative.</td>
+            </tr>
+            <tr>
+              <td>Current-logo <code>#6633CC</code></td>
+              <td>Same as above, slightly deeper</td>
+              <td>Continuity with the current brand.</td>
+              <td>Same as above. Also — if you're changing the mark anyway, the continuity argument is weak.</td>
+              <td><span class="caution">weak fit</span></td>
+            </tr>
+            <tr>
+              <td>Pure mono</td>
+              <td>Anthropic / Vercel — pure seriousness</td>
+              <td>Zero color budget. Ships anywhere.</td>
+              <td>Dot becomes ornament. Loses the direct tie to "systems operational" pulse. No visual signature outside the F letterform.</td>
+              <td><span class="ok">good fit</span> — but leaves the "live-in-prod" story on the table.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           Q2 — Font
+           ═══════════════════════════════════════════════════════ -->
+      <section>
+        <h2>Question 2 — which font?</h2>
+        <p class="lede">
+          Wordmark rendered at 40px in each candidate + at 18px nav size
+          for scale reality. Same weight (500), same letter-spacing
+          (-0.02em). Body copy would use the same family.
+        </p>
+
+        <div class="palette-grid" style="grid-template-columns: repeat(3, 1fr)">
+          <div class="cell">
+            <div class="label">Inter Display 500 · current spec</div>
+            <div class="body" style="flex-direction: column; gap: 20px">
+              <span class="f-inter wordmark wordmark--40" style="font-weight: 500">Figentra</span>
+              <span class="f-inter wordmark wordmark--18" style="font-weight: 500">Figentra</span>
+            </div>
+            <div class="note">
+              Neutral, engineering-forward. Rasmus Andersson designed it.
+              Ships everywhere. What Stripe, Figma, Vercel, and Notion use.
+              <span class="rec">recommended</span>
+            </div>
+          </div>
+          <div class="cell">
+            <div class="label">Plus Jakarta Sans 500</div>
+            <div class="body" style="flex-direction: column; gap: 20px">
+              <span class="f-jakarta wordmark wordmark--40" style="font-weight: 500">Figentra</span>
+              <span class="f-jakarta wordmark wordmark--18" style="font-weight: 500">Figentra</span>
+            </div>
+            <div class="note">
+              Warmer, friendlier. Tokotype/Indonesia. Rounder terminals,
+              softer feel. Reads Notion-consumer. Excellent Arabic (Naskh).
+            </div>
+          </div>
+          <div class="cell">
+            <div class="label">Space Grotesk 500</div>
+            <div class="body" style="flex-direction: column; gap: 20px">
+              <span class="f-grotesk wordmark wordmark--40" style="font-weight: 500">Figentra</span>
+              <span class="f-grotesk wordmark wordmark--18" style="font-weight: 500">Figentra</span>
+            </div>
+            <div class="note">
+              Geometric, deliberately quirky. Florian Karsten. Reads
+              modern-tech / crypto-adjacent. Framer's default. Distinctive
+              but not neutral.
+            </div>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Font</th>
+              <th>Vibe</th>
+              <th>Comparable brands</th>
+              <th>Arabic support</th>
+              <th>Fit for positioning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Inter</strong></td>
+              <td>Serious, engineering, neutral</td>
+              <td>Stripe, Figma, Vercel, Linear, Notion</td>
+              <td>Adequate (system-Arabic fallback works)</td>
+              <td><span class="ok">strongest fit</span> — the workhorse font for the exact tier.</td>
+            </tr>
+            <tr>
+              <td>Plus Jakarta Sans</td>
+              <td>Friendly, consumer-warm, human</td>
+              <td>Notion (partial), various startups</td>
+              <td>Excellent — designed with Naskh parity</td>
+              <td><span class="caution">wrong tier</span> — reads too consumer for Fortune 500 CTO.</td>
+            </tr>
+            <tr>
+              <td>Space Grotesk</td>
+              <td>Distinctive-geometric, crypto-adjacent</td>
+              <td>Framer, Aztec Protocol, Bitwarden</td>
+              <td>Poor (Latin-only)</td>
+              <td><span class="caution">too styled</span> — the F glyph is your signature, not the wordmark.</td>
+            </tr>
+            <tr>
+              <td>Söhne (paid, ~$1k/yr)</td>
+              <td>Editorial-serious, restrained</td>
+              <td>Stripe (parts), Anthropic, OpenAI blog</td>
+              <td>N/A</td>
+              <td><span class="ok">strongest at scale</span> — the endgame once revenue justifies it. Inter Display is the free stand-in.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           Q3 — Weight (bold vs soft)
+           ═══════════════════════════════════════════════════════ -->
+      <section>
+        <h2>Question 3 — bold, medium, or soft?</h2>
+        <p class="lede">
+          Two axes: <strong>wordmark weight</strong> (typographic weight of
+          the letters) and <strong>mark stroke weight</strong> (thickness
+          of the F strokes). Ship them together — a bold wordmark with a
+          thin mark reads mismatched.
+        </p>
+
+        <h3
+          style="
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--graphite-500);
+            margin: 24px 0 12px;
+          "
+        >
+          Wordmark weight
+        </h3>
+        <div class="palette-grid" style="grid-template-columns: repeat(4, 1fr)">
+          <div class="cell">
+            <div class="label">Regular 400</div>
+            <div class="body">
+              <span class="f-inter wordmark wordmark--32" style="font-weight: 400">Figentra</span>
+            </div>
+            <div class="note">Too airy — reads editorial-blog, not engineering.</div>
+          </div>
+          <div class="cell">
+            <div class="label">Medium 500 <span class="rec">rec</span></div>
+            <div class="body">
+              <span class="f-inter wordmark wordmark--32" style="font-weight: 500">Figentra</span>
+            </div>
+            <div class="note">Anthropic, Vanta, Linear default. Refined + confident. What the brand doc specifies.</div>
+          </div>
+          <div class="cell">
+            <div class="label">Semibold 600</div>
+            <div class="body">
+              <span class="f-inter wordmark wordmark--32" style="font-weight: 600">Figentra</span>
+            </div>
+            <div class="note">Slightly more presence. Reads confident-but-loud. Fine if you want more weight at small sizes.</div>
+          </div>
+          <div class="cell">
+            <div class="label">Bold 700</div>
+            <div class="body">
+              <span class="f-inter wordmark wordmark--32" style="font-weight: 700">Figentra</span>
+            </div>
+            <div class="note">Too aggressive for the CTO tier. Reads startup / consumer-tech. Not the shape you want.</div>
+          </div>
+        </div>
+
+        <h3
+          style="
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--graphite-500);
+            margin: 32px 0 12px;
+          "
+        >
+          Mark stroke weight
+        </h3>
+        <div class="palette-grid" style="grid-template-columns: repeat(3, 1fr)">
+          <div class="cell">
+            <div class="label">Thin · 6px stroke</div>
+            <div class="body">
+              <svg width="80" height="80" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="32" y="24" width="6" height="72" fill="currentColor" />
+                <rect x="32" y="24" width="52" height="6" fill="currentColor" />
+                <rect x="32" y="58" width="34" height="6" fill="currentColor" />
+                <circle class="dot" cx="92" cy="27" r="6" fill="#00e5a0" />
+              </svg>
+            </div>
+            <div class="note">Delicate. Disappears at 16px favicon. Wrong at this scale.</div>
+          </div>
+          <div class="cell">
+            <div class="label">Bold · 10px stroke <span class="rec">rec</span></div>
+            <div class="body">
+              <svg width="80" height="80" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot" cx="92" cy="29" r="6" fill="#00e5a0" />
+              </svg>
+            </div>
+            <div class="note">Holds at 16px favicon. Reads confident. Ratio matches Inter Display 500.</div>
+          </div>
+          <div class="cell">
+            <div class="label">Heavy · 14px stroke</div>
+            <div class="body">
+              <svg width="80" height="80" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="28" y="24" width="14" height="72" fill="currentColor" />
+                <rect x="28" y="24" width="56" height="14" fill="currentColor" />
+                <rect x="28" y="52" width="36" height="14" fill="currentColor" />
+                <circle class="dot" cx="94" cy="31" r="7" fill="#00e5a0" />
+              </svg>
+            </div>
+            <div class="note">Too heavy — reads brutalist / crypto. F becomes a black rectangle at small sizes.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           Combined matrix
+           ═══════════════════════════════════════════════════════ -->
+      <section>
+        <h2>The combined matrix — palette × font</h2>
+        <p class="lede">
+          Every finalist paired against every finalist. Row = accent color.
+          Column = font family. All at Inter/Jakarta/Grotesk 500, mark
+          stroke 10px, lockup at 40px wordmark.
+        </p>
+
+        <div class="matrix">
+          <!-- Header row -->
+          <div class="m-header">Row · palette</div>
+          <div class="m-header">Inter Display 500</div>
+          <div class="m-header">Plus Jakarta Sans 500</div>
+          <div class="m-header">Space Grotesk 500</div>
+
+          <!-- Row 1: Signal mint -->
+          <div class="m-row-label">Signal mint</div>
+          <div>
+            <span class="lockup">
+              <svg width="40" height="40" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot" cx="92" cy="29" r="6" fill="#00e5a0" />
+              </svg>
+              <span class="f-inter wordmark wordmark--32" style="font-weight: 500">Figentra</span>
+            </span>
+          </div>
+          <div>
+            <span class="lockup">
+              <svg width="40" height="40" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot" cx="92" cy="29" r="6" fill="#00e5a0" />
+              </svg>
+              <span class="f-jakarta wordmark wordmark--32" style="font-weight: 500">Figentra</span>
+            </span>
+          </div>
+          <div>
+            <span class="lockup">
+              <svg width="40" height="40" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot" cx="92" cy="29" r="6" fill="#00e5a0" />
+              </svg>
+              <span class="f-grotesk wordmark wordmark--32" style="font-weight: 500">Figentra</span>
+            </span>
+          </div>
+
+          <!-- Row 2: Mauve -->
+          <div class="m-row-label">Mauve</div>
+          <div>
+            <span class="lockup">
+              <svg width="40" height="40" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot" cx="92" cy="29" r="6" fill="#7828c8" />
+              </svg>
+              <span class="f-inter wordmark wordmark--32" style="font-weight: 500">Figentra</span>
+            </span>
+          </div>
+          <div>
+            <span class="lockup">
+              <svg width="40" height="40" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot" cx="92" cy="29" r="6" fill="#7828c8" />
+              </svg>
+              <span class="f-jakarta wordmark wordmark--32" style="font-weight: 500">Figentra</span>
+            </span>
+          </div>
+          <div>
+            <span class="lockup">
+              <svg width="40" height="40" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle class="dot" cx="92" cy="29" r="6" fill="#7828c8" />
+              </svg>
+              <span class="f-grotesk wordmark wordmark--32" style="font-weight: 500">Figentra</span>
+            </span>
+          </div>
+
+          <!-- Row 3: Mono -->
+          <div class="m-row-label">Mono</div>
+          <div>
+            <span class="lockup">
+              <svg width="40" height="40" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle cx="92" cy="29" r="6" fill="currentColor" />
+              </svg>
+              <span class="f-inter wordmark wordmark--32" style="font-weight: 500">Figentra</span>
+            </span>
+          </div>
+          <div>
+            <span class="lockup">
+              <svg width="40" height="40" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle cx="92" cy="29" r="6" fill="currentColor" />
+              </svg>
+              <span class="f-jakarta wordmark wordmark--32" style="font-weight: 500">Figentra</span>
+            </span>
+          </div>
+          <div>
+            <span class="lockup">
+              <svg width="40" height="40" viewBox="0 0 120 120" style="color: var(--ink)">
+                <rect x="30" y="24" width="10" height="72" fill="currentColor" />
+                <rect x="30" y="24" width="52" height="10" fill="currentColor" />
+                <rect x="30" y="56" width="34" height="10" fill="currentColor" />
+                <circle cx="92" cy="29" r="6" fill="currentColor" />
+              </svg>
+              <span class="f-grotesk wordmark wordmark--32" style="font-weight: 500">Figentra</span>
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           My honest read
+           ═══════════════════════════════════════════════════════ -->
+      <section>
+        <h2>My honest read</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Axis</th>
+              <th>Options considered</th>
+              <th>Recommendation</th>
+              <th>Because</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Accent color</td>
+              <td>Signal mint · HeroUI mauve · current purple · mono</td>
+              <td><strong>Signal mint <code>#00E5A0</code></strong></td>
+              <td>Only color that reads as "live / running / in-production." Mauve/purple reads consumer-creative — wrong signal for CTO buyers. Mono works but leaves the deploy-heartbeat story on the table.</td>
+            </tr>
+            <tr>
+              <td>Font family</td>
+              <td>Inter · Plus Jakarta Sans · Space Grotesk · Söhne</td>
+              <td><strong>Inter Display</strong> (with Söhne as the paid endgame)</td>
+              <td>Inter is the workhorse for this exact tier. Jakarta reads too consumer; Grotesk reads too crypto. Söhne is what to migrate to once ARR justifies the $1k/yr license.</td>
+            </tr>
+            <tr>
+              <td>Wordmark weight</td>
+              <td>400 · 500 · 600 · 700</td>
+              <td><strong>500 (Medium)</strong></td>
+              <td>What the brand doc §2 specifies. 400 reads editorial, 600 reads confident-but-loud, 700 reads startup/consumer. 500 is where Anthropic + Vanta + Linear live.</td>
+            </tr>
+            <tr>
+              <td>Mark stroke</td>
+              <td>6px · 10px · 14px</td>
+              <td><strong>10px</strong></td>
+              <td>Holds at 16px favicon. Ratio matches Inter Display 500's letter weight. 6px disappears at small size; 14px reads brutalist.</td>
+            </tr>
+            <tr>
+              <td>Aesthetic direction</td>
+              <td>Bold · medium · soft</td>
+              <td><strong>Medium/tight</strong></td>
+              <td>"Bold" reads YC-startup. "Soft" reads consumer. Figentra needs to read like Stripe/Anthropic — restrained confidence, no shouting, no whispering.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p style="margin-top: 24px; font-size: 15px; color: var(--graphite-600); max-width: 68ch">
+          <strong>Where I could be wrong:</strong> if you're moving Figentra
+          into a market where the audience is closer to product managers than
+          CTOs, or if the Arabic customer base is your primary landing
+          audience, Plus Jakarta Sans becomes a much stronger call for its
+          Arabic pairing. Same story on color — if Figentra's future
+          products aim at creative/agency verticals, mauve holds. For the
+          currently-written "Fortune 500 CTO" positioning in
+          <code>docs/brand/00-foundation.md §1</code>, though, everything
+          above is the pocket.
+        </p>
+      </section>
+
+      <footer style="margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--graphite-200); font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--graphite-500)">
+        <p>Sources · docs/brand/00-foundation.md · docs/brand/04-visual-identity.md · HeroUI default theme (Radix Colors)</p>
+        <p style="margin-top: 8px">Draft location · .tmp/drafts/logos/matrix.html (retired 2026-08-18) · not committed</p>
+      </footer>
+    </div>
+  </body>
+</html>

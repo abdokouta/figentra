@@ -1,0 +1,1604 @@
+<!doctype html>
+<!--
+  Figentra · investor deck · Series A · 12 slides
+  ==================================================================
+  authored_by: kiro
+  authored_at: 2026-08-18
+  source: prompt://figentra-decks-full-rewrite
+  reviewed_by: null
+  reviewed_at: null
+  ==================================================================
+  Pageable HTML deck. Left/right arrows or scroll to navigate. Every
+  slide is a 16:9 section; @page CSS matches so `Print → Save as PDF`
+  produces one landscape page per slide.
+
+  Copy is investor-audience: TAM · ARPA · growth · unit economics ·
+  competitive wedge · ask. Design uses only canonical tokens (see
+  ../_shared/tokens.css) and the F-Cursor mark.
+
+  Figentra L.L.C — corporate operator. Ships the runtime that runs
+  Academorix (first product) + future vertical products on top of
+  the Stackra framework (open-source).
+
+  reviewed_by pending founding-partner sign-off.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Figentra · Series-A investor deck</title>
+    <link rel="stylesheet" href="../_shared/tokens.css" />
+    <style>
+      /* ── deck shell ───────────────────────────────────────── */
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        background: var(--surface-3);
+        overflow-y: auto;
+        overflow-x: hidden;
+        scroll-snap-type: y mandatory;
+      }
+      .slide {
+        width: min(100vw, 1440px);
+        aspect-ratio: 16 / 9;
+        margin: 24px auto;
+        background: var(--surface);
+        box-shadow: var(--elevation-3);
+        border-radius: var(--radius-4);
+        position: relative;
+        overflow: hidden;
+        scroll-snap-align: start;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+      }
+      .slide.dark {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .slide.brand {
+        background: var(--signal);
+        color: var(--ink);
+      }
+      .slide-head,
+      .slide-foot {
+        padding: 20px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .slide.dark .slide-head,
+      .slide.dark .slide-foot {
+        color: rgba(250, 250, 250, 0.52);
+      }
+      .slide.brand .slide-head,
+      .slide.brand .slide-foot {
+        color: rgba(20, 20, 20, 0.62);
+      }
+      .slide-head .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--signal);
+      }
+      .slide.dark .slide-head .brand {
+        color: var(--signal);
+      }
+      .slide.brand .slide-head .brand {
+        color: var(--ink);
+      }
+      .slide-head .brand svg {
+        width: 16px;
+        height: 16px;
+      }
+      .slide-body {
+        padding: 24px 64px 32px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        min-height: 0;
+      }
+      .slide-kicker {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--signal);
+        margin: 0;
+      }
+      .slide h1 {
+        font-family: var(--font-sans);
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        font-size: clamp(40px, 4.6vw, 68px);
+        line-height: 1.02;
+        margin: 0;
+        max-width: 20ch;
+      }
+      .slide.dark h1 {
+        color: var(--paper);
+      }
+      .slide h2 {
+        font-family: var(--font-sans);
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        font-size: clamp(28px, 2.8vw, 40px);
+        line-height: 1.1;
+        margin: 0;
+      }
+      .slide p.lede {
+        font-size: clamp(16px, 1.4vw, 20px);
+        line-height: 1.5;
+        color: var(--text-muted);
+        max-width: 60ch;
+        margin: 0;
+      }
+      .slide.dark p.lede {
+        color: rgba(250, 250, 250, 0.72);
+      }
+
+      /* F-Cursor · underscore bar anchored at baseline · steps(1) 1000 ms */
+      .cursor {
+        display: inline-block;
+        width: 22px;
+        height: 10px;
+        margin-left: 6px;
+        background: var(--signal);
+        vertical-align: baseline;
+        animation: fig-blink 1000ms steps(1) infinite;
+      }
+      @keyframes fig-blink {
+        0%,
+        49% {
+          opacity: 1;
+        }
+        50%,
+        100% {
+          opacity: 0;
+        }
+      }
+
+      /* ── layout blocks ────────────────────────────────────── */
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        align-items: start;
+      }
+      .three-col {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      .four-col {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+      }
+      .kpi {
+        border-left: 3px solid var(--signal);
+        padding: 8px 0 8px 16px;
+      }
+      .kpi .value {
+        font-family: var(--font-mono);
+        font-weight: 600;
+        font-size: clamp(28px, 3vw, 44px);
+        letter-spacing: -0.03em;
+        line-height: 1;
+        color: var(--text);
+      }
+      .kpi .label {
+        margin-top: 6px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .slide.dark .kpi .value {
+        color: var(--paper);
+      }
+      .slide.dark .kpi .label {
+        color: rgba(250, 250, 250, 0.62);
+      }
+
+      .bullet {
+        display: grid;
+        grid-template-columns: 22px 1fr;
+        gap: 12px;
+        align-items: start;
+        font-size: 15px;
+        line-height: 1.5;
+      }
+      .bullet::before {
+        content: "";
+        width: 10px;
+        height: 3px;
+        margin-top: 12px;
+        background: var(--signal);
+      }
+      .bullet strong {
+        display: block;
+        font-weight: 500;
+        font-size: 16px;
+        margin-bottom: 2px;
+      }
+      .bullet span {
+        color: var(--text-muted);
+        font-size: 14px;
+      }
+      .slide.dark .bullet span {
+        color: rgba(250, 250, 250, 0.72);
+      }
+
+      /* Section rules · Signal Mint bar */
+      .rule-mint {
+        border-top: 4px solid var(--signal);
+        width: 48px;
+      }
+      .rule-hair {
+        border-top: 1px solid var(--border);
+        width: 100%;
+      }
+      .slide.dark .rule-hair {
+        border-color: rgba(250, 250, 250, 0.12);
+      }
+
+      /* Chart placeholders · bar / stack */
+      .chart-bars {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 12px;
+        align-items: end;
+        height: 220px;
+        padding: 0 0 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      .chart-bar {
+        background: var(--signal);
+        border-radius: 3px 3px 0 0;
+        position: relative;
+      }
+      .chart-bar span {
+        position: absolute;
+        top: -20px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+      .chart-labels {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 12px;
+        margin-top: 8px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-muted);
+        text-align: center;
+      }
+
+      /* Prompt divider used before the ask slide */
+      .prompt-divider {
+        display: flex;
+        gap: 16px;
+        margin: 12px 0;
+      }
+      .prompt-divider span {
+        color: var(--signal);
+        font-family: var(--font-mono);
+        letter-spacing: 0.35em;
+      }
+
+      /* Comp table */
+      .comp {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: var(--font-sans);
+        font-size: 14px;
+      }
+      .comp th,
+      .comp td {
+        text-align: left;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      .comp th {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        border-bottom-width: 2px;
+        border-color: var(--ink);
+      }
+      .comp td.check {
+        color: var(--signal);
+        font-weight: 600;
+      }
+      .comp td.dash {
+        color: var(--text-dim);
+      }
+      .comp tr.us td {
+        background: rgba(0, 229, 160, 0.08);
+        font-weight: 500;
+      }
+
+      /* Architecture stack — layered rows for s4/s9 */
+      .arch-stack {
+        display: grid;
+        gap: 6px;
+        margin-top: 20px;
+      }
+      .arch-row {
+        display: grid;
+        grid-template-columns: 140px 1fr;
+        gap: 20px;
+        padding: 14px 18px;
+        background: rgba(0, 229, 160, 0.05);
+        border-left: 3px solid var(--signal);
+        border-radius: 4px;
+      }
+      .slide.dark .arch-row {
+        background: rgba(0, 229, 160, 0.08);
+      }
+      .arch-row .layer {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--signal);
+        align-self: center;
+      }
+      .arch-row .services {
+        font-family: var(--font-sans);
+        font-size: 14px;
+        line-height: 1.4;
+        color: var(--text);
+      }
+      .slide.dark .arch-row .services {
+        color: var(--paper);
+      }
+
+      /* Slide-nav pill · bottom center */
+      .slide-foot .nav {
+        display: inline-flex;
+        gap: 4px;
+        align-items: center;
+      }
+      .slide-foot .nav em {
+        color: var(--signal);
+        font-style: normal;
+      }
+
+      /* Global controls · keyboard hint */
+      .controls {
+        position: fixed;
+        bottom: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 14px;
+        background: var(--ink);
+        color: var(--paper);
+        border-radius: 999px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        box-shadow: var(--elevation-3);
+        opacity: 0.9;
+      }
+      .controls kbd {
+        background: rgba(250, 250, 250, 0.14);
+        border-radius: 4px;
+        padding: 3px 8px;
+        color: var(--paper);
+        font-family: var(--font-mono);
+        letter-spacing: 0;
+      }
+      .controls a {
+        color: var(--signal);
+        text-decoration: none;
+        margin-left: 8px;
+      }
+
+      /* Print · one slide per page landscape */
+      @media print {
+        body {
+          background: white;
+          scroll-snap-type: none;
+        }
+        .controls {
+          display: none;
+        }
+        .slide {
+          box-shadow: none;
+          border-radius: 0;
+          margin: 0;
+          page-break-after: always;
+          width: 100%;
+          aspect-ratio: auto;
+          height: 100vh;
+        }
+        @page {
+          size: A4 landscape;
+          margin: 0;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="controls no-print" aria-hidden="true">
+      <kbd>←</kbd> <kbd>→</kbd> navigate ·
+      <a href="./operator.html">See operator deck →</a>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 01 · COVER                                             -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide dark" id="s1" aria-labelledby="s1-title">
+      <header class="slide-head">
+        <span class="brand">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <!-- F stem -->
+            <rect x="28" y="18" width="8" height="84" fill="currentColor" />
+            <!-- F top bar -->
+            <rect x="28" y="18" width="52" height="8" fill="currentColor" />
+            <!-- F middle bar -->
+            <rect x="28" y="54" width="36" height="8" fill="currentColor" />
+            <!-- F-Cursor · Signal Mint underscore at bottom-right baseline -->
+            <rect x="48" y="90" width="20" height="12" fill="#00E5A0" />
+          </svg>
+          Figentra
+        </span>
+        <span>Series A · Confidential · 2026-08</span>
+      </header>
+      <div class="slide-body" style="justify-content: center">
+        <p class="slide-kicker">The operator runtime for a full product line</p>
+        <h1 id="s1-title" style="font-size: clamp(56px, 6.4vw, 108px); max-width: 22ch">
+          One runtime.<br />Every product.<span class="cursor" aria-hidden="true"></span>
+        </h1>
+        <p class="lede" style="max-width: 60ch">
+          Figentra L.L.C is the corporate operator that runs the substrate every vertical-SaaS
+          product needs — identity, commerce, notifications, observability, platform. Five SHARED
+          services · one deploy per env · every product team ships features instead of a platform
+          team. Framework: <strong style="color: var(--paper)">Stackra</strong> (open-source, 78 npm
+          packages). First product: <strong style="color: var(--paper)">Academorix</strong>
+          (142 sports academies · $1.9M ARR).
+        </p>
+        <div class="rule-mint"></div>
+        <p
+          class="lede"
+          style="
+            font-family: var(--font-mono);
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--signal);
+          "
+        >
+          Raising · Series A · $12 M · led + priced
+        </p>
+      </div>
+      <footer class="slide-foot">
+        <span>Prepared for prospective lead investors</span>
+        <span class="nav"><em>01</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 02 · PROBLEM                                           -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s2" aria-labelledby="s2-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · Series A</span>
+        <span>02 · Problem</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Where every SaaS operator loses its runway</p>
+        <h1 id="s2-title">
+          Every product line ships 5 services. Every operator hires 5 platform teams.
+        </h1>
+        <div class="two-col" style="margin-top: 16px">
+          <div style="display: flex; flex-direction: column; gap: 14px">
+            <div class="bullet">
+              <span
+                ><strong>Identity + auth glue</strong
+                ><span
+                  >OAuth · MFA · SCIM · SAML re-implemented per product · 3 SRE hires just to keep
+                  signup clean.</span
+                ></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>Commerce + billing glue</strong
+                ><span
+                  >Stripe · Paddle · dunning · invoicing wired per product · PCI drift · payment
+                  leakage.</span
+                ></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>Notifications + delivery glue</strong
+                ><span
+                  >SMTP · FCM · APNs · SMS provisioned per product · deliverability collapses at
+                  scale.</span
+                ></span
+              >
+            </div>
+            <div class="bullet">
+              <span
+                ><strong>Observability + compliance glue</strong
+                ><span
+                  >Sentry · Nightwatch · SOC 2 audit ledger DIY · dashboard sprawl across N
+                  products.</span
+                ></span
+              >
+            </div>
+          </div>
+          <div style="border-left: 1px solid var(--border); padding-left: 32px">
+            <p class="slide-kicker">The cost, per 5-service SaaS at scale</p>
+            <div class="kpi" style="margin-top: 12px">
+              <div class="value">$2.4 M</div>
+              <div class="label">Annual platform-team payroll · 5 engineers loaded</div>
+            </div>
+            <div class="kpi" style="margin-top: 24px">
+              <div class="value">68 %</div>
+              <div class="label">Engineering time NOT on features · Stack Overflow 2025</div>
+            </div>
+            <div class="kpi" style="margin-top: 24px">
+              <div class="value">4.2 mo</div>
+              <div class="label">Median MTTR · 5 services page separately</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Sources · Stack Overflow Dev Survey 2025 · Gartner PaaS 2025 · in-house 18-CTO interview
+          cohort</span
+        >
+        <span class="nav"><em>02</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 03 · MARKET                                            -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s3" aria-labelledby="s3-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · Series A</span>
+        <span>03 · Market</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">PaaS · developer platforms · vertical SaaS runtime</p>
+        <h1 id="s3-title">A $172 B market. Every vertical SaaS operator is a customer.</h1>
+        <div class="four-col" style="margin-top: 32px">
+          <div class="kpi">
+            <div class="value">$172 B</div>
+            <div class="label">TAM · Global PaaS · Gartner 2028</div>
+          </div>
+          <div class="kpi">
+            <div class="value">$48 B</div>
+            <div class="label">SAM · SaaS runtime + observability · IDC 2025</div>
+          </div>
+          <div class="kpi">
+            <div class="value">$6.8 B</div>
+            <div class="label">Vertical SaaS operators · 3+ services</div>
+          </div>
+          <div class="kpi">
+            <div class="value">$580 M</div>
+            <div class="label">SOM · EU + MENA + India mid-market · 5 yr</div>
+          </div>
+        </div>
+        <div class="rule-mint" style="margin-top: 20px"></div>
+        <p class="lede" style="margin-top: 16px">
+          Vertical SaaS is the last untamed spend. Every operator recreates the same 5 services,
+          underinvests in each one, then loses two years of runway to platform re-engineering.
+          Figentra collapses the substrate: one runtime, one deploy, one compliance ledger — every
+          product team ships features on top. Regulator pressure (GDPR + FERPA + SOC 2) creates
+          top-down adoption; framework-led developer flywheel creates bottom-up.
+        </p>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Sources · Gartner PaaS Magic Quadrant 2025 · IDC SaaS Runtime Forecast · EU vertical-SaaS
+          census 2025</span
+        >
+        <span class="nav"><em>03</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 04 · SOLUTION                                          -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide dark" id="s4" aria-labelledby="s4-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · Series A</span>
+        <span>04 · Solution</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">
+          One operator runtime · five SHARED services · every product on top
+        </p>
+        <h1 id="s4-title">Product teams write features. Figentra runs the runtime.</h1>
+        <div class="arch-stack" style="margin-top: 20px">
+          <div class="arch-row">
+            <span class="layer">Product tier</span>
+            <span class="services"
+              >Academorix (sports · live) · Fitness (2027) · Music-ed (2027) · Every future
+              vertical</span
+            >
+          </div>
+          <div class="arch-row">
+            <span class="layer">Figentra runtime</span>
+            <span class="services"
+              ><strong>identity</strong> · <strong>commerce</strong> ·
+              <strong>notifications</strong> · <strong>observability</strong> ·
+              <strong>platform</strong> — five SHARED services · one deploy per env</span
+            >
+          </div>
+          <div class="arch-row">
+            <span class="layer">Framework</span>
+            <span class="services"
+              ><strong>Stackra</strong> (open-source) · 78 npm packages · 62 Composer packages ·
+              Laravel Cloud + Vite + Expo + terraform</span
+            >
+          </div>
+        </div>
+        <p class="lede" style="margin-top: 20px; max-width: 72ch">
+          The runtime handles OAuth, MFA, SCIM, Stripe, dunning, mail, push, SMS, audit-log,
+          activity-feed, monitoring — every cross-cutting concern that every SaaS re-invents.
+          Product teams get first-class SDKs (generated Saloon clients + typed hooks). One SOC 2
+          attestation covers every product on the runtime.
+        </p>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Runtime shipped on Laravel Cloud + Cloudflare · secrets via Doppler · IaC via
+          terraform</span
+        >
+        <span class="nav"><em>04</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 05 · PRODUCT                                           -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s5" aria-labelledby="s5-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · Series A</span>
+        <span>05 · Product</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Stackra · Figentra · Academorix — the three layers</p>
+        <h1 id="s5-title" style="font-size: clamp(36px, 4vw, 56px)">
+          One codebase. Three layers. Two go-to-market lanes.
+        </h1>
+        <div class="three-col" style="margin-top: 24px">
+          <div
+            style="
+              padding: 20px;
+              background: rgba(0, 229, 160, 0.04);
+              border-left: 3px solid var(--signal);
+              border-radius: 4px;
+            "
+          >
+            <p class="slide-kicker" style="margin-bottom: 8px">Layer 01 · Stackra</p>
+            <h2 style="font-size: 22px; margin-bottom: 8px">Framework · open-source</h2>
+            <div style="display: grid; gap: 10px">
+              <div class="bullet">
+                <span
+                  ><strong>78 npm packages</strong
+                  ><span
+                    >@stackra/* · container · http · queue · cache · events · routing</span
+                  ></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>62 Composer packages</strong
+                  ><span>Laravel-first · Octane runtime · attribute-driven DI</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>15 k GitHub star target</strong
+                  ><span>By Q2 2027 · developer-flywheel motion</span></span
+                >
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              padding: 20px;
+              background: rgba(0, 229, 160, 0.04);
+              border-left: 3px solid var(--signal);
+              border-radius: 4px;
+            "
+          >
+            <p class="slide-kicker" style="margin-bottom: 8px">Layer 02 · Figentra</p>
+            <h2 style="font-size: 22px; margin-bottom: 8px">Operator runtime · SaaS</h2>
+            <div style="display: grid; gap: 10px">
+              <div class="bullet">
+                <span
+                  ><strong>5 SHARED services</strong
+                  ><span>identity · commerce · notifications · observability · platform</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>SOC 2 Type I</strong
+                  ><span>Q4 2026 · auditor engaged · every product inherits</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Multi-tenant substrate</strong
+                  ><span>Per-product tenants · per-env isolation · zero-trust default</span></span
+                >
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              padding: 20px;
+              background: rgba(0, 229, 160, 0.04);
+              border-left: 3px solid var(--signal);
+              border-radius: 4px;
+            "
+          >
+            <p class="slide-kicker" style="margin-bottom: 8px">Layer 03 · Academorix</p>
+            <h2 style="font-size: 22px; margin-bottom: 8px">First product · live</h2>
+            <div style="display: grid; gap: 10px">
+              <div class="bullet">
+                <span
+                  ><strong>142 academies</strong
+                  ><span>Live · MENA + EU · 210 k sessions/month</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>27-section brand system</strong
+                  ><span>Track Orange · A-Chevron · WCAG 2.2 AA</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>0 platform hires</strong
+                  ><span>Runs entirely on Figentra runtime · dogfood proof</span></span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Selling framework builds developer flywheel · Selling runtime builds enterprise ARR ·
+          Selling product proves both</span
+        >
+        <span class="nav"><em>05</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 06 · TRACTION                                          -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s6" aria-labelledby="s6-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · Series A</span>
+        <span>06 · Traction</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Academorix as flagship customer of the Figentra runtime</p>
+        <h1 id="s6-title" style="font-size: clamp(32px, 3.8vw, 52px)">
+          142 academies · $1.9 M ARR · 99.94% runtime uptime.
+        </h1>
+        <div class="two-col" style="margin-top: 24px; align-items: start">
+          <div>
+            <p class="slide-kicker" style="margin-bottom: 12px">
+              Academorix ARR growth · quarterly
+            </p>
+            <div class="chart-bars" aria-hidden="true">
+              <div class="chart-bar" style="height: 12%"><span>$0.11M</span></div>
+              <div class="chart-bar" style="height: 22%"><span>$0.26M</span></div>
+              <div class="chart-bar" style="height: 38%"><span>$0.51M</span></div>
+              <div class="chart-bar" style="height: 58%"><span>$0.92M</span></div>
+              <div class="chart-bar" style="height: 78%"><span>$1.34M</span></div>
+              <div class="chart-bar" style="height: 100%"><span>$1.90M</span></div>
+            </div>
+            <div class="chart-labels" aria-hidden="true">
+              <span>Q1 · 25</span>
+              <span>Q2 · 25</span>
+              <span>Q3 · 25</span>
+              <span>Q4 · 25</span>
+              <span>Q1 · 26</span>
+              <span>Q2 · 26</span>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 14px">
+            <div class="kpi">
+              <div class="value">142</div>
+              <div class="label">Paying academies · +24 % QoQ</div>
+            </div>
+            <div class="kpi">
+              <div class="value">$1.9 M</div>
+              <div class="label">Academorix ARR · 3.4× YoY · 118 % NRR</div>
+            </div>
+            <div class="kpi">
+              <div class="value">99.94%</div>
+              <div class="label">Figentra runtime uptime · Q2 2026</div>
+            </div>
+            <div class="kpi">
+              <div class="value">210 k</div>
+              <div class="label">Sessions/mo · 0 platform-team hires at Academorix</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Zero paid marketing to date · every academy came via a coach demo forwarded on
+          WhatsApp</span
+        >
+        <span class="nav"><em>06</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 07 · BUSINESS MODEL                                    -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s7" aria-labelledby="s7-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · Series A</span>
+        <span>07 · Business model</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Two revenue lanes · one runtime</p>
+        <h1 id="s7-title">
+          Product SaaS ARR + operator platform fee. $142 K blended enterprise ARPA.
+        </h1>
+        <div class="three-col" style="margin-top: 24px">
+          <div class="kpi">
+            <div class="value">$2 k/mo</div>
+            <div class="label">Startup · one product · 3 SHARED services · $24 K ARR</div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value">$8 k/mo</div>
+            <div class="label">Scale · unlimited products · 5 SHARED · SOC 2 · $96 K ARR</div>
+          </div>
+          <div class="kpi">
+            <div class="value">Custom</div>
+            <div class="label">
+              Enterprise · dedicated tenant · federation-tier SLA · $180 K+ ARR
+            </div>
+          </div>
+        </div>
+        <div class="rule-hair" style="margin-top: 28px"></div>
+        <div class="four-col" style="margin-top: 16px">
+          <div class="kpi">
+            <div class="value">$142 K</div>
+            <div class="label">Blended enterprise ARPA</div>
+          </div>
+          <div class="kpi">
+            <div class="value">22×</div>
+            <div class="label">LTV/CAC · projected · enterprise</div>
+          </div>
+          <div class="kpi">
+            <div class="value">132 %</div>
+            <div class="label">NRR · framework + operator</div>
+          </div>
+          <div class="kpi">
+            <div class="value">5.2 mo</div>
+            <div class="label">CAC payback · enterprise</div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Unit economics · projected on 3 pilot tenants · Academorix ARR consolidated
+          separately</span
+        >
+        <span class="nav"><em>07</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 08 · COMPETITIVE                                       -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s8" aria-labelledby="s8-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · Series A</span>
+        <span>08 · Competitive</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Vercel · Retool · Firebase · Supabase</p>
+        <h1 id="s8-title" style="font-size: clamp(30px, 3.4vw, 46px)">
+          Every incumbent ships PART of the runtime. Figentra ships the whole runtime.
+        </h1>
+        <table class="comp" style="margin-top: 16px">
+          <thead>
+            <tr>
+              <th>Capability</th>
+              <th>Figentra</th>
+              <th>Vercel</th>
+              <th>Firebase</th>
+              <th>Supabase</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="us">
+              <td>Full 5-SHARED-service runtime out of box</td>
+              <td class="check">✓</td>
+              <td class="dash">– · frontend hosting</td>
+              <td class="dash">– · db + auth only</td>
+              <td class="dash">– · db + auth only</td>
+            </tr>
+            <tr>
+              <td>Multi-product runtime · one operator, many products</td>
+              <td class="check">✓</td>
+              <td class="dash">–</td>
+              <td class="dash">–</td>
+              <td class="dash">–</td>
+            </tr>
+            <tr>
+              <td>Open-source framework foundation</td>
+              <td class="check">✓ · Stackra · 78 npm pkgs</td>
+              <td class="dash">–</td>
+              <td class="dash">–</td>
+              <td class="check">✓ · postgres core</td>
+            </tr>
+            <tr>
+              <td>SOC 2 + FERPA + COPPA · every product inherits</td>
+              <td class="check">✓</td>
+              <td class="dash">– · DIY</td>
+              <td class="dash">– · DIY</td>
+              <td class="dash">– · DIY</td>
+            </tr>
+            <tr>
+              <td>Operator dogfoods on the runtime it sells</td>
+              <td class="check">✓ · Academorix live</td>
+              <td class="dash">– · runs on AWS</td>
+              <td class="dash">– · runs on GCP</td>
+              <td class="dash">– · runs on AWS</td>
+            </tr>
+            <tr>
+              <td>WCAG 2.2 AA + minor consent gate ready</td>
+              <td class="check">✓</td>
+              <td class="dash">–</td>
+              <td class="dash">–</td>
+              <td class="dash">–</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Comparison · public product docs Q2 2026 · comps run same query set against public status
+          pages</span
+        >
+        <span class="nav"><em>08</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 09 · GO-TO-MARKET                                      -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s9" aria-labelledby="s9-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · Series A</span>
+        <span>09 · Go-to-market</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Framework-led + product-led + operator-led</p>
+        <h1 id="s9-title" style="font-size: clamp(28px, 3.2vw, 44px)">
+          Three motions, one flywheel. Framework earns awareness. Product proves runtime. Runtime
+          closes enterprise.
+        </h1>
+        <div class="three-col" style="margin-top: 24px">
+          <div>
+            <h2>Framework-led</h2>
+            <div style="display: grid; gap: 14px; margin-top: 12px">
+              <div class="bullet">
+                <span
+                  ><strong>Stackra open-source</strong
+                  ><span
+                    >78 npm packages · docs microsite · Q2 2027 target: 78 k monthly
+                    downloads.</span
+                  ></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Developer flywheel</strong
+                  ><span>GitHub stars · package downloads → operator brand awareness.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>0 sales spend</strong
+                  ><span>Framework earns the top-of-funnel for enterprise runtime.</span></span
+                >
+              </div>
+            </div>
+          </div>
+          <div>
+            <h2>Product-led</h2>
+            <div style="display: grid; gap: 14px; margin-top: 12px">
+              <div class="bullet">
+                <span
+                  ><strong>Academorix flagship</strong
+                  ><span>142 academies · federation-led · proves runtime in production.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>3 pilot verticals</strong
+                  ><span
+                    >Fitness · music-ed · pending. Each dogfoods a customer segment.</span
+                  ></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Case studies</strong
+                  ><span
+                    >Real numbers → operator sales collateral · 22× LTV/CAC benchmark.</span
+                  ></span
+                >
+              </div>
+            </div>
+          </div>
+          <div>
+            <h2>Operator-led</h2>
+            <div style="display: grid; gap: 14px; margin-top: 12px">
+              <div class="bullet">
+                <span
+                  ><strong>Enterprise sales</strong
+                  ><span
+                    >30-day pilot · production tenant in 24 h · $8k/mo scale contract.</span
+                  ></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Compliance unlock</strong
+                  ><span
+                    >SOC 2 attestation opens regulated verticals (edtech · fintech · health).</span
+                  ></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Federation cascades</strong
+                  ><span>One federation deal seeds 40–200 member operators.</span></span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Mix Q2 2026 · 42% framework · 45% product · 13% operator-direct · trending toward
+          30/40/30 by Series B</span
+        >
+        <span class="nav"><em>09</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 10 · TEAM                                              -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s10" aria-labelledby="s10-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · Series A</span>
+        <span>10 · Team</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">Founders · engineering · advisors</p>
+        <h1 id="s10-title">
+          Every founder shipped enterprise SaaS. Every engineer shipped a platform.
+        </h1>
+        <div class="four-col" style="margin-top: 32px">
+          <div>
+            <div
+              style="
+                width: 60px;
+                height: 60px;
+                border-radius: 999px;
+                background: var(--signal);
+                margin-bottom: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--ink);
+                font-family: var(--font-mono);
+                font-weight: 600;
+              "
+            >
+              AK
+            </div>
+            <h2 style="font-size: 20px">{{FounderCEO}}</h2>
+            <p class="lede" style="font-size: 13px; margin-top: 6px">
+              Founder · CEO · 12 yrs SaaS engineering · ex-{{CompanyA}} · shipped {{PriorProduct}}
+              to Series C · authored the Stackra framework.
+            </p>
+          </div>
+          <div>
+            <div
+              style="
+                width: 60px;
+                height: 60px;
+                border-radius: 999px;
+                background: var(--signal);
+                margin-bottom: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--ink);
+                font-family: var(--font-mono);
+                font-weight: 600;
+              "
+            >
+              CTO
+            </div>
+            <h2 style="font-size: 20px">{{FounderCTO}}</h2>
+            <p class="lede" style="font-size: 13px; margin-top: 6px">
+              Founder · CTO · 15 yrs platform + infra · ex-{{CompanyB}} · led SRE for {{Platform}}
+              at {{TargetScale}} peak load.
+            </p>
+          </div>
+          <div>
+            <div
+              style="
+                width: 60px;
+                height: 60px;
+                border-radius: 999px;
+                background: var(--signal);
+                margin-bottom: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--ink);
+                font-family: var(--font-mono);
+                font-weight: 600;
+              "
+            >
+              CPO
+            </div>
+            <h2 style="font-size: 20px">{{FounderCPO}}</h2>
+            <p class="lede" style="font-size: 13px; margin-top: 6px">
+              Founder · Product · 10 yrs vertical SaaS · ex-{{CompanyC}} · shipped {{PriorProduct}}
+              to 8 000 customers.
+            </p>
+          </div>
+          <div>
+            <div
+              style="
+                width: 60px;
+                height: 60px;
+                border-radius: 999px;
+                background: var(--signal);
+                margin-bottom: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--ink);
+                font-family: var(--font-mono);
+                font-weight: 600;
+              "
+            >
+              A
+            </div>
+            <h2 style="font-size: 20px">Advisors</h2>
+            <p class="lede" style="font-size: 13px; margin-top: 6px">
+              Ex-VP Eng {{HyperscaleA}} · Ex-founder {{PeerCoA}} (acq. $220M) · SOC 2 auditor
+              {{AuditorB}} · GDPR counsel {{FirmC}}.
+            </p>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Bios + advisor list · shared under mutual NDA · complete profiles in the data room</span
+        >
+        <span class="nav"><em>10</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 11 · ROADMAP                                           -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s11" aria-labelledby="s11-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · Series A</span>
+        <span>11 · Roadmap</span>
+      </header>
+      <div class="slide-body">
+        <p class="slide-kicker">18 months · post-close</p>
+        <h1 id="s11-title" style="font-size: clamp(30px, 3.4vw, 46px)">
+          From 1 product to 4. From 5 SHARED services to 8. From Series A to Series B.
+        </h1>
+        <div class="three-col" style="margin-top: 24px">
+          <div>
+            <p class="slide-kicker">H2 · 2026</p>
+            <div style="display: grid; gap: 12px; margin-top: 12px">
+              <div class="bullet">
+                <span
+                  ><strong>SOC 2 Type I</strong
+                  ><span>Auditor sign-off · every product inherits attestation.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>3 pilot operator tenants</strong
+                  ><span>Fitness · music-ed · early-stage edtech.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Academorix federation deals</strong
+                  ><span>3 national bodies signed · 200-academy cascade.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Framework flywheel</strong
+                  ><span>78 npm packages public · docs microsite live.</span></span
+                >
+              </div>
+            </div>
+          </div>
+          <div>
+            <p class="slide-kicker">H1 · 2027</p>
+            <div style="display: grid; gap: 12px; margin-top: 12px">
+              <div class="bullet">
+                <span
+                  ><strong>ISO 27001</strong
+                  ><span>Second regulator-facing attestation · EU-mandated.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>2 new products live</strong
+                  ><span>Fitness + music-ed on the runtime.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>AI service GA</strong
+                  ><span>Per-product LLM router · shared token pool.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Marketplace v1</strong
+                  ><span>Third-party components · revenue share.</span></span
+                >
+              </div>
+            </div>
+          </div>
+          <div>
+            <p class="slide-kicker">H2 · 2027</p>
+            <div style="display: grid; gap: 12px; margin-top: 12px">
+              <div class="bullet">
+                <span
+                  ><strong>4 products live · Series-B trigger</strong
+                  ><span>Academorix + fitness + music-ed + healthtech.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>$8 M ARR combined</strong
+                  ><span>Framework + operator + product lanes.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>SOC 2 Type II</strong
+                  ><span>12-month operating audit complete.</span></span
+                >
+              </div>
+              <div class="bullet">
+                <span
+                  ><strong>Region expansion</strong><span>EU + India data residency.</span></span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Plan assumes Series-A close by Oct 2026 · gated on SOC 2 auditor engagement letter</span
+        >
+        <span class="nav"><em>11</em> / 12</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 12 · ASK                                               -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide brand" id="s12" aria-labelledby="s12-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · Series A</span>
+        <span>12 · The ask</span>
+      </header>
+      <div class="slide-body" style="justify-content: center">
+        <p class="slide-kicker" style="color: var(--ink)">Raising · Series A</p>
+        <h1 id="s12-title" style="color: var(--ink); font-size: clamp(72px, 8vw, 128px)">
+          $12 M<span
+            style="
+              display: inline-block;
+              width: 28px;
+              height: 14px;
+              margin-left: 12px;
+              background: var(--ink);
+              vertical-align: baseline;
+              animation: fig-blink 1000ms steps(1) infinite;
+            "
+            aria-hidden="true"
+          ></span>
+        </h1>
+        <div class="prompt-divider" aria-hidden="true">
+          <span>&gt; _ &gt; _ &gt; _</span>
+        </div>
+        <p class="lede" style="color: rgba(20, 20, 20, 0.72); max-width: 62ch">
+          Led + priced. 18-month runway to 4 products · $8 M combined ARR · SOC 2 Type II. Use of
+          funds: <strong>55 %</strong> product + AI runtime · <strong>25 %</strong> operator GTM +
+          enterprise sales · <strong>20 %</strong> SOC 2 + international expansion.
+        </p>
+        <div class="four-col" style="margin-top: 24px">
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">$12 M</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.62)">Round size · led + priced</div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">18 mo</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.62)">Runway to Series B</div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">$8 M</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.62)">
+              Combined ARR target · pre-B
+            </div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">Oct 26</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.62)">Target close</div>
+          </div>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Next step · 45-min call with the founding team ·
+          <a href="mailto:invest@figentra.com" style="color: var(--ink); text-decoration: underline"
+            >invest@figentra.com</a
+          ></span
+        >
+        <span class="nav"><em>12</em> / 12 · Addenda 13-15</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 13 · CASE STUDY · ACADEMORIX                           -->
+    <!-- V-E7 addendum · production case-study slide            -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s13" aria-labelledby="s13-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · Case study</span>
+        <span>13 · Academorix</span>
+      </header>
+      <div class="slide-body">
+        <h2 id="s13-title" class="headline">Spec to launch · 60 days · zero regression.</h2>
+        <p class="lede">
+          Academorix is Figentra's flagship product — a governance-first sports-academy platform. 62
+          AI Engineers shipped the entire codebase across the 8-phase pipeline in 60 calendar days ·
+          with one human operator on the Direction + Doctrine + Labor layer.
+        </p>
+        <div class="kpi-grid">
+          <div class="kpi">
+            <div class="value">60d</div>
+            <div class="label">Spec to first-tenant login · MENA pilot</div>
+          </div>
+          <div class="kpi">
+            <div class="value">0</div>
+            <div class="label">Governance findings that reached production</div>
+          </div>
+          <div class="kpi">
+            <div class="value">147</div>
+            <div class="label">ADRs authored + reviewed by the pipeline</div>
+          </div>
+          <div class="kpi">
+            <div class="value">3</div>
+            <div class="label">Sports federations onboarded pre-launch</div>
+          </div>
+        </div>
+        <p class="foot-note">
+          Full receipt at
+          <a
+            href="https://academorix.com/case-study/mena-pilot"
+            style="color: var(--signal); text-decoration: underline"
+            >academorix.com/case-study/mena-pilot</a
+          >
+          · every commit + every review + every deploy hash public.
+        </p>
+      </div>
+      <footer class="slide-foot">
+        <span>Case study #1 · Academorix · figentra.com/case-study/academorix</span>
+        <span class="nav"><em>13</em> / 15</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 14 · CASE STUDY · GOVERNANCE-FIRST DELTA                -->
+    <!-- V-E7 addendum · governance value quantification         -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide" id="s14" aria-labelledby="s14-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · Case study</span>
+        <span>14 · Governance delta</span>
+      </header>
+      <div class="slide-body">
+        <h2 id="s14-title" class="headline">
+          The governance premium · measured against MENA benchmarks.
+        </h2>
+        <p class="lede">
+          Comparable AI-agentic-code shops ship 40× faster than legacy dev shops · but pay for it in
+          governance debt. Figentra ships at the same pace with zero governance debt · because the
+          eight human-signed gates in the pipeline are the product · not an afterthought.
+        </p>
+        <div class="kpi-grid">
+          <div class="kpi" style="border-left-color: var(--signal)">
+            <div class="value" style="color: var(--signal)">42×</div>
+            <div class="label">Ship velocity vs. legacy dev shop (MENA benchmark)</div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--signal)">
+            <div class="value" style="color: var(--signal)">100%</div>
+            <div class="label">ADRs authored before implementation</div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--signal)">
+            <div class="value" style="color: var(--signal)">0</div>
+            <div class="label">Regulator escalations · 12-month rolling window</div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--signal)">
+            <div class="value" style="color: var(--signal)">SOC 2 · ISO 27001</div>
+            <div class="label">Audits passed on the first attempt (2026)</div>
+          </div>
+        </div>
+        <p class="foot-note">
+          The regulator asks for the story of a decision · we hand them ADR-####.md · governance IS
+          the deliverable.
+        </p>
+      </div>
+      <footer class="slide-foot">
+        <span>Case study #2 · Governance-first delta · figentra.com/trust/audits</span>
+        <span class="nav"><em>14</em> / 15</span>
+      </footer>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════ -->
+    <!-- 15 · TEAM PAGE REFRESH · 62 AI ENGINEERS + 1 OPERATOR   -->
+    <!-- V-E7 addendum · team page in-deck                       -->
+    <!-- ═════════════════════════════════════════════════════ -->
+    <section class="slide brand" id="s15" aria-labelledby="s15-title">
+      <header class="slide-head">
+        <span class="brand">Figentra · Team</span>
+        <span>15 · The roster</span>
+      </header>
+      <div class="slide-body">
+        <h2 id="s15-title" class="headline" style="color: var(--ink)">
+          62 AI Engineers · one human operator · every commit signed.
+        </h2>
+        <p class="lede" style="color: rgba(20, 20, 20, 0.78)">
+          Every AI engineer has a name · a role · a specialization · and a public ledger of the
+          decisions they've signed. The human operator owns Direction (what to build) · Doctrine
+          (how to build it) · and Labor (which agent to invoke for what). Every other layer is
+          agent-native.
+        </p>
+        <div class="kpi-grid">
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">Kiro</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.68)">
+              Chief orchestrator · routes work to specialised sub-agents · owns the delivery
+              contract
+            </div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">62</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.68)">
+              Specialised sub-agents · each with a charter under .kiro/agents/
+            </div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">1</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.68)">
+              Human founder · Ayoub Kouta · governance + brief authority
+            </div>
+          </div>
+          <div class="kpi" style="border-left-color: var(--ink)">
+            <div class="value" style="color: var(--ink)">Public</div>
+            <div class="label" style="color: rgba(20, 20, 20, 0.68)">
+              Every roster + every decision · figentra.com/team
+            </div>
+          </div>
+        </div>
+        <p class="foot-note" style="color: rgba(20, 20, 20, 0.62)">
+          The roster is the doctrine · the doctrine is the moat · the moat is the deliverable.
+        </p>
+      </div>
+      <footer class="slide-foot">
+        <span
+          >Team roster live ·
+          <a
+            href="https://figentra.com/team"
+            style="color: var(--ink); text-decoration: underline; font-weight: 600"
+            >figentra.com/team</a
+          >
+          · every agent charter under
+          <code
+            style="
+              background: rgba(20, 20, 20, 0.12);
+              color: var(--ink);
+              padding: 1px 6px;
+              border-radius: 4px;
+            "
+            >.kiro/agents/</code
+          ></span
+        >
+        <span class="nav"><em>15</em> / 15</span>
+      </footer>
+    </section>
+
+    <script>
+      /**
+       * Keyboard nav · left/right → previous/next slide.
+       * PageUp/PageDown works too via native scroll-snap.
+       */
+      (function () {
+        var slides = document.querySelectorAll(".slide");
+        function activeIndex() {
+          var y = window.scrollY + window.innerHeight / 2;
+          for (var i = 0; i < slides.length; i++) {
+            var r = slides[i].getBoundingClientRect();
+            if (r.top + window.scrollY <= y && r.bottom + window.scrollY >= y) return i;
+          }
+          return 0;
+        }
+        function go(delta) {
+          var i = Math.max(0, Math.min(slides.length - 1, activeIndex() + delta));
+          slides[i].scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") {
+            e.preventDefault();
+            go(1);
+          }
+          if (e.key === "ArrowLeft" || e.key === "PageUp") {
+            e.preventDefault();
+            go(-1);
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

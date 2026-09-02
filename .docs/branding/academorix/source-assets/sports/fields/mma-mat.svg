@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="MMA cage diagram">
+  <style>
+    svg { color: #141414; }
+    @media (prefers-color-scheme: dark) {
+      svg { color: #fafafa; }
+    }
+  </style>
+
+  <title>MMA cage</title>
+  <desc>Line-art regulation MMA octagon — 30ft cage with center circle, corner posts, and touch-glove center mark. Track Orange accent on center + gate. Academorix v0.1.</desc>
+
+  <!-- Outer octagon (30ft cage) -->
+  <path d="M 275 20 L 525 20 L 720 155 L 720 345 L 525 480 L 275 480 L 80 345 L 80 155 Z"/>
+
+  <!-- Inner buffer zone (fighter buffer, dashed) -->
+  <path d="M 290 60 L 510 60 L 680 170 L 680 330 L 510 440 L 290 440 L 120 330 L 120 170 Z"
+        stroke-dasharray="4 6" opacity="0.55"/>
+
+  <!-- Center circle -->
+  <circle cx="400" cy="250" r="80"/>
+  <!-- Center touch-glove marker -->
+  <circle cx="400" cy="250" r="6" fill="#FF6B35" stroke="none"/>
+
+  <!-- Corner posts (8 posts, one per vertex) -->
+  <circle cx="275" cy="20" r="6" fill="currentColor" stroke="none"/>
+  <circle cx="525" cy="20" r="6" fill="currentColor" stroke="none"/>
+  <circle cx="720" cy="155" r="6" fill="currentColor" stroke="none"/>
+  <circle cx="720" cy="345" r="6" fill="currentColor" stroke="none"/>
+  <circle cx="525" cy="480" r="6" fill="currentColor" stroke="none"/>
+  <circle cx="275" cy="480" r="6" fill="currentColor" stroke="none"/>
+  <circle cx="80" cy="345" r="6" fill="currentColor" stroke="none"/>
+  <circle cx="80" cy="155" r="6" fill="currentColor" stroke="none"/>
+
+  <!-- Cage door / gate (marked in Track Orange) -->
+  <line x1="80" y1="220" x2="80" y2="280" stroke="#FF6B35" stroke-width="4"/>
+
+  <!-- Fighter starting positions (subtle marks) -->
+  <line x1="290" y1="250" x2="310" y2="250" opacity="0.55"/>
+  <line x1="490" y1="250" x2="510" y2="250" opacity="0.55"/>
+</svg>
