@@ -1,6 +1,5 @@
 /** Provider-neutral durable workflow contracts. */
 export type WorkflowExecutionStatus = 'pending' | 'running' | 'succeeded' | 'failed' | 'cancelled' | 'terminated' | 'paused';
-
 export type WorkflowProviderKind = 'cloudflare' | 'temporal' | 'vercel' | 'custom';
 
 export interface WorkflowRetryPolicy {
@@ -29,19 +28,16 @@ export interface WorkflowStartRequest<TPayload = unknown> {
   metadata?: Record<string, unknown>;
 }
 
-export interface WorkflowSignalRequest<TPayload = unknown> {
-  executionId: string;
-  signal: string;
-  payload?: TPayload;
-}
+export interface WorkflowSignalRequest<TPayload = unknown> { executionId: string; signal: string; payload?: TPayload; }
 
 export interface WorkflowProviderCapabilities {
-  pause?: boolean;
-  resume?: boolean;
-  signal?: boolean;
-  cancel?: boolean;
-  terminate?: boolean;
-  waitForEvent?: boolean;
+  pause: boolean;
+  resume: boolean;
+  signal: boolean;
+  cancel: boolean;
+  terminate: boolean;
+  waitForEvent: boolean;
+  query: boolean;
 }
 
 export interface WorkflowProvider {
@@ -57,22 +53,31 @@ export interface WorkflowProvider {
 }
 
 export interface WorkflowContext<TInput = unknown> {
-  executionId: string;
-  input: TInput;
-  metadata?: Record<string, unknown>;
-  signal?: AbortSignal;
+  readonly executionId: string;
+  readonly input: TInput;
+  readonly metadata?: Record<string, unknown>;
+  readonly signal?: AbortSignal;
+  readonly results: unknown[];
+}
+
+export type WorkflowHookType = 'before' | 'after' | 'onError' | 'compensate';
+export interface WorkflowHookDefinition<TContext = WorkflowContext> {
+  readonly type: WorkflowHookType;
+  readonly name: string;
+  readonly execute: (context: TContext, result?: unknown, error?: unknown) => Promise<unknown> | unknown;
 }
 
 export interface WorkflowStepDefinition<TContext = WorkflowContext, TResult = unknown> {
-  name: string;
-  execute: (context: TContext) => Promise<TResult> | TResult;
-  retry?: WorkflowRetryPolicy;
-  compensate?: (context: TContext, result?: TResult) => Promise<void> | void;
+  readonly name: string;
+  readonly execute: (context: TContext) => Promise<TResult> | TResult;
+  readonly retry?: WorkflowRetryPolicy;
+  readonly compensate?: (context: TContext, result?: TResult) => Promise<void> | void;
+  readonly hooks?: readonly WorkflowHookDefinition<TContext>[];
 }
 
 export interface WorkflowDefinition<TInput = unknown, TContext = WorkflowContext<TInput>> {
-  name: string;
-  version: string;
-  steps: readonly WorkflowStepDefinition<TContext, unknown>[];
-  metadata?: Record<string, unknown>;
+  readonly name: string;
+  readonly version: string;
+  readonly steps: readonly WorkflowStepDefinition<TContext, unknown>[];
+  readonly metadata?: Record<string, unknown>;
 }
