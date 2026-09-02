@@ -11,3 +11,4 @@ export class DefaultHealthService implements HealthServiceContract {
   unregister(name: string): boolean { return this.registry.unregister(name); }
   check(probe: HealthProbe = "all", context?: HealthCheckContext): Promise<HealthReport> { return this.evaluator.evaluate(this.registry.forProbe(probe), probe, context?.metadata); }
 }
+export function defineHealthService(options: CreateHealthServiceOptions = {}): DefaultHealthService { return new DefaultHealthService(options); }
