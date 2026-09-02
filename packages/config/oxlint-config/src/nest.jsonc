@@ -1,0 +1,17 @@
+{
+  // @stackra/oxlint-config/nest — NestJS services (TypeScript, decorators, DI).
+  //
+  // Usage — services/<name>/.oxlintrc.json:
+  //   { "extends": ["./node_modules/@stackra/oxlint-config/nest.jsonc"] }
+  "extends": ["./base.jsonc"],
+  "plugins": ["typescript", "unicorn", "oxc", "import"],
+  "env": {
+    "node": true
+  },
+  "rules": {
+    // NestJS modules are legitimately empty / marker classes.
+    "typescript/no-extraneous-class": "off",
+    // Type-aware rule: only fires under `oxlint --type-aware`. Inert otherwise.
+    "typescript/no-floating-promises": "warn"
+  }
+}

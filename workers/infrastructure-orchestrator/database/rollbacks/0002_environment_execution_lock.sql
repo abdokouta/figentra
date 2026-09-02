@@ -1,0 +1,1 @@
+DROP INDEX IF EXISTS uq_infrastructure_active_environment;

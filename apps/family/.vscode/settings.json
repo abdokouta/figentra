@@ -1,0 +1,46 @@
+{
+  "//": "Workspace-scoped VS Code settings for apps/family. Overrides the repo-root defaults where mobile needs different behaviour.",
+  "typescript.tsdk": "../../node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "never"
+  },
+  "files.associations": {
+    "*.jsonc": "jsonc",
+    ".doppler.yaml": "yaml"
+  },
+  "files.exclude": {
+    "**/.expo": true,
+    "**/ios/Pods": true,
+    "**/ios/build": true,
+    "**/android/.gradle": true,
+    "**/android/build": true,
+    "**/android/app/build": true
+  },
+  "search.exclude": {
+    "**/.expo": true,
+    "**/ios": true,
+    "**/android": true,
+    "**/coverage": true
+  },
+  "tailwindCSS.experimental.classRegex": [
+    [
+      "className={cn\\(([^)]*)\\)",
+      "\"([^\"]*)\""
+    ],
+    [
+      "className={cx\\(([^)]*)\\)",
+      "\"([^\"]*)\""
+    ],
+    [
+      "className={clsx\\(([^)]*)\\)",
+      "\"([^\"]*)\""
+    ],
+    [
+      "tv\\(([^)]*)\\)",
+      "[\"'`]([^\"'`]*)[\"'`]"
+    ]
+  ]
+}

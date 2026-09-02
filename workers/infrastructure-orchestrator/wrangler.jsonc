@@ -1,0 +1,60 @@
+// =============================================================================
+// @file wrangler.jsonc
+// @description Cloudflare configuration for the Infrastructure Orchestrator.
+//
+// The Worker is the control plane. Terraform execution occurs only inside the
+// dedicated Container class. The Worker never evaluates arbitrary shell input.
+// =============================================================================
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "figentra-infrastructure-orchestrator",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat", "rpc"],
+  "observability": { "enabled": true, "head_sampling_rate": 1 },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "figentra-infrastructure-orchestrator",
+      "database_id": "GENERATED_BY_TERRAFORM",
+      "migrations_dir": "database/migrations"
+    }
+  ],
+  "containers": [
+    {
+      "class_name": "TerraformRunner",
+      "image": "./runner/Dockerfile",
+      "max_instances": 3
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      { "name": "TERRAFORM_RUNNER", "class_name": "TerraformRunner" }
+    ]
+  },
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["TerraformRunner"] }
+  ],
+  "workflows": [
+    {
+      "name": "figentra-infrastructure-workflow",
+      "binding": "INFRA_WORKFLOW",
+      "class_name": "InfrastructureWorkflow",
+      "limits": { "steps": 10000 }
+    }
+  ],
+  "vars": {
+    "IDENTITY_JWKS_URL": "GENERATED_BY_TERRAFORM",
+    "IDENTITY_ISSUER": "GENERATED_BY_TERRAFORM",
+    "IDENTITY_AUDIENCE": "figentra:infrastructure-orchestrator",
+    "PLAN_PERMISSION": "infrastructure:terraform:read",
+    "APPLY_PERMISSION": "infrastructure:terraform:execute",
+    "DESTROY_PERMISSION": "infrastructure:terraform:destroy",
+    "TERRAFORM_REPOSITORY": "figentra/architecture"
+  },
+  "env": {
+    "development": { "name": "figentra-infrastructure-orchestrator-development" },
+    "staging": { "name": "figentra-infrastructure-orchestrator-staging" },
+    "production": { "name": "figentra-infrastructure-orchestrator" }
+  }
+}

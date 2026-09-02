@@ -1,0 +1,33 @@
+# Prettier does NOT read .gitignore — heavy / generated / vendored trees are
+# listed here explicitly so `pnpm format` (prettier --write .) stays fast and
+# never rewrites machine-owned or reference material.
+
+# Dependencies + package store
+node_modules
+.pnpm-store
+
+# Build + tool outputs
+dist
+build
+out
+.next
+coverage
+.turbo
+.vercel
+
+# Cloudflare Wrangler
+.wrangler
+.dev.vars
+.dev.vars.*
+
+# Terraform (state + provider mirror + generated catalog)
+.terraform
+*.tfstate
+*.tfstate.*
+infrastructure/terraform/catalog.json
+
+# Lockfiles (owned by the package manager, not the formatter)
+pnpm-lock.yaml
+
+# Reference material — inherited architecture snapshot, never reformatted
+.ref

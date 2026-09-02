@@ -1,0 +1,55 @@
+# ────────────────────────────────────────────────────────────────────────
+# .eas/workflows/production-release.yml — Academorix Family
+# ────────────────────────────────────────────────────────────────────────
+#
+# EAS Workflow triggered by `family-vX.Y.Z` tag pushes propagated from
+# gitlab.com/academorix/mobile via the one-way GitLab → GitHub push
+# mirror (see .kiro/steering/brand-hierarchy.md §"Current-reality —
+# GitLab is primary").
+#
+# ── Trigger ──────────────────────────────────────────────────────────
+#
+# The `on.push.tags` filter matches only the family-v* tag pattern
+# (per `mobile-apps-strategy.md` §Rule 9). Coach's workflow at
+# apps/coach/.eas/workflows/production-release.yml uses coach-v*.
+#
+# ── Credentials flow ─────────────────────────────────────────────────
+#
+# Android submit reads $GOOGLE_PLAY_SERVICE_ACCOUNT_JSON from Expo's
+# project-level file-type env var (uploaded via
+# `eas env:create production --type file --visibility secret`).
+# Expo materialises the file on the workflow runner + points the env
+# var at its absolute path. eas.json's `submit.production.android.
+# serviceAccountKeyPath` resolves the interpolation at submit time.
+#
+# ── iOS status ───────────────────────────────────────────────────────
+#
+# iOS build + submit jobs deferred until Apple team review completes.
+# When APP_STORE_CONNECT_APPLE_ID / _ASC_APP_ID / _APPLE_TEAM_ID land
+# in Doppler academorix-family/prd + get uploaded to Expo env vars,
+# add build_ios + submit_ios jobs mirroring the Android shape.
+# ────────────────────────────────────────────────────────────────────
+
+name: Family — Production release (Android)
+
+on:
+  push:
+    tags:
+      - "family-v*"
+
+jobs:
+  build_android:
+    name: Build Android
+    type: build
+    params:
+      platform: android
+      profile: production
+
+  submit_android:
+    name: Submit Android to Google Play
+    needs: [build_android]
+    type: submit
+    params:
+      platform: android
+      profile: production
+      build_id: ${{ needs.build_android.outputs.build_id }}

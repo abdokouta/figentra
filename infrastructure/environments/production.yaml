@@ -1,0 +1,20 @@
+environment: production
+branch: main
+log_level: warn
+production: true
+runtime:
+  node: '24'
+  http: fastify
+  edge: cloudflare-workers
+  messaging: nats
+  event_stream: nats-jetstream
+security:
+  identity_provider: supabase
+  authorization_authority: figentra-iam
+  nats_tls_required: true
+  manual_production_gate: true
+external:
+  doppler_config: prd
+  wrangler_environment: production
+  terraform_workspace: production
+  docker_compose: false

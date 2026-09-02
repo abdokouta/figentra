@@ -1,0 +1,13 @@
+{
+  // @stackra/oxlint-config/worker — Cloudflare Workers (Hono).
+  //
+  // Usage — workers/<name>/.oxlintrc.json:
+  //   { "extends": ["./node_modules/@stackra/oxlint-config/worker.jsonc"] }
+  "extends": ["./base.jsonc"],
+  "plugins": ["typescript", "unicorn", "oxc", "import"],
+  "env": {
+    // Cloudflare Workers expose Web-standard globals (fetch, Response, Request,
+    // URL, crypto, caches). The browser env is the closest predefined set.
+    "browser": true
+  }
+}

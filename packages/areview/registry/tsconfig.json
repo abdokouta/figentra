@@ -1,0 +1,16 @@
+{
+  "extends": "@stackra/typescript-config/base",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./dist"
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "coverage",
+    "__tests__"
+  ]
+}

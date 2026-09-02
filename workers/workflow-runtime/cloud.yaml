@@ -1,0 +1,48 @@
+# =============================================================================
+# Figentra deployable manifest — Workflow Runtime Worker
+# =============================================================================
+# This Worker is the generic durable execution runtime. It is not the Registry
+# and it is not an application workflow implementation. Applications register
+# workflow metadata in Registry and deploy executable workflow definitions into
+# this runtime bundle (or a dedicated runtime worker) through the same contract.
+# =============================================================================
+kind: worker
+slug: workflow-runtime
+brand: figentra
+plane: platform
+runtime: cloudflare-worker
+tier: control-plane
+source:
+  type: local
+  path: workers/workflow-runtime
+subdomain: workflows
+cloudflare_name: figentra-workflow-runtime
+doppler_project: figentra-workflow-runtime
+capabilities:
+  needs_d1: false
+  needs_kv: false
+  needs_r2: false
+  needs_queue: false
+  needs_durable_object: false
+  needs_workflow: true
+branch:
+  development: develop
+  staging: staging
+  production: main
+env_vars:
+  development:
+    LOG_LEVEL: debug
+  staging:
+    LOG_LEVEL: info
+  production:
+    LOG_LEVEL: warn
+observability:
+  sentry:
+    platform: javascript
+    enable: true
+  betterstack:
+    enable_uptime: true
+tags:
+  service: workflow-runtime
+  plane: platform
+  vendor: figentra

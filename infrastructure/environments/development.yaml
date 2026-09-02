@@ -1,0 +1,20 @@
+environment: development
+branch: develop
+log_level: debug
+production: false
+runtime:
+  node: '24'
+  http: fastify
+  edge: cloudflare-workers
+  messaging: nats
+  event_stream: nats-jetstream
+security:
+  identity_provider: supabase
+  authorization_authority: figentra-iam
+  nats_tls_required: true
+  manual_production_gate: false
+external:
+  doppler_config: dev
+  wrangler_environment: development
+  terraform_workspace: development
+  docker_compose: true

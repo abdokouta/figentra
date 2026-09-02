@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.npmrc
+.DS_Store
+.turbo/
+
+# Agent + operator scratch space — throw-away by contract.
+.tmp/
+tmp/
+
+# Local `npm pack` output.
+*.tgz
+.pnpm-store/

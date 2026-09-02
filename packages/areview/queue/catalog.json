@@ -1,0 +1,11 @@
+{
+  "package": {
+    "name": "@figentra/queue"
+  },
+  "purpose": "Provider-neutral queue contracts, named provider manager, and Cloudflare Queues, SQS, Redis and BullMQ adapters.",
+  "peer_deps": [
+    "@nestjs/bullmq",
+    "@nestjs/common",
+    "bullmq"
+  ]
+}

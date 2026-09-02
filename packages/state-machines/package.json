@@ -1,0 +1,43 @@
+{
+  "name": "@figentra/state-machines",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Framework-neutral typed state machines for domain state and guarded transitions.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "lint": "oxlint src",
+    "lint:fix": "oxlint --fix src",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "check-types": "pnpm run typecheck",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@stackra/oxlint-config": "workspace:*",
+    "@stackra/prettier-config": "workspace:*",
+    "@stackra/typescript-config": "workspace:*",
+    "@stackra/tsup-config": "workspace:*",
+    "oxlint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:",
+    "tsup": "catalog:",
+    "vitest": "catalog:"
+  }
+}

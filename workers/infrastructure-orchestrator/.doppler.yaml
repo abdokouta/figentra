@@ -1,0 +1,46 @@
+# =============================================================================
+# Figentra configuration manifest
+# =============================================================================
+#
+# @file workers/infrastructure-orchestrator/.doppler.yaml
+# @description This file is part of the Figentra declarative configuration
+#   system. It is consumed by the appropriate build, deployment, CI, local
+#   development, or release tooling. It is NOT a source of business logic.
+#
+# @security Secrets, private keys, credentials, access tokens, database URLs,
+#   and other sensitive material MUST NOT be committed to this file. Inject
+#   secrets through Doppler, CI protected variables, Wrangler secrets, or the
+#   target provider's secret-management facility.
+#
+# @change Any schema/data change must be reviewed with the owning service and
+#   the corresponding Terraform/CI/deployment generator. Generated files must
+#   not become a second source of truth.
+#
+# @environment Environment-specific values are explicit and limited to safe
+#   non-secret configuration. The canonical environments are dev, stg, and prd.
+# =============================================================================
+
+# =============================================================================
+# Doppler — @figentra/api-gateway  (Cloudflare Worker · Hono · edge gateway)
+# =============================================================================
+#
+# Binds workers/api-gateway to the `figentra-api-gateway` Doppler project.
+#
+# What lives here
+#   Edge-gateway runtime config + secrets: upstream service URLs
+#   (IAM_SERVICE_URL, TENANT_SERVICE_URL, MONETIZATION_SERVICE_URL,
+#   REGISTRY_URL), Clerk JWKS + publishable key for authn prevalidation,
+#   rate-limit + request-id config.
+#
+# What does NOT live here
+#   Workspace-tooling secrets      -> /.doppler.yaml (figentra-workspace)
+#   Each downstream service secret  -> that service's own .doppler.yaml
+#
+# Binding:  cd workers/api-gateway && doppler setup   (or root `pnpm doppler:setup`)
+# Configs:  dev · stg · prd    Override: DOPPLER_CONFIG=stg doppler run -- pnpm dev
+# Governance: .kiro/steering/doppler.md · AGENTS.md
+# =============================================================================
+
+setup:
+  project: figentra-api-gateway
+  config: dev

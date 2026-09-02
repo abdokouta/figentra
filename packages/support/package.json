@@ -1,0 +1,101 @@
+{
+  "name": "@stackra/support",
+  "version": "1.0.1",
+  "description": "Foundation utility layer for the Stackra framework \u2014 Str, Arr, Num, Env, Pipeline, Fluent, Uri, BaseRegistry, Manager, and 20+ helpers.",
+  "license": "MIT",
+  "author": {
+    "name": "Figentra L.L.C",
+    "email": "dev@figentra.com",
+    "url": "https://figentra.com"
+  },
+  "keywords": [
+    "stackra",
+    "support",
+    "utilities",
+    "helpers",
+    "collections",
+    "registry",
+    "manager"
+  ],
+  "homepage": "https://gitlab.com/stackra/frontend/framework/-/tree/main/src/support#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/stackra/frontend/framework.git",
+    "directory": "src/support"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/stackra/frontend/framework/-/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "import": "./dist/testing.mjs",
+      "require": "./dist/testing.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rimraf dist .turbo",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage --passWithNoTests"
+  },
+  "peerDependencies": {
+    "@stackra/testing": "workspace:*",
+    "@vivtel/metadata": "catalog:",
+    "collect.js": "catalog:",
+    "path-browserify": "catalog:",
+    "react": "catalog:",
+    "reflect-metadata": "catalog:"
+  },
+  "peerDependenciesMeta": {
+    "@stackra/testing": {
+      "optional": true
+    },
+    "@vivtel/metadata": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@stackra/testing": "workspace:*",
+    "@stackra/tsup-config": "workspace:*",
+    "@stackra/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/path-browserify": "catalog:",
+    "@vivtel/metadata": "catalog:",
+    "collect.js": "catalog:",
+    "path-browserify": "catalog:",
+    "react": "catalog:",
+    "reflect-metadata": "catalog:",
+    "rimraf": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

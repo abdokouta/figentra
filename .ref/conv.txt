@@ -1,0 +1,2533 @@
+Archive.zip
+Zip Archive
+check this my custom terraform system or what we have better?
+Analysis paused
+
+Yes. I would add all of these to the architecture, and I’ve produced the consolidated v5 document with the new decisions integrated rather than leaving them as disconnected notes.
+
+Download the final FIGENTRA_PLATFORM_SERVICE_BOUNDARIES_v5.md
+
+Key decisions now locked
+
+Actors
+
+User
+Service Account
+System
+Integration Actor
+All go through the same IAM authorization model.
+
+Events
+
+Not every action becomes an event.
+Meaningful business state transitions do.
+Reads don't.
+Commands, domain events, and audit events are separate concepts.
+Transactional Outbox → durable event delivery → idempotent consumers.
+
+Integrations / App Store
+
+Added a proper Integration Platform.
+Applications ≠ Integrations.
+Tenant can install/connect/configure/pause/disconnect integrations.
+OAuth/API credentials are isolated from Registry/frontend.
+Feature flags only control rollout/beta availability.
+Entitlements + installation + connection state determine actual availability.
+Marketplace can eventually contain Applications, Integrations, Extensions and Connectors.
+
+Versioning
+
+Added a platform-wide @figentra/versioning.
+Covers:
+REST APIs
+Webhooks
+Events
+Workflows
+Integrations
+SDK compatibility
+Application/manifest versions
+Explicit compatibility/deprecation/sunset model similar to mature platforms.
+
+Workflows
+
+Added @figentra/workflows.
+Architecture is inspired by Medusa's Workflow SDK, particularly its workflow/step/compensation model and pluggable workflow engine. Medusa's current docs describe workflows as sequences of steps with rollback/consistency semantics and a replaceable workflow engine.
+But we don't make Figentra dependent on Medusa.
+Workflow ≠ event:
+Workflow orchestrates work.
+Event announces a completed fact.
+
+ORM
+
+Final decision: MikroORM, not TypeORM.
+Default entity style: defineEntity + class.
+Decorators remain available selectively.
+MikroORM's current documentation explicitly recommends the defineEntity + class pattern and provides strong TypeScript inference.
+This also fits better with the architecture we've been designing around explicit metadata/compilation.
+
+Controllers
+
+Not one controller per action.
+Not one gigantic controller per application.
+Use bounded-context/resource controllers:
+ProductsController
+OrdersController
+CustomersController
+
+Standard CRUD:
+
+GET    /products
+GET    /products/:id
+POST   /products
+PATCH  /products/:id
+DELETE /products/:id
+
+Business commands:
+
+POST /products/:id/publish
+POST /orders/:id/refund
+POST /orders/:id/cancel
+POST /domains/:id/verify
+POST /integrations/:id/reconnect
+
+The controller stays thin:
+
+Controller
+    ↓
+Command / Query
+    ↓
+Use Case
+    ↓
+Domain
+    ↓
+Repository / Transaction
+    ↓
+Outbox
+    ↓
+Events
+
+And the frontend remains exactly as we decided:
+
+Vite
+  ↓
+React Router 7
+  ↓
+HeroUI Pro + Stackra UI
+  ↓
+Stackra Query
+  ↓
+Figentra API
+
+No Refine, no SDUI, and no duplicate query/HTTP abstraction.
+
+FIGENTRA_PLATFORM_SERVICE_BOUNDARIES_v5.md
+Document
+After we have done v5 what are all missing for figentra paaS and any sevice extra or existing extra capabilities
+
+Yes. After v5, the core SaaS platform architecture is strong, but if the goal is truly Figentra as a PaaS / platform-of-platforms, there are several important capabilities still missing.
+
+The biggest gap is that v5 describes the application/control plane very well, but not yet the complete developer/platform operations plane.
+
+Cloudflare now gives us a lot of primitives we can exploit: Workers, Containers, Queues, Workflows, R2, KV, Durable Objects, Hyperdrive, Analytics Engine, Vectorize, etc.
+
+I would add the following.
+
+1. The missing big picture
+
+I would divide Figentra into 5 planes, not just services:
+
+                         FIGENTRA
+                            │
+       ┌────────────────────┼────────────────────┐
+       │                    │                    │
+   CONTROL PLANE       APPLICATION PLANE     DEVELOPER PLANE
+       │                    │                    │
+       │                    │                    │
+   Identity             Commerce              Projects
+   Tenant               CRM                   Environments
+   IAM                   POS                   Deployments
+   Billing               Analytics             Builds
+   Domains               Custom Apps           Releases
+   Entitlements                                Secrets
+   Registry                                     Logs
+   Integrations                                 Metrics
+       │                                         │
+       └────────────────┬────────────────────────┘
+                        │
+                  PLATFORM PLANE
+                        │
+          Cloudflare / Postgres / R2 / Queues
+                        │
+                  OBSERVABILITY PLANE
+                        │
+            Logs / Metrics / Traces / Audit
+
+This is the major thing I think we were missing.
+
+2. PaaS / Project Service
+
+If Figentra is genuinely a PaaS, we need a first-class:
+
+Project Service
+
+A project is not a tenant and not an application.
+
+Example:
+
+Tenant
+│
+├── Project: Commerce Platform
+│   ├── Application: Admin
+│   ├── Application: Storefront
+│   ├── Application: API
+│   └── Application: Worker
+│
+├── Project: CRM
+│   ├── Application: Web
+│   └── Application: API
+
+A project should contain:
+
+project
+environment
+applications
+services
+resources
+deployments
+domains
+secrets
+variables
+integrations
+usage
+logs
+metrics
+
+This is essential for a PaaS.
+
+3. Environment Service
+
+We need:
+
+development
+staging
+production
+preview
+
+as first-class environments.
+
+Example:
+
+Project
+│
+├── Development
+├── Preview #142
+├── Staging
+└── Production
+
+Each environment gets:
+
+configuration
+secrets
+domains
+deployments
+service bindings
+database connections
+feature configuration
+
+Environment isolation should be explicit.
+
+4. Deployment Service
+
+This is probably the largest missing service.
+
+We need:
+
+Deployment Service
+
+with:
+
+Deployment
+├── source
+├── commit
+├── branch
+├── build
+├── artifact
+├── environment
+├── deployment status
+├── rollout
+├── health
+└── rollback
+
+Lifecycle:
+
+Git push
+   ↓
+Build
+   ↓
+Artifact
+   ↓
+Deploy
+   ↓
+Health check
+   ↓
+Traffic switch
+   ↓
+Success
+
+And:
+
+rollback
+redeploy
+promote
+cancel
+retry
+
+Cloudflare already supports automatic resource provisioning for Workers deployments and a wide range of bindings, which makes it a strong infrastructure layer underneath this abstraction.
+
+5. Build Service
+
+Separate:
+
+Build
+
+from:
+
+Deployment
+
+Build Service:
+
+source
+   ↓
+build environment
+   ↓
+dependencies
+   ↓
+tests
+   ↓
+artifact
+
+We need:
+
+Build
+BuildJob
+BuildArtifact
+BuildLog
+BuildCache
+BuildEnvironment
+
+Eventually:
+
+GitHub
+GitLab
+Bitbucket
+
+webhooks can trigger builds.
+
+6. Artifact Service / Registry
+
+We need an artifact system.
+
+Potential artifacts:
+
+Docker images
+Node packages
+PHP packages
+Frontend bundles
+Worker bundles
+Container images
+SDKs
+OpenAPI documents
+Application manifests
+
+For containers, Cloudflare Containers can be part of the runtime layer, while the artifact lifecycle should remain Figentra-controlled.
+
+7. Secrets Service
+
+This is mandatory.
+
+We mentioned secrets before, but it deserves a first-class boundary.
+
+Secrets Service
+
+Capabilities:
+
+create
+read
+rotate
+revoke
+version
+audit
+scope
+expire
+
+Example:
+
+production
+ ├── DATABASE_URL
+ ├── STRIPE_SECRET_KEY
+ ├── CLERK_SECRET_KEY
+ └── SHOPIFY_CLIENT_SECRET
+
+Secrets must never enter:
+
+Application Registry
+Frontend runtime
+Manifest
+Git
+logs
+events
+
+Cloudflare itself now provides Secrets Store and supports bindings to resources, so we should integrate rather than invent another secret-storage mechanism where appropriate.
+
+8. Configuration Service
+
+Separate:
+
+Secrets
+
+from:
+
+Configuration
+
+Configuration can safely contain:
+
+API URL
+timeouts
+limits
+feature configuration
+UI settings
+region
+logging level
+
+Architecture:
+
+Configuration
+     +
+Secrets
+     ↓
+Environment
+     ↓
+Application
+9. Service Catalog
+
+We have an Application Registry.
+
+We should additionally have:
+
+Platform Service Registry
+
+It answers:
+
+What backend services exist?
+
+Example:
+
+IAM
+Tenant
+Billing
+Notification
+Search
+Reporting
+Usage
+Integration
+Workflow
+
+Metadata:
+
+service
+version
+owner
+environment
+health
+dependencies
+API
+events
+workflows
+database
+deployment
+
+This becomes very useful for developers and AI agents.
+
+10. Dependency Graph
+
+The Registry should eventually understand:
+
+Commerce
+ ├── IAM
+ ├── Tenant
+ ├── Monetization
+ ├── Notification
+ ├── Search
+ └── Usage
+
+So we have:
+
+Service Dependency Graph
+
+This enables:
+
+deployment ordering
+impact analysis
+health analysis
+architecture visualization
+AI-assisted debugging
+11. Observability Platform
+
+This is another major missing piece.
+
+We need first-class:
+
+Logs
+Metrics
+Traces
+Events
+Audit
+
+not just "logging."
+
+Cloudflare provides real-time logs/analytics and Workers observability, while OpenTelemetry is the right abstraction for application-level telemetry.
+
+I would standardize on:
+
+OpenTelemetry
+
+for:
+
+traces
+metrics
+logs correlation
+
+with:
+
+trace_id
+span_id
+request_id
+correlation_id
+tenant_id
+actor_id
+service
+environment
+deployment
+12. Central Log Service
+
+Need:
+
+Log ingestion
+Log search
+Log retention
+Log correlation
+Log export
+
+But don't build another Elasticsearch immediately.
+
+Potential architecture:
+
+Applications
+    ↓
+OpenTelemetry
+    ↓
+Log Pipeline
+    ↓
+Cloudflare / storage / log backend
+
+R2 is particularly useful for cheap long-term object/log/event retention because it is S3-compatible and has no egress fees.
+
+13. Metrics Service
+
+We need platform metrics such as:
+
+requests
+latency
+errors
+CPU
+memory
+queue depth
+workflow duration
+DB latency
+cache hit rate
+billing usage
+
+And business metrics:
+
+orders
+revenue
+active users
+subscriptions
+
+These should remain conceptually different.
+
+14. Tracing
+
+Distributed Figentra absolutely needs tracing.
+
+Example:
+
+Request
+ ↓
+Gateway
+ ↓
+IAM
+ ↓
+Commerce
+ ↓
+Workflow
+ ↓
+Postgres
+ ↓
+Notification
+
+One:
+
+trace_id
+
+should allow us to follow the entire operation.
+
+15. Health / Readiness Service
+
+Each service needs:
+
+/health
+/readiness
+/liveness
+
+But additionally we need platform-level:
+
+Service Health
+Dependency Health
+Environment Health
+Deployment Health
+
+So the PaaS can tell:
+
+Commerce is degraded because PostgreSQL latency increased.
+
+rather than merely:
+
+Commerce is unhealthy.
+
+16. Incident / Status Service
+
+For a real platform:
+
+Incident Service
+
+and:
+
+Status Page
+
+Eventually:
+
+status.figentra.com
+
+Capabilities:
+
+incident
+severity
+affected services
+affected regions
+timeline
+updates
+resolution
+postmortem
+
+This is an important SaaS/PaaS capability.
+
+17. Rate Limit / Quota Service
+
+We have entitlements, but we need to distinguish:
+
+Permission
+Entitlement
+Quota
+Rate Limit
+Usage
+
+Example:
+
+Permission:
+user can export
+
+Entitlement:
+tenant has exports
+
+Quota:
+10,000 exports/month
+
+Rate limit:
+10 export requests/minute
+
+Usage:
+7,245 exports consumed
+
+These should never be conflated.
+
+18. Policy Engine
+
+IAM permissions aren't always enough.
+
+We eventually need:
+
+Policy Engine
+
+for contextual authorization:
+
+Can user X refund order Y?
+
+based on:
+
+role
+tenant
+resource
+ownership
+amount
+location
+time
+risk
+approval state
+
+Example:
+
+refund <= $500
+    → manager
+
+refund > $500
+    → finance approval
+
+This also integrates beautifully with the workflow system.
+
+19. Approval Service
+
+We have workflows but should explicitly support:
+
+Approval
+
+Examples:
+
+Refund approval
+Domain approval
+Application installation
+Integration access
+Production deployment
+Role escalation
+Sensitive data access
+
+Model:
+
+ApprovalRequest
+ApprovalStep
+Approver
+Decision
+Escalation
+20. Scheduler
+
+We need a first-class scheduler.
+
+Schedule
+Cron
+Delayed Job
+Recurring Workflow
+
+Examples:
+
+every night → reconciliation
+every hour → usage aggregation
+every week → reports
+subscription expires → workflow
+
+Cloudflare already provides Cron/Workflows/Queues capabilities, so Figentra should expose a platform abstraction rather than implement its own scheduling infrastructure.
+
+21. File / Media Service
+
+We discussed R2 but should elevate this to:
+
+File Service
+
+Capabilities:
+
+upload
+download
+presigned URLs
+metadata
+virus scanning
+image processing
+variants
+permissions
+retention
+deletion
+tenant isolation
+
+Architecture:
+
+File API
+ ↓
+R2
+ ↓
+processing workflow
+22. Data Export / Import
+
+Enterprise SaaS absolutely needs:
+
+Export
+Import
+Backup
+Restore
+
+Tenant should be able to export:
+
+users
+customers
+orders
+configuration
+audit logs
+files
+reports
+
+This is also important for compliance.
+
+23. Data Lifecycle Service
+
+Need policies for:
+
+retention
+archival
+deletion
+anonymization
+legal hold
+purging
+
+Especially:
+
+tenant deletion
+user deletion
+GDPR-style deletion
+expired logs
+expired files
+billing history
+24. Backup / Disaster Recovery
+
+This is missing from v5.
+
+Need:
+
+Backup policy
+Recovery Point Objective
+Recovery Time Objective
+Restore testing
+Cross-region recovery
+Database snapshots
+Object replication
+
+And most importantly:
+
+A backup that has never been restored is not considered a tested backup.
+
+25. Data Residency
+
+For enterprise tenants:
+
+region
+data residency
+storage region
+processing region
+backup region
+
+Example:
+
+Tenant
+ └── region = eu-west
+
+Later:
+
+EU
+KSA
+UAE
+US
+
+This affects:
+
+Postgres
+R2
+logs
+analytics
+backups
+AI
+26. Compliance Service
+
+Eventually:
+
+Compliance
+
+with:
+
+SOC 2
+ISO 27001
+GDPR
+PCI scope management
+HIPAA where applicable
+
+Don't build certification-specific machinery now, but the architecture should support:
+
+Audit
+Evidence
+Policies
+Controls
+Access reviews
+27. Access Review
+
+Enterprise IAM needs periodic:
+
+Access Review
+
+Example:
+
+Show me all users who have production administrator access.
+
+Then:
+
+review
+approve
+revoke
+expire
+
+This becomes important once Figentra targets enterprise.
+
+28. SCIM / Enterprise Provisioning
+
+Clerk handles identity, but Figentra should eventually support enterprise lifecycle provisioning:
+
+SCIM
+SAML
+OIDC
+JIT provisioning
+Group mapping
+Domain verification
+
+Especially:
+
+Microsoft Entra
+Okta
+Google Workspace
+
+Clerk may provide some of the identity-side functionality, but Figentra needs to define how enterprise organization membership maps into its IAM/tenant model.
+
+29. API Management
+
+We have APIs, but a PaaS needs:
+
+API Gateway
+API Keys
+OAuth Apps
+Scopes
+Rate Limits
+Usage
+Quotas
+Versioning
+Deprecation
+Developer Portal
+
+The missing piece is the:
+
+Developer Portal
+
+Something like:
+
+developers.figentra.com
+
+with:
+
+API documentation
+OpenAPI
+SDKs
+API keys
+OAuth apps
+Webhooks
+Event subscriptions
+Sandbox
+Usage
+Logs
+Changelog
+Versions
+30. Webhook Platform
+
+We already have webhook contracts, but we need the complete platform:
+
+Webhook Endpoint
+Subscription
+Delivery
+Retry
+Signature
+Replay
+Dead Letter
+Logs
+Testing
+
+Dashboard:
+
+Webhook
+├── deliveries
+├── success
+├── failed
+├── retries
+└── replay
+
+This is extremely important for integrations.
+
+31. Event Replay
+
+Because we're using events, add:
+
+Event Store / Event Archive
+
+not necessarily event sourcing.
+
+Keep events for:
+
+replay
+debugging
+integration recovery
+analytics
+audit correlation
+
+Then:
+
+event
+ ↓
+consumer failed
+ ↓
+replay
+32. Dead Letter Platform
+
+Every asynchronous subsystem should have:
+
+DLQ
+
+for:
+
+queues
+webhooks
+events
+notifications
+integrations
+workflows
+
+And UI:
+
+Failed Jobs
+ ↓
+Inspect
+ ↓
+Retry
+ ↓
+Replay
+ ↓
+Discard
+33. Notification Preferences
+
+Notification Service needs another layer:
+
+Notification Preferences
+
+For:
+
+user
+tenant
+application
+event
+channel
+
+Example:
+
+Order Failed
+
+Email: ON
+Push: ON
+SMS: OFF
+In-app: ON
+
+Also:
+
+quiet hours
+digest
+frequency
+language
+timezone
+34. Localization
+
+A platform serving multiple applications needs:
+
+Locale
+Language
+Timezone
+Currency
+Number formatting
+Date formatting
+Translation catalog
+
+This should be a platform capability, not reimplemented per application.
+
+35. Search Platform
+
+v5 has Search, but I'd add:
+
+Search Registry
+Search Index
+Search Document
+Search Projection
+Reindex Job
+
+Application declares:
+
+Products → index
+Customers → index
+Orders → index
+
+Events update indexes.
+
+36. Reporting / Analytics Platform
+
+Likewise, formalize:
+
+Fact Registry
+Metric Registry
+Dimension Registry
+Report Registry
+Dashboard Registry
+
+And:
+
+Operational query
+≠
+Analytical query
+
+Don't make reporting hammer production Postgres.
+
+Eventually:
+
+Postgres
+ ↓
+Events
+ ↓
+Analytics pipeline
+ ↓
+Warehouse/OLAP
+ ↓
+Reports
+37. Feature Flags vs Experimentation
+
+We discussed feature flags.
+
+I'd distinguish:
+
+Feature Flags
+
+from:
+
+Experiments
+
+Flag:
+
+newCheckout = true
+
+Experiment:
+
+50% checkout A
+50% checkout B
+measure conversion
+
+Don't build experimentation yet, but leave the abstraction boundary.
+
+38. Cost / FinOps Service
+
+A PaaS absolutely needs:
+
+Usage
+Cost
+Budget
+Forecast
+Alerts
+
+For Figentra itself:
+
+Cloudflare costs
+Supabase
+Stripe
+Paddle
+AI providers
+Email
+Storage
+Compute
+
+For tenants:
+
+requests
+storage
+bandwidth
+jobs
+AI tokens
+API calls
+seats
+events
+
+Then:
+
+Usage
+ ↓
+Pricing
+ ↓
+Cost
+ ↓
+Invoice
+39. Internal Platform Billing vs Customer Billing
+
+This is important.
+
+There are actually two billing domains:
+
+Figentra Revenue
+        |
+        v
+Tenant Billing
+
+and:
+
+Figentra Infrastructure Cost
+        |
+        v
+FinOps
+
+Don't mix them.
+
+40. AI Platform Service
+
+Given Figentra's direction, I'd add:
+
+AI Gateway
+
+eventually.
+
+Capabilities:
+
+model registry
+provider adapters
+API keys
+token usage
+cost tracking
+rate limits
+quotas
+prompt/version management
+model routing
+fallback
+AI audit
+
+Architecture:
+
+Application
+   ↓
+Figentra AI Gateway
+   ↓
+OpenAI / Anthropic / Gemini / Workers AI / etc.
+
+Cloudflare Workers AI and Vectorize are now native pieces of the Workers ecosystem.
+
+41. Tenant Support / Impersonation
+
+For enterprise operations:
+
+Support Service
+
+with controlled:
+
+impersonation
+tenant context
+support sessions
+audit
+approval
+expiration
+
+Never allow:
+
+admin → silently impersonate
+
+Instead:
+
+Support Request
+ ↓
+approval
+ ↓
+temporary session
+ ↓
+everything audited
+42. Customer Support Integration
+
+Eventually integrate:
+
+Intercom
+Zendesk
+Freshdesk
+
+but don't make support SaaS a core service initially.
+
+The core Figentra capability should be:
+
+Support Context
+
+which exposes:
+
+tenant
+user
+subscriptions
+entitlements
+usage
+errors
+deployments
+audit
+
+to support agents.
+
+43. Security / Abuse Platform
+
+Another missing major capability:
+
+Security & Abuse
+
+including:
+
+IP reputation
+bot detection
+abuse detection
+suspicious login
+API abuse
+rate-limit violations
+credential compromise
+tenant isolation violations
+
+Cloudflare can handle a lot of edge security, but Figentra still needs application-level abuse policy.
+
+44. Encryption / Key Management
+
+Eventually:
+
+KMS
+Encryption keys
+Key rotation
+Tenant encryption
+Credential encryption
+
+Don't necessarily build KMS yourself.
+
+Use:
+
+Cloudflare Secrets/KMS-equivalent facilities
+AWS KMS
+external KMS
+
+depending on the deployment boundary.
+
+45. Environment Promotion
+
+PaaS needs:
+
+Development
+      ↓
+Preview
+      ↓
+Staging
+      ↓
+Production
+
+with:
+
+promotion
+approval
+deployment policy
+rollback
+
+This should integrate with:
+
+IAM
+Approval
+Workflow
+Deployment
+Audit
+46. Preview Environments
+
+This is a very good PaaS feature:
+
+PR #182
+ ↓
+Preview Environment
+ ↓
+preview-182.figentra.app
+
+Automatic:
+
+build
+deploy
+domain
+database branch/sandbox
+secrets
+cleanup
+
+This will be very useful for AI-assisted development.
+
+47. Platform CLI
+
+I strongly recommend:
+
+figentra CLI
+
+Example:
+
+figentra login
+
+figentra project create commerce
+
+figentra env create staging
+
+figentra secret set STRIPE_KEY
+
+figentra deploy
+
+figentra logs
+
+figentra events replay
+
+figentra workflow run
+
+figentra domains add
+
+figentra api generate
+
+figentra sdk generate
+
+This becomes the developer interface to the platform.
+
+48. Platform SDK
+
+Then:
+
+@figentra/sdk
+
+with:
+
+IAM
+Tenant
+Projects
+Applications
+Deployments
+Domains
+Secrets
+Integrations
+Billing
+Usage
+Logs
+Events
+Webhooks
+Workflows
+
+And generated application SDKs separately:
+
+@figentra/commerce-sdk
+@figentra/crm-sdk
+49. Infrastructure-as-Code API
+
+Since we're already using Terraform, expose Figentra resources through a Terraform provider eventually:
+
+resource "figentra_project" {}
+
+resource "figentra_application" {}
+
+resource "figentra_environment" {}
+
+resource "figentra_domain" {}
+
+resource "figentra_integration" {}
+
+This turns Figentra itself into an infrastructure platform.
+
+50. GitOps
+
+For enterprise deployments:
+
+Git
+ ↓
+Manifest
+ ↓
+CI
+ ↓
+Figentra
+ ↓
+Environment
+
+Could eventually support:
+
+figentra.yaml
+
+describing:
+
+project:
+environment:
+applications:
+services:
+domains:
+secrets:
+integrations:
+
+This is very powerful for AI agents.
+
+51. AI Agent / Automation Plane
+
+Given how you're developing with AI, I'd explicitly design:
+
+Figentra Agent API
+
+An AI agent should be able to safely query:
+
+projects
+applications
+deployments
+logs
+metrics
+events
+workflows
+domains
+integrations
+usage
+
+and execute controlled actions:
+
+deploy
+rollback
+restart
+rotate secret
+replay webhook
+retry workflow
+create environment
+
+through IAM-scoped service accounts.
+
+That means:
+
+AI Agent
+ ↓
+Service Account
+ ↓
+IAM
+ ↓
+Policy
+ ↓
+Workflow
+ ↓
+Action
+
+This could become one of Figentra's strongest differentiators.
+
+52. What I Would NOT Build Yet
+
+There are also things we should deliberately not add now.
+
+Don't build:
+Custom Kubernetes control plane
+Custom container scheduler
+Custom identity system
+Custom SDUI
+Custom ORM
+Custom message broker
+Custom object storage
+Custom feature flag engine
+Custom CDN
+Custom DNS
+Custom payment processor
+Custom email provider
+
+Cloudflare already gives us a substantial infrastructure substrate, including Workers, Containers, Queues, Workflows, R2, KV, Durable Objects and Hyperdrive.
+
+Use those primitives instead of recreating infrastructure.
+
+53. The Revised Figentra Architecture
+
+I would now structure the whole platform into:
+
+FIGENTRA
+│
+├── 1. IDENTITY PLANE
+│   └── Clerk
+│
+├── 2. CONTROL PLANE
+│   ├── Tenant
+│   ├── IAM
+│   ├── Actors
+│   ├── Domains
+│   ├── Applications
+│   ├── Registry
+│   ├── Integrations
+│   ├── Entitlements
+│   ├── Feature Flags
+│   └── Versioning
+│
+├── 3. DEVELOPER / PaaS PLANE
+│   ├── Projects
+│   ├── Environments
+│   ├── Builds
+│   ├── Artifacts
+│   ├── Deployments
+│   ├── Releases
+│   ├── Secrets
+│   ├── Configuration
+│   ├── Preview Environments
+│   ├── CLI
+│   ├── SDK
+│   └── Terraform Provider
+│
+├── 4. APPLICATION PLANE
+│   ├── Commerce
+│   ├── CRM
+│   ├── POS
+│   ├── Analytics
+│   └── Future Apps
+│
+├── 5. PLATFORM SERVICES
+│   ├── Notification
+│   ├── Search
+│   ├── Reporting
+│   ├── Usage
+│   ├── Workflow
+│   ├── Files
+│   ├── Webhooks
+│   ├── Scheduler
+│   ├── AI Gateway
+│   └── Approval
+│
+├── 6. OPERATIONS PLANE
+│   ├── Logs
+│   ├── Metrics
+│   ├── Traces
+│   ├── Health
+│   ├── Incidents
+│   ├── Status
+│   ├── Audit
+│   ├── Backup
+│   ├── DR
+│   └── FinOps
+│
+└── 7. SECURITY / COMPLIANCE
+    ├── Policies
+    ├── Access Reviews
+    ├── SCIM/SSO
+    ├── Abuse
+    ├── KMS
+    ├── Data Retention
+    ├── Data Export
+    └── Compliance
+54. Priority: What We Should Add to v6
+
+I would not turn all 40+ things above into microservices.
+
+That's the trap.
+
+I'd make the next architectural version classify them into:
+
+P0 — Must exist before serious PaaS
+Project
+Environment
+Deployment
+Build
+Artifact
+Secrets
+Configuration
+Observability
+Audit
+Rate Limits / Quotas
+Webhook Platform
+Scheduler
+Backup / DR
+Developer Portal
+CLI / SDK
+P1 — Platform maturity
+Approval
+Policy Engine
+Access Reviews
+SCIM
+Data Lifecycle
+Data Export
+FinOps
+Incident/Status
+Preview Environments
+Integration Marketplace
+Event Replay
+DLQ management
+P2 — Differentiation
+AI Gateway
+AI Agent API
+Terraform Provider
+GitOps
+Experimentation
+Advanced analytics
+Multi-region data residency
+Don't build
+Kubernetes
+custom identity
+custom SDUI
+custom broker
+custom storage
+custom CDN
+custom DNS
+custom payment processor
+One particularly important correction
+
+Cloudflare Workflows changes our previous workflow decision.
+
+Cloudflare now has a native durable Workflows platform with persisted state, automatic retries, long-running execution and human-in-the-loop pauses.
+
+And Cloudflare's own guidance distinguishes:
+
+Queues → decoupling, fan-out, buffering, batching, simple background jobs.
+Workflows → multi-step durable execution where individual steps can retry independently.
+
+So for Figentra:
+
+Simple async
+    → Cloudflare Queues
+
+Durable multi-step orchestration
+    → Cloudflare Workflows
+
+Complex application-domain workflow API
+    → @figentra/workflows
+       backed by an appropriate engine
+
+We should not prematurely build our own workflow engine if Cloudflare Workflows satisfies the runtime requirements. That should be revisited in v6.
+
+Bottom line
+
+v5 gave us the SaaS/application control plane.
+
+To make it a true Figentra PaaS, the biggest additions are:
+
+Projects → Environments → Builds → Artifacts → Deployments → Secrets → Observability → Developer Portal → CLI/SDK → Webhooks → Quotas → Backup/DR → Security/Compliance.
+
+Those are the major missing platform capabilities.
+
+We need to compare between cf and aws for sqs, ecs, workers and so on .. as aws gives free tier which one better and cheaper
+
+We dont need this advanced paas for deployments and so on.  We will manage new product deployments from terraform we can create api to run it?
+
+For billing we have figentra->academorix->barclona->parent
+
+Yes — this changes the PaaS scope significantly. If Figentra is not itself going to become a Heroku/Vercel/Render-style deployment platform, I would remove most of the advanced PaaS machinery I proposed earlier.
+
+Your model is:
+
+Figentra
+   ↓
+Platform / Control Plane
+   ↓
+Terraform
+   ↓
+Cloudflare + AWS + Supabase + external providers
+
+Figentra should orchestrate infrastructure, not become the infrastructure scheduler.
+
+And your billing hierarchy is:
+
+FIGENTRA
+   ↓
+ACADEMORIX
+   ↓
+BARCLONA
+   ↓
+PARENT
+
+That hierarchy should be reflected explicitly in the tenancy/billing model.
+
+1. Cloudflare vs AWS — my recommendation
+
+For Figentra, I would not choose one provider exclusively.
+
+I'd use a hybrid architecture, but with a very clear rule:
+
+Cloudflare at the edge; AWS for workloads that benefit from AWS-native infrastructure.
+
+The reason is that Cloudflare is exceptionally attractive for the edge/control-plane layer, while AWS has a much broader backend infrastructure ecosystem and, importantly, very useful free-tier/credit economics for early workloads.
+
+Cloudflare Workers Paid is currently $5/month/account and includes increased Workers/KV/Hyperdrive/Durable Objects allowances with no additional bandwidth/egress charge; Workers Free is also available with daily limits.
+
+AWS currently offers new customers up to $200 in credits over six months, and individual services such as Lambda and SQS have substantial free allowances.
+
+So I would architect Figentra like this:
+
+                        INTERNET
+                           │
+                           ▼
+                    CLOUDFLARE EDGE
+                           │
+             ┌─────────────┼─────────────┐
+             │             │             │
+          Workers       WAF/DNS       CDN/R2
+             │
+             ▼
+        API Gateway
+             │
+       ┌─────┴─────┐
+       │           │
+   Workers      Containers
+       │           │
+       │           ▼
+       │        NestJS
+       │           │
+       └───────────┼─────────────┐
+                   │             │
+                   ▼             ▼
+              Supabase       AWS services
+              PostgreSQL
+2. Cloudflare Workers vs AWS Lambda
+
+For Figentra control-plane APIs, I'd pick Cloudflare Workers + Hono.
+
+Why?
+
+You don't need:
+
+API Gateway
+Lambda
+ALB
+NAT
+VPC
+
+for every tiny Figentra service.
+
+Cloudflare Workers give you:
+
+global edge
+very low operational overhead
+no egress charge
+Hono
+service bindings
+Queues
+KV
+Durable Objects
+R2
+
+Cloudflare explicitly recommends bindings, Queues, Workflows, Service Bindings and Hyperdrive for Workers architectures.
+
+So:
+
+identity.figentra.com
+iam.figentra.com
+tenant.figentra.com
+registry.figentra.com
+billing.figentra.com
+domains.figentra.com
+
+do not necessarily need separate Node servers.
+
+They can be Workers when the workload fits.
+
+3. But don't force NestJS into Workers
+
+This distinction is important.
+
+Cloudflare Worker
+
+Use for:
+
+API Gateway
+Registry
+Runtime
+Tenant resolution
+Domain resolution
+Feature flag evaluation
+lightweight IAM operations
+webhook ingestion
+routing
+BFF
+edge APIs
+Cloudflare Container
+
+Use when you need:
+
+full Node.js
+NestJS
+MikroORM
+longer-running process
+native Node libraries
+background workers
+complex service
+
+Cloudflare Containers are now GA and support full Linux environments, and they can scale to zero.
+
+So our existing decision:
+
+NestJS + Containers
+
+is still valid.
+
+4. AWS ECS vs Cloudflare Containers
+
+This is more interesting.
+
+Requirement	Cloudflare Container	AWS ECS/Fargate
+Tiny/medium service	⭐⭐⭐⭐⭐	⭐⭐⭐
+Scale to zero	⭐⭐⭐⭐⭐	⭐⭐
+Simple deployment	⭐⭐⭐⭐⭐	⭐⭐⭐
+Full Linux	⭐⭐⭐⭐⭐	⭐⭐⭐⭐⭐
+Docker ecosystem	⭐⭐⭐⭐	⭐⭐⭐⭐⭐
+AWS integration	⭐⭐	⭐⭐⭐⭐⭐
+VPC/private networking	⭐⭐	⭐⭐⭐⭐⭐
+Long-running workloads	⭐⭐⭐⭐	⭐⭐⭐⭐⭐
+GPU	❌/limited	⭐⭐⭐⭐⭐
+Enterprise AWS ecosystem	⭐⭐⭐	⭐⭐⭐⭐⭐
+Operational simplicity	⭐⭐⭐⭐⭐	⭐⭐⭐
+Early cost	⭐⭐⭐⭐⭐	⭐⭐⭐⭐
+
+Cloudflare Containers charge based on active vCPU/memory/disk usage and can automatically sleep, which makes them particularly attractive for bursty services.
+
+AWS ECS itself has no separate orchestration fee; you pay for Fargate/EC2 resources.
+
+My choice
+
+For Figentra's own services:
+
+Default:
+Cloudflare Worker
+
+If full Node required:
+Cloudflare Container
+
+If AWS-specific / heavy / long-running:
+AWS ECS/Fargate
+
+Don't use ECS just because it is "enterprise."
+
+5. SQS vs Cloudflare Queues
+
+This one is actually very close.
+
+Cloudflare Queues
+
+Currently:
+
+Free:
+10,000 operations/day
+
+Paid:
+1,000,000 operations/month
+then $0.40 / million operations
+
+and there are no egress/throughput charges.
+
+AWS SQS
+
+AWS gives:
+
+1,000,000 requests/month free
+
+and then usage-based pricing. AWS also notes that data-transfer charges can apply depending on where messages go.
+
+For Figentra
+
+I'd choose:
+
+Cloudflare Queues
+
+for:
+
+Worker → Worker
+Worker → Container
+notifications
+webhooks
+background tasks
+event fan-out
+buffering
+
+Because the rest of our edge stack is already Cloudflare.
+
+But:
+
+AWS workload
+       ↓
+SQS
+
+is completely reasonable.
+
+Do not create a Figentra queue abstraction that hides everything.
+
+Instead:
+
+@figentra/events
+
+defines the business event contract, while infrastructure chooses:
+
+Cloudflare Queue
+or
+SQS
+or
+Kafka
+6. Don't introduce Kafka yet
+
+I would actually downgrade Kafka from the original architecture.
+
+Start:
+
+Cloudflare Queues
+
+If we eventually have:
+
+millions/billions events
+multiple independent consumers
+long retention
+replay
+stream processing
+analytics ingestion
+
+then:
+
+Kafka / MSK
+
+becomes justified.
+
+Until then, Kafka adds operational complexity without enough benefit.
+
+7. Terraform becomes the Deployment Plane
+
+This is the big correction based on what you just said.
+
+We don't need:
+
+Figentra Build Service
+Figentra Deployment Service
+Figentra Artifact Service
+Figentra Environment Orchestrator
+Figentra Scheduler
+
+as large platform microservices.
+
+Instead:
+
+Git
+ ↓
+Terraform
+ ↓
+Cloudflare / AWS / Supabase
+
+Figentra controls desired infrastructure state.
+
+8. Can Figentra expose an API to trigger Terraform?
+
+Yes — and I think that's exactly what we should do.
+
+But don't let the API directly execute arbitrary:
+
+terraform apply
+
+from an HTTP request.
+
+Build:
+
+Infrastructure Service
+
+or:
+
+Terraform Orchestrator
+
+with:
+
+POST /infrastructure/plans
+POST /infrastructure/applies
+POST /infrastructure/destroy
+GET  /infrastructure/runs/:id
+
+Architecture:
+
+Figentra API
+      ↓
+Infrastructure Run
+      ↓
+Queue
+      ↓
+Terraform Runner
+      ↓
+Terraform
+      ↓
+Cloudflare / AWS / Supabase
+9. Terraform Runner
+
+The runner can be:
+
+GitHub Actions
+
+or:
+
+AWS CodeBuild
+
+or:
+
+Cloudflare Container
+
+or a dedicated CI runner.
+
+I would initially choose:
+
+GitHub Actions + Terraform
+
+because it's extremely simple.
+
+Figentra
+   ↓
+create deployment/infrastructure request
+   ↓
+GitHub workflow
+   ↓
+terraform plan
+   ↓
+approval if required
+   ↓
+terraform apply
+   ↓
+callback
+   ↓
+Figentra
+
+This means Figentra does not become a CI/CD platform.
+
+10. Terraform State
+
+Very important.
+
+Don't store Terraform state in your Figentra database.
+
+Use:
+
+Terraform backend
+
+For example:
+
+S3
++
+DynamoDB locking
+
+or Terraform Cloud/HCP Terraform if desired.
+
+If we stay Cloudflare-heavy, an R2-backed strategy is possible depending on the Terraform backend/provider support and locking requirements, but I'd favor a mature backend with proper state locking rather than inventing one.
+
+11. Figentra Infrastructure API
+
+Then the platform API can expose:
+
+POST /projects/:id/infrastructure/plan
+POST /projects/:id/infrastructure/apply
+POST /projects/:id/infrastructure/destroy
+
+GET /infrastructure/runs/:id
+GET /infrastructure/runs/:id/logs
+
+But the actual infrastructure definition remains:
+
+Terraform
+
+not a JSON deployment engine.
+
+12. This Makes Figentra Much Smaller
+
+I would now remove these from our P0/P1 architecture:
+
+❌ Build Service
+❌ Artifact Service
+❌ Deployment Scheduler
+❌ Custom Container Orchestrator
+❌ Preview Environment Service
+❌ PaaS Deployment Engine
+❌ Custom CI/CD
+
+They are unnecessary for your stated model.
+
+Instead:
+
+Figentra
+  = Control Plane
+  + Developer API
+  + Terraform Orchestrator
+
+Terraform:
+
+  = Infrastructure Plane
+
+Cloudflare/AWS:
+
+  = Runtime Plane
+13. Your Billing Hierarchy
+
+This needs to be added explicitly to the architecture.
+
+You said:
+
+FIGENTRA
+   ↓
+ACADEMORIX
+   ↓
+BARCLONA
+   ↓
+PARENT
+
+This isn't simply:
+
+Tenant → Organization
+
+It's a commercial hierarchy.
+
+I would model:
+
+Commercial Account
+       │
+       ├── Figentra
+       │
+       └── Academorix
+             │
+             └── Barclona
+                   │
+                   └── Parent
+
+But we need to clarify what those names represent.
+
+If they are products/companies/organizations, don't put them all into the same "tenant" entity.
+
+14. Separate Organizational Hierarchy from Billing Hierarchy
+
+This is important.
+
+We need:
+
+Organization Hierarchy
+
+and:
+
+Billing Hierarchy
+
+separately.
+
+Example:
+
+Tenant
+│
+├── Organizations
+│   ├── Academorix
+│   └── Barclona
+│
+└── Billing Account
+    └── Parent
+
+Or if the commercial relationship is:
+
+Figentra → Academorix → Barclona → Parent
+
+then:
+
+BillingAccount
+    |
+    +-- Parent Account
+         |
+         +-- Child Account
+              |
+              +-- Child Account
+
+This allows:
+
+Parent pays
+Child consumes
+Grandchild consumes
+15. Billing Service Should Support Hierarchical Billing
+
+Instead of:
+
+Subscription → Tenant
+
+we should support:
+
+Billing Account
+   |
+   +-- Parent Billing Account
+   |
+   +-- Child Billing Accounts
+   |
+   +-- Subscriptions
+   |
+   +-- Entitlements
+   |
+   +-- Usage
+   |
+   +-- Invoices
+
+Example:
+
+Parent
+│
+├── Academorix
+│    ├── Subscription
+│    ├── Usage
+│    └── Entitlements
+│
+└── Barclona
+     ├── Subscription
+     ├── Usage
+     └── Entitlements
+
+Then define who pays.
+
+16. Billing Responsibility
+
+We need an explicit:
+
+Billing Responsibility
+
+because these can differ:
+
+resource owner
+tenant owner
+subscription owner
+invoice recipient
+payment account
+usage owner
+
+Example:
+
+Parent
+  pays
+
+Academorix
+  owns application
+
+Barclona
+  consumes service
+
+This is common in enterprise SaaS.
+
+17. Recommended Commercial Model
+
+I'd model:
+
+Party
+│
+├── Organization
+│
+├── Billing Account
+│
+├── Customer Account
+│
+└── Resource Account
+
+But don't over-engineer it initially.
+
+At minimum:
+
+BillingAccount
+├── parentId
+├── ownerTenantId
+├── payer
+├── currency
+├── billingProfile
+├── paymentProvider
+└── status
+18. Stripe/Paddle Position
+
+Keep:
+
+Figentra Monetization
+       ↓
+Billing Provider Adapter
+       ↓
+Stripe
+Paddle
+
+The hierarchy is Figentra's responsibility.
+
+Stripe/Paddle are processors.
+
+Don't let Stripe's customer/subscription hierarchy become your domain model.
+
+19. Final Infrastructure Decision
+
+I would now lock:
+
+Capability	Primary	Alternative
+Edge	Cloudflare	—
+DNS	Cloudflare	—
+CDN	Cloudflare	—
+API Gateway	Cloudflare Worker + Hono	AWS API Gateway
+Lightweight APIs	Workers	Lambda
+Full Node	Cloudflare Containers	ECS/Fargate
+Heavy AWS workload	—	ECS/Fargate
+Queue	Cloudflare Queues	SQS
+Durable workflow	Cloudflare Workflows	Step Functions
+Object storage	R2	S3
+PostgreSQL	Supabase	RDS/Aurora
+DB acceleration from Workers	Hyperdrive	—
+KV/config cache	Workers KV	ElastiCache/DynamoDB
+Stateful coordination	Durable Objects	DynamoDB
+Search	Meilisearch	OpenSearch
+Event streaming	Queues	Kafka/MSK
+IaC	Terraform	—
+Terraform runner	GitHub Actions initially	AWS CodeBuild
+Container registry	Cloudflare/AWS depending runtime	ECR
+Secrets	Cloudflare/AWS secret facilities	Vault
+Billing	Stripe/Paddle	—
+
+Cloudflare's current storage guidance explicitly positions R2 for object/blob data, KV for configuration/session-like data, Hyperdrive for existing Postgres/MySQL, Queues for background processing, Durable Objects for stateful coordination, and Analytics Engine for high-cardinality metrics/usage.
+
+20. What I'd Actually Deploy for Figentra v1
+
+This is the important part.
+
+I would not deploy 30 microservices.
+
+Cloudflare Workers
+gateway
+runtime
+registry
+tenant
+domains
+feature-flags
+webhooks
+
+Potentially:
+
+iam
+
+if it stays lightweight.
+
+Cloudflare Containers
+iam
+monetization
+notifications
+integrations
+workflow
+search-api
+reporting-api
+
+only where full Node/NestJS is justified.
+
+Supabase
+PostgreSQL
+
+with separate database/schema ownership per service, depending on our final isolation model.
+
+Cloudflare
+R2
+Queues
+KV
+Durable Objects
+Workers
+Containers
+DNS
+WAF
+AWS
+
+Initially only where there is a concrete advantage:
+
+SQS
+ECS/Fargate
+S3
+ECR
+Lambda
+
+We shouldn't introduce AWS merely because it has a free tier.
+
+21. The Most Important Cost Principle
+
+Don't optimize for:
+
+"AWS has a free tier."
+
+Optimize for:
+
+Total architecture cost + engineering cost + operational cost.
+
+For example:
+
+AWS
+ECS
+ALB
+VPC
+NAT
+CloudWatch
+ECR
+SQS
+IAM
+Route53
+...
+
+can become significantly more expensive/complex than:
+
+Cloudflare
+Worker
+Container
+Queue
+R2
+
+even if individual AWS components have free allowances.
+
+Conversely, if you already need AWS for a serious workload, using AWS-native services can be cheaper and much simpler than building a hybrid bridge.
+
+22. Final Figentra Architecture
+
+I would now simplify the architecture to:
+
+                         FIGENTRA
+                            │
+                 ┌──────────┴──────────┐
+                 │                     │
+           CONTROL PLANE          APPLICATIONS
+                 │                     │
+        ┌────────┼────────┐      Commerce / CRM / etc.
+        │        │        │
+     Identity   Tenant   IAM
+        │        │        │
+      Clerk      │        │
+                 │        │
+        Monetization      │
+                 │        │
+          Integrations    │
+                 │        │
+          Application Registry
+                 │
+                 ▼
+           Cloudflare Edge
+                 │
+         ┌───────┴────────┐
+         │                │
+      Workers          Containers
+         │                │
+         │              NestJS
+         │                │
+         └───────┬────────┘
+                 │
+        ┌────────┼─────────┐
+        │        │         │
+      Queue     R2     Supabase
+        │                  │
+        │                PostgreSQL
+        │
+        └──── AWS when justified
+                  │
+             ECS / SQS / S3
+
+And infrastructure provisioning:
+
+Figentra
+   │
+   │ API
+   ▼
+Terraform Orchestrator
+   │
+   ▼
+Terraform
+   │
+   ├── Cloudflare
+   ├── AWS
+   ├── Supabase
+   ├── Clerk
+   ├── Stripe
+   └── Paddle
+
+That's the architecture I'd move forward with.
+
+It keeps Figentra focused on what differentiates it—identity, tenancy, IAM, applications, integrations, billing, entitlements, workflows, APIs and developer contracts—while Terraform remains responsible for actually creating infrastructure. AWS's free tier/credits can be exploited where useful, but they shouldn't dictate the architecture.

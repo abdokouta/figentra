@@ -1,0 +1,85 @@
+# =============================================================================
+# Figentra configuration manifest
+# =============================================================================
+#
+# @file workers/registry/cloud.yaml
+# @description This file is part of the Figentra declarative configuration
+#   system. It is consumed by the appropriate build, deployment, CI, local
+#   development, or release tooling. It is NOT a source of business logic.
+#
+# @security Secrets, private keys, credentials, access tokens, database URLs,
+#   and other sensitive material MUST NOT be committed to this file. Inject
+#   secrets through Doppler, CI protected variables, Wrangler secrets, or the
+#   target provider's secret-management facility.
+#
+# @change Any schema/data change must be reviewed with the owning service and
+#   the corresponding Terraform/CI/deployment generator. Generated files must
+#   not become a second source of truth.
+#
+# @environment Environment-specific values are explicit and limited to safe
+#   non-secret configuration. The canonical environments are development, staging, and production.
+# =============================================================================
+
+# Figentra deployable manifest — application-registry.
+# The source path is the canonical workspace directory. Terraform provisions
+# durable bindings; Wrangler owns the Worker script deployment.
+kind: worker
+slug: application-registry
+brand: figentra
+plane: control
+runtime: cloudflare-worker
+tier: shared
+source:
+  type: local
+  path: workers/registry
+subdomain: registry
+cloudflare_name: figentra-application-registry
+doppler_project: figentra-application-registry
+# Persistence contract. D1 is authoritative; KV is explicitly non-authoritative.
+database:
+  provider: cloudflare-d1
+  binding: DB
+  migrations_path: workers/registry/database/migrations
+  schema_snapshot: workers/registry/database/schema.sql
+cache:
+  provider: cloudflare-kv
+  binding: REGISTRY_CACHE
+  authoritative: false
+
+# Cloudflare bindings requested by this Worker. Terraform provisions IDs.
+capabilities:
+  needs_d1: true
+  needs_kv: true
+  needs_r2: false
+  needs_queue: false
+  needs_durable_object: false
+  # D1 is authoritative Registry persistence; KV is non-authoritative cache.
+  needs_service_binding: true
+branch:
+  development: develop
+  staging: staging
+  production: main
+env_vars:
+  # Development registration tokens are scoped to the dev registry audience.
+  development:
+    LOG_LEVEL: debug
+    REGISTRY_REGISTRATION_AUDIENCE: figentra:registry:registration
+  # Staging registration tokens use the same logical audience in an isolated issuer.
+  staging:
+    LOG_LEVEL: info
+    REGISTRY_REGISTRATION_AUDIENCE: figentra:registry:registration
+  # Production registration requires a service principal with the explicit
+  # registry:application:register permission.
+  production:
+    LOG_LEVEL: warn
+    REGISTRY_REGISTRATION_AUDIENCE: figentra:registry:registration
+observability:
+  sentry:
+    platform: javascript
+    enable: true
+  betterstack:
+    enable_uptime: true
+tags:
+  service: application-registry
+  plane: control
+  vendor: figentra

@@ -1,0 +1,67 @@
+# =============================================================================
+# Figentra deployable manifest — portal web application
+# =============================================================================
+#
+# @file apps/portal/cloud.yaml
+# @description Declarative build/deployment contract for the Vite + React +
+#   HeroUI application. Terraform owns durable routing/resources while the
+#   frontend pipeline produces the immutable application artifact.
+#
+# @security No secrets are committed here. Browser-visible variables are not
+#   secrets and must be treated as public at build time.
+# =============================================================================
+
+# Deployable kind used by the catalog collector.
+kind: app
+# Immutable application slug.
+slug: portal
+# Owning product brand.
+brand: figentra
+# Platform plane.
+plane: product
+# Runtime for the built web application.
+runtime: cloudflare-assets
+# Shared platform deployment tier.
+tier: shared
+# Monorepo source location.
+source:
+  type: local
+  path: apps/portal
+# Public hostname label.
+subdomain: www
+# Stable Cloudflare deployment identity.
+cloudflare_name: figentra-portal
+# Runtime/build configuration project in Doppler.
+doppler_project: figentra-portal
+# Cloudflare capability requirements.
+capabilities:
+  needs_d1: false
+  needs_kv: false
+  needs_r2: false
+  needs_queue: false
+  needs_durable_object: false
+# Branch promotion contract.
+branch:
+  development: develop
+  staging: staging
+  production: main
+# Safe browser/build configuration by environment.
+env_vars:
+  development:
+    LOG_LEVEL: debug
+  staging:
+    LOG_LEVEL: info
+  production:
+    LOG_LEVEL: warn
+# Frontend observability.
+observability:
+  sentry:
+    platform: javascript
+    enable: true
+  betterstack:
+    enable_uptime: true
+# Ownership metadata.
+tags:
+  service: portal
+  plane: product
+  vendor: figentra

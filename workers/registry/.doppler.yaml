@@ -1,0 +1,46 @@
+# =============================================================================
+# Figentra configuration manifest
+# =============================================================================
+#
+# @file workers/registry/.doppler.yaml
+# @description This file is part of the Figentra declarative configuration
+#   system. It is consumed by the appropriate build, deployment, CI, local
+#   development, or release tooling. It is NOT a source of business logic.
+#
+# @security Secrets, private keys, credentials, access tokens, database URLs,
+#   and other sensitive material MUST NOT be committed to this file. Inject
+#   secrets through Doppler, CI protected variables, Wrangler secrets, or the
+#   target provider's secret-management facility.
+#
+# @change Any schema/data change must be reviewed with the owning service and
+#   the corresponding Terraform/CI/deployment generator. Generated files must
+#   not become a second source of truth.
+#
+# @environment Environment-specific values are explicit and limited to safe
+#   non-secret configuration. The canonical environments are dev, stg, and prd.
+# =============================================================================
+
+# =============================================================================
+# Doppler — @figentra/application-registry  (Cloudflare Worker · Hono · D1)
+# =============================================================================
+#
+# Binds workers/application-registry to the `figentra-application-registry`
+# Doppler project.
+#
+# What lives here
+#   Registry runtime config + secrets: D1 binding config, KV read-cache
+#   config, IAM + Monetization publish endpoints (for manifest declaration
+#   fan-out), service-identity signing key. Metadata/routing only — the
+#   registry stores no business data and makes no authz decisions (spec 06).
+#
+# What does NOT live here
+#   Workspace-tooling secrets -> /.doppler.yaml (figentra-workspace)
+#
+# Binding:  cd workers/application-registry && doppler setup  (or `pnpm doppler:setup`)
+# Configs:  dev · stg · prd    Override: DOPPLER_CONFIG=stg doppler run -- pnpm dev
+# Governance: .kiro/steering/doppler.md · AGENTS.md
+# =============================================================================
+
+setup:
+  project: figentra-application-registry
+  config: dev

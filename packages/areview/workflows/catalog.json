@@ -1,0 +1,10 @@
+{
+  "package": {
+    "name": "@figentra/workflows"
+  },
+  "purpose": "Provider-neutral durable workflow contracts, composition DSL, NestJS discovery, and Cloudflare, Temporal and Vercel runtime adapters.",
+  "peer_deps": [
+    "@nestjs/common",
+    "@nestjs/core"
+  ]
+}

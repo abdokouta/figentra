@@ -1,0 +1,53 @@
+# =============================================================================
+# Figentra deployable manifest — Family mobile application
+# =============================================================================
+#
+# @file apps/family/cloud.yaml
+# @description Declarative contract for the Expo/EAS Family application.
+#   Terraform provisions EAS/Firebase prerequisites; EAS builds and submits
+#   mobile artifacts. This manifest contains no secrets.
+# =============================================================================
+
+# Deployable kind consumed by the catalog collector.
+kind: app
+# Immutable platform slug.
+slug: mobile-family
+# Owning product brand.
+brand: figentra
+# Client/mobile plane.
+plane: client
+# Native mobile runtime.
+runtime: expo-mobile
+# Shared application tier.
+tier: shared
+# Monorepo source location.
+source:
+  type: local
+  path: apps/family
+# Doppler project for EAS/native credentials.
+doppler_project: figentra-family
+# Mobile identity consumed by EAS and Firebase provisioning.
+mobile:
+  display_name: Figentra Family
+  eas_slug: figentra-family
+  bundle_id: com.figentra.family
+  scheme: figentra
+  associated_domain: app.figentra.com
+# External platform capabilities.
+capabilities:
+  needs_firebase: true
+# Branch-to-release-channel mapping.
+branch:
+  development: develop
+  staging: staging
+  production: main
+# Mobile observability.
+observability:
+  sentry:
+    platform: react-native
+    enable: true
+# Ownership metadata.
+tags:
+  service: family
+  plane: client
+  vendor: figentra

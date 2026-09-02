@@ -1,0 +1,80 @@
+{
+  "name": "@figentra/queue",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Provider-neutral queue contracts and Cloudflare Queues, SQS, Redis and BullMQ adapters.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./nest": {
+      "types": "./dist/nest/index.d.ts",
+      "import": "./dist/nest/index.js"
+    },
+    "./cloudflare": {
+      "types": "./dist/cloudflare/index.d.ts",
+      "import": "./dist/cloudflare/index.js"
+    },
+    "./sqs": {
+      "types": "./dist/sqs/index.d.ts",
+      "import": "./dist/sqs/index.js"
+    },
+    "./redis": {
+      "types": "./dist/redis/index.d.ts",
+      "import": "./dist/redis/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "lint": "oxlint src __tests__",
+    "lint:fix": "oxlint --fix src __tests__",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "check-types": "pnpm run typecheck",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@stackra/oxlint-config": "workspace:*",
+    "@stackra/prettier-config": "workspace:*",
+    "@stackra/typescript-config": "workspace:*",
+    "@stackra/tsup-config": "workspace:*",
+    "@stackra/testing": "workspace:*",
+    "@nestjs/bullmq": "catalog:",
+    "bullmq": "catalog:",
+    "@cloudflare/workers-types": "catalog:",
+    "oxlint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:",
+    "tsup": "catalog:",
+    "vitest": "catalog:",
+    "@vitest/coverage-v8": "catalog:"
+  },
+  "peerDependencies": {
+    "@nestjs/bullmq": "catalog:",
+    "@nestjs/common": "catalog:",
+    "bullmq": "catalog:"
+  },
+  "peerDependenciesMeta": {
+    "@nestjs/bullmq": {
+      "optional": true
+    },
+    "@nestjs/common": {
+      "optional": true
+    },
+    "bullmq": {
+      "optional": true
+    }
+  }
+}

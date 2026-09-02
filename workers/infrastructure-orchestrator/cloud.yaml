@@ -1,0 +1,69 @@
+# =============================================================================
+# Figentra deployable manifest — Infrastructure Orchestrator Worker
+# =============================================================================
+#
+# @file workers/infrastructure-orchestrator/cloud.yaml
+# @description Declarative deployment contract for the infrastructure control
+#   plane. It accepts authenticated infrastructure intents and dispatches them
+#   to an isolated Terraform Container; it does NOT execute arbitrary commands.
+#
+# @security Secrets and provider credentials MUST NOT be stored here. Production
+#   Terraform credentials/state configuration are runtime-managed and scoped to
+#   the runner environment.
+# =============================================================================
+
+kind: worker
+slug: infrastructure-orchestrator
+brand: figentra
+plane: platform
+runtime: cloudflare-worker
+# The Worker is a control plane; Terraform itself executes in Cloudflare Containers.
+tier: control-plane
+source:
+  type: local
+  path: workers/infrastructure-orchestrator
+subdomain: infrastructure
+cloudflare_name: figentra-infrastructure-orchestrator
+doppler_project: figentra-infrastructure-orchestrator
+
+database:
+  provider: cloudflare-d1
+  binding: DB
+  migrations_path: workers/infrastructure-orchestrator/database/migrations
+execution:
+  control_plane: worker
+  executor: cloudflare-container
+  terraform_root: infrastructure/terraform
+  arbitrary_commands: false
+  source_revision_required: true
+
+capabilities:
+  needs_d1: true
+  needs_kv: false
+  needs_r2: false
+  needs_queue: false
+  needs_durable_object: true
+  needs_container: true
+  needs_workflow: true
+  # Terraform executes in a dedicated Cloudflare Container, never in the Worker VM.
+branch:
+  development: develop
+  staging: staging
+  production: main
+env_vars:
+  development:
+    LOG_LEVEL: debug
+  staging:
+    LOG_LEVEL: info
+  production:
+    LOG_LEVEL: warn
+observability:
+  sentry:
+    platform: javascript
+    enable: true
+  betterstack:
+    enable_uptime: true
+tags:
+  service: infrastructure-orchestrator
+  plane: platform
+  vendor: figentra

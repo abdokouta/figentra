@@ -1,0 +1,16 @@
+{
+  // @stackra/oxlint-config/native — React Native / Expo applications.
+  "extends": ["./base.jsonc"],
+  "plugins": ["typescript", "unicorn", "oxc", "import", "react"],
+  "env": {
+    "es2024": true
+  },
+  "settings": {
+    "react": {
+      "version": "19.0"
+    }
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off"
+  }
+}

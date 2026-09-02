@@ -1,0 +1,125 @@
+{
+  "$schema": "https://v2-10-12.turborepo.dev/schema.json",
+  "globalDependencies": [
+    "package.json",
+    "pnpm-lock.yaml",
+    "pnpm-workspace.yaml",
+    ".npmrc",
+    "tsconfig.json",
+    ".oxlintrc.json",
+    ".prettierrc",
+    ".prettierignore"
+  ],
+  "globalEnv": [
+    "NODE_ENV"
+  ],
+  "tasks": {
+    "build": {
+      "description": "Builds a package or deployable artifact.",
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*",
+        "!**/*.md",
+        "!**/__tests__/**",
+        "!**/coverage/**"
+      ],
+      "outputs": [
+        "dist/**",
+        "build/**",
+        ".output/**"
+      ]
+    },
+    "check": {
+      "description": "Runs the complete package quality gate.",
+      "dependsOn": [
+        "lint",
+        "check-types",
+        "test"
+      ],
+      "outputs": []
+    },
+    "lint": {
+      "description": "Runs Oxlint.",
+      "outputs": []
+    },
+    "format:check": {
+      "description": "Verifies Prettier formatting.",
+      "outputs": []
+    },
+    "check-types": {
+      "description": "Runs the package TypeScript type check.",
+      "dependsOn": [
+        "^check-types"
+      ],
+      "outputs": []
+    },
+    "typecheck": {
+      "description": "Compatibility type-check task for packages using this script name.",
+      "dependsOn": [
+        "^typecheck"
+      ],
+      "outputs": []
+    },
+    "test": {
+      "description": "Runs deterministic tests.",
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "coverage/**"
+      ],
+      "env": [
+        "CI",
+        "NODE_ENV"
+      ]
+    },
+    "test:coverage": {
+      "description": "Runs tests and produces coverage artifacts.",
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "coverage/**"
+      ],
+      "env": [
+        "CI",
+        "NODE_ENV"
+      ]
+    },
+    "e2e": {
+      "description": "Runs end-to-end tests.",
+      "dependsOn": [
+        "build"
+      ],
+      "outputs": [
+        "test-results/**",
+        "playwright-report/**"
+      ],
+      "env": [
+        "CI",
+        "NODE_ENV"
+      ],
+      "cache": false
+    },
+    "dev": {
+      "description": "Runs a persistent development process.",
+      "cache": false,
+      "persistent": true
+    },
+    "deploy": {
+      "description": "Runs a deployment side effect after a successful build.",
+      "dependsOn": [
+        "build"
+      ],
+      "cache": false
+    },
+    "e2e:ui": {
+      "description": "Runs Playwright in interactive UI mode.",
+      "cache": false
+    }
+  },
+  "ui": "tui"
+}

@@ -1,0 +1,51 @@
+{
+  "name": "@figentra/infrastructure-orchestrator",
+  "version": "0.0.1",
+  "description": "Figentra infrastructure orchestration control plane for Terraform plans and applies.",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "lint": "oxlint src __tests__",
+    "lint:fix": "oxlint --fix src __tests__",
+    "format": "prettier --write .",
+    "build": "wrangler deploy --dry-run --outdir dist",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "pnpm lint && pnpm run typecheck && pnpm test",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "check-types": "pnpm run typecheck",
+    "format:check": "prettier --check .",
+    "deploy:development": "wrangler deploy --env development --minify",
+    "deploy:staging": "wrangler deploy --env staging --minify",
+    "deploy:production": "wrangler deploy --env production --minify"
+  },
+  "dependencies": {
+    "@cloudflare/containers": "catalog:",
+    "hono": "catalog:",
+    "jose": "catalog:",
+    "zod": "catalog:",
+    "@figentra/observability": "workspace:*",
+    "pino": "catalog:",
+    "hono-pino": "catalog:"
+  },
+  "devDependencies": {
+    "@stackra/oxlint-config": "workspace:*",
+    "@stackra/prettier-config": "workspace:*",
+    "@stackra/typescript-config": "workspace:*",
+    "oxlint": "catalog:",
+    "prettier": "catalog:",
+    "wrangler": "catalog:",
+    "vitest": "catalog:",
+    "prettier-plugin-tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "@vitest/coverage-v8": "catalog:"
+  }
+}

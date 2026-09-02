@@ -1,0 +1,62 @@
+{
+  "$comment": "Portable MCP server config. Read by Claude Code, Cursor, aider — every agent that respects the .mcp.json convention. Kiro reads .kiro/settings/mcp.json separately (its native path). Every secret in this file is a ${VAR} placeholder; the shell (or Doppler) populates the values at agent boot time. Never commit literal tokens here.",
+  "mcpServers": {
+    "doppler": {
+      "command": "npx",
+      "args": ["-y", "@dopplerhq/mcp-server"],
+      "env": {
+        "DOPPLER_TOKEN": "${DOPPLER_TOKEN}"
+      },
+      "autoApprove": [
+        "confirm_access",
+        "projects_list",
+        "environments_list",
+        "configs_list",
+        "secrets_names",
+        "secrets_download"
+      ]
+    },
+    "heroui-react": {
+      "command": "npx",
+      "args": ["-y", "@heroui/react-mcp@latest"],
+      "autoApprove": ["get_component_docs", "list_components", "get_theme_variables"]
+    },
+    "heroui-native": {
+      "command": "npx",
+      "args": ["-y", "@heroui/native-mcp@latest"]
+    },
+    "heroui-pro": {
+      "url": "https://mcp.heroui.pro/mcp",
+      "headers": {
+        "x-heroui-personal-token": "${HEROUI_PRO_TOKEN}"
+      },
+      "autoApprove": [
+        "list_components",
+        "get_component_docs",
+        "get_docs",
+        "get_theme_variables",
+        "get_css"
+      ]
+    },
+    "heroui-native-pro": {
+      "url": "https://native-mcp.heroui.pro/mcp",
+      "headers": {
+        "x-heroui-personal-token": "${HEROUI_PRO_TOKEN}"
+      }
+    },
+    "sentry": {
+      "url": "https://mcp.sentry.dev/mcp",
+      "headers": {
+        "Authorization": "Sentry-Bearer ${SENTRY_MCP_TOKEN}"
+      },
+      "autoApprove": [
+        "find_organizations",
+        "find_teams",
+        "find_projects",
+        "get_issue_details",
+        "search_issues",
+        "search_events"
+      ]
+    }
+  }
+}

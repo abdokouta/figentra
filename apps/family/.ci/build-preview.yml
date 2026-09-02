@@ -1,0 +1,39 @@
+name: Build family — preview
+
+# Preview builds — internal distribution (TestFlight external + Play internal).
+# Fires automatically on every push to `develop` + on manual dispatch.
+#
+# ── Why we use EAS Workflows ──
+# Manual `eas build --platform ...` invocations don't survive an operator
+# handoff. EAS Workflows codify the build+submit sequence as YAML that
+# lives with the code, produces auditable runs in the EAS dashboard,
+# and can be re-triggered from the CI without a workstation-side login.
+#
+# See:
+#   .docs/runbooks/mobile-eas-build.md §"CI/CD via EAS Workflows"
+#   .kiro/steering/laravel-cloud-conventions.md (parallel — deploy on merge)
+#
+# ── Trigger ──
+# push:develop     — every merge to develop fires builds. Preview builds
+#                    target the dev-plane URLs baked in via eas.json's
+#                    `preview` profile (api.dev.academorix.com,
+#                    api.dev.figentra.com).
+# workflow_dispatch — on-demand from the dashboard for ad-hoc rebuilds.
+
+on:
+  push:
+    branches: ['develop']
+  workflow_dispatch:
+
+jobs:
+  build_ios_preview:
+    type: build
+    params:
+      platform: ios
+      profile: preview
+
+  build_android_preview:
+    type: build
+    params:
+      platform: android
+      profile: preview

@@ -1,0 +1,6 @@
+{
+  "package": {
+    "name": "@figentra/state-machines"
+  },
+  "purpose": "Typed domain state machine and guarded transition primitives; no durable workflow runtime."
+}

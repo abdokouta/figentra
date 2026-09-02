@@ -1,0 +1,49 @@
+{
+  "name": "@stackra/oxlint-config",
+  "version": "3.0.2",
+  "private": false,
+  "description": "Shared oxlint config presets for the stackra-frontend monorepo. Exports base + react + nest + worker presets.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/base.jsonc",
+    "./base": "./src/base.jsonc",
+    "./react": "./src/react.jsonc",
+    "./nest": "./src/nest.jsonc",
+    "./worker": "./src/worker.jsonc",
+    "./native": "./src/native.jsonc"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "lint": "echo 'This IS the oxlint config \u2014 nothing to lint here'",
+    "typecheck": "echo 'JSON config \u2014 no TS to check'",
+    "test": "echo 'No tests'",
+    "build": "echo 'Consumed as-is'"
+  },
+  "peerDependencies": {
+    "oxlint": "catalog:"
+  },
+  "author": {
+    "name": "Figentra L.L.C",
+    "email": "dev@figentra.com",
+    "url": "https://figentra.com"
+  },
+  "homepage": "https://gitlab.com/stackra/frontend/oxlint-config#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/stackra/frontend/oxlint-config.git",
+    "directory": "."
+  },
+  "bugs": {
+    "url": "https://gitlab.com/stackra/frontend/oxlint-config/-/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

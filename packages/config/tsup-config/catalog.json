@@ -1,0 +1,27 @@
+{
+  "$schema": "../../.ref/schemas/catalog.v1.json",
+  "name": "@stackra/tsup-config",
+  "tier": "foundation",
+  "surfaces": [
+    "core"
+  ],
+  "kind": "tooling",
+  "purpose": "Workspace tsup build config preset — canonical multi-entry ESM+CJS bundle shape.",
+  "capabilities": [
+    "`defineBaseConfig(entries)` helper for one-line tsup config",
+    "Handles dts/format/clean/sourcemap defaults",
+    "Aligns every package.json exports shape"
+  ],
+  "when_to_use": "Every workspace package + every client app consumes this preset for uniform behaviour.",
+  "when_not_to_use": "Applications with intentionally-different rules can extend + override.",
+  "peer_deps": [
+    "tsup"
+  ],
+  "backend_pair": null,
+  "size_gzip_kb": {},
+  "maturity": "beta",
+  "owning_agent": "workspace-standardization-steward",
+  "docs": [
+    "README.md"
+  ]
+}

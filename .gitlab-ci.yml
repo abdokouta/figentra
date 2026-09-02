@@ -1,0 +1,378 @@
+# =============================================================================
+# Figentra configuration manifest
+# =============================================================================
+#
+# @file .gitlab-ci.yml
+# @description This file is part of the Figentra declarative configuration
+#   system. It is consumed by the appropriate build, deployment, CI, local
+#   development, or release tooling. It is NOT a source of business logic.
+#
+# @security Secrets, private keys, credentials, access tokens, database URLs,
+#   and other sensitive material MUST NOT be committed to this file. Inject
+#   secrets through Doppler, CI protected variables, Wrangler secrets, or the
+#   target provider's secret-management facility.
+#
+# @change Any schema/data change must be reviewed with the owning service and
+#   the corresponding Terraform/CI/deployment generator. Generated files must
+#   not become a second source of truth.
+#
+# @environment Environment-specific values are explicit and limited to safe
+#   non-secret configuration. The canonical environments are development, staging, and production; external provider aliases are explicitly mapped.
+# =============================================================================
+
+# =============================================================================
+# figentra-platform — CI/CD pipeline (spec 19)
+# =============================================================================
+#
+# Two logical pipelines in one file, kept separate by `rules` (spec 19 §4):
+#   • Application — quality → build → package (Docker) → deploy (Wrangler/EAS).
+#   • Infrastructure — terraform fmt/validate/plan → apply (manual).
+#
+# Branch → environment (spec 19 §7, reviewed promotion — never auto-prod):
+#   develop  → development (auto-deploy)
+#   staging  → staging      (auto-deploy, smoke-gated)
+#   main     → production   (MANUAL apply/deploy gates — MUST-escalate)
+#
+# Secrets: every job that touches a cloud reads them via `doppler run --`
+#   (Doppler service token in the env-scoped CI var DOPPLER_TOKEN). No plaintext
+#   secrets in this file or in CI variables beyond the Doppler token itself
+#   (spec 19 §3, §9).
+#
+# PREREQUISITES before this pipeline runs green (Track A Phase 0 — human-gated):
+#   1. `@stackra/*` config packages published to npm (or switched to git deps) —
+#      the local `link:` overrides do NOT resolve on a CI runner. Until then
+#      `pnpm install --frozen-lockfile` fails at the `.setup` stage. This is the
+#      single hard blocker for the whole pipeline.
+#   2. Doppler projects + env-scoped CI service tokens (DOPPLER_TOKEN).
+#   3. AWS creds + state bucket (terraform init), Cloudflare API token+account,
+#      EAS token — all injected via Doppler at job time.
+#
+# Governance: prod apply/deploy are `when: manual` + protected — a human
+# approves per .kiro/steering/ai-agent-governance.md (MUST-escalate).
+# =============================================================================
+
+stages:
+  - setup
+  - quality
+  - build
+  - package
+  - contract
+  - infra
+  - deploy
+
+variables:
+  # Pinned toolchain (.nvmrc = 24.18.0; packageManager = pnpm@11.24.0).
+  NODE_IMAGE: "node:24.18.0-bookworm-slim"
+  # pnpm store lives in the project dir so GitLab can cache it.
+  PNPM_STORE: "$CI_PROJECT_DIR/.pnpm-store"
+  # Turbo affected-base: the MR diff base, else the previous commit.
+  TURBO_BASE: "${CI_MERGE_REQUEST_DIFF_BASE_SHA:-HEAD^1}"
+  FF_USE_FASTZIP: "true"
+
+# Run on merge requests, on the three environment branches, and on tags.
+workflow:
+  rules:
+    - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
+    - if: "$CI_COMMIT_BRANCH == 'develop'"
+    - if: "$CI_COMMIT_BRANCH == 'staging'"
+    - if: "$CI_COMMIT_BRANCH == 'main'"
+    - if: "$CI_COMMIT_TAG"
+
+# --- Reusable anchors --------------------------------------------------------
+
+# corepack-activated pnpm + a warm store cache. Every Node job extends this.
+.pnpm:
+  image: "$NODE_IMAGE"
+  before_script:
+    - corepack enable
+    - corepack prepare pnpm@11.24.0 --activate
+    - pnpm config set store-dir "$PNPM_STORE"
+    - pnpm install --frozen-lockfile
+  cache:
+    key:
+      files:
+        - pnpm-lock.yaml
+    paths:
+      - .pnpm-store
+      - node_modules/.cache/turbo
+
+# Wraps a job's cloud-touching commands in `doppler run --` for the right env.
+# Usage: extend + set DOPPLER_CONFIG using the explicit canonical-environment mapping: development→dev, staging→stg, production→prd.
+.doppler:
+  image: "$NODE_IMAGE"
+  before_script:
+    - corepack enable && corepack prepare pnpm@11.24.0 --activate
+    - apt-get update && apt-get install -y --no-install-recommends curl unzip
+    - curl -Ls --tlsv1.2 --proto "=https" https://cli.doppler.com/install.sh | sh
+
+# Docker runner variant. docker:27 is Alpine-based, so cloud tooling must use
+# apk rather than inheriting the Debian/Node setup above.
+.docker-cloud:
+  image: docker:27
+  before_script:
+    - apk add --no-cache curl unzip
+    - curl -Ls --tlsv1.2 --proto "=https" https://cli.doppler.com/install.sh | sh
+
+# Infra-change rule anchor (per-env branch rules are inlined on each deploy job).
+.on-infra-changes:
+  rules:
+    - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
+      changes: [infrastructure/terraform/**/*]
+    - if: "$CI_COMMIT_BRANCH =~ /^(develop|staging|main)$/"
+      changes: [infrastructure/terraform/**/*]
+
+# =============================================================================
+# setup — resolve the workspace once; fail fast if install is broken
+# =============================================================================
+install:
+  stage: setup
+  extends: .pnpm
+  script:
+    - pnpm ls --depth -1 > /dev/null
+    - echo "workspace install OK"
+
+# =============================================================================
+# quality — format, lint, typecheck, (non-blocking) test  [spec 19 §8]
+# =============================================================================
+format:check:
+  stage: quality
+  extends: .pnpm
+  script: [pnpm run format:check]
+
+commitlint:
+  stage: quality
+  extends: .pnpm
+  script:
+    - pnpm run commitlint:ci
+  rules:
+    - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
+    - if: "$CI_COMMIT_BRANCH =~ /^(develop|staging|main)$/"
+
+lint:
+  stage: quality
+  extends: .pnpm
+  # Turbo "affected" on MRs; full sweep on env branches.
+  script:
+    - >
+      if [ "$CI_PIPELINE_SOURCE" = "merge_request_event" ]; then
+        pnpm turbo run lint --filter="...[$TURBO_BASE]";
+      else
+        pnpm run lint;
+      fi
+
+typecheck:
+  stage: quality
+  extends: .pnpm
+  script:
+    - >
+      if [ "$CI_PIPELINE_SOURCE" = "merge_request_event" ]; then
+        pnpm turbo run check-types --filter="...[$TURBO_BASE]";
+      else
+        pnpm run check-types;
+      fi
+
+# Services ship `vitest run` but carry no suites yet — non-blocking until they
+# land (the platform "test business rules" guidance, spec 10 §8 / 19 §8).
+test:
+  stage: quality
+  extends: .pnpm
+  allow_failure: true
+  script:
+    - pnpm -r --filter "./services/*" run test
+
+# catalog.json is generated (cloud.yaml → infrastructure catalog). Fail if it's stale.
+catalog:drift:
+  stage: quality
+  extends: .pnpm
+  script:
+    - pnpm run catalog
+    - git diff --exit-code infrastructure/catalog.json
+
+# =============================================================================
+# build — turbo build (affected on MRs, full on env branches)
+# =============================================================================
+build:
+  stage: build
+  extends: .pnpm
+  script:
+    - >
+      if [ "$CI_PIPELINE_SOURCE" = "merge_request_event" ]; then
+        pnpm turbo run build --filter="...[$TURBO_BASE]";
+      else
+        pnpm run build;
+      fi
+  artifacts:
+    paths: [apps/*/dist, services/*/dist]
+    expire_in: 1 day
+
+# =============================================================================
+# package — Docker image per NestJS service → Cloudflare Container registry
+#           (spec 19 §5). Env branches only; needs Doppler-injected CF creds.
+# =============================================================================
+docker:build:
+  stage: package
+  services: [docker:27-dind]
+  extends: .docker-cloud
+  parallel:
+    matrix:
+      - SERVICE:
+          [approval, audit, entitlements, files, gateway, iam, identity, integrations, monetization, notifications, policy, reporting, scope, search, tenant, usage]
+  script:
+    - >
+      doppler run --config "$DOPPLER_CONFIG" --
+      sh -c '
+        echo "$CLOUDFLARE_API_TOKEN" | docker login --username "$CLOUDFLARE_ACCOUNT_ID" --password-stdin registry.cloudflare.com &&
+        docker build -f services/'"$SERVICE"'/Dockerfile -t "registry.cloudflare.com/$CLOUDFLARE_ACCOUNT_ID/'"$SERVICE"':$CI_COMMIT_SHORT_SHA" . &&
+        docker push "registry.cloudflare.com/$CLOUDFLARE_ACCOUNT_ID/'"$SERVICE"':$CI_COMMIT_SHORT_SHA"
+      '
+  rules:
+    - if: "$CI_COMMIT_BRANCH == 'develop'"
+      variables: { DOPPLER_CONFIG: dev }
+    - if: "$CI_COMMIT_BRANCH == 'staging'"
+      variables: { DOPPLER_CONFIG: stg }
+    - if: "$CI_COMMIT_BRANCH == 'main'"
+      variables: { DOPPLER_CONFIG: prd }
+      when: manual
+
+# =============================================================================
+# contract — repository/infrastructure consistency gates
+# =============================================================================
+infra:contract:
+  stage: contract
+  extends: .pnpm
+  script:
+    - pnpm run ci:contract
+    - pnpm run infra:test
+    - pnpm run docker:compose -- --environment=development
+    - pnpm run docker:test
+  rules:
+    - if: "$CI_PIPELINE_SOURCE == 'merge_request_event'"
+    - if: "$CI_COMMIT_BRANCH =~ /^(develop|staging|main)$/"
+
+# =============================================================================
+# infra — Terraform. fmt+validate on every infra change; plan on env branches;
+#         apply is manual (prod doubly so). One S3 state, workspace per env.
+# =============================================================================
+.terraform:
+  extends: .doppler
+  variables:
+    TF_ROOT: infrastructure/terraform
+  before_script:
+    - !reference [.doppler, before_script]
+    - curl -Ls https://releases.hashicorp.com/terraform/1.13.0/terraform_1.13.0_linux_amd64.zip -o tf.zip && unzip -o tf.zip -d /usr/local/bin
+    - cd "$TF_ROOT"
+
+tf:validate:
+  stage: infra
+  extends: .terraform
+  script:
+    - terraform fmt -check -recursive
+    - terraform init -backend=false
+    - terraform validate
+  rules: [!reference [.on-infra-changes, rules]]
+
+tf:plan:
+  stage: infra
+  extends: .terraform
+  script:
+    - doppler run --config "$DOPPLER_CONFIG" -- terraform init
+    - doppler run --config "$DOPPLER_CONFIG" -- terraform workspace select "$TF_WORKSPACE" || terraform workspace new "$TF_WORKSPACE"
+    - doppler run --config "$DOPPLER_CONFIG" -- terraform plan -out=plan.tfout
+  artifacts:
+    paths: [infrastructure/terraform/plan.tfout]
+    expire_in: 1 day
+  rules:
+    - if: "$CI_COMMIT_BRANCH == 'develop'"
+      variables: { DOPPLER_CONFIG: dev, TF_WORKSPACE: development }
+      changes: [infrastructure/terraform/**/*]
+    - if: "$CI_COMMIT_BRANCH == 'staging'"
+      variables: { DOPPLER_CONFIG: stg, TF_WORKSPACE: staging }
+      changes: [infrastructure/terraform/**/*]
+    - if: "$CI_COMMIT_BRANCH == 'main'"
+      variables: { DOPPLER_CONFIG: prd, TF_WORKSPACE: production }
+      changes: [infrastructure/terraform/**/*]
+
+tf:apply:
+  stage: infra
+  extends: .terraform
+  script:
+    - doppler run --config "$DOPPLER_CONFIG" -- terraform init
+    - doppler run --config "$DOPPLER_CONFIG" -- terraform workspace select "$TF_WORKSPACE"
+    - doppler run --config "$DOPPLER_CONFIG" -- terraform apply -auto-approve plan.tfout
+  needs: [tf:plan]
+  rules:
+    - if: "$CI_COMMIT_BRANCH == 'develop'"
+      variables: { DOPPLER_CONFIG: dev, TF_WORKSPACE: development }
+      when: manual
+    - if: "$CI_COMMIT_BRANCH == 'staging'"
+      variables: { DOPPLER_CONFIG: stg, TF_WORKSPACE: staging }
+      when: manual
+    - if: "$CI_COMMIT_BRANCH == 'main'"
+      variables: { DOPPLER_CONFIG: prd, TF_WORKSPACE: production }
+      when: manual
+      allow_failure: false
+
+# =============================================================================
+# deploy — Wrangler (workers + containers) + EAS (mobile). Consumes TF outputs
+#          (binding ids) at runtime via Doppler. Prod = manual (spec 19 §7).
+# =============================================================================
+.wrangler:
+  extends: .doppler
+  before_script:
+    - !reference [.doppler, before_script]
+    - pnpm install --frozen-lockfile
+
+deploy:workers:
+  stage: deploy
+  extends: .wrangler
+  parallel:
+    matrix:
+      - WORKER:
+          [application-registry, infrastructure-orchestrator, workflow-runtime]
+  script:
+    - cd "workers/$WORKER"
+    - doppler run --config "$DOPPLER_CONFIG" -- pnpm exec wrangler deploy --env "$WRANGLER_ENV"
+  rules:
+    - if: "$CI_COMMIT_BRANCH == 'develop'"
+      variables: { DOPPLER_CONFIG: dev, WRANGLER_ENV: development }
+    - if: "$CI_COMMIT_BRANCH == 'staging'"
+      variables: { DOPPLER_CONFIG: stg, WRANGLER_ENV: staging }
+    - if: "$CI_COMMIT_BRANCH == 'main'"
+      variables: { DOPPLER_CONFIG: prd, WRANGLER_ENV: production }
+      when: manual
+
+deploy:containers:
+  stage: deploy
+  extends: .wrangler
+  needs: [docker:build]
+  parallel:
+    matrix:
+      - SERVICE:
+          [approval, audit, entitlements, files, gateway, iam, identity, integrations, monetization, notifications, policy, reporting, scope, search, tenant, usage]
+  script:
+    - cd "services/$SERVICE"
+    - doppler run --config "$DOPPLER_CONFIG" -- pnpm exec wrangler deploy --env "$WRANGLER_ENV"
+  rules:
+    - if: "$CI_COMMIT_BRANCH == 'develop'"
+      variables: { DOPPLER_CONFIG: dev, WRANGLER_ENV: development }
+    - if: "$CI_COMMIT_BRANCH == 'staging'"
+      variables: { DOPPLER_CONFIG: stg, WRANGLER_ENV: staging }
+    - if: "$CI_COMMIT_BRANCH == 'main'"
+      variables: { DOPPLER_CONFIG: prd, WRANGLER_ENV: production }
+      when: manual
+
+# Mobile (family, Expo). EAS build + submit run in EAS cloud, triggered here.
+deploy:mobile:
+  stage: deploy
+  extends: .doppler
+  script:
+    - cd apps/family
+    - pnpm install --frozen-lockfile
+    - doppler run --config "$DOPPLER_CONFIG" -- pnpm exec eas build --platform all --non-interactive --no-wait --profile "$EAS_PROFILE"
+  rules:
+    - if: "$CI_COMMIT_BRANCH == 'staging'"
+      variables: { DOPPLER_CONFIG: stg, EAS_PROFILE: preview }
+      when: manual
+    - if: "$CI_COMMIT_BRANCH == 'main'"
+      variables: { DOPPLER_CONFIG: prd, EAS_PROFILE: production }
+      when: manual

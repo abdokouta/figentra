@@ -1,0 +1,51 @@
+# =============================================================================
+# Figentra configuration manifest
+# =============================================================================
+#
+# @file apps/family/.doppler.yaml
+# @description This file is part of the Figentra declarative configuration
+#   system. It is consumed by the appropriate build, deployment, CI, local
+#   development, or release tooling. It is NOT a source of business logic.
+#
+# @security Secrets, private keys, credentials, access tokens, database URLs,
+#   and other sensitive material MUST NOT be committed to this file. Inject
+#   secrets through Doppler, CI protected variables, Wrangler secrets, or the
+#   target provider's secret-management facility.
+#
+# @change Any schema/data change must be reviewed with the owning service and
+#   the corresponding Terraform/CI/deployment generator. Generated files must
+#   not become a second source of truth.
+#
+# @environment Environment-specific values are explicit and limited to safe
+#   non-secret configuration. The canonical environments are dev, stg, and prd.
+# =============================================================================
+
+# =============================================================================
+# Doppler — @figentra/family  (React Native · Expo / EAS · parents + athletes)
+# =============================================================================
+#
+# Binds apps/family to the `figentra-family` Doppler project.
+#
+# What lives here
+#   Client build-time public config, inlined into the EAS build via EXPO_PUBLIC_*
+#   (visible in the shipped bundle; rotated via Doppler):
+#     EXPO_PUBLIC_APP_ENV, EXPO_PUBLIC_API_URL, EXPO_PUBLIC_SENTRY_DSN.
+#   Native SUBMIT credentials, referenced by eas.json `$VAR` (never inlined),
+#   bridged into the EAS build/submit environment at CI time:
+#     APPLE_ID, ASC_APP_ID, APPLE_TEAM_ID (App Store Connect),
+#     GOOGLE_PLAY_SERVICE_ACCOUNT_KEY_PATH (Google Play service-account JSON),
+#     EXPO_TOKEN (EAS auth).
+#
+# What does NOT live here
+#   Workspace-tooling secrets -> /.doppler.yaml (figentra-workspace).
+#   Terraform provider creds (EXPO_TOKEN/GOOGLE_CREDENTIALS for provisioning the
+#   EAS app + Firebase/GCP project) -> figentra-workspace, exported as TF_VAR_*.
+#
+# Binding:  cd apps/family && doppler setup   (or root `pnpm doppler:setup`)
+# Configs:  dev · stg · prd    Override: DOPPLER_CONFIG=stg doppler run -- eas build
+# Governance: .kiro/steering/doppler.md · AGENTS.md
+# =============================================================================
+
+setup:
+  project: figentra-family
+  config: dev

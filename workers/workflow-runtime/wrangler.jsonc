@@ -1,0 +1,28 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "figentra-workflow-runtime",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat", "rpc"],
+  "observability": { "enabled": true, "head_sampling_rate": 1 },
+  "workflows": [
+    {
+      "name": "figentra-workflow-runtime",
+      "binding": "WORKFLOW_RUNTIME",
+      "class_name": "FigentraWorkflowRuntime",
+      "limits": { "steps": 10000 }
+    }
+  ],
+  "vars": {
+    "IDENTITY_JWKS_URL": "GENERATED_BY_TERRAFORM",
+    "IDENTITY_ISSUER": "GENERATED_BY_TERRAFORM",
+    "IDENTITY_AUDIENCE": "figentra:workflow-runtime",
+    "WORKFLOW_EXECUTE_PERMISSION": "workflow:execute",
+    "LOG_LEVEL": "info"
+  },
+  "env": {
+    "development": { "name": "figentra-workflow-runtime-development" },
+    "staging": { "name": "figentra-workflow-runtime-staging" },
+    "production": { "name": "figentra-workflow-runtime" }
+  }
+}

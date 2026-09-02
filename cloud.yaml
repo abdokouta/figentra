@@ -1,0 +1,78 @@
+# =============================================================================
+# Figentra Cloud Deployment Catalog
+# =============================================================================
+#
+# @file cloud.yaml
+# @description Root deployment-source manifest for Figentra.
+#
+# This file deliberately does NOT auto-discover the repository. Only paths and
+# external repositories explicitly declared here participate in catalog
+# generation. Each selected local source MUST contain its own cloud.yaml.
+#
+# `pnpm-workspace.yaml`/package.json workspaces answer a different question:
+# which directories belong to the JavaScript workspace. This file answers:
+# which directories are authorized deployment/catalog sources.
+#
+# @security No credentials, tokens, private keys, database passwords, or other
+# secrets are permitted here. Runtime secrets belong in Doppler/CI/provider
+# secret stores.
+# =============================================================================
+
+version: 1
+
+# =============================================================================
+# Local deployment sources
+# =============================================================================
+#
+# Nothing outside these paths is considered a local deployable by the collector.
+# Globs are supported for controlled gradual enrollment; explicit exclusions
+# may be used to keep experimental directories out of the deployment catalog.
+# =============================================================================
+paths:
+  - "apps/*"
+  - "services/*"
+  - "workers/*"
+
+# =============================================================================
+# External repository sources
+# =============================================================================
+#
+# External repositories are catalog sources, not npm/pnpm workspace members.
+# Their own cloud.yaml is collected only because the repository is explicitly
+# declared here.
+# =============================================================================
+repos: []
+# Example:
+# repos:
+#   - slug: crm
+#     repo: figentra-inc/crm
+#     ref: main
+
+# =============================================================================
+# Product identities
+# =============================================================================
+#
+# Products provide brand/domain/provider ownership. Deployable metadata remains
+# in each selected source's cloud.yaml; this prevents duplicate deployment
+# configuration at the repository root.
+# =============================================================================
+products:
+  - slug: figentra
+    display_name: Figentra
+    tld: figentra.com
+    cloudflare:
+      account_id_var: CLOUDFLARE_ACCOUNT_ID
+    doppler_workplace: figentra
+    sentry_org: figentra
+    observability:
+      betterstack: true
+
+  - slug: academorix
+    display_name: Academorix
+    tld: academorix.com
+    cloudflare:
+      account_id_var: ACADEMORIX_CLOUDFLARE_ACCOUNT_ID
+    doppler_workplace: academorix
+    sentry_org: academorix
+    observability:
+      betterstack: true

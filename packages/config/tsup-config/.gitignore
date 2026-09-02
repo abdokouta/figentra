@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.turbo/
+.npmrc
+.pub_status
+.pub_install.log
+.pub_build.log
+.pub_publish.log
+*.log
+.pnpm-store/

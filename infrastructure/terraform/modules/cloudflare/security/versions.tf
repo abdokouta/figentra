@@ -1,0 +1,14 @@
+/**
+ * @file versions.tf
+ * @description Provider constraints for the Figentra Cloudflare security module.
+ */
+terraform {
+  required_version = ">= 1.9.0, < 2.0.0"
+
+  required_providers {
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 5.24"
+    }
+  }
+}

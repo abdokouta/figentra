@@ -1,0 +1,46 @@
+{
+  "name": "@figentra/workflow-runtime",
+  "version": "0.0.1",
+  "description": "Figentra generic Cloudflare Workflow runtime and dispatch control plane.",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": { "node": ">=24.0.0" },
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "build": "wrangler deploy --dry-run --outdir dist",
+    "lint": "oxlint src __tests__",
+    "lint:fix": "oxlint --fix src __tests__",
+    "typecheck": "tsc --noEmit",
+    "check-types": "pnpm run typecheck",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "deploy:development": "wrangler deploy --env development --minify",
+    "deploy:staging": "wrangler deploy --env staging --minify",
+    "deploy:production": "wrangler deploy --env production --minify"
+  },
+  "dependencies": {
+    "hono": "catalog:",
+    "jose": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@figentra/workflows": "workspace:*",
+    "@stackra/oxlint-config": "workspace:*",
+    "@stackra/prettier-config": "workspace:*",
+    "@stackra/typescript-config": "workspace:*",
+    "@cloudflare/workers-types": "catalog:",
+    "oxlint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:",
+    "tsup": "catalog:",
+    "wrangler": "catalog:",
+    "vitest": "catalog:",
+    "@vitest/coverage-v8": "catalog:"
+  }
+}

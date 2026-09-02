@@ -1,0 +1,74 @@
+# =============================================================================
+# Figentra local infrastructure catalog
+# =============================================================================
+#
+# @file infrastructure/docker/docker.yaml
+# @description Declarative local-only infrastructure dependencies used by
+#   Docker Compose generation. Production infrastructure is NOT managed here;
+#   Terraform and provider-native deployment tools own production resources.
+#
+# @security Development credentials below are intentionally non-production
+#   defaults. Never point this catalog at production databases or secrets.
+#
+# @generation The Docker generator combines this file with every deployable
+#   cloud.yaml that declares docker.enabled: true.
+# =============================================================================
+
+# Local dependency containers. Application containers are collected separately
+# from their owning deployable manifests.
+services:
+  # NATS provides the local service-to-service messaging backbone.
+  nats:
+    # Pin a major server line for reproducible local development.
+    image: nats:3
+    # Infra profile prevents accidental startup unless explicitly requested.
+    profile: infra
+    # Client and monitoring ports are exposed for local development only.
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    # JetStream is enabled locally to exercise the production event model.
+    command: ["-js", "-m", "8222"]
+    # Health endpoint allows dependent containers to wait for NATS readiness.
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8222/"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  # PostgreSQL is the local persistence baseline for Nest services.
+  postgres:
+    # Pin the major PostgreSQL line used by the platform.
+    image: postgres:17
+    # Infra profile keeps databases opt-in for local development.
+    profile: infra
+    # Local-only database port.
+    ports:
+      - "5432:5432"
+    # These credentials are development-only and must never be reused in cloud environments.
+    environment:
+      POSTGRES_USER: figentra
+      POSTGRES_PASSWORD: figentra
+      POSTGRES_DB: figentra
+    # PostgreSQL readiness probe.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U figentra -d figentra"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # Redis is reserved for cache/coordination/rate-limit-adjacent workloads.
+  redis:
+    # Pin the Redis major line for local reproducibility.
+    image: redis:8-alpine
+    # Infra profile keeps Redis optional.
+    profile: infra
+    # Local-only Redis port.
+    ports:
+      - "6379:6379"
+    # Simple liveness/readiness probe.
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10

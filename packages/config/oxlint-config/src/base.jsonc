@@ -1,0 +1,28 @@
+{
+  // @stackra/oxlint-config — shared base.
+  //
+  // Do NOT extend this file directly from a workspace. Extend one of the role
+  // presets instead (react.jsonc / nest.jsonc / worker.jsonc); each of those
+  // already extends this base.
+  //
+  // Default plugins (always on): eslint core + typescript + unicorn + oxc.
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn"
+  },
+  "env": {
+    "es2024": true
+  },
+  "rules": {
+    "typescript/no-explicit-any": "off"
+  },
+  "ignorePatterns": [
+    "**/dist/**",
+    "**/build/**",
+    "**/coverage/**",
+    "**/node_modules/**",
+    "**/.turbo/**",
+    "**/.wrangler/**",
+    "**/*.d.ts"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "package": {
+    "name": "@figentra/observability",
+    "version": "0.2.0"
+  },
+  "purpose": "Figentra cross-runtime observability, telemetry, logging contracts, Nest Observe integration, Worker logging integration, and testing primitives.",
+  "peer_deps": [
+    "@nestjs/common",
+    "@nestjs/core",
+    "hono",
+    "rxjs"
+  ]
+}

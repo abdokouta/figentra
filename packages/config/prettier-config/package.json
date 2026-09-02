@@ -1,0 +1,46 @@
+{
+  "name": "@stackra/prettier-config",
+  "version": "3.0.2",
+  "private": false,
+  "description": "Shared Prettier configuration preset for the stackra-frontend monorepo. Exports a canonical Prettier config with Tailwind v4 plugin wiring.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "lint": "echo 'Config only - no lint'",
+    "typecheck": "echo 'No TS sources'",
+    "test": "echo 'No tests'",
+    "build": "echo 'Static - nothing to build'"
+  },
+  "peerDependencies": {
+    "prettier": "catalog:",
+    "prettier-plugin-tailwindcss": "catalog:"
+  },
+  "author": {
+    "name": "Figentra L.L.C",
+    "email": "dev@figentra.com",
+    "url": "https://figentra.com"
+  },
+  "homepage": "https://gitlab.com/stackra/frontend/prettier-config#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/stackra/frontend/prettier-config.git",
+    "directory": "."
+  },
+  "bugs": {
+    "url": "https://gitlab.com/stackra/frontend/prettier-config/-/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

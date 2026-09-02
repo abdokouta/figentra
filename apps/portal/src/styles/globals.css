@@ -1,0 +1,11 @@
+
+@import "tailwindcss";
+@import "@heroui/styles";
+@import "./theme.css";
+
+/*
+ * Dark-mode variant selector — `dark:*` utility classes apply when
+ * any ancestor carries the `.dark` class. `@stackra/theming`
+ * toggles `.dark` on `<html>` when `resolvedMode === "dark"`.
+ */
+@custom-variant dark (&:is(.dark *));

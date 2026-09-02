@@ -1,0 +1,12 @@
+{
+  "extends": "@stackra/typescript-config/worker",
+  "include": [
+    "src/**/*.ts",
+    "__tests__/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "coverage"
+  ]
+}

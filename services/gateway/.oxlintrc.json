@@ -1,0 +1,6 @@
+{
+  "$schema": "https://oxc.rs/schema/oxlint.json",
+  "extends": [
+    "@stackra/oxlint-config/nest"
+  ]
+}

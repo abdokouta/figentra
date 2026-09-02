@@ -1,0 +1,11 @@
+/** @file gateway.error.ts @description Stable Gateway error codes. */
+
+/** Machine-readable Gateway error identifiers. */
+export const GatewayErrorCode = Object.freeze({
+  AUTHENTICATION_REQUIRED: "GATEWAY_AUTHENTICATION_REQUIRED",
+  AUTHORIZATION_DENIED: "GATEWAY_AUTHORIZATION_DENIED",
+  ROUTE_NOT_FOUND: "GATEWAY_ROUTE_NOT_FOUND",
+  UPSTREAM_TIMEOUT: "GATEWAY_UPSTREAM_TIMEOUT",
+  UPSTREAM_UNAVAILABLE: "GATEWAY_UPSTREAM_UNAVAILABLE",
+  INVALID_REQUEST: "GATEWAY_INVALID_REQUEST",
+} as const);

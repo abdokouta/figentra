@@ -1,0 +1,9 @@
+{
+  "package": {
+    "name": "@stackra/network",
+    "path": "packages/network"
+  },
+  "purpose": "Foundational service-to-service network transport primitives; no service-specific SDKs.",
+  "when_to_use": "Use for authenticated HTTP transport, timeout, and retry primitives when communicating with another service.",
+  "peer_deps": []
+}

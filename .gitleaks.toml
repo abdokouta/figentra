@@ -1,0 +1,16 @@
+# =============================================================================
+# @file .gitleaks.toml
+# @description Repository secret-scanning policy for CI and local verification.
+# @security Findings must be resolved or explicitly allowlisted with an ADR.
+# =============================================================================
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Generated/example identifiers that are intentionally non-secret."
+paths = [
+  '''(^|/)\.ref/''',
+  '''(^|/)docs/''',
+  '''(^|/)\.kiro/'''
+]

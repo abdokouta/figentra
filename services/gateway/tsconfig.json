@@ -1,0 +1,6 @@
+{
+  "extends": "@stackra/typescript-config/node.json",
+  "compilerOptions": { "outDir": "./dist", "rootDir": "./src", "declaration": true, "declarationMap": true, "sourceMap": true, "experimentalDecorators": true, "emitDecoratorMetadata": true, "module": "NodeNext", "moduleResolution": "NodeNext" },
+  "include": ["src/**/*.ts"],
+  "exclude": ["dist", "node_modules", "__tests__"]
+}

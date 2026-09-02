@@ -1,0 +1,25 @@
+{
+  "$schema": "../../.ref/schemas/catalog.v1.json",
+  "name": "@stackra/typescript-config",
+  "tier": "foundation",
+  "surfaces": [
+    "core"
+  ],
+  "kind": "tooling",
+  "purpose": "Workspace TypeScript config preset — canonical strict + moduleResolution + target settings.",
+  "capabilities": [
+    "Consumer extends `@stackra/typescript-config/base`",
+    "React variant + node variant + strict variant",
+    "Path alias support via `paths`"
+  ],
+  "when_to_use": "Every workspace package + every client app consumes this preset for uniform behaviour.",
+  "when_not_to_use": "Applications with intentionally-different rules can extend + override.",
+  "peer_deps": [],
+  "backend_pair": null,
+  "size_gzip_kb": {},
+  "maturity": "beta",
+  "owning_agent": "workspace-standardization-steward",
+  "docs": [
+    "README.md"
+  ]
+}

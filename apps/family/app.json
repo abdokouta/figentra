@@ -1,0 +1,97 @@
+{
+  "expo": {
+    "name": "Academorix",
+    "slug": "academorix-family",
+    "owner": "academorix",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/images/icon.png",
+    "scheme": "academorix",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.academorix.app",
+      "buildNumber": "1",
+      "associatedDomains": ["applinks:app.academorix.com"],
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Unlock the app quickly with Face ID",
+        "NSCameraUsageDescription": "Take or upload profile photos",
+        "NSPhotoLibraryUsageDescription": "Choose profile photos from your library"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0A0A0A",
+        "foregroundImage": "./src/assets/images/android-icon-foreground.png",
+        "monochromeImage": "./src/assets/images/android-icon-monochrome.png"
+      },
+      "package": "com.academorix.app",
+      "versionCode": 1,
+      "permissions": [
+        "CAMERA",
+        "READ_MEDIA_IMAGES",
+        "READ_MEDIA_VIDEO",
+        "USE_BIOMETRIC",
+        "USE_FINGERPRINT",
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE",
+        "POST_NOTIFICATIONS"
+      ],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "app.academorix.com",
+              "pathPrefix": "/"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./src/assets/images/splash-icon.png",
+          "imageWidth": 220,
+          "resizeMode": "contain",
+          "backgroundColor": "#0A0A0A",
+          "dark": {
+            "image": "./src/assets/images/splash-icon.png",
+            "imageWidth": 220,
+            "resizeMode": "contain",
+            "backgroundColor": "#0A0A0A"
+          }
+        }
+      ],
+      "expo-image",
+      "expo-secure-store",
+      "expo-notifications",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow Academorix to use Face ID to unlock the app."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "16b1ebc8-91a3-4ebb-b596-0bfe4ca4caba"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/16b1ebc8-91a3-4ebb-b596-0bfe4ca4caba"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
+  }
+}

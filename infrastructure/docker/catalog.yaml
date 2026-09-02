@@ -1,0 +1,19 @@
+# =============================================================================
+# @file infrastructure/docker/catalog.yaml
+# @description Docker generation contract.
+#
+# The root `cloud.yaml` is the only deployment-source enrollment manifest.
+# Docker consumes the generated infrastructure/catalog.json and never performs
+# independent filesystem discovery.
+# =============================================================================
+
+kind: docker-catalog
+version: 1
+source:
+  root_manifest: ../../cloud.yaml
+  generated_catalog: ../catalog.json
+  infrastructure: ./docker.yaml
+output:
+  compose: ./docker-compose.generated.yml
+environments:
+  path: ./environments

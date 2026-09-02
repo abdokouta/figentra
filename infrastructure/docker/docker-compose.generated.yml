@@ -1,0 +1,602 @@
+# =============================================================================
+# GENERATED FILE — DO NOT EDIT
+# @file infrastructure/docker/docker-compose.generated.yml
+# @description Local/integration Compose topology for development.
+# @source-of-truth infrastructure/environments/development.yaml + infrastructure/catalog.json + docker.yaml
+# @generator infrastructure/docker/scripts/generate-compose.mjs
+# @security Secrets are forbidden in generated Compose.
+# =============================================================================
+name: figentra
+services:
+  approval:
+    build:
+      context: .
+      dockerfile: services/approval/Dockerfile
+      target: runtime
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 20s
+    networks:
+    - figentra
+    environment:
+      NODE_ENV: development
+      FIGENTRA_ENV: development
+      LOG_LEVEL: debug
+      OBSERVE_SERVICE_ID: approval
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - 'fetch(''http://127.0.0.1:3000/api/health/live'').then(r => process.exit(r.ok
+        ? 0 : 1)).catch(() => process.exit(1))'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    expose:
+    - '3000'
+    depends_on:
+      nats:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+  audit:
+    build:
+      context: .
+      dockerfile: services/audit/Dockerfile
+      target: runtime
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 20s
+    networks:
+    - figentra
+    environment:
+      NODE_ENV: development
+      FIGENTRA_ENV: development
+      LOG_LEVEL: debug
+      OBSERVE_SERVICE_ID: audit
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - 'fetch(''http://127.0.0.1:3000/api/health/live'').then(r => process.exit(r.ok
+        ? 0 : 1)).catch(() => process.exit(1))'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    expose:
+    - '3000'
+    depends_on:
+      nats:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+  entitlements:
+    build:
+      context: .
+      dockerfile: services/entitlements/Dockerfile
+      target: runtime
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 20s
+    networks:
+    - figentra
+    environment:
+      NODE_ENV: development
+      FIGENTRA_ENV: development
+      LOG_LEVEL: debug
+      OBSERVE_SERVICE_ID: entitlements
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - 'fetch(''http://127.0.0.1:3000/api/health/live'').then(r => process.exit(r.ok
+        ? 0 : 1)).catch(() => process.exit(1))'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    expose:
+    - '3000'
+    depends_on:
+      nats:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+  files:
+    build:
+      context: .
+      dockerfile: services/files/Dockerfile
+      target: runtime
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 20s
+    networks:
+    - figentra
+    environment:
+      NODE_ENV: development
+      FIGENTRA_ENV: development
+      LOG_LEVEL: debug
+      OBSERVE_SERVICE_ID: files
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - 'fetch(''http://127.0.0.1:3000/api/health/live'').then(r => process.exit(r.ok
+        ? 0 : 1)).catch(() => process.exit(1))'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    expose:
+    - '3000'
+    depends_on:
+      nats:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+  gateway:
+    build:
+      context: .
+      dockerfile: services/gateway/Dockerfile
+      target: runtime
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 20s
+    networks:
+    - figentra
+    environment:
+      NODE_ENV: development
+      FIGENTRA_ENV: development
+      LOG_LEVEL: debug
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - 'fetch(''http://127.0.0.1:3000/api/health/live'').then(r => process.exit(r.ok
+        ? 0 : 1)).catch(() => process.exit(1))'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    expose:
+    - '3000'
+    depends_on:
+      nats:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+  iam:
+    build:
+      context: .
+      dockerfile: services/iam/Dockerfile
+      target: runtime
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 20s
+    networks:
+    - figentra
+    environment:
+      NODE_ENV: development
+      FIGENTRA_ENV: development
+      LOG_LEVEL: debug
+      OBSERVE_SERVICE_ID: iam
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - 'fetch(''http://127.0.0.1:3000/api/health/live'').then(r => process.exit(r.ok
+        ? 0 : 1)).catch(() => process.exit(1))'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    expose:
+    - '3000'
+    depends_on:
+      nats:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+  identity:
+    build:
+      context: .
+      dockerfile: services/identity/Dockerfile
+      target: runtime
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 20s
+    networks:
+    - figentra
+    environment:
+      NODE_ENV: development
+      FIGENTRA_ENV: development
+      LOG_LEVEL: debug
+      OBSERVE_SERVICE_ID: identity
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - 'fetch(''http://127.0.0.1:3000/api/health/live'').then(r => process.exit(r.ok
+        ? 0 : 1)).catch(() => process.exit(1))'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    expose:
+    - '3000'
+    depends_on:
+      nats:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+  integrations:
+    build:
+      context: .
+      dockerfile: services/integrations/Dockerfile
+      target: runtime
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 20s
+    networks:
+    - figentra
+    environment:
+      NODE_ENV: development
+      FIGENTRA_ENV: development
+      LOG_LEVEL: debug
+      OBSERVE_SERVICE_ID: integrations
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - 'fetch(''http://127.0.0.1:3000/api/health/live'').then(r => process.exit(r.ok
+        ? 0 : 1)).catch(() => process.exit(1))'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    expose:
+    - '3000'
+    depends_on:
+      nats:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+  monetization:
+    build:
+      context: .
+      dockerfile: services/monetization/Dockerfile
+      target: runtime
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 20s
+    networks:
+    - figentra
+    environment:
+      NODE_ENV: development
+      FIGENTRA_ENV: development
+      LOG_LEVEL: debug
+      OBSERVE_SERVICE_ID: monetization
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - 'fetch(''http://127.0.0.1:3000/api/health/live'').then(r => process.exit(r.ok
+        ? 0 : 1)).catch(() => process.exit(1))'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    expose:
+    - '3000'
+    depends_on:
+      nats:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+  notifications:
+    build:
+      context: .
+      dockerfile: services/notifications/Dockerfile
+      target: runtime
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 20s
+    networks:
+    - figentra
+    environment:
+      NODE_ENV: development
+      FIGENTRA_ENV: development
+      LOG_LEVEL: debug
+      OBSERVE_SERVICE_ID: notifications
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - 'fetch(''http://127.0.0.1:3000/api/health/live'').then(r => process.exit(r.ok
+        ? 0 : 1)).catch(() => process.exit(1))'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    expose:
+    - '3000'
+    depends_on:
+      nats:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+  policy:
+    build:
+      context: .
+      dockerfile: services/policy/Dockerfile
+      target: runtime
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 20s
+    networks:
+    - figentra
+    environment:
+      NODE_ENV: development
+      FIGENTRA_ENV: development
+      LOG_LEVEL: debug
+      OBSERVE_SERVICE_ID: policy
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - 'fetch(''http://127.0.0.1:3000/api/health/live'').then(r => process.exit(r.ok
+        ? 0 : 1)).catch(() => process.exit(1))'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    expose:
+    - '3000'
+    depends_on:
+      nats:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+  reporting:
+    build:
+      context: .
+      dockerfile: services/reporting/Dockerfile
+      target: runtime
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 20s
+    networks:
+    - figentra
+    environment:
+      NODE_ENV: development
+      FIGENTRA_ENV: development
+      LOG_LEVEL: debug
+      OBSERVE_SERVICE_ID: reporting
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - 'fetch(''http://127.0.0.1:3000/api/health/live'').then(r => process.exit(r.ok
+        ? 0 : 1)).catch(() => process.exit(1))'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    expose:
+    - '3000'
+    depends_on:
+      nats:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+  scope:
+    build:
+      context: .
+      dockerfile: services/scope/Dockerfile
+      target: runtime
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 20s
+    networks:
+    - figentra
+    environment:
+      NODE_ENV: development
+      FIGENTRA_ENV: development
+      LOG_LEVEL: debug
+      OBSERVE_SERVICE_ID: scope
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - 'fetch(''http://127.0.0.1:3000/api/health/live'').then(r => process.exit(r.ok
+        ? 0 : 1)).catch(() => process.exit(1))'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    expose:
+    - '3000'
+    depends_on:
+      nats:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+  search:
+    build:
+      context: .
+      dockerfile: services/search/Dockerfile
+      target: runtime
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 20s
+    networks:
+    - figentra
+    environment:
+      NODE_ENV: development
+      FIGENTRA_ENV: development
+      LOG_LEVEL: debug
+      OBSERVE_SERVICE_ID: search
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - 'fetch(''http://127.0.0.1:3000/api/health/live'').then(r => process.exit(r.ok
+        ? 0 : 1)).catch(() => process.exit(1))'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    expose:
+    - '3000'
+    depends_on:
+      nats:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+  tenant:
+    build:
+      context: .
+      dockerfile: services/tenant/Dockerfile
+      target: runtime
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 20s
+    networks:
+    - figentra
+    environment:
+      NODE_ENV: development
+      FIGENTRA_ENV: development
+      LOG_LEVEL: debug
+      OBSERVE_SERVICE_ID: tenant
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - 'fetch(''http://127.0.0.1:3000/api/health/live'').then(r => process.exit(r.ok
+        ? 0 : 1)).catch(() => process.exit(1))'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    expose:
+    - '3000'
+    depends_on:
+      nats:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+  usage:
+    build:
+      context: .
+      dockerfile: services/usage/Dockerfile
+      target: runtime
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 20s
+    networks:
+    - figentra
+    environment:
+      NODE_ENV: development
+      FIGENTRA_ENV: development
+      LOG_LEVEL: debug
+      OBSERVE_SERVICE_ID: usage
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - 'fetch(''http://127.0.0.1:3000/api/health/live'').then(r => process.exit(r.ok
+        ? 0 : 1)).catch(() => process.exit(1))'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    expose:
+    - '3000'
+    depends_on:
+      nats:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+  nats:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+  nats:
+    image: nats:3
+    profiles:
+    - infra
+    ports:
+    - 4222:4222
+    - 8222:8222
+    command:
+    - -js
+    - -m
+    - '8222'
+    healthcheck:
+      test:
+      - CMD
+      - wget
+      - --spider
+      - -q
+      - http://127.0.0.1:8222/
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    networks:
+    - figentra
+  postgres:
+    image: postgres:17
+    profiles:
+    - infra
+    ports:
+    - 5432:5432
+    environment:
+      POSTGRES_USER: figentra
+      POSTGRES_PASSWORD: figentra
+      POSTGRES_DB: figentra
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - pg_isready -U figentra -d figentra
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+    - figentra
+  redis:
+    image: redis:8-alpine
+    profiles:
+    - infra
+    ports:
+    - 6379:6379
+    healthcheck:
+      test:
+      - CMD
+      - redis-cli
+      - ping
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+    - figentra
+networks:
+  figentra:
+    name: figentra

@@ -1,0 +1,26 @@
+{
+  "name": "@stackra/oxlint-config",
+  "tier": "foundation",
+  "surfaces": [
+    "core"
+  ],
+  "kind": "tooling",
+  "purpose": "Workspace oxlint config preset \u2014 shared lint rules across @stackra/* packages, services, and workers.",
+  "capabilities": [
+    "base + react + native + nest + worker presets",
+    "Consumed via package export specifiers in .oxlintrc.json",
+    "Built-in oxlint plugins \u2014 no ESLint runtime dependency tree"
+  ],
+  "when_to_use": "Every package/app/service/worker consumes a preset for uniform oxlint behaviour.",
+  "when_not_to_use": "Workspaces with intentionally-different rules extend + override locally.",
+  "peer_deps": [
+    "oxlint"
+  ],
+  "backend_pair": null,
+  "size_gzip_kb": {},
+  "maturity": "stable",
+  "owning_agent": "workspace-standardization-steward",
+  "docs": [
+    "README.md"
+  ]
+}

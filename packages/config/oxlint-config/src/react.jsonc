@@ -1,0 +1,23 @@
+{
+  // @stackra/oxlint-config/react — Vite + React 19 apps.
+  //
+  // The `react` plugin bundles react + react-hooks + react-refresh rules.
+  //
+  // Usage — apps/<name>/.oxlintrc.json:
+  //   { "extends": ["./node_modules/@stackra/oxlint-config/react.jsonc"] }
+  "extends": ["./base.jsonc"],
+  "plugins": ["typescript", "unicorn", "oxc", "import", "react", "jsx-a11y"],
+  "env": {
+    "browser": true
+  },
+  "settings": {
+    "react": {
+      // oxlint requires a concrete major version here (unlike ESLint's "detect").
+      "version": "19.0"
+    }
+  },
+  "rules": {
+    // React 19 automatic JSX runtime — no in-scope React import required.
+    "react/react-in-jsx-scope": "off"
+  }
+}

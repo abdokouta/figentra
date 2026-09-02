@@ -1,0 +1,112 @@
+// =============================================================================
+// @file workers/registry/wrangler.jsonc
+// @description Cloudflare Wrangler configuration for the Figentra
+// Application Registry.
+//
+// @source-of-truth `cloud.yaml` declares required capabilities. Terraform
+// provisions D1/KV and CI renders real resource identifiers before deployment.
+//
+// @security The Registry is a control-plane service. Registration mutations
+// require a service principal, a dedicated audience, and an explicit IAM
+// permission. Secrets are injected at runtime and never committed here.
+//
+// @operations Route resolution is callable by the Gateway through a Cloudflare
+// Service Binding. Public administration endpoints remain independently
+// protected by the same identity/IAM contract.
+// =============================================================================
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "figentra-application-registry",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat", "rpc"],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "vars": {
+    "LOG_LEVEL": "info",
+    "IDENTITY_JWKS_URL": "GENERATED_BY_TERRAFORM",
+    "IDENTITY_ISSUER": "GENERATED_BY_TERRAFORM",
+    "IDENTITY_AUDIENCE": "figentra:registry",
+    "REGISTRY_REGISTRATION_AUDIENCE": "figentra:registry:registration",
+    "REGISTRY_ROUTE_RESOLUTION_AUDIENCE": "figentra:registry:route-resolution",
+    "REGISTRY_ALLOWED_UPSTREAM_SUFFIX": "figentra.com"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "figentra-application-registry",
+      "database_id": "GENERATED_BY_TERRAFORM",
+      "migrations_dir": "database/migrations"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "REGISTRY_CACHE",
+      "id": "GENERATED_BY_TERRAFORM"
+    }
+  ],
+  "env": {
+    "development": {
+      "name": "figentra-application-registry-development",
+      "vars": {
+        "LOG_LEVEL": "debug"
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "figentra-application-registry-development",
+          "database_id": "GENERATED_BY_TERRAFORM",
+          "migrations_dir": "database/migrations"
+        }
+      ],
+      "kv_namespaces": [
+        {
+          "binding": "REGISTRY_CACHE",
+          "id": "GENERATED_BY_TERRAFORM"
+        }
+      ]
+    },
+    "staging": {
+      "name": "figentra-application-registry-staging",
+      "vars": {
+        "LOG_LEVEL": "info"
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "figentra-application-registry-staging",
+          "database_id": "GENERATED_BY_TERRAFORM",
+          "migrations_dir": "database/migrations"
+        }
+      ],
+      "kv_namespaces": [
+        {
+          "binding": "REGISTRY_CACHE",
+          "id": "GENERATED_BY_TERRAFORM"
+        }
+      ]
+    },
+    "production": {
+      "name": "figentra-application-registry",
+      "vars": {
+        "LOG_LEVEL": "warn"
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "figentra-application-registry",
+          "database_id": "GENERATED_BY_TERRAFORM",
+          "migrations_dir": "database/migrations"
+        }
+      ],
+      "kv_namespaces": [
+        {
+          "binding": "REGISTRY_CACHE",
+          "id": "GENERATED_BY_TERRAFORM"
+        }
+      ]
+    }
+  }
+}

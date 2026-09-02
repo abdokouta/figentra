@@ -1,0 +1,55 @@
+# Figentra Gateway deployment contract.
+# Secrets are runtime-injected; this file contains no credentials.
+kind: service
+slug: gateway
+brand: figentra
+plane: edge
+runtime: cloudflare-container
+tier: shared
+source:
+  type: local
+  path: services/gateway
+subdomain: api
+cloudflare_name: figentra-gateway
+doppler_project: figentra-gateway
+capabilities:
+  needs_d1: false
+  needs_kv: false
+  needs_r2: false
+  needs_queue: false
+  needs_durable_object: false
+  needs_supabase: false
+  needs_redis: true
+  needs_nats: true
+branch:
+  development: develop
+  staging: staging
+  production: main
+env_vars:
+  development:
+    LOG_LEVEL: debug
+  staging:
+    LOG_LEVEL: info
+  production:
+    LOG_LEVEL: warn
+container:
+  # Canonical runtime contract shared by Docker, Compose, and CI.
+  port: 3000
+  health_path: /api/health/live
+docker:
+  enabled: true
+  context: .
+  dockerfile: services/gateway/Dockerfile
+  target: runtime
+  container_port: 3000
+  network: figentra
+observability:
+  sentry:
+    platform: node
+    enable: true
+  betterstack:
+    enable_uptime: true
+tags:
+  service: gateway
+  plane: edge
+  vendor: figentra

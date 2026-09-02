@@ -1,0 +1,60 @@
+{
+  "name": "@stackra/tsup-config",
+  "version": "3.0.2",
+  "private": false,
+  "description": "Shared tsup config helper for the stackra-frontend monorepo. Exports defineBaseConfig(entries, overrides).",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rimraf dist .turbo",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'No source lint - build config'",
+    "test": "echo 'No tests - build config'"
+  },
+  "peerDependencies": {
+    "tsup": "catalog:"
+  },
+  "devDependencies": {
+    "@stackra/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "rimraf": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:"
+  },
+  "author": {
+    "name": "Figentra L.L.C",
+    "email": "dev@figentra.com",
+    "url": "https://figentra.com"
+  },
+  "homepage": "https://gitlab.com/stackra/frontend/tsup-config#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/stackra/frontend/tsup-config.git",
+    "directory": "."
+  },
+  "bugs": {
+    "url": "https://gitlab.com/stackra/frontend/tsup-config/-/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

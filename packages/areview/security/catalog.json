@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "package": {
+    "name": "@figentra/security",
+    "path": "packages/areview/security",
+    "version": "0.1.0"
+  },
+  "purpose": "Figentra shared security package.",
+  "capabilities": [],
+  "when_to_use": "Use @figentra/security when its documented package capabilities are required.",
+  "when_not_to_use": "Do not use this package as a substitute for a service-owned business boundary.",
+  "peer_deps": [],
+  "maturity": "active",
+  "owning_agent": "framework-core-builder",
+  "docs": [
+    "README.md"
+  ]
+}

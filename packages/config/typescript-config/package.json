@@ -1,0 +1,47 @@
+{
+  "name": "@stackra/typescript-config",
+  "version": "3.0.2",
+  "private": false,
+  "description": "Shared TypeScript configuration presets for the stackra-frontend monorepo. Exports base + react-library + vite + vite-node + native + worker + nest presets.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    "./base": "./src/base.json",
+    "./react-library": "./src/react-library.json",
+    "./vite": "./src/vite.json",
+    "./vite-node": "./src/vite-node.json",
+    "./native": "./src/native.json",
+    "./worker": "./src/worker.json",
+    "./nest": "./src/nest.json"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "lint": "echo 'JSON files \u2014 linted via prettier'",
+    "typecheck": "echo 'No TypeScript sources'",
+    "test": "echo 'No tests'",
+    "build": "echo 'Static JSON \u2014 nothing to build'"
+  },
+  "author": {
+    "name": "Figentra L.L.C",
+    "email": "dev@figentra.com",
+    "url": "https://figentra.com"
+  },
+  "homepage": "https://gitlab.com/stackra/frontend/typescript-config#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/stackra/frontend/typescript-config.git",
+    "directory": "."
+  },
+  "bugs": {
+    "url": "https://gitlab.com/stackra/frontend/typescript-config/-/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}
