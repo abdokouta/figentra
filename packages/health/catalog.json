@@ -1,0 +1,9 @@
+{
+  "name": "@figentra/health",
+  "category": "observability",
+  "status": "stable",
+  "subpaths": ["core", "nest", "worker"],
+  "coreBoundary": "provider-neutral",
+  "terminus": false,
+  "routeNaming": "define*"
+}
