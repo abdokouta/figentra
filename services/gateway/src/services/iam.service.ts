@@ -1,9 +1,9 @@
 /** @file iam.service.ts @description Gateway IAM decision adapter. */
 import { ForbiddenException, Inject, Injectable, ServiceUnavailableException } from "@nestjs/common";
-import { GATEWAY_CONFIG } from "../modules/gateway.config.module.js";
+import { GATEWAY_CONFIG } from "../modules/gateway.config.module";
 import { HttpServiceTransport } from "@stackra/network";
-import type { GatewayActorContext } from "../types/request-context.type.js";
-import type { GatewayConfig } from "../config/gateway.config.js";
+import type { GatewayActorContext } from "../types/request-context.type";
+import type { GatewayConfig } from "../config/gateway.config";
 
 /** Calls IAM for authoritative permission decisions. */
 @Injectable()

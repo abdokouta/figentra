@@ -1,9 +1,9 @@
 /** @file token-exchange.service.ts @description Identity S2S token exchange adapter. */
 import { Inject, Injectable, ServiceUnavailableException } from "@nestjs/common";
-import { GATEWAY_CONFIG } from "../modules/gateway.config.module.js";
+import { GATEWAY_CONFIG } from "../modules/gateway.config.module";
 import { HttpServiceTransport } from "@stackra/network";
-import type { GatewayActorContext } from "../types/request-context.type.js";
-import type { GatewayConfig } from "../config/gateway.config.js";
+import type { GatewayActorContext } from "../types/request-context.type";
+import type { GatewayConfig } from "../config/gateway.config";
 
 /** Response from Identity's authenticated downstream-token exchange. */
 interface TokenExchangeResponse {

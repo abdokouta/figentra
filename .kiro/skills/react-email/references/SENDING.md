@@ -115,7 +115,7 @@ await transporter.sendMail({
 ```tsx
 import { render } from "react-email";
 import FormData from "form-data";
-import Mailgun from "mailgun.js";
+import Mailgun from "mailgun";
 import { WelcomeEmail } from "./emails/welcome";
 
 const mailgun = new Mailgun(FormData);

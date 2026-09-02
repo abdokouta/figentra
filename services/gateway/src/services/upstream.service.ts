@@ -1,18 +1,18 @@
 /** @file upstream.service.ts @description Authenticated upstream proxy service. */
 import { BadGatewayException, Inject, Injectable, GatewayTimeoutException } from "@nestjs/common";
-import { GATEWAY_CONFIG } from "../modules/gateway.config.module.js";
+import { GATEWAY_CONFIG } from "../modules/gateway.config.module";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { HttpServiceTransport } from "@stackra/network";
-import type { ServiceRoute } from "../interfaces/service-route.interface.js";
-import type { GatewayConfig } from "../config/gateway.config.js";
-import type { GatewayActorContext } from "../types/request-context.type.js";
-import { GatewayTokenExchangeService } from "./token-exchange.service.js";
+import type { ServiceRoute } from "../interfaces/service-route.interface";
+import type { GatewayConfig } from "../config/gateway.config";
+import type { GatewayActorContext } from "../types/request-context.type";
+import { GatewayTokenExchangeService } from "./token-exchange.service";
 
 /** Proxies validated requests to an authenticated registered service. */
 @Injectable()
 export class GatewayUpstreamService {
   /** Creates the upstream proxy service. */
-  public constructor(@Inject(GATEWAY_CONFIG) private readonly config: GatewayConfig, private readonly tokenExchange: GatewayTokenExchangeService) {}
+  public constructor(@Inject(GATEWAY_CONFIG) private readonly config: GatewayConfig, private readonly tokenExchange: GatewayTokenExchangeService) { }
 
   /** Forwards one request using an audience-bound token and safe headers. */
   public async forward(request: FastifyRequest, reply: FastifyReply, route: ServiceRoute, actor: GatewayActorContext): Promise<void> {

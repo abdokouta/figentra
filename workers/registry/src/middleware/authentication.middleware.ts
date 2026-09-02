@@ -1,17 +1,19 @@
 /**
  * @file authentication.middleware.ts
- * @description Registry Identity JWT verification middleware.
+ * @description Authentication middleware verifying incoming JWT tokens for protected routes.
  */
+
 import type { Context, Next } from "hono";
-import { verifyRegistryToken } from "../security/jwt-verifier.js";
-import type { RegistryBindings } from "../interfaces/registry-bindings.interface.js";
-import type { RegistryVariables } from "../interfaces/registry-variables.interface.js";
+import { verifyRegistryToken } from "../security/jwt-verifier";
+import type { RegistryBindings } from "../interfaces/registry-bindings.interface";
+import type { RegistryVariables } from "../interfaces/registry-variables.interface";
 
 /**
- * Authenticates all protected Registry requests.
+ * Authenticates requests to /v1/* endpoints by verifying the Bearer token.
+ * Populates `registryClaims` on the Hono context for downstream route authorization.
  *
- * @security Route modules remain responsible for exact principal, audience and
- * permission checks.
+ * @param c - Hono request context.
+ * @param next - Next middleware handler.
  */
 export async function authenticateRegistryRequest(
   c: Context<{ Bindings: RegistryBindings; Variables: RegistryVariables }>,
@@ -26,9 +28,6 @@ export async function authenticateRegistryRequest(
     c.set("registryClaims", claims);
     await next();
   } catch {
-    return c.json(
-      { error: "unauthorized", requestId: c.get("requestId") },
-      401,
-    );
+    return c.json({ error: "unauthorized", requestId: c.get("requestId") }, 401);
   }
 }

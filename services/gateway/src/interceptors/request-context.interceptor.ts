@@ -2,7 +2,7 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
 import type { FastifyReply } from "fastify";
 import { Observable, tap } from "rxjs";
-import { CORRELATION_ID_HEADER, REQUEST_ID_HEADER } from "../constants/gateway.constant.js";
+import { CORRELATION_ID_HEADER, REQUEST_ID_HEADER } from "../constants/gateway.constant";
 
 /** Symbolic metadata key reserved for request-context integration. */
 export const REQUEST_CONTEXT = Symbol("figentra.gateway.request-context");

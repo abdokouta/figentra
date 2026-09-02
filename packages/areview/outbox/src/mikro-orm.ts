@@ -8,8 +8,8 @@
  * taking the same event. Each service owns its own outbox tables.
  */
 import type { EntityManager } from "@mikro-orm/core";
-import type { OutboxRecord } from "./index.js";
-import type { OutboxRelayStore } from "./relay.js";
+import type { OutboxRecord } from "./index";
+import type { OutboxRelayStore } from "./relay";
 
 /**
  * PostgreSQL outbox persistence adapter.
@@ -18,7 +18,7 @@ export class MikroOrmOutboxStore implements OutboxRelayStore {
   /**
    * @param em - MikroORM EntityManager configured for the owning service DB.
    */
-  public constructor(private readonly em: EntityManager) {}
+  public constructor(private readonly em: EntityManager) { }
 
   /** Claims pending rows without allowing another relay to claim the same row. */
   public async claim(limit: number): Promise<readonly OutboxRecord[]> {

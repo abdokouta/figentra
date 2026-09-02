@@ -33,6 +33,7 @@
     "@figentra/workflows": "workspace:*",
     "@stackra/oxlint-config": "workspace:*",
     "@stackra/prettier-config": "workspace:*",
+    "@stackra/testing": "workspace:*",
     "@stackra/typescript-config": "workspace:*",
     "@cloudflare/workers-types": "catalog:",
     "oxlint": "catalog:",

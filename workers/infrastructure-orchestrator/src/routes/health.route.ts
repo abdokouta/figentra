@@ -3,8 +3,8 @@
  * @description Infrastructure Orchestrator health endpoints.
  */
 import { Hono } from "hono";
-import type { OrchestratorBindings } from "../interfaces/orchestrator-bindings.interface.js";
-import type { OrchestratorVariables } from "../interfaces/orchestrator-variables.interface.js";
+import type { OrchestratorBindings } from "../interfaces/orchestrator-bindings.interface";
+import type { OrchestratorVariables } from "../interfaces/orchestrator-variables.interface";
 
 /**
  * Creates Orchestrator health routes.

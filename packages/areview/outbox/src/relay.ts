@@ -9,7 +9,7 @@
  */
 import { jetstream } from "@nats-io/jetstream";
 import type { NatsConnection } from "@nats-io/nats-core";
-import { retryDelay, type OutboxRecord } from "./index.js";
+import { retryDelay, type OutboxRecord } from "./index";
 
 /**
  * Minimal persistence contract required by the relay.
@@ -47,7 +47,7 @@ export class OutboxRelay {
   public constructor(
     private readonly store: OutboxRelayStore,
     private readonly options: OutboxRelayOptions,
-  ) {}
+  ) { }
 
   /**
    * Runs one bounded relay pass.

@@ -7,11 +7,11 @@
  */
 import { Hono } from "hono";
 import { createWorkerLogger, getWorkerLogger, type WorkerLogVariables } from "@figentra/observability/worker";
-import type { OrchestratorBindings } from "./interfaces/orchestrator-bindings.interface.js";
-import type { OrchestratorVariables } from "./interfaces/orchestrator-variables.interface.js";
-import { registerOrchestratorRoutes } from "./routes/index.js";
-import { authenticateInfrastructureRequest } from "./middleware/authentication.middleware.js";
-import { establishRequestContext } from "./middleware/request-context.middleware.js";
+import type { OrchestratorBindings } from "./interfaces/orchestrator-bindings.interface";
+import type { OrchestratorVariables } from "./interfaces/orchestrator-variables.interface";
+import { registerOrchestratorRoutes } from "./routes/index";
+import { authenticateInfrastructureRequest } from "./middleware/authentication.middleware";
+import { establishRequestContext } from "./middleware/request-context.middleware";
 
 /**
  * Creates the Infrastructure Orchestrator Worker.

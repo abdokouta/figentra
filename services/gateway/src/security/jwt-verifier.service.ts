@@ -1,9 +1,9 @@
 /** @file jwt-verifier.service.ts @description External access-token verification. */
 import { Injectable, Inject, UnauthorizedException } from "@nestjs/common";
-import { GATEWAY_CONFIG } from "../modules/gateway.config.module.js";
+import { GATEWAY_CONFIG } from "../modules/gateway.config.module";
 import { createRemoteJWKSet, jwtVerify, type JWTPayload } from "jose";
-import type { GatewayActorContext } from "../types/request-context.type.js";
-import type { GatewayConfig } from "../config/gateway.config.js";
+import type { GatewayActorContext } from "../types/request-context.type";
+import type { GatewayConfig } from "../config/gateway.config";
 
 /** Verifies user/application JWTs at the Gateway trust boundary. */
 @Injectable()

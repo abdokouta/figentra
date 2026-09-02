@@ -1,10 +1,10 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { DiscoveryModule } from '@nestjs/core';
-import { WorkflowClient, type WorkflowClientOptions } from '../client.js';
-import { WorkflowDiscoveryService } from './workflow.discovery.service.js';
+import { WorkflowClient, type WorkflowClientOptions } from '../client';
+import { WorkflowDiscoveryService } from './workflow.discovery.service';
 
 /** Nest configuration for the Workflow Runtime client. */
-export interface WorkflowModuleOptions extends WorkflowClientOptions {}
+export interface WorkflowModuleOptions extends WorkflowClientOptions { }
 
 /** DI token for the framework-neutral workflow client. */
 export const WORKFLOW_CLIENT = Symbol('FIGENTRA_WORKFLOW_CLIENT');

@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { DiscoveryModule } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
-import { Step, Workflow } from '../../src/decorators/index.js';
-import { WorkflowDiscoveryService } from '../../src/nest/workflow.discovery.service.js';
+import { Step, Workflow } from '../../src/decorators/index';
+import { WorkflowDiscoveryService } from '../../src/nest/workflow.discovery.service';
 
 @Workflow('test-workflow', { version: '1' })
 @Injectable()
 class TestWorkflow {
   @Step('one', { compensateMethod: 'compensate' }) async one(): Promise<string> { return 'ok'; }
-  async compensate(): Promise<void> {}
+  async compensate(): Promise<void> { }
 }
 
 describe('WorkflowDiscoveryService', () => {

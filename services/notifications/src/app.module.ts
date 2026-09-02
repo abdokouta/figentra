@@ -8,8 +8,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
 import { AcceptLanguageResolver, HeaderResolver, I18nModule } from 'nestjs-i18n';
-import { HealthController } from "./infrastructure/health.controller.js";
-import { DevtoolsModule, ObserveModule } from "./infrastructure/observability.js";
+import { HealthController } from "./infrastructure/health.controller";
+import { DevtoolsModule, ObserveModule } from "./infrastructure/observability";
+
+import { RegistryModule } from "@figentra/registry-worker-sdk";
 
 @Module({
   controllers: [HealthController],
@@ -17,6 +19,19 @@ import { DevtoolsModule, ObserveModule } from "./infrastructure/observability.js
     ObserveModule,
     DevtoolsModule,
     ConfigModule.forRoot({ isGlobal: true }),
+    RegistryModule.forRootAsync({
+      useFactory: () => ({
+        application: "notifications",
+        displayName: "Notifications Service",
+        description: "Multi-channel dispatch (email, SMS, push, webhook), template rendering, and delivery tracking.",
+        version: process.env.APP_VERSION ?? "0.0.0",
+        registryUrl: process.env.REGISTRY_URL ?? "http://localhost:8787",
+        registrationToken: process.env.REGISTRY_TOKEN,
+        environment: (process.env.NODE_ENV as "development" | "staging" | "production") ?? "development",
+        enabled: process.env.REGISTRY_ENABLED !== "false",
+        failOnRegistrationError: false,
+      }),
+    }),
     LoggerModule.forRoot({
       pinoHttp: {
         level: process.env.LOG_LEVEL ?? 'info',
@@ -37,4 +52,4 @@ import { DevtoolsModule, ObserveModule } from "./infrastructure/observability.js
 /**
  * Public Figentra API symbol.
  */
-export class AppModule {}
+export class AppModule { }

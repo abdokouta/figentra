@@ -1,1 +1,1 @@
-export * from './queue.adapter.js';
+export * from './queue.adapter';

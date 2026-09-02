@@ -1,5 +1,3 @@
 {
-  "extends": [
-    "@stackra/oxlint-config/worker"
-  ]
+  "extends": ["./node_modules/@stackra/oxlint-config/src/worker.jsonc"]
 }

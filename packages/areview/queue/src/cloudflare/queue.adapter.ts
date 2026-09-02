@@ -1,4 +1,4 @@
-import type { QueueHandler, QueueMessage, QueueProvider, QueueProviderCapabilities, QueuePublishOptions, QueuePublishResult } from '../contracts/queue.types.js';
+import type { QueueHandler, QueueMessage, QueueProvider, QueueProviderCapabilities, QueuePublishOptions, QueuePublishResult } from '../contracts/queue.types';
 
 export interface CloudflareQueueBinding<TMessage = unknown> {
   send(body: TMessage, options?: { delaySeconds?: number }): Promise<void>;
@@ -27,7 +27,7 @@ export class CloudflareQueueProvider implements QueueProvider {
     visibilityTimeout: false,
   };
 
-  constructor(private readonly queue: CloudflareQueueBinding) {}
+  constructor(private readonly queue: CloudflareQueueBinding) { }
 
   async publish<TBody>(queue: string, message: QueueMessage<TBody>, options: QueuePublishOptions = {}): Promise<QueuePublishResult> {
     if (!queue.trim()) throw new Error('Queue name cannot be empty.');

@@ -4,38 +4,67 @@
 node_modules
 .pnp
 .pnp.js
+.pnpm-store
 
-# Local env files
+# Local environment & secret overrides
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
 
-# Testing
+# Testing & Coverage
 coverage
+.nyc_output
 
-# Turbo
+# Turbo & Build Tooling
 .turbo
-
-# Vercel
 .vercel
 
 # Build Outputs
-.next/
-out/
-build
 dist
+dist-ssr
+build
+out/
+.next/
+web-build/
 
+# Mobile / Expo / React Native
+.expo/
+expo-env.d.ts
+.kotlin/
+*.jks
+*.keystore
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+.metro-health-check*
+/apps/family/ios
+/apps/family/android
 
-# Debug
+# Logs & Debug
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Misc
+# OS & Editor
 .DS_Store
+Thumbs.db
 *.pem
+*.tgz
+*.tsbuildinfo
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
 # Terraform (spec 15 §6 — state is never committed)
 .terraform/
@@ -53,5 +82,7 @@ infrastructure/terraform/catalog.json
 
 # Cloudflare Wrangler
 .wrangler/
-.dev.vars
-.dev.vars.*
+
+# Scratch & Temporary storage
+.tmp/
+tmp/

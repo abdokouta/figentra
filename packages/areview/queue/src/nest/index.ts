@@ -1,1 +1,1 @@
-export * from './nest-queue.module.js';
+export * from './nest-queue.module';

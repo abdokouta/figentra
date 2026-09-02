@@ -3,7 +3,7 @@
  * @description Canonical structured log fields shared by platform runtimes.
  */
 
-import type { TelemetryContext } from "./telemetry-context.interface.js";
+import type { TelemetryContext } from "./telemetry-context.interface";
 
 /**
  * Minimum structured fields expected from platform application logs.

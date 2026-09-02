@@ -1,7 +1,7 @@
 /**
- * @file vitest.setup.ts
- * @description Deterministic shared Vitest setup for observability.
- *
- * External systems must be mocked in unit tests and explicitly provisioned in
- * integration suites. This file must remain free of production side effects.
+ * @file __tests__/vitest.setup.ts
+ * @description Shared test initialization for this workspace artifact.
+ * @remarks Keep cross-suite initialization here; test-specific fixtures belong to individual suites.
  */
+
+import "@stackra/testing/setup";

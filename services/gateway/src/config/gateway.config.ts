@@ -1,6 +1,6 @@
 /** @file gateway.config.ts @description Validated Gateway runtime configuration. */
 import { z } from "zod";
-import { UPSTREAM_MAX_RETRIES, UPSTREAM_TIMEOUT_MS } from "../constants/gateway.constant.js";
+import { UPSTREAM_MAX_RETRIES, UPSTREAM_TIMEOUT_MS } from "../constants/gateway.constant";
 
 /** Runtime environment schema. */
 const GatewayEnvironmentSchema = z.object({

@@ -4,7 +4,7 @@
  */
 import { Global, Module } from "@nestjs/common";
 import type { DynamicModule } from "@nestjs/common";
-import { createFigentraDevtoolsModule } from "./devtools.factory.js";
+import { createFigentraDevtoolsModule } from "./devtools.factory";
 
 /** Provides secure development diagnostics. */
 @Global()

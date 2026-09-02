@@ -1,1 +1,1 @@
-export * from './redis.provider.js';
+export * from './redis.provider';

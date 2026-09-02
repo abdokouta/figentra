@@ -1,3 +1,3 @@
-export * from './cloudflare/workflow.provider.js';
-export * from './temporal/workflow.provider.js';
-export * from './vercel/workflow.provider.js';
+export * from './cloudflare/workflow.provider';
+export * from './temporal/workflow.provider';
+export * from './vercel/workflow.provider';

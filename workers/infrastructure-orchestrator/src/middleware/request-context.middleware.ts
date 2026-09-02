@@ -3,8 +3,8 @@
  * @description Orchestrator request/correlation context middleware.
  */
 import type { Context, Next } from "hono";
-import type { OrchestratorBindings } from "../interfaces/orchestrator-bindings.interface.js";
-import type { OrchestratorVariables } from "../interfaces/orchestrator-variables.interface.js";
+import type { OrchestratorBindings } from "../interfaces/orchestrator-bindings.interface";
+import type { OrchestratorVariables } from "../interfaces/orchestrator-variables.interface";
 
 /**
  * Establishes request and correlation identifiers for an Orchestrator request.

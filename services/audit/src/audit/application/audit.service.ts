@@ -5,8 +5,8 @@
 import { createHash, randomUUID } from "node:crypto";
 import { Injectable } from "@nestjs/common";
 import { EntityManager } from "@mikro-orm/postgresql";
-import { AuditEntry } from "../domain/audit-entry.entity.js";
-import type { AuditQuery, CreateAuditEntryInput } from "./audit.types.js";
+import { AuditEntry } from "../domain/audit-entry.entity";
+import type { AuditQuery, CreateAuditEntryInput } from "./audit.types";
 
 /**
  * Implements audit append and query use cases.
@@ -16,7 +16,7 @@ export class AuditService {
   /**
    * @param em - MikroORM EntityManager supplied by Nest.
    */
-  public constructor(private readonly em: EntityManager) {}
+  public constructor(private readonly em: EntityManager) { }
 
   /**
    * Appends one immutable record.
@@ -96,11 +96,11 @@ export class AuditService {
       ...(query.outcome ? { outcome: query.outcome } : {}),
       ...(query.from || query.to
         ? {
-            occurredAt: {
-              ...(query.from ? { $gte: query.from } : {}),
-              ...(query.to ? { $lt: query.to } : {}),
-            },
-          }
+          occurredAt: {
+            ...(query.from ? { $gte: query.from } : {}),
+            ...(query.to ? { $lt: query.to } : {}),
+          },
+        }
         : {}),
     };
 

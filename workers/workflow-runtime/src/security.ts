@@ -1,5 +1,5 @@
 import { createRemoteJWKSet, jwtVerify } from 'jose';
-import type { WorkflowRuntimeEnv } from './env.types.js';
+import type { WorkflowRuntimeEnv } from './env.types';
 
 /** Minimal verified service-principal claims required by workflow execution. */
 export interface WorkflowClaims {

@@ -2,8 +2,8 @@
  * @file job.service.ts
  * @description Durable D1 persistence for infrastructure execution requests.
  */
-import type { OrchestratorBindings } from '../interfaces/orchestrator-bindings.interface.js';
-import type { TerraformOperation } from '../types/terraform-operation.type.js';
+import type { OrchestratorBindings } from '../interfaces/orchestrator-bindings.interface';
+import type { TerraformOperation } from '../types/terraform-operation.type';
 
 /**
  * Creates a durable infrastructure job record before execution is dispatched.

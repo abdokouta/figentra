@@ -2,7 +2,7 @@
  * @file terraform-workflow-input.interface.ts
  * @description Durable Workflow input for one approved Terraform operation.
  */
-import type { TerraformOperation } from "../types/terraform-operation.type.js";
+import type { TerraformOperation } from "../types/terraform-operation.type";
 
 export interface TerraformWorkflowInput {
   readonly jobId: string;

@@ -2,10 +2,10 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException, SetMetadata } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import type { FastifyRequest } from "fastify";
-import { PUBLIC_PATHS } from "../constants/gateway.constant.js";
-import { GatewayJwtVerifierService } from "../security/jwt-verifier.service.js";
-import type { AuthenticatedGatewayRequest } from "../interfaces/authenticated-request.interface.js";
-import { REQUEST_CONTEXT } from "../interceptors/request-context.interceptor.js";
+import { PUBLIC_PATHS } from "../constants/gateway.constant";
+import { GatewayJwtVerifierService } from "../security/jwt-verifier.service";
+import type { AuthenticatedGatewayRequest } from "../interfaces/authenticated-request.interface";
+import { REQUEST_CONTEXT } from "../interceptors/request-context.interceptor";
 
 /** Marks an endpoint as intentionally public. */
 export const Public = (): MethodDecorator & ClassDecorator => SetMetadata("gatewayPublic", true);
@@ -14,7 +14,7 @@ export const Public = (): MethodDecorator & ClassDecorator => SetMetadata("gatew
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
   /** Creates the authentication guard. */
-  public constructor(private readonly verifier: GatewayJwtVerifierService, private readonly reflector: Reflector) {}
+  public constructor(private readonly verifier: GatewayJwtVerifierService, private readonly reflector: Reflector) { }
 
   /** Verifies the bearer token and stores trusted actor context. */
   public async canActivate(context: ExecutionContext): Promise<boolean> {

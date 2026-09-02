@@ -2,7 +2,7 @@
  * @file registry-claims.interface.ts
  * @description Verified JWT claims consumed by Registry authorization guards.
  */
-import type { JWTPayload } from 'jose';
+import type { JWTPayload } from "jose";
 
 /**
  * Claims accepted after signature, issuer, and audience verification.

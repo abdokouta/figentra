@@ -1,9 +1,6 @@
 /**
  * @file registry-audience.constant.ts
- * @description Registry runtime constant.
+ * @description Default JWT audience expected for general Registry Worker operations.
  */
 
-/**
- * Default logical Registry audience.
- */
 export const REGISTRY_AUDIENCE = "figentra:registry";

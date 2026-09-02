@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { terraformJobSchema } from '../../src/schemas/terraform-job.schema.js';
+import { terraformJobSchema } from '../../src/schemas/terraform-job.schema';
 
 describe('terraform job policy', () => {
   const base = { revision: 'a'.repeat(40), reason: 'scheduled infrastructure change', approvalRef: 'CHG-123' };

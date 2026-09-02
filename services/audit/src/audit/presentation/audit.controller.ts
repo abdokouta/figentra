@@ -9,11 +9,11 @@ import {
   Query,
   UseGuards,
 } from "@nestjs/common";
-import { AuditService } from "../application/audit.service.js";
-import { AuditQueryDto } from "./dtos/audit-query.dto.js";
+import { AuditService } from "../application/audit.service";
+import { AuditQueryDto } from "./dtos/audit-query.dto";
 import { IamAuthorizationGuard, RequirePermission, ServiceIdentityGuard } from "@figentra/security";
-import type { AuditEntry } from "../domain/audit-entry.entity.js";
-import type { AuditEntryResponse } from "./responses/audit-entry.response.js";
+import type { AuditEntry } from "../domain/audit-entry.entity";
+import type { AuditEntryResponse } from "./responses/audit-entry.response";
 
 /**
  * Internal audit API controller.
@@ -56,14 +56,24 @@ function serializeAuditEntry(entry: AuditEntry): AuditEntryResponse {
   };
 }
 
+import {
+  RegisterModule,
+  RegisterResource,
+  RegisterAction,
+  RegisterNavigation,
+} from "@figentra/registry-worker-sdk";
+
+@RegisterModule({ key: "audit", description: "Audit trail and immutable ledger service" })
+@RegisterResource({ key: "audit-entry", moduleKey: "audit", label: "Audit Entry" })
+@RegisterAction({ key: "audit-entry:read", resourceKey: "audit-entry", permission: "audit.read" })
+@RegisterNavigation({ key: "audit-logs", path: "/audit", label: "Audit Logs", permission: "audit.read" })
 @UseGuards(ServiceIdentityGuard, IamAuthorizationGuard)
 @Controller({ path: "audit", version: "1" })
-/** Public symbol `AuditController`. */
 export class AuditController {
   /**
    * @param auditService - Audit application service.
    */
-  public constructor(private readonly auditService: AuditService) {}
+  public constructor(private readonly auditService: AuditService) { }
 
   /**
    * Queries the immutable audit ledger.

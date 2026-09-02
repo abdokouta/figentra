@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
-import type { WorkflowRuntimeEnv } from './env.types.js';
-import { verifyWorkflowToken } from './security.js';
-import type { WorkflowInvocation } from './workflow.types.js';
-import { workflowInvocationSchema } from './workflow.schema.js';
+import type { WorkflowRuntimeEnv } from './env.types';
+import { verifyWorkflowToken } from './security';
+import type { WorkflowInvocation } from './workflow.types';
+import { workflowInvocationSchema } from './workflow.schema';
 
 /** Creates the authenticated workflow invocation API. */
 export function createWorkflowRuntimeApp(): Hono<{ Bindings: WorkflowRuntimeEnv }> {

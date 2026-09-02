@@ -1,9 +1,6 @@
 /**
  * @file registration-permission.constant.ts
- * @description IAM permission required to register application versions.
+ * @description IAM permission required for registering application manifests.
  */
 
-/**
- * Registry application registration permission.
- */
-export const REGISTRY_REGISTRATION_PERMISSION = 'registry:application:register';
+export const REGISTRY_REGISTRATION_PERMISSION = "registry:application:register";

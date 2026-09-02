@@ -1,13 +1,10 @@
 /**
  * @file index.ts
- * @description Cloudflare Worker entrypoint for the Figentra Application Registry.
+ * @description Main entrypoint exporting the configured Cloudflare Worker application.
  */
-import { createRegistry } from './app.js';
 
-/**
- * Default Registry Worker export.
- */
+import { createRegistry } from "./app";
+
 const app = createRegistry();
 
-/** Public exported symbol. */
 export default app;

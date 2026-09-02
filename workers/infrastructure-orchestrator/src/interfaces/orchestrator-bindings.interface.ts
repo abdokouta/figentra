@@ -1,5 +1,5 @@
 import type { Workflow } from "cloudflare:workers";
-import type { TerraformRunner } from "../terraform-runner.js";
+import type { TerraformRunner } from "../terraform-runner";
 
 /**
  * @file orchestrator-bindings.interface.ts

@@ -103,7 +103,7 @@ export class NatsMessagingAdapter implements RpcClient, EventBus, OnModuleInit, 
   /**
    * @param options - Runtime NATS configuration.
    */
-  public constructor(private readonly options: NatsClientOptions) {}
+  public constructor(private readonly options: NatsClientOptions) { }
 
   /** Connects the adapter during Nest startup. */
   public async onModuleInit(): Promise<void> {
@@ -137,4 +137,4 @@ export class NatsMessagingAdapter implements RpcClient, EventBus, OnModuleInit, 
 }
 
 /** Public barrel export. */
-export { NatsEventPublisher } from "./nats-publisher.js";
+export { NatsEventPublisher } from "./nats-publisher";

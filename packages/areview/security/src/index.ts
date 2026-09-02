@@ -142,7 +142,7 @@ export class IamAuthorizationGuard implements CanActivate {
       get<T>(metadataKey: symbol, target: object): T | undefined;
     },
     private readonly authorizer: AuthorizationDecisionPort,
-  ) {}
+  ) { }
 
   /**
    * Resolves the required permission and asks IAM for the authoritative result.
@@ -182,7 +182,7 @@ export class ServiceIdentityGuard implements CanActivate {
   public constructor(
     private readonly verifier: ServiceIdentityVerifier,
     @Inject(FIGENTRA_SERVICE_ID) private readonly serviceId: string,
-  ) {}
+  ) { }
 
   /**
    * Authenticates the bearer token and attaches the authorization context.
@@ -212,9 +212,9 @@ export class ServiceIdentityGuard implements CanActivate {
 /**
  * Re-exports the IAM RPC adapter used by service integrations.
  */
-export { IamRpcAuthorizationAdapter } from "./iam-client.js";
+export { IamRpcAuthorizationAdapter } from "./iam-client";
 
 /**
  * Re-exports the IAM authorization request and response contracts.
  */
-export type { IamAuthorizationRequest, IamAuthorizationResponse } from "./iam-client.js";
+export type { IamAuthorizationRequest, IamAuthorizationResponse } from "./iam-client";

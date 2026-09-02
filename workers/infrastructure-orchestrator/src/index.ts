@@ -2,7 +2,7 @@
  * @file index.ts
  * @description Cloudflare Worker entrypoint for infrastructure orchestration.
  */
-import { createInfrastructureOrchestrator } from './app.js';
+import { createInfrastructureOrchestrator } from './app';
 
 /**
  * Default Worker export.
@@ -12,7 +12,7 @@ const app = createInfrastructureOrchestrator();
 export default app;
 
 /** Public barrel export. */
-export { TerraformRunner } from './terraform-runner.js';
+export { TerraformRunner } from './terraform-runner';
 
 /** Public barrel export. */
-export { InfrastructureWorkflow } from './workflows/infrastructure.workflow.js';
+export { InfrastructureWorkflow } from './workflows/infrastructure.workflow';

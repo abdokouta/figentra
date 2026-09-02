@@ -5,7 +5,7 @@
  */
 import type { AuthorizationContext } from "@stackra/contracts";
 import type { RpcClient } from "@figentra/messaging";
-import type { AuthorizationDecisionPort } from "./index.js";
+import type { AuthorizationDecisionPort } from "./index";
 
 /**
  * IAM authorization request contract.
@@ -38,7 +38,7 @@ export class IamRpcAuthorizationAdapter implements AuthorizationDecisionPort {
   public constructor(
     private readonly rpc: RpcClient,
     private readonly subject = "iam.authorization.check.v1",
-  ) {}
+  ) { }
 
   /**
    * Requests an authoritative IAM decision.

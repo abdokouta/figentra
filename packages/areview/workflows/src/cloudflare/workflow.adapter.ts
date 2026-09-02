@@ -1,4 +1,4 @@
-import type { WorkflowContext, WorkflowDefinition, WorkflowExecution, WorkflowRetryPolicy, WorkflowStepDefinition } from '../contracts/index.js';
+import type { WorkflowContext, WorkflowDefinition, WorkflowExecution, WorkflowRetryPolicy, WorkflowStepDefinition } from '../contracts/index';
 
 export interface CloudflareWorkflowStep {
   do<T>(name: string, config: WorkflowRetryPolicy | undefined, callback: () => Promise<T>): Promise<T>;

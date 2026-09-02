@@ -4,8 +4,8 @@
  */
 import { Global, Module } from "@nestjs/common";
 import type { DynamicModule } from "@nestjs/common";
-import { createFigentraObservability } from "./observability.factory.js";
-import type { FigentraObservabilityOptions } from "./interfaces/observability-options.interface.js";
+import { createFigentraObservability } from "./observability.factory";
+import type { FigentraObservabilityOptions } from "./interfaces/observability-options.interface";
 
 /** Provides the shared NestJS Observe integration. */
 @Global()

@@ -5,10 +5,10 @@
  * deployment bundle. Registry stores their metadata; this Worker stores and
  * executes the actual code through native Cloudflare Workflows.
  */
-import { createWorkflowRuntimeApp } from './app.js';
+import { createWorkflowRuntimeApp } from './app';
 
-export { FigentraWorkflowRuntime } from './workflow.runtime.js';
-export { registerWorkflow, resolveWorkflow, listRegisteredWorkflows } from './workflow.registry.js';
-export type { WorkflowHandler, WorkflowInvocation } from './workflow.types.js';
+export { FigentraWorkflowRuntime } from './workflow.runtime';
+export { registerWorkflow, resolveWorkflow, listRegisteredWorkflows } from './workflow.registry';
+export type { WorkflowHandler, WorkflowInvocation } from './workflow.types';
 
 export default createWorkflowRuntimeApp();

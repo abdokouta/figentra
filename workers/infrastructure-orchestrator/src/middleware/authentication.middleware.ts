@@ -3,9 +3,9 @@
  * @description Orchestrator Identity token validation middleware.
  */
 import type { Context, Next } from "hono";
-import { verifyInfrastructurePrincipal } from "../services/auth.service.js";
-import type { OrchestratorBindings } from "../interfaces/orchestrator-bindings.interface.js";
-import type { OrchestratorVariables } from "../interfaces/orchestrator-variables.interface.js";
+import { verifyInfrastructurePrincipal } from "../services/auth.service";
+import type { OrchestratorBindings } from "../interfaces/orchestrator-bindings.interface";
+import type { OrchestratorVariables } from "../interfaces/orchestrator-variables.interface";
 
 /**
  * Authenticates a protected Orchestrator request.

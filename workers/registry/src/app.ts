@@ -1,53 +1,49 @@
 /**
  * @file app.ts
- * @description Application Registry composition root.
+ * @description Composition root for the Figentra Application Registry Cloudflare Worker.
  *
- * Cross-cutting middleware is configured here; HTTP behavior is implemented in
- * cohesive route modules under `routes/`.
+ * Configures middleware (request context, Pino logging, JWT auth) and registers all route modules.
  */
+
 import { Hono } from "hono";
-import { createWorkerLogger, getWorkerLogger, type WorkerLogVariables } from "@figentra/observability/worker";
-import type { RegistryBindings } from "./interfaces/registry-bindings.interface.js";
-import type { RegistryVariables } from "./interfaces/registry-variables.interface.js";
-import { authenticateRegistryRequest } from "./middleware/authentication.middleware.js";
-import { establishRequestContext } from "./middleware/request-context.middleware.js";
-import { registerRegistryRoutes } from "./routes/index.js";
+import {
+  createWorkerLogger,
+  getWorkerLogger,
+  type WorkerLogVariables,
+} from "@figentra/observability/worker";
+import type { RegistryBindings } from "./interfaces/registry-bindings.interface";
+import type { RegistryVariables } from "./interfaces/registry-variables.interface";
+import { authenticateRegistryRequest } from "./middleware/authentication.middleware";
+import { establishRequestContext } from "./middleware/request-context.middleware";
+import { registerRegistryRoutes } from "./routes/index";
 
 /**
- * Creates the Application Registry Worker.
+ * Creates and configures the Hono Application Registry instance.
  *
- * @returns Fully configured Registry Hono application.
+ * @returns Fully composed Hono application with middleware and routes.
  */
-export function createRegistry(): Hono<{ Bindings: RegistryBindings; Variables: RegistryVariables & WorkerLogVariables }> {
-  const app = new Hono<{ Bindings: RegistryBindings; Variables: RegistryVariables & WorkerLogVariables }>();
+export function createRegistry(): Hono<{
+  Bindings: RegistryBindings;
+  Variables: RegistryVariables & WorkerLogVariables;
+}> {
+  const app = new Hono<{
+    Bindings: RegistryBindings;
+    Variables: RegistryVariables & WorkerLogVariables;
+  }>();
 
-  /**
-   * Establishes request IDs and baseline security response headers.
-   */
   app.use("*", establishRequestContext);
-
-  /**
-   * Emits structured request logs through Pino with no Node-only transport.
-   */
   app.use("*", createWorkerLogger());
-
   app.use("/v1/*", authenticateRegistryRequest);
 
   registerRegistryRoutes(app);
 
-  /**
-   * Converts unexpected failures into a stable Registry API error.
-   */
   app.onError((error, c) => {
     getWorkerLogger(c).error({
       error,
       requestId: c.req.header("x-request-id"),
     });
 
-    return c.json(
-      { error: "internal_error", requestId: c.req.header("x-request-id") },
-      500,
-    );
+    return c.json({ error: "internal_error", requestId: c.req.header("x-request-id") }, 500);
   });
 
   return app;

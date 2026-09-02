@@ -4,10 +4,10 @@
  */
 import { WorkflowEntrypoint, type WorkflowEvent, type WorkflowStep } from 'cloudflare:workers';
 import { CloudflareWorkflowAdapter, createStep, createWorkflow, response, type StepContext } from '@figentra/workflows';
-import type { OrchestratorBindings } from '../interfaces/orchestrator-bindings.interface.js';
-import type { TerraformWorkflowInput } from '../interfaces/terraform-workflow-input.interface.js';
-import { executeTerraformJob } from '../services/runner.service.js';
-import { markJobFailed, markJobFinished, markJobRunning } from '../services/job.service.js';
+import type { OrchestratorBindings } from '../interfaces/orchestrator-bindings.interface';
+import type { TerraformWorkflowInput } from '../interfaces/terraform-workflow-input.interface';
+import { executeTerraformJob } from '../services/runner.service';
+import { markJobFailed, markJobFinished, markJobRunning } from '../services/job.service';
 
 const RETRY = { retries: { limit: 3, delay: '15 seconds', backoff: 'exponential' as const }, timeout: '60 minutes' };
 type InfrastructureContext = StepContext<TerraformWorkflowInput> & { env: OrchestratorBindings };

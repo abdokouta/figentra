@@ -6,17 +6,25 @@ import { Controller } from "@nestjs/common";
 import { EventPattern, type Payload } from "@nestjs/microservices";
 import { AuditRequestedEventSchema, type AuditRequestedEvent } from "@figentra/events";
 import type { MessageEnvelope } from "@stackra/contracts";
-import { AuditService } from "./audit.service.js";
+import { AuditService } from "./audit.service";
+
+import { RegisterEvent } from "@figentra/registry-worker-sdk";
 
 /**
  * Consumes durable audit requests emitted by service outboxes.
  */
+@RegisterEvent({
+  key: "figentra.audit.record.v1",
+  direction: "consumes",
+  topic: "figentra.audit.record.v1",
+  version: "1",
+})
 @Controller()
 export class AuditEventConsumer {
   /**
    * @param auditService - Audit append use case.
    */
-  public constructor(private readonly auditService: AuditService) {}
+  public constructor(private readonly auditService: AuditService) { }
 
   /**
    * Consumes one versioned audit event.

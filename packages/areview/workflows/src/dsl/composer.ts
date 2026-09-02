@@ -1,5 +1,5 @@
-import type { WorkflowRetryPolicy } from '../contracts/workflow.types.js';
-import type { HookDefinition, StepContext, StepDefinition, ComposedWorkflowBuilder, ComposedWorkflowDefinition, WorkflowResponse, StepResponse } from './types.js';
+import type { WorkflowRetryPolicy } from '../contracts/workflow.types';
+import type { HookDefinition, StepContext, StepDefinition, ComposedWorkflowBuilder, ComposedWorkflowDefinition, WorkflowResponse, StepResponse } from './types';
 
 export function createStep<TInput = unknown, TResult = unknown, TContext extends StepContext<TInput> = StepContext<TInput>>(name: string, execute: StepDefinition<TInput, TResult, TContext>['execute'], options: { retry?: WorkflowRetryPolicy; compensate?: StepDefinition<TInput, TResult, TContext>['compensate'] } = {}): StepDefinition<TInput, TResult, TContext> {
   if (!name.trim()) throw new Error('Workflow step name cannot be empty.');

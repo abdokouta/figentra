@@ -1,4 +1,4 @@
-import type { WorkflowHandler } from './workflow.types.js';
+import type { WorkflowHandler } from './workflow.types';
 
 const handlers = new Map<string, WorkflowHandler>();
 

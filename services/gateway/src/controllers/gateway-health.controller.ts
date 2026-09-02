@@ -3,16 +3,16 @@
  * @description Terminus-backed dependency readiness for the Gateway.
  */
 import { Controller, Get, Inject } from "@nestjs/common";
-import { GATEWAY_CONFIG } from "../modules/gateway.config.module.js";
+import { GATEWAY_CONFIG } from "../modules/gateway.config.module";
 import { HealthCheck, HealthCheckService } from "@nestjs/terminus";
-import type { GatewayConfig } from "../config/gateway.config.js";
-import { Public } from "../guards/authentication.guard.js";
+import type { GatewayConfig } from "../config/gateway.config";
+import { Public } from "../guards/authentication.guard";
 
 /** Performs bounded health checks against Gateway-critical control-plane dependencies. */
 @Controller("health")
 export class GatewayHealthController {
   /** Creates the readiness controller. */
-  public constructor(private readonly health: HealthCheckService, @Inject(GATEWAY_CONFIG) private readonly config: GatewayConfig) {}
+  public constructor(private readonly health: HealthCheckService, @Inject(GATEWAY_CONFIG) private readonly config: GatewayConfig) { }
 
   /** Returns process health without dependency checks. */
   @Get("live")

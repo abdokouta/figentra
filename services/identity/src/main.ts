@@ -10,8 +10,8 @@ import { NestFactory } from "@nestjs/core";
 import { Logger } from "nestjs-pino";
 import { FastifyAdapter } from "@nestjs/platform-fastify";
 import { Transport, type MicroserviceOptions } from "@nestjs/microservices";
-import { AppModule } from "./app.module.js";
-import { ObserveInstrument } from "./infrastructure/observability.js";
+import { AppModule } from "./app.module";
+import { ObserveInstrument } from "./infrastructure/observability";
 
 /** Boots the identity service with Fastify HTTP and NATS transport. */
 async function bootstrap(): Promise<void> {

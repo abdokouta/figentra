@@ -2,7 +2,7 @@
  * @file orchestrator-variables.interface.ts
  * @description Request-local Hono variables for the Infrastructure Orchestrator.
  */
-import type { InfrastructurePrincipal } from "./infrastructure-principal.interface.js";
+import type { InfrastructurePrincipal } from "./infrastructure-principal.interface";
 
 /**
  * Request-local state established by Orchestrator middleware.

@@ -3,7 +3,7 @@
  * @description Unit tests for append-only audit behavior.
  */
 import { describe, expect, it, vi } from "vitest";
-import { AuditService } from "../../src/audit/application/audit.service.js";
+import { AuditService } from "../../src/audit/application/audit.service";
 
 /**
  * Verifies audit hash chaining with a mocked transaction context.

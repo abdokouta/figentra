@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { QueueManager, type QueueProvider } from '../../src/index.js';
+import { QueueManager, type QueueProvider } from '../../src/index';
 
 describe('QueueManager', () => {
   it('routes publish to the selected provider', async () => {

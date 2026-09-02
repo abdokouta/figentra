@@ -1,5 +1,7 @@
-/** @file vitest.setup.ts @description Shared Gateway test setup. */
-import { beforeEach, vi } from "vitest";
+/**
+ * @file __tests__/vitest.setup.ts
+ * @description Shared test initialization for this workspace artifact.
+ * @remarks Keep cross-suite initialization here; test-specific fixtures belong to individual suites.
+ */
 
-/** Reset mocks between tests to prevent cross-test state leakage. */
-beforeEach(() => vi.restoreAllMocks());
+import "@stackra/testing/setup";

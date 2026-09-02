@@ -3,9 +3,9 @@
  * @description Infrastructure orchestrator JWT verification boundary.
  */
 import { createRemoteJWKSet, jwtVerify, type JWTPayload } from 'jose';
-import type { OrchestratorBindings } from '../interfaces/orchestrator-bindings.interface.js';
+import type { OrchestratorBindings } from '../interfaces/orchestrator-bindings.interface';
 
-import type { InfrastructurePrincipal } from '../interfaces/infrastructure-principal.interface.js';
+import type { InfrastructurePrincipal } from '../interfaces/infrastructure-principal.interface';
 
 /**
  * Verifies the caller's Identity/IAM token.

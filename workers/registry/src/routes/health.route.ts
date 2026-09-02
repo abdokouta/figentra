@@ -3,15 +3,18 @@
  * @description Application Registry health endpoints.
  */
 import { Hono } from "hono";
-import type { RegistryBindings } from "../interfaces/registry-bindings.interface.js";
-import type { RegistryVariables } from "../interfaces/registry-variables.interface.js";
+import type { RegistryBindings } from "../interfaces/registry-bindings.interface";
+import type { RegistryVariables } from "../interfaces/registry-variables.interface";
 
 /**
  * Creates Registry health routes.
  *
  * @returns Health route sub-application.
  */
-export function createHealthRoutes(): Hono<{ Bindings: RegistryBindings; Variables: RegistryVariables }> {
+export function createHealthRoutes(): Hono<{
+  Bindings: RegistryBindings;
+  Variables: RegistryVariables;
+}> {
   const router = new Hono<{ Bindings: RegistryBindings; Variables: RegistryVariables }>();
 
   /**

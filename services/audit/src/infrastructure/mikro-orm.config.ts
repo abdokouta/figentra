@@ -7,7 +7,7 @@
  */
 import { Migrator } from "@mikro-orm/migrations";
 import { defineConfig } from "@mikro-orm/postgresql";
-import { AuditEntry } from "../audit/domain/audit-entry.entity.js";
+import { AuditEntry } from "../audit/domain/audit-entry.entity";
 
 /**
  * Defines the Audit Service persistence boundary.

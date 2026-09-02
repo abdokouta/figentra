@@ -37,8 +37,10 @@
     "hono-pino": "catalog:"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "catalog:",
     "@stackra/oxlint-config": "workspace:*",
     "@stackra/prettier-config": "workspace:*",
+    "@stackra/testing": "workspace:*",
     "@stackra/typescript-config": "workspace:*",
     "oxlint": "catalog:",
     "prettier": "catalog:",

@@ -3,7 +3,7 @@
  * @description Infrastructure Orchestrator application composition tests.
  */
 import { describe, expect, it } from "vitest";
-import { createInfrastructureOrchestrator } from "../../src/app.js";
+import { createInfrastructureOrchestrator } from "../../src/app";
 
 describe("Infrastructure Orchestrator", () => {
   /** Verifies that the Worker composition root is constructible. */

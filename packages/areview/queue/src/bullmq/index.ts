@@ -1,1 +1,1 @@
-export * from './bullmq.provider.js';
+export * from './bullmq.provider';

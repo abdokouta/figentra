@@ -1,6 +1,6 @@
 /** @file request-context.middleware.test.ts @description Request context middleware tests. */
 import { describe, expect, it, vi } from "vitest";
-import { RequestContextMiddleware } from "../../src/middleware/request-context.middleware.js";
+import { RequestContextMiddleware } from "../../src/middleware/request-context.middleware";
 
 describe("RequestContextMiddleware", () => {
   it("creates and mirrors bounded request identifiers", () => {

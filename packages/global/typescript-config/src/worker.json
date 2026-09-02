@@ -1,0 +1,16 @@
+{
+  "display": "@stackra/typescript-config — Cloudflare Worker",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "WebWorker"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": ["@cloudflare/workers-types"],
+    "jsx": "preserve",
+    "noEmit": true,
+    "baseUrl": "."
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", ".wrangler", "coverage"]
+}

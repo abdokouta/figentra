@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { DiscoveryService } from '@nestjs/core';
 import 'reflect-metadata';
-import { WORKFLOW_METADATA, WORKFLOW_STEP_METADATA, type WorkflowClassMetadata, type WorkflowStepMetadata } from '../decorators/index.js';
-import type { WorkflowDefinition, WorkflowContext } from '../contracts/index.js';
+import { WORKFLOW_METADATA, WORKFLOW_STEP_METADATA, type WorkflowClassMetadata, type WorkflowStepMetadata } from '../decorators/index';
+import type { WorkflowDefinition, WorkflowContext } from '../contracts/index';
 
 export interface DiscoveredWorkflowClass { type: Function; metadata: WorkflowClassMetadata; steps: Array<WorkflowStepMetadata & { method: string | symbol }>; }
 
 /** Discovers workflow and durable step declarations from Nest providers/controllers. */
 @Injectable()
 export class WorkflowDiscoveryService {
-  constructor(private readonly discovery: DiscoveryService) {}
+  constructor(private readonly discovery: DiscoveryService) { }
   collect(): DiscoveredWorkflowClass[] {
     const result: DiscoveredWorkflowClass[] = [];
     for (const wrapper of [...this.discovery.getProviders(), ...this.discovery.getControllers()]) {

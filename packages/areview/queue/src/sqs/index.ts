@@ -1,1 +1,1 @@
-export * from './sqs.provider.js';
+export * from './sqs.provider';

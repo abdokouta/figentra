@@ -23,6 +23,7 @@
     "test": "vitest run",
     "check": "pnpm lint && pnpm run typecheck && pnpm test",
     "test:coverage": "vitest run --coverage",
+    "test:e2e": "bash scripts/test-e2e.sh",
     "test:watch": "vitest",
     "deploy:development": "wrangler deploy --env development --minify",
     "deploy:staging": "wrangler deploy --env staging --minify",
@@ -37,8 +38,10 @@
     "hono-pino": "catalog:"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "catalog:",
     "@stackra/oxlint-config": "workspace:*",
     "@stackra/prettier-config": "workspace:*",
+    "@stackra/testing": "workspace:*",
     "@stackra/typescript-config": "workspace:*",
     "oxlint": "catalog:",
     "prettier": "catalog:",

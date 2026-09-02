@@ -1,2 +1,2 @@
-export * from './metadata.js';
-export * from './workflow.decorators.js';
+export * from './metadata';
+export * from './workflow.decorators';

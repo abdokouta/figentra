@@ -7,6 +7,9 @@ packages:
   - services/*
   - workers/*
   - packages/*
+  - packages/global/*
+  - packages/client/*
+  - packages/nestjs/*
   - packages/areview/*
   - packages/config/*
 catalog:

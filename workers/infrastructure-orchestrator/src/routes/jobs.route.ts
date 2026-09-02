@@ -3,11 +3,11 @@
  * @description Infrastructure job HTTP contract.
  */
 import { Hono } from "hono";
-import type { OrchestratorBindings } from "../interfaces/orchestrator-bindings.interface.js";
-import type { OrchestratorVariables } from "../interfaces/orchestrator-variables.interface.js";
-import type { TerraformWorkflowInput } from "../interfaces/terraform-workflow-input.interface.js";
-import { terraformJobSchema } from "../schemas/terraform-job.schema.js";
-import { createJob } from "../services/job.service.js";
+import type { OrchestratorBindings } from "../interfaces/orchestrator-bindings.interface";
+import type { OrchestratorVariables } from "../interfaces/orchestrator-variables.interface";
+import type { TerraformWorkflowInput } from "../interfaces/terraform-workflow-input.interface";
+import { terraformJobSchema } from "../schemas/terraform-job.schema";
+import { createJob } from "../services/job.service";
 
 /**
  * Creates infrastructure job routes.

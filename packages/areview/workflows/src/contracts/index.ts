@@ -1,2 +1,2 @@
-export * from './workflow.types.js';
-export * from './workflow-client.types.js';
+export * from './workflow.types';
+export * from './workflow-client.types';

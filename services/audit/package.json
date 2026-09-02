@@ -39,6 +39,7 @@
     "@stackra/contracts": "workspace:*",
     "@figentra/events": "workspace:*",
     "@figentra/messaging": "workspace:*",
+    "@figentra/registry-worker-sdk": "workspace:*",
     "@figentra/security": "workspace:*",
     "@figentra/observability": "workspace:*",
     "@mikro-orm/core": "catalog:",
@@ -50,6 +51,7 @@
   },
   "devDependencies": {
     "@nestjs/testing": "catalog:",
+    "@stackra/testing": "workspace:*",
     "@stackra/oxlint-config": "workspace:*",
     "@stackra/prettier-config": "workspace:*",
     "@stackra/typescript-config": "workspace:*",

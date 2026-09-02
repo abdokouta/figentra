@@ -73,6 +73,8 @@ export function createWorkerLogger(): MiddlewareHandler<WorkerLogEnv> {
  * @param context - Hono request context.
  * @returns Request-scoped Pino logger.
  */
-export function getWorkerLogger(context: Context<WorkerLogEnv>): pino.Logger {
+export function getWorkerLogger<E extends { Variables: WorkerLogVariables } = { Variables: WorkerLogVariables }>(
+  context: Context<E>,
+): pino.Logger {
   return context.var.logger;
 }

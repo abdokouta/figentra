@@ -3,7 +3,7 @@
  * @description Unit tests for outbox retry semantics and event validation.
  */
 import { describe, expect, it } from "vitest";
-import { outboxEventSchema, retryDelay } from "../src/index.js";
+import { outboxEventSchema, retryDelay } from "../src/index";
 
 describe("outbox", () => {
   it("uses bounded exponential retry delays", () => {

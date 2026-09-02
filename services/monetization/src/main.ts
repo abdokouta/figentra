@@ -11,8 +11,8 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { Logger } from 'nestjs-pino';
 
-import { AppModule } from './app.module.js';
-import { ObserveInstrument } from './infrastructure/observability.js';
+import { AppModule } from './app.module';
+import { ObserveInstrument } from './infrastructure/observability';
 
 /**
  * Bootstraps the HTTP application and applies platform-wide invariants.

@@ -21,3 +21,4 @@
 
 - [ADR-0082 — Gateway NestJS + Fastify](ADR-0082-gateway-nestjs-fastify.md)
 - [ADR-0083 — Explicit Cloud Deployment Sources](ADR-0083-explicit-cloud-deployment-sources.md)
+- [ADR-0087 — Gitignore, Path Aliases, and Test Initialization](ADR-0087-gitignore-path-aliases-and-test-initialization.md)

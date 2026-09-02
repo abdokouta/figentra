@@ -18,14 +18,15 @@ import {
   ServiceIdentityVerifier,
 } from "@figentra/security";
 import { NatsMessagingAdapter } from "@figentra/messaging";
+import { RegistryModule } from "@figentra/registry-worker-sdk";
 
-import mikroOrmConfig from "./infrastructure/mikro-orm.config.js";
-import { AuditEntry } from "./audit/domain/audit-entry.entity.js";
-import { AuditService } from "./audit/application/audit.service.js";
-import { AuditEventConsumer } from "./audit/application/audit-event.consumer.js";
-import { AuditController } from "./audit/presentation/audit.controller.js";
-import { HealthController } from "./infrastructure/health.controller.js";
-import { DevtoolsModule, ObserveModule } from "./infrastructure/observability.js";
+import mikroOrmConfig from "./infrastructure/mikro-orm.config";
+import { AuditEntry } from "./audit/domain/audit-entry.entity";
+import { AuditService } from "./audit/application/audit.service";
+import { AuditEventConsumer } from "./audit/application/audit-event.consumer";
+import { AuditController } from "./audit/presentation/audit.controller";
+import { HealthController } from "./infrastructure/health.controller";
+import { DevtoolsModule, ObserveModule } from "./infrastructure/observability";
 
 /**
  * Public application composition root.
@@ -79,10 +80,10 @@ import { DevtoolsModule, ObserveModule } from "./infrastructure/observability.js
           token: process.env.NATS_TOKEN,
           tls: process.env.NATS_TLS_CA
             ? {
-                ca: process.env.NATS_TLS_CA,
-                cert: process.env.NATS_TLS_CERT,
-                key: process.env.NATS_TLS_KEY,
-              }
+              ca: process.env.NATS_TLS_CA,
+              cert: process.env.NATS_TLS_CERT,
+              key: process.env.NATS_TLS_KEY,
+            }
             : undefined,
         });
       },
@@ -104,6 +105,19 @@ import { DevtoolsModule, ObserveModule } from "./infrastructure/observability.js
     ObserveModule,
     DevtoolsModule,
     ConfigModule.forRoot({ isGlobal: true }),
+    RegistryModule.forRootAsync({
+      useFactory: () => ({
+        application: "audit",
+        displayName: "Audit Service",
+        description: "Durable audit log persistence and query service.",
+        version: process.env.APP_VERSION ?? "0.0.0",
+        registryUrl: process.env.REGISTRY_URL ?? "http://localhost:8787",
+        registrationToken: process.env.REGISTRY_TOKEN,
+        environment: (process.env.NODE_ENV as "development" | "staging" | "production") ?? "development",
+        enabled: process.env.REGISTRY_ENABLED !== "false",
+        failOnRegistrationError: false,
+      }),
+    }),
     MikroOrmModule.forRoot(mikroOrmConfig),
     MikroOrmModule.forFeature([AuditEntry]),
     LoggerModule.forRoot({
@@ -135,4 +149,4 @@ import { DevtoolsModule, ObserveModule } from "./infrastructure/observability.js
   ],
 })
 /** Public symbol `AppModule`. */
-export class AppModule {}
+export class AppModule { }

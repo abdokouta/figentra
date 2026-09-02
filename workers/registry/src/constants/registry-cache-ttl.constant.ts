@@ -1,9 +1,6 @@
 /**
  * @file registry-cache-ttl.constant.ts
- * @description Registry runtime constant.
+ * @description Non-authoritative KV cache TTL for application and metadata queries (seconds).
  */
 
-/**
- * Non-authoritative Registry cache TTL.
- */
 export const REGISTRY_CACHE_TTL_SECONDS = 60;

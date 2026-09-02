@@ -1,9 +1,6 @@
 /**
  * @file route-cache-ttl.constant.ts
- * @description Registry runtime constant.
+ * @description Non-authoritative KV cache TTL for Gateway route resolution results (seconds).
  */
 
-/**
- * Non-authoritative route cache TTL.
- */
-export const ROUTE_CACHE_TTL_SECONDS = 30;
+export const ROUTE_CACHE_TTL_SECONDS = 60;

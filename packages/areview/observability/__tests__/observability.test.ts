@@ -3,8 +3,8 @@
  * @description Contract tests for framework-neutral telemetry primitives.
  */
 import { describe, expect, it } from "vitest";
-import { createTelemetryContext } from "../src/core/context.js";
-import { createTelemetryFixture } from "../src/testing/index.js";
+import { createTelemetryContext } from "../src/core/context";
+import { createTelemetryFixture } from "../src/testing/index";
 
 /**
  * Verifies deterministic telemetry context construction.

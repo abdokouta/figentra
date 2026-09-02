@@ -112,14 +112,14 @@ while `index.ts` only exports the default Worker.
 Standardize:
 
 ```ts
-export { createGateway } from "./app.js";
+export { createGateway } from "./app";
 export default createGateway();
 ```
 
 and:
 
 ```ts
-export { createRegistry } from "./app.js";
+export { createRegistry } from "./app";
 export default createRegistry();
 ```
 

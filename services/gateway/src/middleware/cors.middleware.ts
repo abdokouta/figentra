@@ -1,13 +1,13 @@
 /** @file cors.middleware.ts @description Explicit CORS policy. */
 import { Injectable, type NestMiddleware } from "@nestjs/common";
 import type { FastifyReply, FastifyRequest } from "fastify";
-import type { GatewayConfig } from "../config/gateway.config.js";
+import type { GatewayConfig } from "../config/gateway.config";
 
 /** Enforces the configured browser origin allow-list. */
 @Injectable()
 export class CorsMiddleware implements NestMiddleware {
   /** Creates the CORS policy from validated configuration. */
-  public constructor(private readonly config: GatewayConfig) {}
+  public constructor(private readonly config: GatewayConfig) { }
 
   /** Handles CORS preflight and response headers. */
   public use(request: FastifyRequest, reply: FastifyReply, next: () => void): void {

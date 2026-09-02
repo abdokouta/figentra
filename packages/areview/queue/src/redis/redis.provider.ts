@@ -1,4 +1,4 @@
-import type { QueueConsumeOptions, QueueHandler, QueueMessage, QueueProvider, QueueProviderCapabilities, QueuePublishOptions, QueuePublishResult, QueueSubscription } from '../contracts/queue.types.js';
+import type { QueueConsumeOptions, QueueHandler, QueueMessage, QueueProvider, QueueProviderCapabilities, QueuePublishOptions, QueuePublishResult, QueueSubscription } from '../contracts/queue.types';
 
 export interface RedisQueueClient {
   lpush(key: string, value: string): Promise<number>;
@@ -19,7 +19,7 @@ export class RedisQueueProvider implements QueueProvider {
     visibilityTimeout: false,
   };
 
-  constructor(private readonly redis: RedisQueueClient, private readonly key: (queue: string) => string = (queue) => `queue:${queue}`) {}
+  constructor(private readonly redis: RedisQueueClient, private readonly key: (queue: string) => string = (queue) => `queue:${queue}`) { }
 
   async publish<TBody>(queue: string, message: QueueMessage<TBody>, _options: QueuePublishOptions = {}): Promise<QueuePublishResult> {
     await this.redis.lpush(this.key(queue), JSON.stringify(message));

@@ -1,6 +1,6 @@
-import type { WorkflowRetryPolicy, WorkflowContext, WorkflowDefinition } from '../contracts/workflow.types.js';
+import type { WorkflowRetryPolicy, WorkflowContext, WorkflowDefinition } from '../contracts/workflow.types';
 
-export interface StepContext<TInput = unknown> extends WorkflowContext<TInput> {}
+export interface StepContext<TInput = unknown> extends WorkflowContext<TInput> { }
 export interface StepDefinition<TInput = unknown, TResult = unknown, TContext extends StepContext<TInput> = StepContext<TInput>> {
   readonly kind: 'step'; readonly name: string;
   readonly execute: (input: TInput, context: TContext) => TResult | Promise<TResult>;

@@ -3,9 +3,9 @@
  * @description Creates the shared NestJS Observe integration.
  */
 import { createObserveModule } from "@nestjs/observe";
-import type { FigentraObservabilityOptions } from "./interfaces/observability-options.interface.js";
-import type { FigentraObservabilityRuntime } from "./types/observability-runtime.type.js";
-import { GIT_SHA_ENV, OBSERVE_APP_KEY_ENV, OBSERVE_APP_SECRET_ENV, OBSERVE_DEBUG_ENV, OBSERVE_ENDPOINT_ENV } from "./constants/observability.constant.js";
+import type { FigentraObservabilityOptions } from "./interfaces/observability-options.interface";
+import type { FigentraObservabilityRuntime } from "./types/observability-runtime.type";
+import { GIT_SHA_ENV, OBSERVE_APP_KEY_ENV, OBSERVE_APP_SECRET_ENV, OBSERVE_DEBUG_ENV, OBSERVE_ENDPOINT_ENV } from "./constants/observability.constant";
 
 /**
  * Creates a matched Observe module and instrumentation instance.
@@ -19,8 +19,8 @@ export const createFigentraObservability = (options: FigentraObservabilityOption
   });
   return {
     module: ObserveModule.forRoot({
-      appKey: process.env[OBSERVE_APP_KEY_ENV],
-      appSecret: process.env[OBSERVE_APP_SECRET_ENV],
+      appKey: process.env[OBSERVE_APP_KEY_ENV] ?? "",
+      appSecret: process.env[OBSERVE_APP_SECRET_ENV] ?? "",
       serviceId: options.serviceId,
       serviceVersion: options.serviceVersion || process.env[GIT_SHA_ENV] || "unknown",
       endpoint: options.endpoint ?? process.env[OBSERVE_ENDPOINT_ENV],

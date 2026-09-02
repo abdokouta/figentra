@@ -6,11 +6,12 @@
  * the dedicated route-resolution audience.
  */
 import { Hono } from "hono";
-import type { RegistryBindings } from "../interfaces/registry-bindings.interface.js";
-import type { RegistryVariables } from "../interfaces/registry-variables.interface.js";
-import type { RegistryClaims } from "../interfaces/registry-claims.interface.js";
+import type { RegistryBindings } from "../interfaces/registry-bindings.interface";
+import type { RegistryVariables } from "../interfaces/registry-variables.interface";
+import type { RegistryClaims } from "../interfaces/registry-claims.interface";
 
-import { REGISTRY_ROUTE_RESOLUTION_PERMISSION } from "../constants/route-resolution-permission.constant.js";
+import { REGISTRY_ROUTE_RESOLUTION_PERMISSION } from "../constants/route-resolution-permission.constant";
+import { ROUTE_CACHE_TTL_SECONDS } from "../constants/route-cache-ttl.constant";
 
 /**
  * Checks whether a verified Registry JWT includes the expected audience.
@@ -28,7 +29,10 @@ function hasAudience(claims: RegistryClaims, expected: string): boolean {
  *
  * @returns Route-resolution sub-application.
  */
-export function createRouteResolutionRoutes(): Hono<{ Bindings: RegistryBindings; Variables: RegistryVariables }> {
+export function createRouteResolutionRoutes(): Hono<{
+  Bindings: RegistryBindings;
+  Variables: RegistryVariables;
+}> {
   const router = new Hono<{ Bindings: RegistryBindings; Variables: RegistryVariables }>();
 
   /**
@@ -46,10 +50,7 @@ export function createRouteResolutionRoutes(): Hono<{ Bindings: RegistryBindings
       !claims.permissions?.includes(REGISTRY_ROUTE_RESOLUTION_PERMISSION) ||
       !hasAudience(claims, c.env.REGISTRY_ROUTE_RESOLUTION_AUDIENCE)
     ) {
-      return c.json(
-        { error: "forbidden", reason: "route_resolution_permission_required" },
-        403,
-      );
+      return c.json({ error: "forbidden", reason: "route_resolution_permission_required" }, 403);
     }
 
     const method = c.req.query("method")?.toUpperCase();
@@ -63,21 +64,21 @@ export function createRouteResolutionRoutes(): Hono<{ Bindings: RegistryBindings
 
     if (c.env.REGISTRY_CACHE) {
       const cached = await c.env.REGISTRY_CACHE.get(cacheKey, "json");
-      if (cached) return c.json(cached, 200, {
-        "cache-control": "private, max-age=30",
-      });
+      if (cached)
+        return c.json(cached, 200, {
+          "cache-control": "private, max-age=30",
+        });
     }
 
-    const rows = await c.env.DB
-      .prepare(
-        `SELECT id, path_pattern, upstream, audience,
+    const rows = await c.env.DB.prepare(
+      `SELECT id, path_pattern, upstream, audience,
                 required_permission AS requiredPermission,
                 metadata_json
          FROM application_routes
          WHERE method = ?
          ORDER BY length(path_pattern) DESC
          LIMIT 500`,
-      )
+    )
       .bind(method)
       .all<{
         id: string;
@@ -110,18 +111,15 @@ export function createRouteResolutionRoutes(): Hono<{ Bindings: RegistryBindings
     };
 
     if (c.env.REGISTRY_CACHE) {
-      await c.env.REGISTRY_CACHE.put(
-        cacheKey,
-        JSON.stringify(result),
-        { expirationTtl: ROUTE_CACHE_TTL_SECONDS },
-      );
+      await c.env.REGISTRY_CACHE.put(cacheKey, JSON.stringify(result), {
+        expirationTtl: ROUTE_CACHE_TTL_SECONDS,
+      });
     }
 
     return c.json(result, 200, {
       "cache-control": "private, max-age=30",
     });
   });
-
 
   return router;
 }

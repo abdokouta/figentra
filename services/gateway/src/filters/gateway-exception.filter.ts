@@ -1,7 +1,7 @@
 /** @file gateway-exception.filter.ts @description Safe global HTTP error envelope. */
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from "@nestjs/common";
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { GatewayErrorCode } from "../errors/gateway.error.js";
+import { GatewayErrorCode } from "../errors/gateway.error";
 
 /** Normalizes all Gateway errors without exposing upstream internals. */
 @Catch()

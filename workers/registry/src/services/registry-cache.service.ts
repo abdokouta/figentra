@@ -2,7 +2,7 @@
  * @file registry-cache.service.ts
  * @description Non-authoritative KV cache operations for Registry metadata.
  */
-import type { RegistryBindings } from '../interfaces/registry-bindings.interface.js';
+import type { RegistryBindings } from "../interfaces/registry-bindings.interface";
 
 /**
  * Invalidates all derived Registry cache entries for an application mutation.
@@ -12,14 +12,11 @@ import type { RegistryBindings } from '../interfaces/registry-bindings.interface
 export async function invalidateRegistryCache(env: RegistryBindings, slug: string): Promise<void> {
   if (!env.REGISTRY_CACHE) return;
 
-  const keys = [
-    `application:${slug}`,
-    `metadata:${slug}`,
-  ];
+  const keys = [`application:${slug}`, `metadata:${slug}`];
 
   let cursor: string | undefined;
   do {
-    const page = await env.REGISTRY_CACHE.list({ prefix: 'route:', cursor, limit: 1000 });
+    const page = await env.REGISTRY_CACHE.list({ prefix: "route:", cursor, limit: 1000 });
     keys.push(...page.keys.map((entry) => entry.name));
     cursor = page.list_complete ? undefined : page.cursor;
   } while (cursor);

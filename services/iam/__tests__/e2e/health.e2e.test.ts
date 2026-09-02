@@ -7,7 +7,7 @@
 import { Test, type TestingModule } from "@nestjs/testing";
 import { type INestApplication } from "@nestjs/common";
 import request from "supertest";
-import { AppModule } from "../../src/app.module.js";
+import { AppModule } from "../../src/app.module";
 
 describe("HTTP health boundary (e2e)", () => {
   let app: INestApplication;

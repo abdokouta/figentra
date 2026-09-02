@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { listRegisteredWorkflows, registerWorkflow, resolveWorkflow } from '../src/workflow.registry.js';
+import { listRegisteredWorkflows, registerWorkflow, resolveWorkflow } from '../src/workflow.registry';
 
 describe('workflow registry', () => {
   it('registers and resolves immutable workflow versions', () => {

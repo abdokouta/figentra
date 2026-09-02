@@ -1,4 +1,4 @@
-import type { QueueConsumeOptions, QueueHandler, QueueMessage, QueueProvider, QueueProviderCapabilities, QueuePublishOptions, QueuePublishResult, QueueSubscription } from '../contracts/queue.types.js';
+import type { QueueConsumeOptions, QueueHandler, QueueMessage, QueueProvider, QueueProviderCapabilities, QueuePublishOptions, QueuePublishResult, QueueSubscription } from '../contracts/queue.types';
 
 export interface BullMqQueueLike {
   add(name: string, data: unknown, options?: Record<string, unknown>): Promise<{ id?: string | number }>;
@@ -24,7 +24,7 @@ export class BullMqQueueProvider implements QueueProvider {
     visibilityTimeout: true,
   };
 
-  constructor(private readonly factory: BullMqFactory) {}
+  constructor(private readonly factory: BullMqFactory) { }
 
   async publish<TBody>(queue: string, message: QueueMessage<TBody>, options: QueuePublishOptions = {}): Promise<QueuePublishResult> {
     const job = await this.factory.queue(queue).add(message.type, message, {

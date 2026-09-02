@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import type { WorkflowRetryPolicy } from '../contracts/workflow.types.js';
-import { WORKFLOW_METADATA, WORKFLOW_STEP_METADATA, type WorkflowClassMetadata, type WorkflowStepMetadata } from './metadata.js';
+import type { WorkflowRetryPolicy } from '../contracts/workflow.types';
+import { WORKFLOW_METADATA, WORKFLOW_STEP_METADATA, type WorkflowClassMetadata, type WorkflowStepMetadata } from './metadata';
 
 export function Workflow(name: string, options: Omit<WorkflowClassMetadata, 'name'> = {}): ClassDecorator {
   if (!name.trim()) throw new Error('Workflow name cannot be empty.');

@@ -25,18 +25,20 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@figentra/observability": "workspace:*",
+    "@figentra/registry-worker-sdk": "workspace:*",
     "@nestjs/common": "catalog:",
-    "@nestjs/core": "catalog:",
     "@nestjs/config": "catalog:",
-    "nestjs-i18n": "catalog:",
-    "reflect-metadata": "catalog:",
+    "@nestjs/core": "catalog:",
     "@nestjs/platform-fastify": "catalog:",
     "fastify": "catalog:",
+    "nestjs-i18n": "catalog:",
     "nestjs-pino": "catalog:",
-    "@figentra/observability": "workspace:*"
+    "reflect-metadata": "catalog:"
   },
   "devDependencies": {
     "@nestjs/testing": "catalog:",
+    "@stackra/testing": "workspace:*",
     "@stackra/oxlint-config": "workspace:*",
     "@stackra/prettier-config": "workspace:*",
     "@stackra/typescript-config": "workspace:*",

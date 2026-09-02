@@ -13,8 +13,8 @@ import { type MicroserviceOptions } from '@nestjs/microservices';
 import { createNatsMicroserviceOptions } from '@figentra/messaging';
 import { Logger } from 'nestjs-pino';
 
-import { AppModule } from './app.module.js';
-import { ObserveInstrument } from './infrastructure/observability.js';
+import { AppModule } from './app.module';
+import { ObserveInstrument } from './infrastructure/observability';
 
 /**
  * Bootstraps the HTTP application and applies platform-wide invariants.
@@ -60,10 +60,10 @@ async function bootstrap(): Promise<void> {
     token: process.env.NATS_TOKEN,
     tls: process.env.NATS_TLS_CA
       ? {
-          ca: process.env.NATS_TLS_CA,
-          cert: process.env.NATS_TLS_CERT,
-          key: process.env.NATS_TLS_KEY,
-        }
+        ca: process.env.NATS_TLS_CA,
+        cert: process.env.NATS_TLS_CERT,
+        key: process.env.NATS_TLS_KEY,
+      }
       : undefined,
   });
 

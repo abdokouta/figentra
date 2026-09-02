@@ -8,15 +8,15 @@ import { FastifyAdapter, type NestFastifyApplication } from "@nestjs/platform-fa
 import { ValidationPipe, VersioningType } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { Logger } from "nestjs-pino";
-import { AppModule } from "./app.module.js";
-import { GatewayExceptionFilter } from "./filters/gateway-exception.filter.js";
-import { AuthenticationGuard } from "./guards/authentication.guard.js";
-import { RequestContextInterceptor } from "./interceptors/request-context.interceptor.js";
-import { SecurityHeadersInterceptor } from "./interceptors/security-headers.interceptor.js";
-import { GatewayLoggingInterceptor } from "./interceptors/logging.interceptor.js";
-import { loadGatewayConfig } from "./config/gateway.config.js";
+import { AppModule } from "./app.module";
+import { GatewayExceptionFilter } from "./filters/gateway-exception.filter";
+import { AuthenticationGuard } from "./guards/authentication.guard";
+import { RequestContextInterceptor } from "./interceptors/request-context.interceptor";
+import { SecurityHeadersInterceptor } from "./interceptors/security-headers.interceptor";
+import { GatewayLoggingInterceptor } from "./interceptors/logging.interceptor";
+import { loadGatewayConfig } from "./config/gateway.config";
 import { createFigentraObservability } from "@figentra/observability/nest";
-import { SERVICE_NAME, SERVICE_VERSION } from "./constants/service.constant.js";
+import { SERVICE_NAME, SERVICE_VERSION } from "./constants/service.constant";
 
 /** Boots the Gateway with the complete application-boundary pipeline. */
 async function bootstrap(): Promise<void> {

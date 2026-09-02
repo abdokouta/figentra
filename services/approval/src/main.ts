@@ -11,9 +11,9 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { Logger } from 'nestjs-pino';
 
-import { AppModule } from './app.module.js';
+import { AppModule } from './app.module';
 import { createFigentraObservability } from "@figentra/observability/nest";
-import { SERVICE_NAME, SERVICE_VERSION } from "./constants/service.constant.js";
+import { SERVICE_NAME, SERVICE_VERSION } from "./constants/service.constant";
 
 /**
  * Bootstraps the HTTP application and applies platform-wide invariants.

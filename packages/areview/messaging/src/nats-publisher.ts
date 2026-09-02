@@ -5,8 +5,8 @@
 import { jetstream } from "@nats-io/jetstream";
 import type { NatsConnection } from "@nats-io/nats-core";
 import type { FigentraEventEnvelope } from "@figentra/events";
-import type { MessagingEventPublisher } from "./interfaces/messaging-client.interface.js";
-import { MESSAGING_CONSTANTS } from "./constants/messaging.constant.js";
+import type { MessagingEventPublisher } from "./interfaces/messaging-client.interface";
+import { MESSAGING_CONSTANTS } from "./constants/messaging.constant";
 
 /**
  * Publishes Figentra events to NATS JetStream.
@@ -15,7 +15,7 @@ export class NatsEventPublisher implements MessagingEventPublisher {
   /**
    * @param connection - Authenticated NATS connection.
    */
-  public constructor(private readonly connection: NatsConnection) {}
+  public constructor(private readonly connection: NatsConnection) { }
 
   /**
    * Publishes one validated event.

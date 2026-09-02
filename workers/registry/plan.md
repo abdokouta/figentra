@@ -1,10 +1,13 @@
 # Application Registry — Production Plan
 
 ## Purpose
-The Registry is the authoritative control-plane catalog for deployable applications,
-modules, resources, actions, capabilities, branding metadata, and route metadata.
+
+The Registry is the authoritative control-plane catalog for deployable
+applications, modules, resources, actions, capabilities, branding metadata, and
+route metadata.
 
 ## Runtime
+
 - Cloudflare Worker
 - Hono
 - D1 authoritative persistence
@@ -14,10 +17,13 @@ modules, resources, actions, capabilities, branding metadata, and route metadata
 - Pino-backed structured logging
 
 ## Data ownership
-D1 is authoritative. KV is a non-authoritative cache only. Terraform/`cloud.yaml`
-provision the bindings; registry application metadata is not duplicated in Terraform.
+
+D1 is authoritative. KV is a non-authoritative cache only.
+Terraform/`cloud.yaml` provision the bindings; registry application metadata is
+not duplicated in Terraform.
 
 ## Functional areas
+
 - Application registration.
 - Application metadata.
 - Versioning.
@@ -32,6 +38,7 @@ provision the bindings; registry application metadata is not duplicated in Terra
 - Audit emission for administrative mutations.
 
 ## Completed
+
 - Hono Worker scaffold.
 - D1 binding contract.
 - Migration/schema structure.
@@ -64,9 +71,13 @@ provision the bindings; registry application metadata is not duplicated in Terra
 - [ ] Load/soak testing.
 - [ ] Security/penetration testing.
 - [ ] Production deployment rehearsal.
-- [ ] First-class tables/APIs for events, workflows, integrations, settings, features, widgets, and localization.
+- [ ] First-class tables/APIs for events, workflows, integrations, settings,
+      features, widgets, and localization.
 
-These are deliberately tracked as explicit gates instead of being hidden behind a claim of 100% runtime verification.
+These are deliberately tracked as explicit gates instead of being hidden behind
+a claim of 100% runtime verification.
 
 ## Non-goals
-The Registry is not a generic database and must not become a business-domain store.
+
+The Registry is not a generic database and must not become a business-domain
+store.

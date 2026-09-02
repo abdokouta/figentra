@@ -1,6 +1,6 @@
 /** @file gateway.config.module.ts @description Singleton Gateway configuration provider. */
 import { Global, Module } from "@nestjs/common";
-import { loadGatewayConfig, type GatewayConfig } from "../config/gateway.config.js";
+import { loadGatewayConfig, type GatewayConfig } from "../config/gateway.config";
 
 /** Global provider for validated Gateway runtime configuration. */
 @Global()
@@ -8,7 +8,7 @@ import { loadGatewayConfig, type GatewayConfig } from "../config/gateway.config.
   providers: [{ provide: "GATEWAY_CONFIG", useFactory: loadGatewayConfig }],
   exports: ["GATEWAY_CONFIG"],
 })
-export class GatewayConfigModule {}
+export class GatewayConfigModule { }
 
 /** Injection token for the validated Gateway configuration. */
 export const GATEWAY_CONFIG = "GATEWAY_CONFIG" as const;

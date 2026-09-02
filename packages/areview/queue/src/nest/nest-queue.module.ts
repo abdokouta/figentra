@@ -1,8 +1,8 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
-import type { QueueProvider } from '../contracts/queue.types.js';
-import { QUEUE_PROVIDER } from '../tokens.js';
-import { BullMqQueueProvider } from '../bullmq/bullmq.provider.js';
+import type { QueueProvider } from '../contracts/queue.types';
+import { QUEUE_PROVIDER } from '../tokens';
+import { BullMqQueueProvider } from '../bullmq/bullmq.provider';
 
 export interface NestQueueOptions { connection: Parameters<typeof BullModule.forRoot>[0]['connection']; prefix?: string; }
 
@@ -17,4 +17,4 @@ export class NestQueueModule {
   }
 }
 
-export { BullMqQueueProvider } from '../bullmq/bullmq.provider.js';
+export { BullMqQueueProvider } from '../bullmq/bullmq.provider';

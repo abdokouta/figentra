@@ -1,1 +1,1 @@
-export * from './workflow.adapter.js';
+export * from './workflow.adapter';

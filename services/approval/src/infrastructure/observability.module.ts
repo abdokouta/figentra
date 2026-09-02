@@ -4,7 +4,7 @@
  */
 import { Module } from "@nestjs/common";
 import { FigentraDevtoolsModule, FigentraObservabilityModule } from "@figentra/observability/nest";
-import { SERVICE_NAME, SERVICE_VERSION } from "../constants/service.constant.js";
+import { SERVICE_NAME, SERVICE_VERSION } from "../constants/service.constant";
 
 /** Approval service observability composition. */
 @Module({
@@ -15,4 +15,4 @@ import { SERVICE_NAME, SERVICE_VERSION } from "../constants/service.constant.js"
   exports: [FigentraObservabilityModule, FigentraDevtoolsModule],
 })
 /** Public symbol `ObservabilityModule`. */
-export class ObservabilityModule {}
+export class ObservabilityModule { }

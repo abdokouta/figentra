@@ -2,7 +2,7 @@
 import { Injectable, type NestMiddleware } from "@nestjs/common";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { randomUUID } from "node:crypto";
-import { CORRELATION_ID_HEADER, REQUEST_ID_HEADER, TRACEPARENT_HEADER } from "../constants/gateway.constant.js";
+import { CORRELATION_ID_HEADER, REQUEST_ID_HEADER, TRACEPARENT_HEADER } from "../constants/gateway.constant";
 
 /** Establishes safe request/correlation identifiers before authentication. */
 @Injectable()

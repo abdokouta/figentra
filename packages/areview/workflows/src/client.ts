@@ -1,10 +1,10 @@
-import type { WorkflowProvider, WorkflowStartRequest, WorkflowExecution, WorkflowSignalRequest } from './contracts/workflow.types.js';
+import type { WorkflowProvider, WorkflowStartRequest, WorkflowExecution, WorkflowSignalRequest } from './contracts/workflow.types';
 
 export interface WorkflowClientOptions { provider: WorkflowProvider }
 
 /** Provider-neutral facade; applications do not depend on a workflow vendor. */
 export class WorkflowClient {
-  constructor(private readonly options: WorkflowClientOptions) {}
+  constructor(private readonly options: WorkflowClientOptions) { }
   get provider(): WorkflowProvider { return this.options.provider; }
   supports(capability: keyof WorkflowProvider['capabilities']): boolean { return this.options.provider.capabilities[capability]; }
   start<TPayload = unknown>(request: WorkflowStartRequest<TPayload>): Promise<WorkflowExecution> { return this.options.provider.start(request); }

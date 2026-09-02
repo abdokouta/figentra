@@ -27,6 +27,7 @@
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts"
   },
   "dependencies": {
+    "@figentra/registry-worker-sdk": "workspace:*",
     "@figentra/observability": "workspace:*",
     "@stackra/network": "workspace:*",
     "@nestjs/common": "catalog:",
@@ -44,6 +45,7 @@
   },
   "devDependencies": {
     "@nestjs/testing": "catalog:",
+    "@stackra/testing": "workspace:*",
     "@stackra/oxlint-config": "workspace:*",
     "@stackra/prettier-config": "workspace:*",
     "@stackra/typescript-config": "workspace:*",

@@ -1,25 +1,77 @@
-/** @file registry.service.ts @description Registry S2S route-resolution adapter. */
-import { Injectable, Inject, ServiceUnavailableException } from "@nestjs/common";
-import { GATEWAY_CONFIG } from "../modules/gateway.config.module.js";
-import { HttpServiceTransport } from "@stackra/network";
-import type { ServiceRoute } from "../interfaces/service-route.interface.js";
-import type { GatewayConfig } from "../config/gateway.config.js";
+/**
+ * @file registry.service.ts
+ * @description Gateway S2S route-resolution adapter using @figentra/registry-worker-sdk.
+ */
 
-/** Resolves public routes using Registry as the sole route authority. */
+import {
+  Injectable,
+  Inject,
+  Optional,
+  ServiceUnavailableException,
+  NotFoundException,
+} from "@nestjs/common";
+import { RegistryClientService, RegistryClientError } from "@figentra/registry-worker-sdk";
+import { GATEWAY_CONFIG } from "../modules/gateway.config.module";
+import type { ServiceRoute } from "../interfaces/service-route.interface";
+import type { GatewayConfig } from "../config/gateway.config";
+
+/**
+ * Resolves public routes using the Application Registry Worker as the authoritative route store.
+ */
 @Injectable()
 export class GatewayRegistryService {
-  private readonly transport: HttpServiceTransport;
+  public constructor(
+    @Inject(GATEWAY_CONFIG)
+    private readonly config: GatewayConfig,
 
-  /** Creates an authenticated Registry transport. */
-  public constructor(@Inject(GATEWAY_CONFIG) config: GatewayConfig) {
-    this.transport = new HttpServiceTransport({ service: "registry", baseUrl: config.registryServiceUrl, timeoutMs: config.upstreamTimeoutMs, maxRetries: config.upstreamMaxRetries, getAccessToken: () => config.gatewayServiceToken });
-  }
+    @Optional()
+    private readonly registryClient?: RegistryClientService,
+  ) {}
 
-  /** Resolves an HTTP route for the given method and path. */
+  /**
+   * Resolves an HTTP route for the given method and path against the Registry Worker.
+   *
+   * @param method - HTTP method (GET, POST, etc.)
+   * @param path - Incoming request path
+   * @returns Resolved ServiceRoute upstream descriptor
+   * @throws NotFoundException if route is not registered
+   * @throws ServiceUnavailableException if registry is unreachable
+   */
   public async resolve(method: string, path: string): Promise<ServiceRoute> {
     try {
-      return await this.transport.request<ServiceRoute>("GET", `/v1/routes/resolve?method=${encodeURIComponent(method)}&path=${encodeURIComponent(path)}`);
-    } catch {
+      if (this.registryClient) {
+        const resolved = await this.registryClient.resolveRoute(method, path);
+        return {
+          id: resolved.id ?? `${method}:${path}`,
+          upstream: resolved.upstream,
+          audience: resolved.audience,
+          requiredPermission: resolved.requiredPermission,
+          metadata: resolved.metadata,
+        };
+      }
+
+      // Direct fallback using configured registryServiceUrl
+      const url = `${this.config.registryServiceUrl.replace(/\/$/, "")}/v1/routes/resolve?method=${encodeURIComponent(method)}&path=${encodeURIComponent(path)}`;
+      const headers: Record<string, string> = { Accept: "application/json" };
+      if (this.config.gatewayServiceToken) {
+        headers["Authorization"] = `Bearer ${this.config.gatewayServiceToken}`;
+      }
+
+      const res = await fetch(url, { headers });
+      if (res.status === 404) {
+        throw new NotFoundException(`No route found for ${method} ${path}`);
+      }
+      if (!res.ok) {
+        throw new ServiceUnavailableException("Route registry unavailable");
+      }
+
+      const data = (await res.json()) as ServiceRoute;
+      return data;
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      if (error instanceof RegistryClientError && error.status === 404) {
+        throw new NotFoundException(`No route found for ${method} ${path}`);
+      }
       throw new ServiceUnavailableException("Route registry unavailable");
     }
   }

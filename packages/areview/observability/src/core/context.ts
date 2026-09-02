@@ -2,7 +2,7 @@
  * @file context.ts
  * @description Framework-neutral telemetry context helpers.
  */
-import type { TelemetryContext } from "../contracts/telemetry-context.interface.js";
+import type { TelemetryContext } from "../contracts/telemetry-context.interface";
 
 /**
  * Creates a trusted initial telemetry context.

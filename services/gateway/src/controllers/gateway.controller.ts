@@ -1,16 +1,16 @@
 /** @file gateway.controller.ts @description Public API Gateway controller. */
 import { All, Controller, Param, Req, Res } from "@nestjs/common";
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { GatewayRegistryService } from "../services/registry.service.js";
-import { GatewayIamService } from "../services/iam.service.js";
-import { GatewayUpstreamService } from "../services/upstream.service.js";
-import type { AuthenticatedGatewayRequest } from "../interfaces/authenticated-request.interface.js";
+import { GatewayRegistryService } from "../services/registry.service";
+import { GatewayIamService } from "../services/iam.service";
+import { GatewayUpstreamService } from "../services/upstream.service";
+import type { AuthenticatedGatewayRequest } from "../interfaces/authenticated-request.interface";
 
 /** Routes authenticated public API calls to Registry-resolved services. */
 @Controller("v1")
 export class GatewayController {
   /** Creates the Gateway controller with its platform adapters. */
-  public constructor(private readonly registry: GatewayRegistryService, private readonly iam: GatewayIamService, private readonly upstream: GatewayUpstreamService) {}
+  public constructor(private readonly registry: GatewayRegistryService, private readonly iam: GatewayIamService, private readonly upstream: GatewayUpstreamService) { }
 
   /** Forwards any versioned service path after authentication and authorization. */
   @All(":service/*splat")

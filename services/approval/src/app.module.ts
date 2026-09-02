@@ -8,13 +8,26 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
 import { AcceptLanguageResolver, HeaderResolver, I18nModule } from 'nestjs-i18n';
-import { ObservabilityModule } from "./infrastructure/observability.module.js";
+import { ObservabilityModule } from "./infrastructure/observability.module";
 
 @Module({
   controllers: [],
   imports: [
     ObservabilityModule,
     ConfigModule.forRoot({ isGlobal: true }),
+    RegistryModule.forRootAsync({
+      useFactory: () => ({
+        application: "approval",
+        displayName: "Approval Service",
+        description: "Multi-party authorization workflows, change management, and human-in-the-loop approvals.",
+        version: process.env.APP_VERSION ?? "0.0.0",
+        registryUrl: process.env.REGISTRY_URL ?? "http://localhost:8787",
+        registrationToken: process.env.REGISTRY_TOKEN,
+        environment: (process.env.NODE_ENV as "development" | "staging" | "production") ?? "development",
+        enabled: process.env.REGISTRY_ENABLED !== "false",
+        failOnRegistrationError: false,
+      }),
+    }),
     LoggerModule.forRoot({
       pinoHttp: {
         level: process.env.LOG_LEVEL ?? 'info',
@@ -35,4 +48,4 @@ import { ObservabilityModule } from "./infrastructure/observability.module.js";
 /**
  * Public Figentra API symbol.
  */
-export class AppModule {}
+export class AppModule { }

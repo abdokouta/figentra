@@ -2,8 +2,8 @@
  * @file application-manifest.type.ts
  * @description Runtime type inferred from the canonical Registry manifest schema.
  */
-import type { z } from 'zod';
-import type { applicationManifestSchema } from '../schemas/application-manifest.schema.js';
+import type { z } from "zod";
+import type { applicationManifestSchema } from "../schemas/application-manifest.schema";
 
 /**
  * Validated application registration manifest.

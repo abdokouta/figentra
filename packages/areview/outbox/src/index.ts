@@ -106,4 +106,4 @@ export function retryDelay(attempts: number, baseMs = 500, maxMs = 300_000): num
 }
 
 /** Public barrel export. */
-export { MikroOrmOutboxStore } from "./mikro-orm.js";
+export { MikroOrmOutboxStore } from "./mikro-orm";

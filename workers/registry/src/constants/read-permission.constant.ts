@@ -1,7 +1,6 @@
 /**
  * @file read-permission.constant.ts
- * @description IAM permission required for Registry inventory reads.
+ * @description IAM permission required for reading Registry metadata and catalog items.
  */
 
-/** Registry inventory read permission. */
-export const REGISTRY_READ_PERMISSION = 'registry:read';
+export const REGISTRY_READ_PERMISSION = "registry:read";

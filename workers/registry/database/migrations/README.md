@@ -4,7 +4,12 @@
 
 The Registry Worker uses **raw SQL + Wrangler D1 migrations**.
 
-Each migration file owns **one logical schema object** and its directly associated indexes. The seven extensible Registry metadata categories (`event`, `workflow`, `integration`, `setting`, `feature`, `widget`, `localization`) intentionally share one constrained `application_catalog_items` table so the Registry does not accumulate seven nearly-identical tables. This makes schema ownership obvious, reviewable, and easy to audit.
+Each migration file owns **one logical schema object** and its directly
+associated indexes. The seven extensible Registry metadata categories (`event`,
+`workflow`, `integration`, `setting`, `feature`, `widget`, `localization`)
+intentionally share one constrained `application_catalog_items` table so the
+Registry does not accumulate seven nearly-identical tables. This makes schema
+ownership obvious, reviewable, and easy to audit.
 
 ```text
 0001_applications.sql
@@ -32,8 +37,8 @@ Raw SQL gives us:
 - Smaller Worker bundles.
 - Straightforward database review and incident debugging.
 
-If a typed query/schema layer is required later, evaluate Drizzle separately;
-do not replace Wrangler's migration mechanism with Knex.
+If a typed query/schema layer is required later, evaluate Drizzle separately; do
+not replace Wrangler's migration mechanism with Knex.
 
 ## Up / Down policy
 

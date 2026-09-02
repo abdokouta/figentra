@@ -2,7 +2,7 @@
  * @file index.ts
  * @description Test helpers for observability contracts.
  */
-import type { TelemetryContext } from "../contracts/telemetry-context.interface.js";
+import type { TelemetryContext } from "../contracts/telemetry-context.interface";
 
 /**
  * Creates deterministic telemetry context data for unit and integration tests.

@@ -1,5 +1,11 @@
 {
   "extends": "@stackra/typescript-config/worker",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
   "include": [
     "src/**/*.ts",
     "__tests__/**/*.ts",

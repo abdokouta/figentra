@@ -1,4 +1,4 @@
-import type { WorkflowRetryPolicy } from '../contracts/workflow.types.js';
+import type { WorkflowRetryPolicy } from '../contracts/workflow.types';
 
 export const WORKFLOW_METADATA = Symbol.for('figentra:workflow');
 export const WORKFLOW_STEP_METADATA = Symbol.for('figentra:workflow:step');

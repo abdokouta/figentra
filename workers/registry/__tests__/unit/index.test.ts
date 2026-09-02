@@ -7,7 +7,7 @@
  * environment-specific Cloudflare resources.
  */
 import { describe, expect, it } from "vitest";
-import { createRegistry } from "./index.js";
+import { createRegistry } from "@/app";
 
 function createEnv() {
   return {

@@ -6,15 +6,15 @@
  * and the dedicated registration audience.
  */
 import { Hono } from "hono";
-import type { RegistryBindings } from "../interfaces/registry-bindings.interface.js";
-import type { RegistryVariables } from "../interfaces/registry-variables.interface.js";
-import type { RegistryClaims } from "../interfaces/registry-claims.interface.js";
+import type { RegistryBindings } from "../interfaces/registry-bindings.interface";
+import type { RegistryVariables } from "../interfaces/registry-variables.interface";
+import type { RegistryClaims } from "../interfaces/registry-claims.interface";
 
-import { applicationManifestSchema } from "../schemas/application-manifest.schema.js";
-import { validateUpstreams } from "../validators/upstream.validator.js";
-import { sha256 } from "../utils/sha256.util.js";
-import { invalidateRegistryCache } from "../services/registry-cache.service.js";
-import { REGISTRY_REGISTRATION_PERMISSION } from "../constants/registration-permission.constant.js";
+import { applicationManifestSchema } from "../schemas/application-manifest.schema";
+import { validateUpstreams } from "../validators/upstream.validator";
+import { sha256 } from "../utils/sha256.util";
+import { invalidateRegistryCache } from "../services/registry-cache.service";
+import { REGISTRY_REGISTRATION_PERMISSION } from "../constants/registration-permission.constant";
 
 /**
  * Checks whether a verified Registry JWT includes the expected audience.
@@ -32,7 +32,10 @@ function hasAudience(claims: RegistryClaims, expected: string): boolean {
  *
  * @returns Registration route sub-application.
  */
-export function createRegistrationRoutes(): Hono<{ Bindings: RegistryBindings; Variables: RegistryVariables }> {
+export function createRegistrationRoutes(): Hono<{
+  Bindings: RegistryBindings;
+  Variables: RegistryVariables;
+}> {
   const router = new Hono<{ Bindings: RegistryBindings; Variables: RegistryVariables }>();
 
   /**
@@ -80,10 +83,7 @@ export function createRegistrationRoutes(): Hono<{ Bindings: RegistryBindings; V
     const manifest = parsed.data;
 
     try {
-      validateUpstreams(
-        manifest.routes,
-        c.env.REGISTRY_ALLOWED_UPSTREAM_SUFFIX,
-      );
+      validateUpstreams(manifest.routes, c.env.REGISTRY_ALLOWED_UPSTREAM_SUFFIX);
     } catch (error) {
       return c.json(
         {
@@ -99,24 +99,17 @@ export function createRegistrationRoutes(): Hono<{ Bindings: RegistryBindings; V
     const contentHash = await sha256(serializedManifest);
     const now = new Date().toISOString();
 
-    const existingRegistration = await c.env.DB
-      .prepare(
-        "SELECT id FROM registrations WHERE registration_key = ?",
-      )
+    const existingRegistration = await c.env.DB.prepare(
+      "SELECT id FROM registrations WHERE registration_key = ?",
+    )
       .bind(registrationKey)
       .first<{ id: string }>();
 
     if (existingRegistration) {
-      return c.json(
-        { error: "registration_exists", id: existingRegistration.id },
-        409,
-      );
+      return c.json({ error: "registration_exists", id: existingRegistration.id }, 409);
     }
 
-    const existingApplication = await c.env.DB
-      .prepare(
-        "SELECT id FROM applications WHERE slug = ?",
-      )
+    const existingApplication = await c.env.DB.prepare("SELECT id FROM applications WHERE slug = ?")
       .bind(manifest.slug)
       .first<{ id: string }>();
 
@@ -169,14 +162,7 @@ export function createRegistrationRoutes(): Hono<{ Bindings: RegistryBindings; V
           (id, application_id, version, manifest_hash, manifest_json,
            status, created_at)
          VALUES (?, ?, ?, ?, ?, 'active', ?)`,
-      ).bind(
-        versionId,
-        applicationId,
-        manifest.version,
-        contentHash,
-        serializedManifest,
-        now,
-      ),
+      ).bind(versionId, applicationId, manifest.version, contentHash, serializedManifest, now),
       c.env.DB.prepare(
         `INSERT INTO registrations
           (id, application_id, registration_key, content_hash, actor_id,
@@ -218,14 +204,7 @@ export function createRegistrationRoutes(): Hono<{ Bindings: RegistryBindings; V
           `INSERT INTO application_capabilities
             (id, application_id, version_id, capability, config_json, created_at)
            VALUES (?, ?, ?, ?, ?, ?)`,
-        ).bind(
-          crypto.randomUUID(),
-          applicationId,
-          versionId,
-          capability,
-          "{}",
-          now,
-        ),
+        ).bind(crypto.randomUUID(), applicationId, versionId, capability, "{}", now),
       ),
       ...(manifest.modules ?? []).map((module) =>
         c.env.DB.prepare(
@@ -313,15 +292,15 @@ export function createRegistrationRoutes(): Hono<{ Bindings: RegistryBindings; V
           now,
         ),
       ),
-      ...([
-        ...((manifest.eventDefinitions ?? []).map((item) => ({ category: 'event', item })) ),
-        ...((manifest.workflowDefinitions ?? []).map((item) => ({ category: 'workflow', item })) ),
-        ...((manifest.integrations ?? []).map((item) => ({ category: 'integration', item })) ),
-        ...((manifest.settings ?? []).map((item) => ({ category: 'setting', item })) ),
-        ...((manifest.features ?? []).map((item) => ({ category: 'feature', item })) ),
-        ...((manifest.widgets ?? []).map((item) => ({ category: 'widget', item })) ),
-        ...((manifest.localization ?? []).map((item) => ({ category: 'localization', item })) ),
-      ]).map(({ category, item }) =>
+      ...[
+        ...(manifest.eventDefinitions ?? []).map((item) => ({ category: "event", item })),
+        ...(manifest.workflowDefinitions ?? []).map((item) => ({ category: "workflow", item })),
+        ...(manifest.integrations ?? []).map((item) => ({ category: "integration", item })),
+        ...(manifest.settings ?? []).map((item) => ({ category: "setting", item })),
+        ...(manifest.features ?? []).map((item) => ({ category: "feature", item })),
+        ...(manifest.widgets ?? []).map((item) => ({ category: "widget", item })),
+        ...(manifest.localization ?? []).map((item) => ({ category: "localization", item })),
+      ].map(({ category, item }) =>
         c.env.DB.prepare(
           `INSERT INTO application_catalog_items
             (id, application_id, version_id, category, item_key, payload_json, created_at)
@@ -331,7 +310,11 @@ export function createRegistrationRoutes(): Hono<{ Bindings: RegistryBindings; V
           applicationId,
           versionId,
           category,
-          String(item.key ?? item.namespace),
+          String(
+            (item as { key?: string; namespace?: string }).key ??
+              (item as { key?: string; namespace?: string }).namespace ??
+              crypto.randomUUID(),
+          ),
           JSON.stringify(item),
           now,
         ),
