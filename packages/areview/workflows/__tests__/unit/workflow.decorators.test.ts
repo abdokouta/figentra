@@ -1,22 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { Before, Step, Workflow } from '../../src/decorators/index.js';
-import { WORKFLOW_HOOK_METADATA, WORKFLOW_METADATA, WORKFLOW_STEP_METADATA } from '../../src/decorators/metadata.js';
+import { Step, Workflow } from '../../src/decorators/index.js';
+import { WORKFLOW_METADATA, WORKFLOW_STEP_METADATA } from '../../src/decorators/metadata.js';
 
 @Workflow('identity.sync-users', { version: '1' })
 class WorkflowFixture {
-  @Before('sync')
-  async validate(): Promise<void> {}
-
-  @Step('sync')
-  async sync(): Promise<void> {}
+  @Step('sync', { compensateMethod: 'compensate' }) async sync(): Promise<void> {}
+  async compensate(): Promise<void> {}
 }
 
 describe('workflow decorators', () => {
-  it('keeps hooks step-local', () => {
+  it('keeps durable steps explicit', () => {
     expect(Reflect.getMetadata(WORKFLOW_METADATA, WorkflowFixture).name).toBe('identity.sync-users');
-    expect(Reflect.getMetadata(WORKFLOW_STEP_METADATA, WorkflowFixture.prototype, 'sync').name).toBe('sync');
-    expect(Reflect.getMetadata(WORKFLOW_HOOK_METADATA, WorkflowFixture)).toEqual([
-      expect.objectContaining({ type: 'before', step: 'sync', method: 'validate' }),
-    ]);
+    expect(Reflect.getMetadata(WORKFLOW_STEP_METADATA, WorkflowFixture.prototype, 'sync')).toEqual(expect.objectContaining({ name: 'sync', compensateMethod: 'compensate' }));
   });
 });
