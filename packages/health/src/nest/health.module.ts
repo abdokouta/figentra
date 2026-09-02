@@ -1,6 +1,6 @@
 import { DynamicModule, Module, Provider } from "@nestjs/common";
 import { DiscoveryModule } from "@nestjs/core";
-import { DefaultHealthService, type CreateHealthServiceOptions } from "../core/services/health.service.js";
+import { defineHealthService, type CreateHealthServiceOptions } from "../core/services/health.service.js";
 import { HEALTH_SERVICE } from "../core/constants/health.tokens.js";
 import { defineHealthController, type HealthControllerOptions } from "./controllers/health.controller.js";
 import { HealthIndicatorLoader } from "./discovery/indicator-loader.service.js";
@@ -9,7 +9,7 @@ export interface NestHealthModuleOptions extends CreateHealthServiceOptions, Hea
 @Module({})
 export class HealthModule {
   static forRoot(options: NestHealthModuleOptions = { path: "health" }): DynamicModule {
-    const service = new DefaultHealthService(options);
+    const service = defineHealthService(options);
     const serviceProvider: Provider = { provide: HEALTH_SERVICE, useValue: service };
     const controller = defineHealthController(service, { path: options.path ?? "health" });
     return { module: HealthModule, imports: [DiscoveryModule], providers: [serviceProvider, ...(options.discovery === false ? [] : [HealthIndicatorLoader])], controllers: [controller], exports: [serviceProvider] };
