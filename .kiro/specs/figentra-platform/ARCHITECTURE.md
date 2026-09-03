@@ -4,115 +4,82 @@
 
 ## 1. Ownership law
 
-Figentra has one authoritative owner for every business domain. Services own bounded-context business state. Packages own reusable technical capabilities. Applications compose product experiences. Runtime workers execute service-owned asynchronous work.
+Figentra has one authoritative owner for every business domain. Services own bounded-context business state. Packages own reusable technical capabilities. Applications compose product experiences. Service worker roles execute asynchronous work from the owning NestJS source tree.
 
-No implementation may introduce a competing owner, identity model, authorization model, event bus, persistence boundary or duplicated business service.
+No implementation may introduce a competing owner, identity model, authorization model, persistence boundary or duplicated business service.
 
 ## 2. Runtime planes
 
 ```text
 EDGE
-  Cloudflare DNS / WAF / Workers
-        ↓
-GATEWAY
-  authentication context / routing / rate limits / correlation
-        ↓
-CONTROL PLANE — NestJS
-  Identity Tenant IAM Monetization Usage Workflow
-  Notifications Audit Files Integrations Search Reporting
-  Analytics Marketing
-        ↓
+  Cloudflare DNS/WAF
+       ↓
+  Gateway — Cloudflare Worker + Hono
+       ↓
+CONTROL PLANE
+  14 NestJS services
+       ↓
 DATA / ASYNC PLANE
-  PostgreSQL + Outbox + NATS JetStream + service-owned workers
+  PostgreSQL + transactional outbox + NATS JetStream
+       ↓
+  service-owned consumer/worker/scheduler roles
 ```
+
+Independent Cloudflare control-plane Workers:
+
+```text
+Gateway
+Application Registry
+Infrastructure Orchestrator
+```
+
+These are independent Worker applications, not business services and not replacements for service workers.
 
 ## 3. Canonical services — 14
 
 | Service | Owns |
 |---|---|
-| Identity | authentication orchestration, principals, identities, credentials/references, sessions, provider links, service identities, delegation |
-| Tenant | tenants, platform organizations, domains, residency, application bindings, provisioning and tenant settings |
+| Identity | authentication orchestration, identities, principals, credentials/references, sessions, provider links, service identities and delegation |
+| Tenant | tenants, organizations, domains, residency, application bindings, provisioning and tenant settings |
 | IAM | permissions, roles, assignments, authorization and policy definitions/evaluation |
-| Monetization | products/plans/prices, subscriptions, billing, invoices/payments, discounts/credits and entitlements |
+| Monetization | plans/prices, subscriptions, billing, invoices/payments, discounts/credits and entitlements |
 | Usage | usage facts, meters, aggregation, consumption periods, quotas and billable usage |
-| Workflow | definitions/versions, executions, steps, timers, signals, retries, compensation, human tasks, approvals and escalation |
+| Workflow | workflow definitions/versions, executions, steps, timers, signals, retries, compensation, human tasks, approvals and escalation |
 | Notifications | templates, preferences, channels, deliveries and provider attempts |
 | Audit | immutable audit records, attribution, retention, export, integrity and reconciliation |
 | Files | file metadata, upload sessions, object references, versions, lifecycle and processing orchestration |
 | Integrations | external connections, credential references, OAuth state, webhooks, mappings, sync/import/export and reconciliation |
 | Search | indexes, mappings, projections, indexing jobs, search contracts and reindexing |
-| Reporting | report definitions, parameters, execution, schedules, operational read models and exports |
+| Reporting | report definitions, parameters, executions, schedules, operational read models and exports |
 | Analytics | analytical ingestion, facts, dimensions, metrics, aggregation, attribution and analytical queries |
 | Marketing | audiences, segments, campaigns, journeys, eligibility, suppression, scheduling, activation and conversions |
 
-## 4. Deliberately removed service boundaries
+## 4. Removed standalone boundaries
 
-### Scope → removed
-
-There is no generic platform Scope service. Tenant supplies tenancy context. Product services own their own resource hierarchies. IAM evaluates authorization against resource/context supplied by the owning domain.
-
-### Policy → IAM
-
-Policy definitions, versions and evaluation are part of authorization and therefore belong to IAM.
-
-### Approval → Workflow
-
-Approval is a durable human-task/workflow primitive. Workflow owns execution and decisions; IAM determines who is authorized/eligible.
-
-### Entitlements → Monetization
-
-Entitlements are the effective commercial access result of plans, subscriptions, grants, overrides and limits. Monetization owns them.
+- **Scope → removed:** tenant is the tenancy context; product services own resource hierarchies; IAM consumes resource/context.
+- **Policy → IAM:** authorization policy is part of IAM.
+- **Approval → Workflow:** approval is a durable human-task/workflow primitive; IAM determines authorization/eligibility.
+- **Entitlements → Monetization:** effective commercial access belongs to Monetization.
 
 ## 5. Identity and authorization
 
-Identity answers **who is authenticated**. IAM answers **whether that principal may perform an action**.
-
-```ts
-const principal = await identity.resolveAuthenticatedPrincipal(token);
-const decision = await iam.authorize({
-  principalId: principal.id,
-  tenantId: ctx.tenantId,
-  resource: { type: resourceType, id: resourceId },
-  action: 'resource.action',
-  context,
-});
-```
-
-Services MUST NOT call Identity for permission decisions and MUST NOT implement private role/permission stores. Identity MUST NOT own authorization policy.
-
-## 6. Commercial authorization
-
-Commercial capability checks are distinct from IAM authorization:
+Identity answers **who is authenticated**. IAM answers **whether the principal may act**. Monetization answers **whether the commercial capability is available**. Applications enforce domain/business rules.
 
 ```text
-IAM        → may this principal perform the action?
-Monetization → does this tenant/account have the commercial capability?
+Authentication → Identity → Principal
+Authorization  → IAM
+Commercial     → Monetization
+Business rules → owning service/application
 ```
 
-A protected operation can require both decisions.
+Supabase Auth is the day-one human authentication provider. `@stackra/identity` is the provider/identity boundary; services do not implement their own identity or authorization stores.
 
-## 7. Workflow architecture
-
-Workflow is a service **and** has a reusable SDK boundary. Business services define their business workflows using `@stackra/workflow` contracts/DSL; the Workflow service provides durable execution state and orchestration.
-
-```text
-Business Service
-   ↓ @stackra/workflow definition
-Workflow Service
-   ↓
-Durable execution / timers / retries / compensation
-   ↓
-NATS JetStream + service commands/events
-```
-
-Workflow MUST NOT own another service's business state. It orchestrates through versioned contracts. Approval is implemented as a workflow human-task primitive.
-
-## 8. Standard request path
+## 6. Standard request path
 
 ```text
 Client
  → Gateway
- → Identity authentication/context
+ → authentication/context
  → RequestContext
  → schema validation
  → IAM authorization
@@ -127,44 +94,70 @@ Client
 
 Gateway authorization is never the only authorization layer.
 
-## 9. Cross-service communication
+## 7. Cross-service communication
 
-HTTPS + OpenAPI + typed SDK is the default synchronous contract. NATS request/reply is reserved for justified internal low-latency interactions. NATS + JetStream is the canonical durable asynchronous transport. Durable publication uses transactional outbox. Redis is cache/coordination infrastructure. Kafka requires an ADR.
+- Browser/client → Gateway: HTTPS.
+- Gateway → Worker: Cloudflare Service Binding where compatible.
+- Gateway → NestJS service: authenticated HTTPS.
+- Service sync calls: HTTPS + OpenAPI + typed SDK.
+- Durable async: NATS + JetStream + transactional outbox.
+- Redis: cache/coordination.
+- Kafka: ADR-only.
 
-## 10. Data ownership
+No universal NestJS RPC contract.
 
-No service writes another service's database. Cross-service references are opaque IDs. Foreign keys do not cross service database boundaries. Consumer read models never become accidental sources of truth.
+## 8. Data ownership
 
-## 11. Runtime worker model
+No service writes another service database. Cross-service IDs are opaque. Foreign keys do not cross service database boundaries. Consumer projections never become accidental sources of truth.
 
-A worker is normally a role of its owning NestJS service. API, consumer, worker and scheduler roles share the same domain modules. Workers implement bounded concurrency, cancellation, timeouts, idempotency, retries/DLQ where applicable, readiness and graceful shutdown.
+## 9. Workflow
 
-Separate `workers/<service>` applications require an ADR proving a genuinely independent runtime/deployment boundary. Independent Cloudflare workers remain Gateway, Registry and Infrastructure Orchestrator only.
+`@stackra/workflow` provides reusable workflow definition/execution-client contracts. The Workflow service owns durable orchestration. Business services define workflows and own business state; Workflow never writes business data directly.
 
-## 12. Audit and governance
-
-Audit is a focused governance/security boundary. It owns immutable audit records, not logs, traces, analytics or domain events. A future Compliance/Risk service may consume Audit when it becomes an independent bounded context.
-
-## 13. Signals
+## 10. Package decomposition law
 
 ```text
-Logger       → logs
-Observability→ OpenTelemetry traces/metrics
-Tracking     → behavioral collection SDK
-Analytics    → analytical interpretation
-Marketing    → campaign decisions/activation
-Audit        → immutable governance records
-Usage        → metering/billable consumption
-Events       → domain facts
-Notifications→ delivery
+Capability           → package
+Provider / driver    → package subpath
+Runtime integration  → package subpath
+Framework adapter    → package subpath
+Testing integration  → package subpath
 ```
 
-These are deliberately non-interchangeable.
+Standalone runtime foundations (`node`, `browser`, `react`, `react-native`, `desktop`, `worker`, `nestjs`) are retained only for shared runtime/foundation responsibilities. Feature-specific adapters belong to their owning capability package.
 
-## 14. Infrastructure
+## 11. Worker architecture
 
-Docker provides deterministic service/runtime images. Terraform owns cloud/infrastructure resources and environment state. Development, staging and production are isolated. Monitoring is infrastructure/operations, not a business service.
+### Gateway
+Cloudflare Worker + Hono. Owns public edge routing, request normalization, authentication prevalidation, rate limits, correlation/trace context and upstream dispatch.
 
-## 15. Implementation gate
+### Application Registry
+Cloudflare Worker + Hono. D1 is authoritative for sanitized application metadata; KV is disposable cache/optimization. Applications own source manifests. Registry never owns application business data and never executes application code.
 
-A component is implementation-ready only when its spec defines ownership, modules, models, relations, DTOs, interfaces/methods, controllers, events/commands, persistence, dependencies, authorization, service relationships, runtime roles, configuration, security, reliability, observability, tests, migrations and deployment behavior with no unresolved architectural design.
+### Infrastructure Orchestrator
+Cloudflare Worker + Hono. Owns authenticated infrastructure control intents and reconciliation. Terraform remains authoritative for durable infrastructure resources.
+
+### Service workers
+Every ordinary service uses the same NestJS source tree for `api`, `consumer`, `worker` and `scheduler` roles. Independent `workers/<service>` applications require an ADR.
+
+## 12. Signal ownership
+
+```text
+Logger        → structured logs
+Observability → OpenTelemetry traces/metrics/propagation
+Tracking      → behavioral collection SDK
+Analytics     → analytical facts/aggregation/attribution
+Marketing     → campaign decisions and activation
+Audit         → immutable accountability records
+Usage         → metering/billable consumption
+Events        → business facts
+Notifications → delivery
+```
+
+## 13. Infrastructure and environments
+
+Docker is the standard container boundary for NestJS services/roles. Terraform is infrastructure source of truth. Environments are exactly `development`, `staging`, `production` and are isolated.
+
+## 14. Implementation gate
+
+A component is implementation-ready only when its specification defines ownership, exact source layout, public contracts, dependencies, lifecycle/DI, configuration, security, failure/recovery, observability, concurrency/resource limits, tenancy/isolation, persistence/migration where applicable, testing and deployment. Missing architecture is a specification defect, not an implementation task.
