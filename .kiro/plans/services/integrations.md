@@ -1,26 +1,50 @@
 ---
 status: canonical
 component: service
-name: integrations
+service: integrations
+version: v1
+runtime: nestjs
 ---
-# Integrations Service — implementation plan
+# Integrations Service — implementation-complete plan
 
-Own external-system connections, credentials/references, webhook ingestion, synchronization orchestration and provider lifecycle. Business semantics remain in owning services.
+## Mission
+Own external-system connections, provider configuration, credential references, inbound webhooks, outbound synchronization, mapping and reconciliation. Business services own the business meaning of synchronized records.
 
-## Modules
-`connection`, `credential-reference`, `provider`, `webhook`, `sync`, `mapping`, `reconciliation`, `persistence`, `http`, `messaging`.
+## Models
+`Integration(id,tenantId,providerKey,status,version,config,createdAt)`; `Connection(id,integrationId,externalAccountRef,status,lastSyncAt)`; `CredentialRef(id,connectionId,secretRef,version)`; `WebhookEvent(id,tenantId,provider,eventId,receivedAt,signatureStatus,status,payloadRef)`; `SyncJob(id,connectionId,direction,cursor,status,attempt,nextRunAt)`; `Mapping(id,connectionId,resourceType,externalKey,internalKey,version)`; `ReconciliationJob(id,connectionId,status,drift,checkpoint)`.
 
-## Runtime
-NestJS `api` for connection management; `consumer` for integration events; `worker` for sync/reconciliation; `scheduler` for polling where webhooks are unavailable.
+## API/DTOs
+`POST/GET/PATCH/DELETE /v1/integrations`; `POST /v1/integrations/:id/connections`; `POST /v1/integrations/:id/sync`; `GET /v1/sync-jobs/:id`; `POST /v1/reconciliation`; provider webhooks at `/v1/webhooks/:provider`.
 
-## Contracts
-Provider-neutral versioned integration contracts in `@stackra/contracts`; external SDK/webhook schemas are adapter-local and verified at ingress.
+## Interfaces
+`IntegrationService.create/update/disable`; `ConnectionService.connect/disconnect/test`; `WebhookService.verify/ingest/process`; `SyncService.start/run`; `ReconciliationService.compare/repair`; `IntegrationProvider` with `authorize`, `request`, `verifyWebhook`, `map` and capability metadata.
 
-## Reliability/security
-Idempotent webhook delivery, signature verification, replay protection, bounded retries/DLQ, rate-limit backoff and reconciliation. Credentials live in a secret manager; DB stores references, not raw secrets. Tenant-scoped connections and egress allowlists are mandatory.
+## Provider boundary
+External SDKs are adapter-local. Provider credentials are secret references. Each provider declares API version, rate limits, webhook signature algorithm, pagination semantics, idempotency support and supported operations. Unsupported operations fail explicitly; no generic fake provider is accepted.
 
-## Observability/testing/deployment
-Trace outbound calls and sync jobs without secrets/PII; metrics for latency, rate limits, failures, backlog and drift. Contract/provider sandbox tests, replay/concurrency/isolation/migration tests. Docker + Terraform with health-gated rollout and graceful shutdown.
+## Identity/IAM/Tenant
+Identity provides principal context. IAM authorizes integration administration, connection access and sync operations. Tenant owns the tenant boundary and is checked before every connection operation. Integration never stores user credentials directly when an OAuth/provider secret manager can hold them.
 
-## Exit criteria
-Provider adapters are real, versioned and tested; webhook/sync/reconciliation paths are durable and safe; no generic provider stub remains.
+## Webhooks
+Verify authenticity before persistence/processing. Deduplicate by provider event ID plus tenant/connection. Persist the verified envelope, then enqueue domain processing transactionally. Replay endpoints are admin-only and idempotent.
+
+## Sync/reconciliation
+Sync uses cursors/checkpoints and bounded pages. Writes to business services occur through contracts, not direct DB access. At-least-once delivery is assumed. Reconciliation compares provider and internal authoritative state and produces explicit repair jobs; automatic repair is permitted only for declared safe operations.
+
+## Persistence
+PostgreSQL tables above plus `outbox`. Index provider/account/event ID/status/nextRunAt. No raw secrets; large provider payloads use Files/object storage when retention requires them.
+
+## Workers/scheduler
+Consumer processes verified webhooks; worker executes sync/reconciliation with per-provider concurrency/rate limits; scheduler polls providers lacking webhooks and retries due jobs.
+
+## Security/reliability
+Egress host allowlists, TLS verification, SSRF-safe URL handling, signature verification, OAuth state validation, replay protection, bounded payloads, secret redaction and tenant isolation. Provider outage uses bounded backoff and does not corrupt business state.
+
+## Observability
+Provider request latency/errors/rate limits, webhook lag/duplicates, sync backlog, reconciliation drift and token refresh failures. Trace external calls with safe provider/account identifiers only.
+
+## Testing
+Provider contract fixtures, signature verification, duplicate/replay, rate limits, pagination/cursor recovery, mapping versioning, concurrent sync, tenant isolation, secret redaction, outage recovery and migration tests.
+
+## Completion gate
+Every enabled provider is real and versioned; credentials are secret references; webhooks are verified/idempotent; sync is resumable; reconciliation is explicit; business data is never accessed through another service's database.
