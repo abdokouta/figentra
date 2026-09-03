@@ -14,17 +14,15 @@ TESTING INTEGRATION = PACKAGE SUBPATH
 
 A standalone package is permitted only when it has an independently meaningful ownership, lifecycle, dependency graph, deployment/runtime role, or release boundary. Do not split `cache/redis`, `http/axios`, `logger/nestjs`, `storage/filesystem`, `query/react`, etc. into separate packages.
 
-Root exports are runtime-neutral unless the package itself is a runtime foundation. Optional runtime/framework/provider dependencies are isolated behind explicit subpath exports.
-
 ## Base
 
 `contracts`, `container`, `support`, `errors`, `config`, `logger`, `observability`, `storage`, `cache`, `database`, `orm`, `schema`, `pagination`, `state-machine`, `pipeline`, `http`, `nats`, `realtime`, `link`, `events`, `security`, `coordinator`
 
 ## Capabilities
 
-`identity`, `tracking`, `workflow`, `sync`, `queue`, `query`, `state`, `media`, `search`, `audit`, `sdui`, `page-builder`
+`identity`, `tracking`, `workflow`, `sync`, `queue`, `query`, `state`, `media`, `search`, `reporting`, `dashboard`, `audit`, `sdui`, `page-builder`, `seo`
 
-Capability packages may expose runtime/framework/provider/testing subpaths. `audit` is a reusable client/contract boundary; the Audit service remains the authoritative durable audit owner. `sdui` owns the controlled runtime document/schema contract; it does not own pages or business data. `page-builder` owns visual authoring; it does not own persistence or publishing authority.
+Capability packages may expose runtime/framework/provider/testing subpaths. `audit` is a reusable client/contract boundary; the Audit service remains the authoritative durable audit owner. `search` is the provider-neutral client/adapter boundary; the Search service owns index lifecycle. `reporting` is the typed report client/builder contract; Reporting owns definitions, projections and execution. `dashboard` owns dashboard documents, widgets and presentation behavior; host services own persistence. `seo` provides the cross-layer SEO contract from domain/backend resolution to web rendering and sitemap/robots output. `sdui` owns the controlled runtime document/schema contract; `page-builder` owns visual authoring.
 
 ## Runtime foundations
 
@@ -44,7 +42,6 @@ These remain standalone only because they provide shared runtime/foundation beha
 
 - Business/domain implementations belong to services.
 - `@stackra/workflow` is the workflow definition/execution SDK; durable orchestration belongs to the Workflow service.
-- `@stackra/workflow` does not own page publication, and `@stackra/page-builder` does not become a workflow service.
 - Service workers, consumers and schedulers are roles of their owning NestJS service. Independent workers require an ADR/spec boundary.
 - Cross-service DTOs, commands, queries, events and errors belong to `@stackra/contracts`.
 - Cache is ephemeral; durable state belongs to database/object storage.
@@ -53,10 +50,12 @@ These remain standalone only because they provide shared runtime/foundation beha
 - Application Registry is an independent Cloudflare Worker + Hono control-plane runtime. It stores sanitized application metadata projections and never owns page documents.
 - SDUI is a controlled schema-driven rendering contract; it never transports executable code.
 - Page Builder edits typed documents rather than React/DOM trees. The owning NestJS service owns pages, revisions and publication.
+- Search clients never connect directly to search-engine infrastructure from browser/mobile runtimes; they use the authenticated HTTP contract. Provider SDKs live only under `@stackra/search/*` backend subpaths.
+- Reporting custom reports use registered datasets and a typed query AST; raw SQL is never a client contract.
+- Dashboard persistence is injected through `@stackra/dashboard/nestjs`; no Dashboard microservice is required.
+- SEO is a cross-layer capability, not a standalone service; domain services remain authoritative for the resources being indexed.
 
 ## Consolidation targets
-
-The following concerns are consolidated into canonical owners rather than remaining standalone package roots:
 
 - Redis → `@stackra/cache/redis`
 - filesystem storage → `@stackra/storage/filesystem`
