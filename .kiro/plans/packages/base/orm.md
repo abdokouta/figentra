@@ -1,42 +1,87 @@
 ---
+authored_by: kiro
+authored_at: 2026-09-03
 status: canonical
 component: package
 package: "@stackra/orm"
-owner: platform
+anchor_adrs: [ADR-0011, ADR-0024]
+depends_on: ["@stackra/database", "@stackra/schema", "@stackra/errors", "@stackra/support"]
 ---
-# `@stackra/orm` — implementation-complete plan
+# `@stackra/orm` — implementation plan
 
-## Purpose
-Provide typed persistence mapping around MikroORM while keeping database lifecycle in `@stackra/database` and business rules in service domains.
+## Purpose and boundary
+`@stackra/orm` owns persistence mapping and object/unit-of-work behavior around the canonical MikroORM adapter. It owns metadata, repositories, identity maps, request-scoped EntityManagers, change tracking, filters, locking and lifecycle hooks. It does not own database pools/connections/migrations, and it never crosses service boundaries.
 
-## Responsibilities
-Entity metadata, identity map, request-scoped EntityManager, repositories, unit-of-work, change tracking, optimistic/pessimistic locking, soft-delete filters, tenant filters, lifecycle hooks and transaction participation.
-
-## Layout
-`src/metadata`, `src/entities`, `src/repositories`, `src/unit-of-work`, `src/filters`, `src/locking`, `src/adapters/mikroorm`, `src/testing`, `src/index.ts`.
-
-## Contracts
+## Public contracts
 ```ts
-interface Repository<T, ID> { findById(id:ID):Promise<T|null>; save(entity:T):Promise<T>; delete(id:ID):Promise<void> }
-interface UnitOfWork { run<T>(fn:()=>Promise<T>):Promise<T>; flush():Promise<void>; rollback():Promise<void> }
-interface LockManager { optimistic<T>(entity:T, version:number):Promise<void>; pessimistic<T>(id:unknown):Promise<T> }
+interface Repository<T, ID> {
+  findById(id:ID):Promise<T|null>;
+  findOne(criteria:QueryCriteria<T>):Promise<T|null>;
+  findMany(criteria:QueryCriteria<T>):Promise<readonly T[]>;
+  save(entity:T):Promise<T>;
+  delete(id:ID):Promise<void>;
+}
+interface UnitOfWork {
+  run<T>(fn:(ctx:UnitOfWorkContext)=>Promise<T>):Promise<T>;
+  flush():Promise<void>;
+  rollback():Promise<void>;
+}
+interface LockManager {
+  optimistic(id:unknown,expectedVersion:number):Promise<void>;
+  pessimistic<T>(id:unknown,mode:'update'|'share'):Promise<T>;
+}
 ```
-Repositories may expose domain-specific methods in services, but generic repository behavior remains consistent. Entities are persistence models, not cross-service DTOs.
+
+## Source tree
+```text
+packages/orm/
+├── src/core/{metadata,entities,repositories,entity-manager,identity-map,unit-of-work,lifecycle,serialization}
+├── src/filters/{tenant,soft-delete,scope}
+├── src/locking/{optimistic,pessimistic}
+├── src/adapters/mikroorm/{adapter,metadata,configuration,index.ts}
+├── src/testing/{repository-fixture,uow-fixture,concurrency-fixture,index.ts}
+└── __tests__/{unit,integration,conformance}/
+```
+
+## Entity/repository rules
+Entities are local persistence representations. DTOs and contracts live outside the ORM layer. Repository methods are intention-revealing and may be composed by service-domain repositories. Generic query APIs require typed criteria and allowlists; no raw SQL or uncontrolled dynamic identifiers from external input.
+
+## Request scope and transactions
+Every API/service request receives a request-scoped EntityManager. The EntityManager is obtained from `@stackra/database`'s transaction/connection boundary. Application use cases own transaction boundaries. Nested transactions use savepoints only when supported. Flush is deterministic and errors preserve causes.
 
 ## Tenant isolation
-Tenant-owned entities carry an explicit tenant key or belong to a tenant-scoped aggregate. Tenant filtering is fail-closed when context is required. A missing tenant context cannot silently execute an unrestricted query. Cross-tenant administrative operations require an explicit system context and IAM authorization.
+Tenant-owned entities declare a tenant key/aggregate. Required tenant filters fail closed when `tenantId` is absent. System entities must be explicitly marked global. Filter bypass requires explicit system execution context and IAM authorization. No global mutable EntityManager or tenant filter state exists.
 
 ## Concurrency
-Optimistic version columns are the default for mutable aggregates. Pessimistic locks are reserved for contention-sensitive critical sections and require transaction scope. Unique constraints and database isolation remain the final correctness boundary.
+Optimistic locking/version columns are the default. Pessimistic locks are allowed only inside explicit transactions for contention-sensitive operations. Lock timeout/deadline is mandatory. Unique constraints and database isolation remain the final correctness boundary.
 
-## Transactions/lifecycle
-The request scope obtains one EntityManager. Transaction boundaries are owned by application use cases and database transaction primitives. Flush failures preserve causal errors. Entity hooks cannot perform hidden network calls or unbounded work.
+## Soft deletion/lifecycle
+Soft deletion is opt-in per entity and always represented by an explicit filter. Hard deletion is restricted to entities whose policy allows it. Lifecycle hooks cannot make hidden network calls or start unbounded async work.
+
+## MikroORM adapter
+MikroORM is the production adapter. It consumes an explicit database client and never creates its own pool. Provider-specific APIs remain adapter-local. Metadata is validated at bootstrap; invalid mappings stop startup.
 
 ## Security
-Parameterized queries, safe sort/filter allowlists, no raw SQL from untrusted input, bounded result sets and redacted query diagnostics. Sensitive columns are explicitly classified and excluded from generic serialization.
+Queries are parameterized. Sort/filter field names must come from allowlists. Sensitive columns are classification-tagged and excluded from generic serialization. SQL diagnostics redact parameter values and credentials.
+
+## Reliability
+Repository/database failures are normalized to canonical errors. Transaction retry may be performed only for classified serialization/deadlock errors and restarts the full idempotent use case. No partial transaction retry is permitted.
+
+## Observability
+Metrics: query duration/count, transaction duration/rollback, lock waits/timeouts, ORM error categories and tenant-filter denials. SQL statements are normalized/redacted. OTel integration is through observability, never direct logger/provider calls.
 
 ## Testing
-Mapping fixtures, repository behavior, transaction rollback, tenant-filter isolation, concurrent writes, lock conflicts, soft-delete behavior, pagination, migration compatibility and provider conformance. Test suites must prove that omitted tenant context cannot read tenant data.
+Metadata/mapping fixtures; repository CRUD; tenant isolation; missing-context failure; optimistic/pessimistic locking; UoW commit/rollback; savepoints; serialization errors; soft-delete; pagination; migration compatibility; real PostgreSQL conformance.
 
-## Completion criteria
-Every service persistence module declares entities, relations, indexes, repositories, transaction boundaries and concurrency semantics. No global EntityManager, cross-service entity import or implicit tenant filter is permitted.
+## Implementation phases
+1. Core metadata/repository/UoW contracts.
+2. MikroORM adapter + database integration.
+3. Tenant/soft-delete filters and locking.
+4. Serialization/lifecycle/observability.
+5. Conformance, concurrency/failure/load tests.
+
+## Exit criteria
+- Every service declares its entities, relations, indexes, repository behavior and transaction boundaries.
+- No cross-service ORM/entity imports exist.
+- Missing tenant context cannot read tenant rows.
+- Connection/pool/migration ownership remains exclusively in `@stackra/database`.
