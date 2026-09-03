@@ -8,7 +8,7 @@ reviewed_at: null
 
 # Figentra — 12-Month Enterprise Day-One Architecture & Implementation Plan
 
-**Status:** Canonical cross-package plan
+**Status:** Canonical cross-package plan  
 **Plan standard:** `.kiro/plans/2026-09-03-enterprise-day-one-plan-standard.md`
 
 This directory is the canonical planning surface for the Figentra monorepo/framework. Every package plan must follow the repository's established dated-plan structure, existing steering standards, and applicable ADRs. Package plans are implementation contracts, not prototypes.
@@ -39,6 +39,7 @@ packages/
 │   ├── errors
 │   ├── config
 │   ├── logger
+│   ├── observability
 │   ├── storage
 │   ├── cache
 │   ├── database
@@ -54,12 +55,13 @@ packages/
 ├── capabilities/
 │   ├── events
 │   ├── identity
-│   ├── auth
 │   ├── queue
 │   ├── sync
 │   ├── search
 │   ├── media
 │   ├── notifications
+│   ├── analytics
+│   ├── marketing
 │   ├── workflow
 │   ├── query
 │   └── state
@@ -80,6 +82,56 @@ packages/
     └── ui
 ```
 
+### Identity/auth boundary
+
+Authentication and identity are one platform bounded context, exposed through `@stackra/identity`. The package owns authentication orchestration, provider adapters, principal normalization, sessions, credentials/tokens, service identities and identity context. Supabase Auth remains the day-one human authentication provider; its provider state is external to Figentra. There is **no independent `@stackra/auth` capability** in the target architecture. IAM/Policy remains a separate authorization boundary.
+
+The old standalone `@stackra/auth` plan is therefore a migration/merge artifact only and must not be implemented as a separate package.
+
+### Telemetry/analytics boundary
+
+Figentra has four intentionally separate concerns:
+
+```text
+Operational telemetry
+  = logs + metrics + traces + runtime/resource signals
+  → @stackra/observability + @stackra/logger
+
+Product/ad behavioral collection
+  = track/identify/page/screen/campaign/conversion events + consent
+  → @stackra/tracking
+
+Analytics
+  = durable ingestion + aggregation + attribution + analytical queries/read models
+  → @stackra/analytics
+
+Marketing
+  = audiences + campaigns + journeys + activation + server-side conversion delivery
+  → @stackra/marketing
+```
+
+These are not interchangeable. Logs are not analytics; traces are not tracking; tracking events are not domain events; analytics is not marketing; audit is not any of the above.
+
+`@stackra/events` remains the domain/application fact transport. `@stackra/queue` and `@stackra/nats` transport work/events but do not own analytics or marketing semantics.
+
+### Runtime placement
+
+Capabilities are runtime-neutral. NestJS is the primary control-plane/application API runtime; Worker runtimes execute edge/background workloads where they fit; dedicated workers execute asynchronous data-plane processing.
+
+```text
+NestJS / HTTP
+  → commands, queries, admin/control APIs, webhooks
+
+NATS / Queue
+  → durable asynchronous work
+
+Worker / background runtime
+  → ingestion, aggregation, campaign evaluation, notification delivery,
+    indexing, integrations, retries and scheduled work
+```
+
+A capability plan MUST specify which operations are synchronous control-plane operations and which are asynchronous worker operations. A capability must not become NestJS-only merely because its service exposes an HTTP API.
+
 ## Dependency law
 
 ```text
@@ -87,18 +139,19 @@ packages/
         ↓
 container / errors / support / config
         ↓
-logger / storage / cache / database / schema / pipeline
+logger / observability / storage / cache / database / schema / pipeline
         ↓
 orm / http / nats / realtime / pagination / state-machine / link
         ↓
-capabilities
+events / identity / queue / sync / search / media / notifications
+        / analytics / marketing / workflow / query / state
         ↓
 runtime adapters + UI
         ↓
 applications
 ```
 
-Forbidden regressions include ORM-owned database connection policy, routing inside link/error packages, cache being treated as durable storage, framework dependencies leaking into runtime-neutral cores, duplicate discovery implementations, and duplicated canonical identifiers.
+Forbidden regressions include ORM-owned database connection policy, routing inside link/error packages, cache being treated as durable storage, framework dependencies leaking into runtime-neutral cores, duplicate discovery implementations, duplicated canonical identifiers, analytics logic inside tracking SDKs, marketing activation inside analytics ingestion, and application code depending directly on vendor telemetry SDKs.
 
 ## Mandatory plan structure
 
@@ -126,6 +179,49 @@ Every package plan follows `.kiro/plans/2026-09-03-enterprise-day-one-plan-stand
 20. dependencies/exports/versioning
 21. implementation phases with completion gates
 22. exit criteria and cross-references
+
+## Canonical signal ownership
+
+| Concern | Canonical owner | Must not own |
+|---|---|---|
+| Structured application logs | `@stackra/logger` | business analytics, audit persistence |
+| OTel SDK/context/export/instrumentation | `@stackra/observability` | product tracking, campaign logic |
+| Metrics | `@stackra/observability` | billing usage semantics |
+| Distributed tracing | `@stackra/observability` | user journey analytics |
+| Runtime/resource monitoring signals | `@stackra/observability` + infrastructure | product reporting |
+| Security/business audit | audit capability/service | operational logs/traces |
+| Domain/application events | `@stackra/events` | telemetry implementation |
+| Client/product/ad tracking | `@stackra/tracking` | durable analytics warehouse |
+| Analytics ingestion/aggregation/query | `@stackra/analytics` | notification delivery/campaign activation |
+| Marketing campaigns/audiences/activation | `@stackra/marketing` | operational telemetry |
+| Billable usage/metering | existing Usage service/capability | generic analytics |
+| Notification delivery | `@stackra/notifications` | marketing campaign ownership |
+
+## Observability contract
+
+OpenTelemetry is the canonical cross-runtime telemetry model for traces, metrics and telemetry context, with logs correlated to the same execution/resource context. The implementation follows OTel semantic conventions rather than inventing Figentra-specific replacements. citeturn1search3turn1search11
+
+Every runtime propagates, where applicable:
+
+```text
+trace_id
+span_id
+trace_state
+request_id
+correlation_id
+causation_id
+service.name
+service.version
+deployment.environment.name
+tenant_id (safe/allowlisted)
+principal_id (safe/allowlisted)
+```
+
+High-cardinality identifiers and PII MUST NOT become unbounded metric labels. Sensitive fields are centrally redacted before logs or telemetry leave the process. Business telemetry must never contain credentials, access tokens, cookies, authorization headers or raw secrets.
+
+### Monitoring is an operational consumer, not another application capability
+
+"Monitoring" means collection, storage, dashboards, alert rules, SLOs and on-call workflows over operational telemetry. It is not a second `monitoring` package. Runtime instrumentation belongs to `@stackra/observability`; backend/collector deployment and dashboards belong to infrastructure/operations plans; alert definitions are version-controlled operational configuration.
 
 ## Storage boundary
 
@@ -162,7 +258,7 @@ Recommended dependency sequence:
 3. support
 4. errors
 5. config
-6. logger
+6. logger + observability
 7. storage
 8. cache
 9. database
@@ -171,10 +267,14 @@ Recommended dependency sequence:
 12. pagination
 13. pipeline/state-machine
 14. HTTP/NATS/realtime/link
-15. capability packages
-16. runtime adapters
-17. UI/runtime integration
-18. cross-package conformance and release verification
+15. events + identity
+16. queue
+17. notifications/sync/search/media
+18. tracking + analytics
+19. marketing/workflow/query/state
+20. runtime adapters
+21. UI/runtime integration
+22. cross-package conformance and release verification
 
 ## Definition of done
 
