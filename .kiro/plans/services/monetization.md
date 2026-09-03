@@ -1,35 +1,54 @@
 ---
 status: canonical
 component: service
-name: monetization
+service: monetization
+version: v1
+runtime: nestjs
 ---
-# Monetization Service — implementation plan
+# Monetization Service — implementation-complete plan
 
-Own plans, subscriptions, pricing, billing periods, invoices, payment intents and provider reconciliation. Entitlements are consumed, not owned, by this service.
+## Mission
+Own commercial configuration and effective commercial access: products/plans, subscriptions, pricing, billing state, usage allowances and entitlements. Entitlements are not a separate service; they are the effective access result produced here.
 
 ## Modules
-`plans`, `prices`, `subscriptions`, `billing-periods`, `invoices`, `payment-intents`, `provider-adapters`, `reconciliation`, `persistence`, `http`, `messaging`.
+`catalog`, `plans`, `pricing`, `subscriptions`, `billing`, `invoices`, `entitlements`, `limits`, `providers`, `webhooks`, `persistence`.
 
-## Contracts
-Versioned public DTOs/commands/events/errors live in `@stackra/contracts`; payment-provider types never cross the service boundary.
+## Models and relations
+`Plan(id,tenantId,key,name,version,status,currency,interval,features,limits)`; `Price(id,planId,amountMinor,currency,interval,providerRef)`; `Subscription(id,tenantId,accountId,planId,status,currentPeriodStart,currentPeriodEnd,cancelAt)`; `Invoice(id,tenantId,subscriptionId,status,totalMinor,dueAt,providerRef)`; `Entitlement(id,tenantId,subjectId,featureKey,source,quantity,startsAt,endsAt,version)`; `UsageLimit(id,tenantId,subjectId,featureKey,period,limit,consumed)`. Plans contain prices; subscriptions reference plans; invoices reference subscription; entitlements are derived commercial grants.
 
-## Runtime
-NestJS `api` for management and billing queries; `consumer` for lifecycle events; `worker` for invoice/payment/reconciliation processing; `scheduler` for period transitions and retryable billing jobs.
+## DTOs
+Create/update plan, price, subscription checkout/change/cancel, invoice query, entitlement check, usage allowance and provider webhook DTOs. Webhook DTOs are provider-versioned and normalized immediately; provider payloads never leak to domain contracts.
+
+## Interfaces
+```ts
+interface MonetizationService { getEntitlement(ctx,subjectId,feature):Promise<EntitlementResult>; checkLimit(ctx,subjectId,feature,cost):Promise<LimitDecision>; }
+interface SubscriptionService { create(ctx,input):Promise<Subscription>; change(ctx,id,input):Promise<Subscription>; cancel(ctx,id,input):Promise<Subscription>; }
+interface BillingProvider { createCustomer(...):Promise<ProviderCustomer>; createSubscription(...):Promise<ProviderSubscription>; verifyWebhook(input):Promise<VerifiedWebhook>; }
+```
+
+## Controllers
+`GET/POST/PATCH/DELETE /v1/plans`; `GET/POST/PATCH /v1/prices`; `POST /v1/subscriptions`; `PATCH /v1/subscriptions/:id`; `POST /v1/subscriptions/:id/cancel`; `GET /v1/invoices`; `POST /v1/entitlements/check`; `POST /v1/usage/authorize`; provider webhooks under `/v1/webhooks/billing/:provider`.
+
+## Identity/IAM/Tenant calls
+Identity establishes principal and tenant context. IAM authorizes plan administration and subscription actions. Tenant is consulted for tenant status/billing ownership. Monetization never authenticates users or stores role/permission tables. Feature access decisions can be cached but authoritative entitlement state remains PostgreSQL.
+
+## Commercial correctness
+Subscription state transitions are explicit and idempotent. Provider webhook processing uses provider event IDs for deduplication. Entitlements are recalculated from authoritative subscription/plan state and versioned. A failed billing provider call cannot create a local “paid” state without verified provider confirmation.
 
 ## Persistence
-Dedicated database, transactional state machine for subscription/payment lifecycle, unique external/provider IDs, immutable invoice numbering, migrations plus outbox in the same transaction.
+PostgreSQL tables: `plans`, `prices`, `subscriptions`, `subscription_items`, `invoices`, `entitlements`, `usage_limits`, `billing_customers`, `provider_events`, `outbox`. Unique tenant/key and provider-event constraints. Monetary amounts stored in minor units with currency.
 
-## Reliability
-Idempotent payment commands and webhook processing, bounded provider retries, DLQ, reconciliation against provider truth, explicit compensation/refund states, graceful shutdown and connection draining.
+## Workers
+NestJS consumer handles verified billing events; worker reconciles provider state and entitlement materialization; scheduler handles renewals/expiry/reconciliation with bounded batches. No standalone worker codebase.
 
-## Security / tenancy
-Tenant-scoped financial records, least-privilege provider credentials, webhook signature verification, encryption for secrets, no payment secrets or full financial payloads in telemetry.
+## Security
+Webhook signature verification, secret references, PCI boundary avoidance, no raw payment credentials, tenant isolation, immutable financial records, idempotency keys and strict provider allowlists.
 
-## Observability / testing
-OTel traces and metrics for billing operations, provider latency/error rate, reconciliation drift and queue lag. Test domain invariants, provider adapters, webhook replay, concurrency, tenant isolation, migrations and e2e flows.
+## Reliability/observability
+Track billing provider latency/failures, webhook lag/duplicates, subscription transition failures, entitlement evaluation latency and reconciliation drift. Financial mutations produce audit events and outbox messages transactionally.
 
-## Deployment
-Immutable Docker images, Terraform-managed secrets/network/queues/observability, health-gated rollout and migration compatibility. No provider placeholder in production.
+## Testing
+Subscription transition matrix; entitlement derivation; limit atomicity; webhook signature/deduplication; provider contract fixtures; failed-payment recovery; tenant isolation; concurrent plan changes; migration compatibility; reconciliation tests.
 
-## Exit criteria
-Production-ready billing lifecycle with real adapters, durable reconciliation, complete contracts and tested failure paths.
+## Completion gate
+All commercial access is resolved here; no `entitlements` service remains; every provider is a real adapter with verification tests; no payment credential enters application persistence.
