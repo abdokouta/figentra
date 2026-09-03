@@ -1,49 +1,50 @@
 ---
-authored_by: kiro
-authored_at: 2026-09-03
-status: Planned
+status: canonical
+component: service
+service: audit
+version: v1
+runtime: nestjs
 ---
+# Audit Service — implementation-complete plan
 
-# Audit Service — implementation plan
+## Mission
+Provide immutable, tenant-isolated records of security, authorization, administration and compliance-relevant actions. Audit is not application logging, OpenTelemetry, analytics, tracking, policy evaluation or notification delivery.
 
-## Purpose
+## Models
+`AuditRecord(id,tenantId,eventType,action,actorPrincipalId,subjectPrincipalId,resourceType,resourceId,requestId,correlationId,causationId,occurredAt,recordedAt,result,reasonCode,metadataHash,previousHash,recordHash,schemaVersion)`; `AuditExport(id,tenantId,range,status,objectRef,checksum,requestedBy)`; `RetentionPolicy(id,tenantId,eventType,retentionDays,archiveClass)`; `IntegrityCheck(id,tenantId,startAt,endAt,status,verifiedCount,failureCount)`.
 
-Deployable NestJS bounded context responsible for durable audit records, tenant-isolated query/control APIs, compliance export, retention policy execution, and integrity verification.
+## DTOs/interfaces
+`AppendAuditRecordDto`, `AuditQueryDto`, `AuditRecordDto`, `AuditExportDto`, `IntegrityCheckDto`, `RetentionPolicyDto`.
+```ts
+interface AuditService { append(ctx,input):Promise<AuditRecord>; query(ctx,input):Promise<Page<AuditRecord>>; export(ctx,input):Promise<AuditExport>; verify(ctx,input):Promise<IntegrityCheck> }
+```
 
-## Boundary
+## API
+`GET /v1/audit`; `GET /v1/audit/:id`; `POST /v1/audit/exports`; `GET /v1/audit/exports/:id`; `POST /v1/audit/integrity-checks`; `GET/PUT /v1/audit/retention`.
 
-Owns audit persistence and read models. It consumes canonical `@stackra/audit` contracts and does not own logging, telemetry, analytics, authorization policy, or notification delivery.
+## Ingestion
+Security-significant services publish audit commands/events transactionally through their outbox. Audit ingestion is at-least-once and deduplicated by source event ID. Append succeeds only after durable persistence. Records are immutable after append; corrections are represented by new records, never mutation.
 
-## APIs
+## IAM/Identity/Tenant
+Identity supplies actor/subject principal identifiers and authentication/delegation context. IAM authorizes querying/exporting/audit administration. Tenant is the isolation authority. Audit does not make authorization decisions; it records their results where required.
 
-- Query audit records with tenant/resource/actor/action/time filters.
-- Retrieve a single immutable audit record.
-- Export authorized audit ranges.
-- Verify integrity for a range or record chain.
-- Report retention/archive status.
-
-All APIs require authenticated principal/actor context and IAM/policy authorization.
+## Integrity
+Records may form a per-tenant hash chain: `recordHash = H(version || canonicalRecord || previousHash)`. Verification detects tampering or gaps. Hashing proves record continuity but does not replace database access controls or archival immutability.
 
 ## Persistence
+PostgreSQL partitioned `audit_records`, `audit_exports`, `retention_policies`, `integrity_checks`, `outbox`. Index tenant/time, actor, subject, resource, action, correlation and event ID. Archive exports use Files/object storage with checksum and access control.
 
-Use the canonical database/ORM stack. Audit records are append-only after finalization. Indexes support tenant, actor, resource, action, timestamp, correlation ID, and integrity verification. Retention/archival policies are explicit and migration-safe.
+## Workers/scheduler
+Consumer appends records; worker performs exports, integrity checks and archive transitions; scheduler executes retention after legal/configured windows. Deletion is forbidden unless retention policy explicitly permits it and produces evidence.
 
-## Reliability
-
-Reads remain available during worker ingestion lag. Duplicate event delivery is idempotent. The service exposes health/readiness and dependency status without exposing secrets or payloads.
+## Security
+Append credentials are service identities with narrow permissions. Query/export is IAM-protected. Restricted metadata is encrypted/classified. Audit payloads are excluded from normal logs and traces.
 
 ## Observability
-
-Use `@stackra/logger` + `@stackra/observability`; include correlation/request/trace IDs and audit IDs. Never emit full sensitive audit payloads to operational telemetry.
+Ingestion lag, append failure, duplicate rate, query latency, export progress, integrity failures and retention backlog. Never log raw audit records.
 
 ## Testing
+Immutable semantics, hash-chain verification, duplicate ingestion, tenant isolation, IAM enforcement, pagination, export authorization, retention boundaries, archive integrity, migration compatibility and concurrent append ordering.
 
-API authorization, tenant isolation, pagination, immutable semantics, idempotent writes, integrity verification, export controls, migration compatibility, concurrency, and failure tests.
-
-## Implementation phases
-
-1. NestJS service scaffold and configuration.
-2. Domain/application contracts and persistence.
-3. Query/export APIs and IAM integration.
-4. Integrity, retention, archival, and reconciliation.
-5. Observability, security hardening, load/failure testing.
+## Completion gate
+Every required audit action has a canonical event contract and producer owner; records are immutable, queryable, integrity-verifiable and tenant-isolated; no generic log table is used as Audit.
