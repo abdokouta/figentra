@@ -1,0 +1,49 @@
+# =============================================================================
+# @file infrastructure/modules/otel-collector/module.yaml
+# @description OpenTelemetry Collector sidecar for distributed tracing.
+#
+# Machine-readable infrastructure module manifest. Validated against
+# infrastructure/modules/schema/module.v1.json at CI time.
+#
+# @security No secrets. Env-var values come from Doppler at runtime;
+#   this file only declares the contract (env-var names + source expressions).
+# =============================================================================
+name: otel-collector
+version: "1.0.0"
+kind: infrastructure-module
+category: observability
+maturity: beta
+description: "OpenTelemetry Collector sidecar for distributed tracing. Provisions an OTel Collector (Docker sidecar locally, managed exporter in prod) that receives OTLP traces/metrics and forwards them to the configured backend (Grafana Tempo, Jaeger, Datadog)."
+provides: ["observability.tracing", "observability.otel"]
+consumes: []
+runtime_targets:
+  terraform: terraform.tf
+  docker: compose.yaml
+  wrangler: null
+schema:
+  type: object
+  properties:
+    exporter:
+      type: string
+      enum: ["otlp", "jaeger", "zipkin", "datadog"]
+      default: otlp
+      description: Trace exporter backend.
+    endpoint:
+      type: string
+      description: Collector OTLP endpoint (overridden per env via Doppler).
+    sampling_ratio:
+      type: number
+      minimum: 0
+      maximum: 1
+      default: 0.1
+      description: Trace sampling ratio.
+env_vars:
+  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+    description: OTel Collector OTLP endpoint.
+    source: terraform_output.otel_endpoint
+  - name: OTEL_SERVICE_NAME
+    description: Service identity for traces.
+    source: deployable.slug
+  - name: OTEL_TRACES_SAMPLER_ARG
+    description: Sampling ratio.
+    source: module.config.sampling_ratio

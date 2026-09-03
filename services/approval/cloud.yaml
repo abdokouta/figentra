@@ -64,21 +64,43 @@ container:
   # Readiness endpoint may check required dependencies.
   readiness_path: /health/ready
 
-# Durable/external capabilities requested by this deployable.
-capabilities:
-  # Services use Supabase/PostgreSQL only when they own persistence.
-  needs_supabase: true
-  # Local/production messaging uses NATS for internal RPC/events.
-  needs_nats: true
-  # Cloudflare-native capabilities are disabled unless explicitly required.
-  needs_d1: false
-  needs_kv: false
-  needs_r2: false
-  needs_queue: false
-  needs_durable_object: false
-  needs_hyperdrive: false
-  # Redis is opt-in for caching/coordination only.
-  needs_redis: false
+# Infrastructure capability modules consumed by this deployable.
+# Each entry references a module from infrastructure/modules/ by name, pins a
+# semver range, and supplies typed config validated at catalog-collection time.
+# Replaces the legacy flat-boolean `capabilities:` block per the cloud.yaml
+# capability-modules plan (2026-09-03).
+modules:
+  # ── Storage ────────────────────────────────────────────────────────────────
+  - use: supabase-postgres
+    version: "^1.0.0"
+    config:
+      database: approval
+      engine_version: "16"
+      pooler_mode: transaction
+
+  # ── Messaging ──────────────────────────────────────────────────────────────
+  - use: nats-jetstream
+    version: "^1.0.0"
+    config:
+      consumer_group: approval-service
+      streams:
+        - name: approval-events
+          subjects: ["approval.>"]
+          retention: limits
+          max_age: "72h"
+
+  # ── Observability ──────────────────────────────────────────────────────────
+  - use: sentry-project
+    version: "^1.0.0"
+    config:
+      platform: node
+      traces_sample_rate: 0.1
+
+  - use: betterstack-uptime
+    version: "^1.0.0"
+    config:
+      probe_url: /health/ready
+      check_interval_seconds: 60
 
 # Git branch promotion mapping. Production is never mapped to a developer branch.
 branch:
@@ -126,6 +148,10 @@ docker:
   network: figentra
 
 # Observability integrations owned by the platform.
+# NOTE: Sentry + BetterStack uptime are now declared as infrastructure modules
+# in the `modules:` block above. Only NestJS-specific observability config
+# (Observe + Devtools) remains here — these are app-runtime concerns, not
+# infrastructure capabilities.
 observability:
   # NestJS Observe is the primary Nest-native telemetry platform for requests,
   # jobs, errors, logs, traces, runtime metrics, and profiles.
@@ -139,14 +165,6 @@ observability:
   devtools:
     enable: true
     http_default: false
-  # Existing uptime monitoring remains independent of application telemetry.
-  # Sentry receives application errors/traces.
-  sentry:
-    platform: node
-    enable: true
-  # Better Stack provides uptime/operational monitoring.
-  betterstack:
-    enable_uptime: true
 
 # Searchable ownership/governance metadata.
 tags:

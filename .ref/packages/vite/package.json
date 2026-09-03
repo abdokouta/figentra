@@ -1,0 +1,82 @@
+{
+  "name": "@stackra/vite",
+  "version": "1.0.1",
+  "description": "Neutral Vite-config orchestrator for the Stackra workspace — typed defineConfig helper and { enabled, factory, options } plugin-map envelope. Consumers bring their own plugin factories.",
+  "license": "MIT",
+  "author": {
+    "name": "Figentra L.L.C",
+    "email": "dev@figentra.com",
+    "url": "https://figentra.com"
+  },
+  "keywords": [
+    "stackra",
+    "vite",
+    "vite-config",
+    "plugin-map",
+    "define-config"
+  ],
+  "homepage": "https://gitlab.com/stackra/frontend/framework/-/tree/main/src/vite#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/stackra/frontend/framework.git",
+    "directory": "src/vite"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/stackra/frontend/framework/-/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "config",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rimraf dist .turbo",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage --passWithNoTests"
+  },
+  "peerDependencies": {
+    "@stackra/support": "workspace:^",
+    "vite": "catalog:"
+  },
+  "peerDependenciesMeta": {
+    "vite": {
+      "optional": false
+    }
+  },
+  "devDependencies": {
+    "@stackra/support": "workspace:*",
+    "@stackra/testing": "workspace:*",
+    "@stackra/tsup-config": "^1.0.2",
+    "@stackra/typescript-config": "^1.0.0",
+    "@types/node": "catalog:",
+    "reflect-metadata": "catalog:",
+    "rimraf": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  }
+}

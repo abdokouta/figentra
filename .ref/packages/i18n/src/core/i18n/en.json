@@ -1,0 +1,13 @@
+{
+  "language_combobox": {
+    "placeholder": "Search language…",
+    "aria_label": "Language: {{name}}"
+  },
+  "language_selector": {
+    "aria_label": "Language: {{name}}",
+    "menu_aria_label": "Language options"
+  },
+  "native_language_selector": {
+    "label": "Language"
+  }
+}

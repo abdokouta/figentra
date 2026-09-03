@@ -1,0 +1,36 @@
+# =============================================================================
+# @file infrastructure/modules/cloudflare-durable-object/module.yaml
+# @description Cloudflare Durable Objects binding.
+#
+# Machine-readable infrastructure module manifest. Validated against
+# infrastructure/modules/schema/module.v1.json at CI time.
+#
+# @security No secrets. Env-var values come from Doppler at runtime;
+#   this file only declares the contract (env-var names + source expressions).
+# =============================================================================
+name: cloudflare-durable-object
+version: "1.0.0"
+kind: infrastructure-module
+category: cloudflare
+maturity: beta
+description: "Cloudflare Durable Objects binding. Provisions a DO namespace for stateful, globally-unique singleton actors inside the Workers runtime."
+provides: ["cloudflare.durable-object"]
+consumes: []
+runtime_targets:
+  terraform: terraform.tf
+  docker: null
+  wrangler: wrangler.jsonc.tmpl
+schema:
+  type: object
+  properties:
+    class_name:
+      type: string
+      description: Exported DO class name in the Worker source.
+    script_name:
+      type: string
+      description: Worker script name (when DO is in a different Worker).
+  required: ["class_name"]
+env_vars:
+  - name: DO_NAMESPACE_ID
+    description: Durable Object namespace ID.
+    source: terraform_output.do_namespace_id

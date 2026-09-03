@@ -33,13 +33,21 @@ subdomain: www
 cloudflare_name: figentra-portal
 # Runtime/build configuration project in Doppler.
 doppler_project: figentra-portal
-# Cloudflare capability requirements.
-capabilities:
-  needs_d1: false
-  needs_kv: false
-  needs_r2: false
-  needs_queue: false
-  needs_durable_object: false
+# Infrastructure capability modules consumed by this deployable.
+# Static asset apps (Cloudflare Pages) typically don't need backend
+# infrastructure modules — they have no server runtime. Sentry + BetterStack
+# are opted into for client-side observability.
+modules:
+  - use: sentry-project
+    version: "^1.0.0"
+    config:
+      platform: javascript
+      traces_sample_rate: 0.1
+
+  - use: betterstack-uptime
+    version: "^1.0.0"
+    config:
+      probe_url: /
 # Branch promotion contract.
 branch:
   development: develop
@@ -53,13 +61,6 @@ env_vars:
     LOG_LEVEL: info
   production:
     LOG_LEVEL: warn
-# Frontend observability.
-observability:
-  sentry:
-    platform: javascript
-    enable: true
-  betterstack:
-    enable_uptime: true
 # Ownership metadata.
 tags:
   service: portal

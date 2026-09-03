@@ -1,0 +1,5 @@
+{
+  "entity_not_found": "{entity} with id \"{id}\" not found",
+  "no_entity_decorator": "No @Entity() decorator found on \"{name}\". Apply @Entity() first.",
+  "slug_taken": "Slug \"{slug}\" is already taken"
+}

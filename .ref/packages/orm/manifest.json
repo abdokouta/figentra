@@ -1,0 +1,24 @@
+{
+  "$schema": "https://gist.githubusercontent.com/stackra-usr/766cbb0d72b6566fdc2642ffcb3d73ee/raw/manifest.schema.json",
+  "slug": "nestjs-orm",
+  "version": "0.1.0",
+  "name": {
+    "en": "Nestjs Orm"
+  },
+  "type": "core",
+  "description": {
+    "en": "NestJS orm infrastructure module."
+  },
+  "author": {
+    "name": "Stackra L.L.C",
+    "email": "dev@stackra.com"
+  },
+  "dependencies": ["console", "orm", "support"],
+  "support": {
+    "documentation": "https://docs.stackra.com/infra/nestjs-orm",
+    "email": "dev@stackra.com"
+  },
+  "compatibility": {
+    "platform_version": ">=1.0.0"
+  }
+}

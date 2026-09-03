@@ -9,10 +9,13 @@ deployment catalog. It is not a production deployment authority.
 root cloud.yaml
   -> explicit paths
   -> per-deployable cloud.yaml
-  -> infrastructure/catalog.json
+  -> infrastructure/.generated/catalog.json         (collect-cloud-yaml.mjs)
   -> infrastructure/docker/scripts/generate-compose.mjs
-  -> docker-compose.generated.yml
+  -> infrastructure/.generated/docker-compose.yml
 ```
+
+Every generated artefact lives under `infrastructure/.generated/` — machine-
+owned, gitignored, regenerated on demand. Never hand-edit the compose file.
 
 Only explicitly enrolled local deployables with `docker.enabled: true` are
 included. Workers, Vite assets, and mobile apps are not implicitly Dockerized.

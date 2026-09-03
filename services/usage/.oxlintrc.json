@@ -1,5 +1,0 @@
-{
-  "extends": [
-    "@stackra/oxlint-config/nest"
-  ]
-}

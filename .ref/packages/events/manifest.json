@@ -1,0 +1,36 @@
+{
+  "$schema": "https://gist.githubusercontent.com/stackra-usr/766cbb0d72b6566fdc2642ffcb3d73ee/raw/manifest.schema.json",
+  "slug": "events",
+  "version": "0.1.0",
+  "name": {
+    "en": "Events",
+    "ar": "الأحداث"
+  },
+  "type": "core",
+  "description": {
+    "en": "Unified events — core + react + nestjs via subpath exports.",
+    "ar": "الأحداث — وحدة أساسية في المنصة."
+  },
+  "author": {
+    "name": "Stackra L.L.C",
+    "email": "dev@stackra.com"
+  },
+  "events": {
+    "publishes": [
+      "notification.sent",
+      "order.confirmed",
+      "order.created",
+      "order.shipped",
+      "user.created"
+    ],
+    "subscribes": ["order.created", "order.updated", "user.created"]
+  },
+  "dependencies": ["console", "container"],
+  "support": {
+    "documentation": "https://docs.stackra.com/platform/events",
+    "email": "dev@stackra.com"
+  },
+  "compatibility": {
+    "platform_version": ">=1.0.0"
+  }
+}

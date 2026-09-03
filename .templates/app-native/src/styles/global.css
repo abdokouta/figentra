@@ -1,0 +1,29 @@
+@import "tailwindcss";
+@import "uniwind";
+@import "heroui-native/styles";
+/*
+ * heroui-native-pro is a licensed HeroUI Pro package. Its `styles`
+ * subpath only exists after the postinstall hydrator downloads the
+ * real distribution (guarded by `HEROUI_AUTH_TOKEN` /
+ * `npx heroui-pro login`). Without a license the specifier can't
+ * resolve, and the whole global.css entry fails to compile — even
+ * though nothing in the workspace uses Pro Native components today.
+ *
+ * The import is disabled until Pro is licensed. To re-enable:
+ *   1. `npx heroui-pro login` (or export HEROUI_AUTH_TOKEN via
+ *      Doppler).
+ *   2. `pnpm install`.
+ *   3. Uncomment the line + the matching @source lines below.
+ *
+ * Metro's `resolveRequest` interceptor already stubs the JS-side
+ * `heroui-native-pro` re-export, so the runtime bundle links; the
+ * CSS-side import is the piece that has no runtime shim.
+ */
+/* @import 'heroui-native-pro/styles'; */
+
+@source "./node_modules/heroui-native/lib";
+/* @source './node_modules/heroui-native-pro/lib'; */
+@source "../../node_modules/heroui-native/lib";
+/* @source '../../node_modules/heroui-native-pro/lib'; */
+@source "./src";
+@source "./app";

@@ -1,0 +1,60 @@
+{
+  "name": "@stackra/testing",
+  "tier": "framework",
+  "kind": "tooling",
+  "surfaces": [
+    "core",
+    "preset",
+    "matchers",
+    "setup",
+    "nest",
+    "worker",
+    "database",
+    "react"
+  ],
+  "purpose": "Centralised Vitest preset + test-authoring toolkit for the Figentra platform.",
+  "capabilities": [
+    "Vitest presets for Node, NestJS+Fastify, Cloudflare Workers, and React+jsdom",
+    "createAssertableProxy - recording proxy with fluent assertions",
+    "defineFactory + Sequence + deterministic Rng for typed fixture builders",
+    "freezeTime / travelTo / restoreTime - controlled clock",
+    "Custom matchers: toBeUlid, toMatchZodSchema, toHaveBeenCalledWithinLast",
+    "NestJS test host (Fastify + supertest) and TestingModule builder",
+    "Miniflare-driven D1, KV, Durable Object fixtures",
+    "PGlite in-process Postgres with per-test transaction rollback",
+    "React Testing Library render wrapper + user-event re-export"
+  ],
+  "when_to_use": "Every package/service/worker/app in the workspace merges the appropriate preset. Author mocks with createAssertableProxy; author fixtures via createD1Fixture / createPgliteDatabase.",
+  "when_not_to_use": "React Native applications (apps/family) stay on Jest via @react-native/jest-preset until Vitest's native transformer story improves.",
+  "peer_deps": [
+    "@cloudflare/vitest-pool-workers",
+    "@electric-sql/pglite",
+    "@faker-js/faker",
+    "@mikro-orm/core",
+    "@nestjs/common",
+    "@nestjs/core",
+    "@nestjs/platform-fastify",
+    "@nestjs/testing",
+    "@testing-library/jest-dom",
+    "@testing-library/react",
+    "@testing-library/user-event",
+    "@vitest/coverage-v8",
+    "fastify",
+    "jsdom",
+    "miniflare",
+    "react",
+    "react-dom",
+    "reflect-metadata",
+    "supertest",
+    "unplugin-swc",
+    "vite-tsconfig-paths",
+    "vitest"
+  ],
+  "backend_pair": null,
+  "size_gzip_kb": {},
+  "maturity": "beta",
+  "owning_agent": "framework-core-builder",
+  "docs": [
+    "packages/testing/README.md"
+  ]
+}

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <!--
+      theme-color — Track Orange in light mode paints the OS browser
+      chrome the same orange as the brand's Signal ramp (§01-color-
+      system §5.2). Dark mode falls back to Ink (#0A0A0B) so the
+      chrome doesn't shout orange when the user's on a night theme.
+    -->
+    <meta name="theme-color" content="#FF6B35" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0A0A0B" media="(prefers-color-scheme: dark)" />
+
+    <!--
+      Brand identity — title, description, favicon, OG tags, Twitter
+      Card tags, and the JSON-LD Organization block — is written at
+      boot by `BrandService.applyDocumentMetadata()` from
+      `src/config/brand.config.ts`. See `main.tsx` for the call site.
+
+      The value below is a one-frame FOUC fallback that the runtime
+      overwrites within the first React commit. Rewrite via env vars
+      (`BRAND_NAME`, `BRAND_DESCRIPTION`, ...) — DO NOT edit here
+      unless you're changing the FOUC fallback specifically.
+
+      Per-route <title> / <meta description> / <link canonical> land
+      once SSR/SSG ships (see .kiro/plans/landing-app-pending-tasks-v2.md
+      §E-seo). The i18n runtime updates <html lang> on locale change
+      via WebDirectionAdapter.
+    -->
+    <title>{{DISPLAY_NAME}}</title>
+
+    <!--
+      Icons + PWA — Academorix brand favicons per
+      docs/brand/academorix/02-logo-spec.md §7. `BrandService.applyFavicon()`
+      still overrides on boot for per-tenant white-labels.
+    -->
+    <!--
+      SVG source — declared FIRST so every modern browser (Chrome
+      80+, Firefox 41+, Safari 15+) picks the vector over the
+      raster fallbacks. The SVG lives at `/favicon.svg` and holds
+      the current v2.0 Turf Green treatment (ADR-0106 §D1). The
+      raster queue below still ships the older Track Orange v1.0
+      rasters as a fallback for legacy browsers — Wave 15's asset
+      pipeline regenerates them from the SVG source.
+    -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" href="/favicon-16.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/favicon-64.png" sizes="64x64" />
+    <link rel="icon" type="image/png" href="/android-192.png" sizes="192x192" />
+    <link rel="icon" type="image/png" href="/pwa-512.png" sizes="512x512" />
+    <link rel="apple-touch-icon" href="/apple-touch-180.png" sizes="180x180" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!--
+      WebSite JSON-LD — a site-level structured-data hint that
+      declares a search endpoint. Outside `BrandService`'s remit
+      (BrandService owns the Organization JSON-LD, not WebSite).
+      Kept inline because it's search-engine-visible before
+      hydration.
+    -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Academorix",
+        "url": "https://academorix.com",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://academorix.com/docs?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

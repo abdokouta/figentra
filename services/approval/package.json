@@ -34,7 +34,8 @@
     "fastify": "catalog:",
     "nestjs-i18n": "catalog:",
     "nestjs-pino": "catalog:",
-    "reflect-metadata": "catalog:"
+    "reflect-metadata": "catalog:",
+    "@figentra/swagger": "workspace:*"
   },
   "devDependencies": {
     "@nestjs/testing": "catalog:",

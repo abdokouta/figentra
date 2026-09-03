@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../.ref/schemas/catalog.v1.json",
+  "name": "@stackra/network",
+  "tier": "framework",
+  "surfaces": ["core", "react", "native", "testing"],
+  "kind": "framework-plumbing",
+  "purpose": "Network detection — online/offline plus connection-type/speed, browser/native/node detectors, event emission, and React bindings.",
+  "capabilities": [
+    "Cross-platform online/offline detection",
+    "Connection type + speed via Network Information API",
+    "Browser, React Native, and Node detector implementations",
+    "Typed events: network.online, network.offline, network.changed",
+    "React hook: useNetworkStatus",
+    "React Native detector via @react-native-community/netinfo",
+    "Testing subpath with controllable detector"
+  ],
+  "when_to_use": "Reacting to online/offline transitions or gating requests on connection quality.",
+  "when_not_to_use": "For pause/resume of queued requests use @stackra/query with network hints; for offline sync use @stackra/sync.",
+  "peer_deps": [
+    "@react-native-community/netinfo",
+    "@stackra/container",
+    "@stackra/contracts",
+    "@stackra/logger",
+    "@stackra/support",
+    "@stackra/testing",
+    "@stackra/ui",
+    "react",
+    "react-native",
+    "reflect-metadata"
+  ],
+  "backend_pair": null,
+  "size_gzip_kb": {},
+  "maturity": "beta",
+  "owning_agent": "framework-core-builder",
+  "docs": ["packages/framework/src/network/README.md"]
+}

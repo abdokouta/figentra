@@ -1,0 +1,52 @@
+# =============================================================================
+# @file infrastructure/modules/sentry-project/module.yaml
+# @description Sentry error tracking + performance monitoring project.
+#
+# Machine-readable infrastructure module manifest. Validated against
+# infrastructure/modules/schema/module.v1.json at CI time.
+#
+# @security No secrets. Env-var values come from Doppler at runtime;
+#   this file only declares the contract (env-var names + source expressions).
+# =============================================================================
+name: sentry-project
+version: "1.0.0"
+kind: infrastructure-module
+category: observability
+maturity: stable
+description: Sentry error tracking + performance monitoring project. Provisions a Sentry project per deployable per environment and injects the DSN.
+provides: ["observability.sentry"]
+consumes: []
+runtime_targets:
+  terraform: terraform.tf
+  docker: null
+  wrangler: null
+schema:
+  type: object
+  properties:
+    platform:
+      type: string
+      enum: ["node", "javascript", "react-native", "python"]
+      description: Sentry SDK platform.
+    traces_sample_rate:
+      type: number
+      minimum: 0
+      maximum: 1
+      default: 0.1
+      description: Performance monitoring sample rate.
+    profiles_sample_rate:
+      type: number
+      minimum: 0
+      maximum: 1
+      default: 0.1
+      description: Profiling sample rate.
+  required: ["platform"]
+env_vars:
+  - name: SENTRY_DSN
+    description: Sentry Data Source Name.
+    source: terraform_output.sentry_dsn
+  - name: SENTRY_ENVIRONMENT
+    description: Sentry environment tag.
+    source: terraform_output.sentry_environment
+  - name: SENTRY_TRACES_SAMPLE_RATE
+    description: Traces sample rate.
+    source: module.config.traces_sample_rate

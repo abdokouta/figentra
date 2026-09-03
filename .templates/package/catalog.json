@@ -1,0 +1,17 @@
+{
+  "$schema": "../../.ref/schemas/catalog.v1.json",
+  "name": "{{PACKAGE_NAME}}",
+  "tier": "framework",
+  "surfaces": ["core"],
+  "kind": "feature",
+  "purpose": "{{DESCRIPTION}}",
+  "capabilities": [],
+  "when_to_use": "{{WHEN_TO_USE}}",
+  "when_not_to_use": "{{WHEN_NOT_TO_USE}}",
+  "peer_deps": ["@stackra/contracts"],
+  "backend_pair": null,
+  "size_gzip_kb": {},
+  "maturity": "alpha",
+  "owning_agent": "framework-core-builder",
+  "docs": ["{{SOURCE_PATH}}/README.md"]
+}

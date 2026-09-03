@@ -11,9 +11,11 @@ import { resolve } from "node:path";
 import { parse } from "yaml";
 
 const root = resolve(import.meta.dirname, "../../..");
-const path = resolve(root, "infrastructure/docker/docker-compose.generated.yml");
+// Every generated artefact lives under infrastructure/.generated/ per the
+// workspace's machine-owned-output contract.
+const path = resolve(root, "infrastructure/.generated/docker-compose.yml");
 const document = parse(readFileSync(path, "utf8"));
-const catalog = JSON.parse(readFileSync(resolve(root, "infrastructure/catalog.json"), "utf8"));
+const catalog = JSON.parse(readFileSync(resolve(root, "infrastructure/.generated/catalog.json"), "utf8"));
 const errors = [];
 const forbiddenSecretKeys = /token|password|secret|private[_-]?key|api[_-]?key/i;
 

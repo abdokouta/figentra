@@ -1,0 +1,52 @@
+{
+  "name": "{{PACKAGE_NAME}}",
+  "version": "0.1.0",
+  "description": "{{DESCRIPTION}}",
+  "license": "MIT",
+  "author": {
+    "name": "Figentra L.L.C",
+    "email": "dev@figentra.com",
+    "url": "https://figentra.com"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "publishConfig": { "access": "public" },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "LICENSE", "README.md"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rimraf dist .turbo",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint . --max-warnings=0",
+    "lint:fix": "oxlint . --fix",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage --passWithNoTests"
+  },
+  "peerDependencies": {
+    "@stackra/contracts": "workspace:^"
+  },
+  "peerDependenciesMeta": {},
+  "devDependencies": {
+    "@stackra/contracts": "workspace:*",
+    "@stackra/testing": "workspace:*",
+    "@stackra/tsup-config": "workspace:*",
+    "@stackra/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "rimraf": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": { "node": ">=24" }
+}

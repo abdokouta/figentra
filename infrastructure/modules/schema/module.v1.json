@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "$id": "module.v1.json",
+  "title": "Figentra Infrastructure Module Manifest",
+  "description": "Validates every module.yaml in the infrastructure/modules/ registry. Each module declares a single infrastructure capability that deployables can opt into via their cloud.yaml modules[] array.",
+  "type": "object",
+  "required": [
+    "name",
+    "version",
+    "kind",
+    "category",
+    "maturity",
+    "description",
+    "provides",
+    "runtime_targets",
+    "schema",
+    "env_vars"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,62}[a-z0-9]$",
+      "description": "Kebab-case module identifier. Must match the parent folder name under infrastructure/modules/."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semver version of this module contract. Breaking changes = major bump."
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["infrastructure-module"],
+      "description": "Discriminator — always infrastructure-module in v1."
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "messaging",
+        "realtime",
+        "storage",
+        "search",
+        "third-party",
+        "background",
+        "ai",
+        "observability",
+        "networking",
+        "auth",
+        "cloudflare"
+      ],
+      "description": "Capability family. Adding a new category requires an ADR amendment."
+    },
+    "maturity": {
+      "type": "string",
+      "enum": ["planned", "alpha", "beta", "stable", "deprecated"],
+      "description": "Lifecycle stage. Consumers of stable modules get semver guarantees."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 20,
+      "description": "One-paragraph summary of what this module provisions."
+    },
+    "provides": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9.-]+$"
+      },
+      "description": "Capability tokens this module exposes."
+    },
+    "consumes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9.-]+$"
+      },
+      "default": [],
+      "description": "Capability tokens this module requires from other modules."
+    },
+    "runtime_targets": {
+      "type": "object",
+      "required": ["terraform", "docker", "wrangler"],
+      "additionalProperties": false,
+      "properties": {
+        "terraform": {
+          "type": ["string", "null"],
+          "description": "Relative path to the Terraform reference file, or null."
+        },
+        "docker": {
+          "type": ["string", "null"],
+          "description": "Relative path to the Docker Compose fragment, or null."
+        },
+        "wrangler": {
+          "type": ["string", "null"],
+          "description": "Relative path to the Wrangler binding template, or null."
+        }
+      },
+      "description": "Which runtime axes can provision this module."
+    },
+    "schema": {
+      "type": "object",
+      "description": "JSON Schema for the deployable config block in cloud.yaml modules[].config."
+    },
+    "env_vars": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "description", "source"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]+$",
+            "description": "SCREAMING_SNAKE_CASE env-var name."
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable description."
+          },
+          "source": {
+            "type": "string",
+            "description": "Source expression: terraform_output.X, module.config.Y, or literal."
+          }
+        }
+      },
+      "description": "Environment variables this module contributes to the deployable runtime."
+    }
+  }
+}

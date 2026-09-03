@@ -239,6 +239,12 @@ parents + athletes; coach = coaches + admins + academy staff).
 
 ## Config naming
 
+> **ADR anchor.** The `dev` / `stg` / `prd` config names below are Doppler-side
+> aliases for the workspace's canonical environment identifiers
+> (`development` / `staging` / `production`). The three-name canonical set + the
+> full external alias mapping are codified by
+> [ADR-0088](../../.docs/adr/ADR-0088-environment-canonical-identifiers.md).
+
 Every project uses exactly three canonical configs (Doppler auto-creates them at
 project creation):
 

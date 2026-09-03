@@ -1,0 +1,68 @@
+<%# ────────────────────────────────────────────────────────────────────────── %>
+<%# @stackra/nestjs-orm — Entity-Specific CRUD Command Stub                    %>
+<%#                                                                             %>
+<%# Available variables:                                                        %>
+<%#   - entityName  : Entity class name (e.g., 'User')                          %>
+<%#   - action      : CRUD action (create, list, show, update, delete)          %>
+<%#   - commandName : Full command name (e.g., 'user:create')                   %>
+<%#   - className   : Command class name (e.g., 'UserCreateCommand')            %>
+<%#   - fileName    : Output file name                                          %>
+<%#   - Str         : @stackra/ts-support string utilities                      %>
+<%# ────────────────────────────────────────────────────────────────────────── %>
+/**
+ * @file <%= fileName %>
+ * @module @stackra/domain/commands
+ * @description <%= Str.ucfirst(action) %> a <%= entityName %> record.
+ */
+
+import { Injectable } from '@nestjs/common';
+import { MikroORM } from '@mikro-orm/core';
+import { Command, BaseCommand } from '@stackra/console';
+
+/**
+ * <%= Str.ucfirst(action) %> a <%= entityName %> record via CLI.
+ *
+ * @example
+ * ```bash
+ * stackra <%= commandName %>
+ * ```
+ */
+@Command({
+  name: '<%= commandName %>',
+  description: '<%= Str.ucfirst(action) %> a <%= entityName %> record',
+<% if (action === 'create') { -%>
+  options: [
+    { name: '--data', short: '-d', description: 'JSON data', type: 'string' },
+    { name: '--interactive', short: '-i', description: 'Prompt for fields', type: 'boolean', default: true },
+  ],
+<% } else if (action === 'list') { -%>
+  options: [
+    { name: '--limit', short: '-l', description: 'Max records', type: 'number', default: 25 },
+    { name: '--where', short: '-w', description: 'JSON filter', type: 'string' },
+  ],
+<% } else if (action === 'show' || action === 'delete') { -%>
+  arguments: [
+    { name: 'id', description: '<%= entityName %> ID', required: true },
+  ],
+<% } else if (action === 'update') { -%>
+  arguments: [
+    { name: 'id', description: '<%= entityName %> ID', required: true },
+  ],
+  options: [
+    { name: '--data', short: '-d', description: 'JSON patch', type: 'string' },
+  ],
+<% } -%>
+})
+export class <%= className %> extends BaseCommand {
+  public constructor(private readonly orm: MikroORM) {
+    super();
+  }
+
+  public async handle(): Promise<number> {
+    // TODO: Implement <%= entityName %> <%= action %> logic
+    // Use the generic entity:* commands as reference implementation
+    this.output.info('Executing <%= commandName %>...');
+    this.output.success('Done.');
+    return 0;
+  }
+}

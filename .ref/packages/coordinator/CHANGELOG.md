@@ -1,0 +1,73 @@
+# @stackra/coordinator
+
+## 3.0.0
+
+### Patch Changes
+
+- Updated dependencies [c32efd4]
+  - @stackra/contracts@1.7.0
+  - @stackra/container@3.0.0
+  - @stackra/events@3.0.0
+
+## 2.0.0
+
+### Patch Changes
+
+- Updated dependencies [01726f0]
+  - @stackra/contracts@1.6.0
+  - @stackra/events@2.0.0
+  - @stackra/container@2.0.0
+
+## 0.2.0
+
+### Minor Changes
+
+- d34bad4: **Breaking (public API surface only).** `@stackra/coordinator` no
+  longer re-exports `TAB_LOCK_MANAGER` from `@stackra/contracts`. Import the
+  token directly from `@stackra/contracts` per `contract-reexports.md`:
+
+  ```ts
+  // before
+  import { TAB_LOCK_MANAGER } from "@stackra/coordinator";
+
+  // after
+  import { TAB_LOCK_MANAGER } from "@stackra/contracts";
+  ```
+
+  Every workspace consumer already imports from `@stackra/contracts` — the
+  re-export was a grandfathered compat shim carried through the row-level
+  attribution work and is now retired.
+
+### Patch Changes
+
+- 552943e: Workspace-wide standards conformance sweep. No behavioural changes;
+  no public API changes. Every `@stackra/*` frontend package converges on the
+  shared per-file discipline defined under `.kiro/steering/`.
+
+  - **Package manifests normalised.** Removed the redundant leaf-level
+    `packageManager` field on 37 packages; moved `react` / `react-dom` /
+    `reflect-metadata` peers to the workspace catalog so version drift is
+    impossible.
+  - **React entity files nested per folder.** Every hook, context, component and
+    provider that previously sat at the top of `react/hooks/`,
+    `react/contexts/`, `react/components/`, or `react/providers/` now lives in
+    its own named folder (`react/hooks/use-x/use-x.hook.ts`, etc.) with a barrel
+    `index.ts` — matching `.kiro/steering/code-standards.md`. 214 files moved;
+    imports through the public subpath entries are unchanged.
+  - **Native helpers routed through `@stackra/support`.** 55+ call sites
+    migrated from native `.toLowerCase()` / hand-rolled `sleep` / `process.env`
+    reads / ad hoc URL string building to the canonical `Str`, `sleep`, `Env`,
+    `Uri`, `once`, and `retry` helpers per
+    `.kiro/steering/support-utilities.md`.
+  - **Inline documentation added.** 291 source files gained top-of-file `@file`
+    / `@module` / `@description` docblocks. 107 barrel indexes received full
+    canonical blocks, 178 files with partial docblocks were augmented with the
+    missing `@file` tag, and 6 fully undocumented interface files received full
+    JSDoc coverage per `.kiro/steering/documentation.md`.
+  - **Typecheck GREEN** across all 42 packages after every round.
+
+- Updated dependencies [552943e]
+  - @stackra/container@2.1.1
+  - @stackra/contracts@0.1.5
+  - @stackra/support@0.1.1
+  - @stackra/testing@1.0.1

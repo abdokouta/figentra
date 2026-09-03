@@ -18,7 +18,12 @@ services/*/cloud.yaml
 
 and emits:
 
-`infrastructure/catalog.json`
+`infrastructure/.generated/catalog.json`
+
+The `infrastructure/.generated/` folder is machine-owned + gitignored — every
+artefact inside is regenerated on demand by an infrastructure script and is
+never hand-edited or committed. See
+[`infrastructure/.generated/README.md`](../../infrastructure/.generated/README.md).
 
 ## Consumers
 
@@ -31,7 +36,7 @@ The generated catalog is consumed by:
 
 ## Rules
 
-- Never manually edit `infrastructure/catalog.json`.
+- Never manually edit `infrastructure/.generated/catalog.json`.
 - Never create `terraform/deployables/<service>` merely because a deployable
   exists.
 - Terraform modules model infrastructure capabilities, not applications.

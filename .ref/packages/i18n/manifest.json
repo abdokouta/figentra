@@ -1,0 +1,25 @@
+{
+  "$schema": "https://gist.githubusercontent.com/stackra-usr/766cbb0d72b6566fdc2642ffcb3d73ee/raw/manifest.schema.json",
+  "slug": "i18n",
+  "version": "0.1.0",
+  "name": {
+    "en": "I18n",
+    "ar": "التدويل"
+  },
+  "type": "core",
+  "description": {
+    "en": "Unified i18n — core services, React hooks, and NestJS adapter via subpath exports.",
+    "ar": "التدويل — وحدة أساسية في المنصة."
+  },
+  "author": {
+    "name": "Stackra L.L.C",
+    "email": "dev@stackra.com"
+  },
+  "support": {
+    "documentation": "https://docs.stackra.com/platform/i18n",
+    "email": "dev@stackra.com"
+  },
+  "compatibility": {
+    "platform_version": ">=1.0.0"
+  }
+}

@@ -23,8 +23,13 @@ TF ?= terraform
 TF_DIR ?= infrastructure/terraform
 ENV ?= development
 
-# Normalize interactive aliases without making them canonical environment names.
-PLAN_DIR := $(TF_DIR)/.plans
+# Every generated artefact lives under infrastructure/.generated/ — machine-
+# owned, gitignored, regenerated on demand. Plans land under
+# infrastructure/.generated/terraform/plans/tfplan-<env> per environment.
+PLAN_DIR := infrastructure/.generated/terraform/plans
+# terraform -chdir=$(TF_DIR) resolves plan paths relative to $(TF_DIR); one
+# `..` climbs from `infrastructure/terraform/` back to `infrastructure/`.
+PLAN_REL := ../.generated/terraform/plans
 
 VALID_ENVS := development staging production
 CONFIRM ?=
@@ -50,7 +55,7 @@ tf-fmt: ## Format all Terraform
 
 tf-plan: tf-select ## Create a saved plan for ENV
 	@mkdir -p $(PLAN_DIR)
-	@$(TF) -chdir=$(TF_DIR) plan -out=.plans/tfplan-$(ENV)
+	@$(TF) -chdir=$(TF_DIR) plan -out=$(PLAN_REL)/tfplan-$(ENV)
 
 tf-apply: tf-select ## Apply the previously saved ENV plan
 	@if [ ! -f "$(PLAN_DIR)/tfplan-$(ENV)" ]; then \
@@ -59,7 +64,7 @@ tf-apply: tf-select ## Apply the previously saved ENV plan
 	@if [ "$(ENV)" = "production" ] && [ "$(CONFIRM)" != "yes-apply-production" ]; then \
 	  echo "REFUSED: production apply requires CONFIRM=yes-apply-production"; exit 1; \
 	fi
-	@$(TF) -chdir=$(TF_DIR) apply .plans/tfplan-$(ENV)
+	@$(TF) -chdir=$(TF_DIR) apply $(PLAN_REL)/tfplan-$(ENV)
 
 tf-apply-plan: tf-apply ## Alias for applying the saved plan
 
@@ -76,7 +81,7 @@ tf-workspace-list: ## List Terraform workspaces in the canonical root
 	@$(TF) -chdir=$(TF_DIR) workspace list
 
 tf-clean: ## Remove local Terraform working data and saved plans
-	@rm -rf $(TF_DIR)/.plans
+	@rm -rf $(PLAN_DIR)
 	@find $(TF_DIR) -type d -name .terraform -prune -exec rm -rf {} +
 
 plan: tf-plan ## Short alias

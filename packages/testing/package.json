@@ -1,0 +1,223 @@
+{
+  "name": "@stackra/testing",
+  "version": "1.0.0",
+  "description": "Centralised Vitest preset + test-authoring toolkit for the Figentra platform. Ships base/nest/worker/react presets, assertable proxies, factories, matchers, and per-runtime fixtures (Miniflare/D1, PGlite, MikroORM, React Testing Library).",
+  "license": "MIT",
+  "author": {
+    "name": "Figentra L.L.C",
+    "email": "dev@figentra.com",
+    "url": "https://figentra.com"
+  },
+  "keywords": [
+    "stackra",
+    "testing",
+    "vitest",
+    "vitest-preset",
+    "nestjs",
+    "cloudflare-workers",
+    "miniflare",
+    "pglite",
+    "mikro-orm",
+    "testing-library"
+  ],
+  "homepage": "https://gitlab.com/figentra/platform/-/tree/main/packages/testing#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/figentra/platform.git",
+    "directory": "packages/testing"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/figentra/platform/-/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "type": "module",
+  "sideEffects": [
+    "./dist/setup/index.js",
+    "./dist/setup/index.mjs",
+    "./dist/react/setup.js",
+    "./dist/react/setup.mjs",
+    "./dist/preset/react.js",
+    "./dist/preset/react.mjs"
+  ],
+  "main": "./dist/core/index.js",
+  "module": "./dist/core/index.mjs",
+  "types": "./dist/core/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.mjs",
+      "require": "./dist/core/index.js"
+    },
+    "./preset": {
+      "types": "./dist/preset/base.d.ts",
+      "import": "./dist/preset/base.mjs",
+      "require": "./dist/preset/base.js"
+    },
+    "./preset/base": {
+      "types": "./dist/preset/base.d.ts",
+      "import": "./dist/preset/base.mjs",
+      "require": "./dist/preset/base.js"
+    },
+    "./preset/nest": {
+      "types": "./dist/preset/nest.d.ts",
+      "import": "./dist/preset/nest.mjs",
+      "require": "./dist/preset/nest.js"
+    },
+    "./preset/worker": {
+      "types": "./dist/preset/worker.d.ts",
+      "import": "./dist/preset/worker.mjs",
+      "require": "./dist/preset/worker.js"
+    },
+    "./preset/react": {
+      "types": "./dist/preset/react.d.ts",
+      "import": "./dist/preset/react.mjs",
+      "require": "./dist/preset/react.js"
+    },
+    "./matchers": {
+      "types": "./dist/matchers/index.d.ts",
+      "import": "./dist/matchers/index.mjs",
+      "require": "./dist/matchers/index.js"
+    },
+    "./setup": {
+      "types": "./dist/setup/index.d.ts",
+      "import": "./dist/setup/index.mjs",
+      "require": "./dist/setup/index.js"
+    },
+    "./nest": {
+      "types": "./dist/nest/index.d.ts",
+      "import": "./dist/nest/index.mjs",
+      "require": "./dist/nest/index.js"
+    },
+    "./worker": {
+      "types": "./dist/worker/index.d.ts",
+      "import": "./dist/worker/index.mjs",
+      "require": "./dist/worker/index.js"
+    },
+    "./database": {
+      "types": "./dist/database/index.d.ts",
+      "import": "./dist/database/index.mjs",
+      "require": "./dist/database/index.js"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.mjs",
+      "require": "./dist/react/index.js"
+    },
+    "./react/setup": {
+      "types": "./dist/react/setup.d.ts",
+      "import": "./dist/react/setup.mjs",
+      "require": "./dist/react/setup.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rimraf dist .turbo",
+    "typecheck": "tsc --noEmit",
+    "check-types": "tsc --noEmit",
+    "lint": "oxlint src __tests__",
+    "lint:fix": "oxlint --fix src __tests__",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage --passWithNoTests"
+  },
+  "peerDependencies": {
+    "@cloudflare/vitest-pool-workers": "catalog:",
+    "@cloudflare/workers-types": "catalog:",
+    "@electric-sql/pglite": "catalog:",
+    "@faker-js/faker": "catalog:",
+    "@mikro-orm/core": "catalog:",
+    "@nestjs/common": "catalog:",
+    "@nestjs/core": "catalog:",
+    "@nestjs/platform-fastify": "catalog:",
+    "@nestjs/testing": "catalog:",
+    "@testing-library/jest-dom": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "fastify": "catalog:",
+    "jsdom": "catalog:",
+    "miniflare": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "reflect-metadata": "catalog:",
+    "supertest": "catalog:",
+    "unplugin-swc": "catalog:",
+    "vite-tsconfig-paths": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependenciesMeta": {
+    "@cloudflare/vitest-pool-workers": { "optional": true },
+    "@cloudflare/workers-types": { "optional": true },
+    "@electric-sql/pglite": { "optional": true },
+    "@faker-js/faker": { "optional": true },
+    "@mikro-orm/core": { "optional": true },
+    "@nestjs/common": { "optional": true },
+    "@nestjs/core": { "optional": true },
+    "@nestjs/platform-fastify": { "optional": true },
+    "@nestjs/testing": { "optional": true },
+    "@testing-library/jest-dom": { "optional": true },
+    "@testing-library/react": { "optional": true },
+    "@testing-library/user-event": { "optional": true },
+    "@vitest/coverage-v8": { "optional": true },
+    "fastify": { "optional": true },
+    "jsdom": { "optional": true },
+    "miniflare": { "optional": true },
+    "react": { "optional": true },
+    "react-dom": { "optional": true },
+    "reflect-metadata": { "optional": true },
+    "supertest": { "optional": true },
+    "unplugin-swc": { "optional": true },
+    "vite-tsconfig-paths": { "optional": true }
+  },
+  "dependencies": {
+    "ulid": "catalog:"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "catalog:",
+    "@cloudflare/workers-types": "catalog:",
+    "@electric-sql/pglite": "catalog:",
+    "@faker-js/faker": "catalog:",
+    "@mikro-orm/core": "catalog:",
+    "@nestjs/common": "catalog:",
+    "@nestjs/core": "catalog:",
+    "@nestjs/platform-fastify": "catalog:",
+    "@nestjs/testing": "catalog:",
+    "@stackra/oxlint-config": "workspace:*",
+    "@stackra/prettier-config": "workspace:*",
+    "@stackra/tsup-config": "workspace:*",
+    "@stackra/typescript-config": "workspace:*",
+    "@testing-library/jest-dom": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@types/supertest": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "fastify": "catalog:",
+    "jsdom": "catalog:",
+    "miniflare": "catalog:",
+    "oxlint": "catalog:",
+    "reflect-metadata": "catalog:",
+    "rimraf": "catalog:",
+    "supertest": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "unplugin-swc": "catalog:",
+    "vite-tsconfig-paths": "catalog:",
+    "vitest": "catalog:",
+    "zod": "catalog:"
+  }
+}

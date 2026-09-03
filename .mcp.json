@@ -12,8 +12,7 @@
         "projects_list",
         "environments_list",
         "configs_list",
-        "secrets_names",
-        "secrets_download"
+        "secrets_names"
       ]
     },
     "heroui-react": {

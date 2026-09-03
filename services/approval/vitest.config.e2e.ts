@@ -1,15 +1,20 @@
 /**
  * @file vitest.config.e2e.ts
- * @description E2E Vitest boundary for the NestJS service.
+ * @module @figentra/approval/test
+ * @description End-to-end Vitest config for the approval service.
+ *   Same preset as `vitest.config.ts` (Nest + Fastify + supertest);
+ *   the only delta is the include pattern (only `__tests__/e2e/**`).
  */
 
-import { mergeConfig, defineConfig } from "vitest/config";
-import base from "./vitest.config.base.ts";
+import preset from "@stackra/testing/preset/nest";
+import { defineConfig, mergeConfig } from "vitest/config";
 
-/** Public exported symbol. */
-export default mergeConfig(base, defineConfig({
-  test: {
-    include: ["__tests__/e2e/**/*.e2e.test.ts"],
-    setupFiles: ["./__tests__/vitest.setup.ts"],
-  },
-}));
+export default mergeConfig(
+  preset,
+  defineConfig({
+    test: {
+      include: ["__tests__/e2e/**/*.e2e.test.ts"],
+      setupFiles: ["./__tests__/vitest.setup.ts"],
+    },
+  }),
+);

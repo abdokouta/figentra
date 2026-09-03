@@ -1,0 +1,31 @@
+{
+  "$schema": "https://gist.githubusercontent.com/stackra-usr/766cbb0d72b6566fdc2642ffcb3d73ee/raw/manifest.schema.json",
+  "slug": "nestjs-webhook",
+  "version": "0.1.0",
+  "name": {
+    "en": "Nestjs Webhook"
+  },
+  "type": "core",
+  "description": {
+    "en": "NestJS webhook infrastructure module."
+  },
+  "author": {
+    "name": "Stackra L.L.C",
+    "email": "dev@stackra.com"
+  },
+  "dependencies": [
+    "orm",
+    "queue",
+    "rate-limit",
+    "response",
+    "support",
+    "webhook"
+  ],
+  "support": {
+    "documentation": "https://docs.stackra.com/infra/nestjs-webhook",
+    "email": "dev@stackra.com"
+  },
+  "compatibility": {
+    "platform_version": ">=1.0.0"
+  }
+}

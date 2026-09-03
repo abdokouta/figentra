@@ -1,0 +1,34 @@
+/**
+ * @file <%= fileName %>
+ * @module <%= moduleName ?? '@stackra/nestjs-orm' %>/seeders
+ * @description <%= className %> database seeder.
+ */
+
+import type { EntityManager } from '@mikro-orm/core';
+import { BaseSeeder } from '@stackra/nestjs-orm';
+
+/**
+ * <%= className %> — populates initial/test data.
+ */
+export class <%= className %> extends BaseSeeder {
+  /**
+   * Run the seeder.
+   *
+   * @param em - Entity manager for database operations
+   */
+  public async run(em: EntityManager): Promise<void> {
+    // TODO: Implement seeder logic
+    //
+    // Option 1: Direct entity creation
+    // const entity = em.create(MyEntity, { name: 'Sample' });
+    // em.persist(entity);
+    // await em.flush();
+    //
+    // Option 2: Using factory
+    // const factory = MyEntityFactory.make(em);
+    // await factory.create(10);
+    //
+    // Option 3: Call other seeders
+    // await this.call(em, [UserSeeder, PostSeeder]);
+  }
+}

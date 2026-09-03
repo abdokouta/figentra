@@ -1,0 +1,41 @@
+# =============================================================================
+# @file infrastructure/modules/betterstack-uptime/module.yaml
+# @description Better Stack uptime monitoring.
+#
+# Machine-readable infrastructure module manifest. Validated against
+# infrastructure/modules/schema/module.v1.json at CI time.
+#
+# @security No secrets. Env-var values come from Doppler at runtime;
+#   this file only declares the contract (env-var names + source expressions).
+# =============================================================================
+name: betterstack-uptime
+version: "1.0.0"
+kind: infrastructure-module
+category: observability
+maturity: stable
+description: "Better Stack uptime monitoring. Provisions an uptime monitor that probes the deployable's health endpoint and alerts on downtime."
+provides: ["observability.uptime"]
+consumes: []
+runtime_targets:
+  terraform: terraform.tf
+  docker: null
+  wrangler: null
+schema:
+  type: object
+  properties:
+    probe_url:
+      type: string
+      default: /health/ready
+      description: Health endpoint path to probe.
+    check_interval_seconds:
+      type: integer
+      minimum: 30
+      default: 60
+      description: Probe interval.
+    alert_channels:
+      type: array
+      items:
+        type: string
+      default: []
+      description: Alert channel IDs.
+env_vars: []

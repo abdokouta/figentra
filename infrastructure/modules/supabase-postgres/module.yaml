@@ -1,0 +1,56 @@
+# =============================================================================
+# @file infrastructure/modules/supabase-postgres/module.yaml
+# @description Supabase PostgreSQL database.
+#
+# Machine-readable infrastructure module manifest. Validated against
+# infrastructure/modules/schema/module.v1.json at CI time.
+#
+# @security No secrets. Env-var values come from Doppler at runtime;
+#   this file only declares the contract (env-var names + source expressions).
+# =============================================================================
+name: supabase-postgres
+version: "1.0.0"
+kind: infrastructure-module
+category: storage
+maturity: stable
+description: "Supabase PostgreSQL database. Provisions a Supabase project (or reuses an existing one) and injects the connection string, service-role key, and anon key into the deployable runtime."
+provides: ["database.postgres", "supabase.project"]
+consumes: []
+runtime_targets:
+  terraform: terraform.tf
+  docker: compose.yaml
+  wrangler: null
+schema:
+  type: object
+  properties:
+    database:
+      type: string
+      pattern: "^[a-z][a-z0-9_]{0,62}$"
+      description: Logical database name.
+    engine_version:
+      type: string
+      enum: ["15", "16", "17"]
+      default: "16"
+      description: PostgreSQL major version.
+    pooler_mode:
+      type: string
+      enum: ["transaction", "session"]
+      default: transaction
+      description: PgBouncer pooler mode.
+  required: ["database"]
+env_vars:
+  - name: DATABASE_URL
+    description: PostgreSQL connection string (pooler).
+    source: terraform_output.database_url
+  - name: DIRECT_DATABASE_URL
+    description: Direct connection string (migrations).
+    source: terraform_output.direct_database_url
+  - name: SUPABASE_URL
+    description: Supabase project API URL.
+    source: terraform_output.supabase_url
+  - name: SUPABASE_ANON_KEY
+    description: Supabase public anon key.
+    source: terraform_output.supabase_anon_key
+  - name: SUPABASE_SERVICE_ROLE_KEY
+    description: Supabase service-role key (server-only).
+    source: terraform_output.supabase_service_role_key

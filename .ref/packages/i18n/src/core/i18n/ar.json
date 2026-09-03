@@ -1,0 +1,13 @@
+{
+  "language_combobox": {
+    "placeholder": "ابحث عن اللغة…",
+    "aria_label": "اللغة: {{name}}"
+  },
+  "language_selector": {
+    "aria_label": "اللغة: {{name}}",
+    "menu_aria_label": "خيارات اللغة"
+  },
+  "native_language_selector": {
+    "label": "اللغة"
+  }
+}

@@ -33,19 +33,25 @@ mobile:
   bundle_id: com.figentra.family
   scheme: figentra
   associated_domain: app.figentra.com
-# External platform capabilities.
-capabilities:
-  needs_firebase: true
+# Infrastructure capability modules consumed by this deployable.
+modules:
+  - use: firebase-fcm
+    version: "^1.0.0"
+    config:
+      project_id: figentra-family
+      android_package: com.figentra.family
+      ios_bundle_id: com.figentra.family
+
+  - use: sentry-project
+    version: "^1.0.0"
+    config:
+      platform: react-native
+      traces_sample_rate: 0.1
 # Branch-to-release-channel mapping.
 branch:
   development: develop
   staging: staging
   production: main
-# Mobile observability.
-observability:
-  sentry:
-    platform: react-native
-    enable: true
 # Ownership metadata.
 tags:
   service: family

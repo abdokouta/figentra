@@ -110,8 +110,8 @@ layout; alphabetising scripts is a review-blocking finding.
 | `size`                   | `size-limit` — bundle-size budgets from `.size-limit.json`.                    |
 | `quality`                | `pnpm format:check && pnpm lint && pnpm typecheck && pnpm knip` — static gate. |
 | `quality:fix`            | `pnpm format && pnpm lint:fix` — the auto-fix version.                         |
-| `verify`                 | Same as `quality` — pre-commit-safe subset (no tests, no build).               |
-| `check`                  | `pnpm quality && pnpm test` — full contributor gate pre-push.                  |
+| `verify`                 | `pnpm format:check && pnpm lint && pnpm typecheck` — **pre-push gate** ([ADR-0089](../../.docs/adr/ADR-0089-pre-push-vs-ci-verification-split.md)); fast + cache-friendly. |
+| `check`                  | `pnpm quality && pnpm test` — **CI gate** for the full standards suite ([ADR-0089](../../.docs/adr/ADR-0089-pre-push-vs-ci-verification-split.md)). |
 | `ci`                     | `pnpm quality && pnpm test && pnpm build && pnpm size` — full CI gate.         |
 | `clean`                  | `node scripts/clean.mjs` — reap every regenerable artifact.                    |
 | `clean:dry`              | Same script, `--dry-run` flag.                                                 |
@@ -422,5 +422,5 @@ grep -l '"packageManager"' frontend/packages/*/package.json frontend/apps/*/pack
 - [`subpath-layering.md`](subpath-layering.md) — subpath dependency direction
   (one-way, top-down).
 - [`commit-conventions.md`](commit-conventions.md) — dependency change hygiene.
-- [`frontend-package-audit-checklist.md`](frontend-package-audit-checklist.md) —
+- [`frontend-package-audit-checklist.md`](../../.ref/steering/frontend-package-audit-checklist.md) —
   the per-package audit the `frontend-package-auditor` sub-agent walks.

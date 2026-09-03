@@ -1,0 +1,41 @@
+# =============================================================================
+# @file infrastructure/modules/twilio-sms/module.yaml
+# @description Twilio SMS messaging integration.
+#
+# Machine-readable infrastructure module manifest. Validated against
+# infrastructure/modules/schema/module.v1.json at CI time.
+#
+# @security No secrets. Env-var values come from Doppler at runtime;
+#   this file only declares the contract (env-var names + source expressions).
+# =============================================================================
+name: twilio-sms
+version: "1.0.0"
+kind: infrastructure-module
+category: third-party
+maturity: beta
+description: "Twilio SMS messaging integration. Configures the Twilio account SID, auth token, and default sender number for transactional SMS (OTP codes, notifications, alerts)."
+provides: ["sms.twilio"]
+consumes: []
+runtime_targets:
+  terraform: terraform.tf
+  docker: null
+  wrangler: null
+schema:
+  type: object
+  properties:
+    from_number:
+      type: string
+      description: Default sender phone number (E.164 format).
+    messaging_service_sid:
+      type: string
+      description: Twilio Messaging Service SID (optional; overrides from_number).
+env_vars:
+  - name: TWILIO_ACCOUNT_SID
+    description: Twilio account SID (from Doppler).
+    source: terraform_output.twilio_account_sid
+  - name: TWILIO_AUTH_TOKEN
+    description: Twilio auth token (from Doppler).
+    source: terraform_output.twilio_auth_token
+  - name: TWILIO_FROM_NUMBER
+    description: Default sender number.
+    source: module.config.from_number

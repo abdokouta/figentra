@@ -1,0 +1,44 @@
+# =============================================================================
+# @file infrastructure/modules/cloudflare-hyperdrive/module.yaml
+# @description Cloudflare Hyperdrive connection-pool binding.
+#
+# Machine-readable infrastructure module manifest. Validated against
+# infrastructure/modules/schema/module.v1.json at CI time.
+#
+# @security No secrets. Env-var values come from Doppler at runtime;
+#   this file only declares the contract (env-var names + source expressions).
+# =============================================================================
+name: cloudflare-hyperdrive
+version: "1.0.0"
+kind: infrastructure-module
+category: cloudflare
+maturity: beta
+description: "Cloudflare Hyperdrive connection-pool binding. Provisions a Hyperdrive configuration that accelerates TCP connections from Workers to external databases (Postgres, MySQL)."
+provides: ["cloudflare.hyperdrive"]
+consumes: []
+runtime_targets:
+  terraform: terraform.tf
+  docker: null
+  wrangler: wrangler.jsonc.tmpl
+schema:
+  type: object
+  properties:
+    config_name:
+      type: string
+      description: Hyperdrive configuration name.
+    origin_host:
+      type: string
+      description: Origin database hostname (injected via Doppler at runtime; placeholder here).
+    origin_port:
+      type: integer
+      default: 5432
+      description: Origin database port.
+    caching_disabled:
+      type: boolean
+      default: false
+      description: Disable query caching.
+  required: ["config_name"]
+env_vars:
+  - name: HYPERDRIVE_ID
+    description: Hyperdrive configuration ID.
+    source: terraform_output.hyperdrive_id

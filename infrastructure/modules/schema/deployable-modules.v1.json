@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "$id": "deployable-modules.v1.json",
+  "title": "Figentra Deployable Modules Array",
+  "description": "Validates the modules[] array inside a deployable cloud.yaml. Each entry references a module from the infrastructure/modules/ registry by name, pins a semver range, and supplies typed config that the registry module schema validates.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["use", "version"],
+    "additionalProperties": false,
+    "properties": {
+      "use": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]{0,62}[a-z0-9]$",
+        "description": "Module name — must match a folder under infrastructure/modules/."
+      },
+      "version": {
+        "type": "string",
+        "description": "Semver range constraint (e.g. ^1.0.0, ~2.3, >=1.5.0 <2.0.0)."
+      },
+      "config": {
+        "type": "object",
+        "description": "Module-specific configuration. Validated against the module schema at catalog-collection time.",
+        "additionalProperties": true
+      }
+    }
+  }
+}

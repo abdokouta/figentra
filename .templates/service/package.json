@@ -1,0 +1,47 @@
+{
+  "name": "{{PACKAGE_NAME}}",
+  "version": "0.0.0",
+  "private": true,
+  "description": "{{DESCRIPTION}}",
+  "license": "MIT",
+  "author": {
+    "name": "Figentra L.L.C",
+    "email": "dev@figentra.com",
+    "url": "https://figentra.com"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "nest build",
+    "dev": "nest start --watch",
+    "clean": "rimraf dist .turbo",
+    "check-types": "tsc --noEmit",
+    "lint": "oxlint . --max-warnings=0",
+    "lint:fix": "oxlint . --fix",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage --passWithNoTests",
+    "test:e2e": "vitest run -c vitest.config.e2e.ts --passWithNoTests"
+  },
+  "dependencies": {
+    "@nestjs/common": "catalog:",
+    "@nestjs/core": "catalog:",
+    "@nestjs/platform-fastify": "catalog:",
+    "fastify": "catalog:",
+    "reflect-metadata": "catalog:"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "catalog:",
+    "@nestjs/testing": "catalog:",
+    "@stackra/contracts": "workspace:*",
+    "@stackra/testing": "workspace:*",
+    "@stackra/tsup-config": "workspace:*",
+    "@stackra/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "rimraf": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

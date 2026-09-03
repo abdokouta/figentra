@@ -1,0 +1,8 @@
+{
+  "name": "@stackra/container-cloudflare-worker-example",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@stackra/container": "workspace:*"
+  }
+}

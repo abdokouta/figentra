@@ -19,11 +19,11 @@ MAKEFLAGS += --no-print-directory
 .DEFAULT_GOAL := help
 
 ROOT := $(CURDIR)
-TF_MK := infrastructure/terraform/terraform.mk
-DOCKER_MK := infrastructure/docker/docker.mk
 
-include $(TF_MK)
-include $(DOCKER_MK)
+# Every infrastructure concern (Terraform, Docker, and any future subsystem)
+# routes through this single include point. See
+# `infrastructure/infrastructure.mk` for the composition.
+include infrastructure/infrastructure.mk
 
 .PHONY: help doctor bootstrap install build dev test lint typecheck format docs-check \
         catalog infra-generate docker-generate clean
@@ -76,7 +76,9 @@ docker-generate: ## Generate the local Docker Compose file from the explicit clo
 
 clean: ## Remove generated build/test artifacts
 	@pnpm turbo run clean
-	@rm -rf infrastructure/terraform/.plans
+	@rm -rf infrastructure/.generated/terraform/plans
+	@rm -f infrastructure/.generated/docker-compose.yml
+	@rm -f infrastructure/.generated/catalog.json
 
 # --- Enterprise security / production readiness -----------------------------
 
@@ -113,7 +115,7 @@ production-readiness: ## Validate the repository-level production readiness gate
 	@make -C infrastructure/docker compose-validate ENV=development
 	@terraform -chdir=infrastructure/terraform fmt -check -recursive
 	@terraform -chdir=infrastructure/terraform validate
-	@docker compose -f infrastructure/docker/docker-compose.generated.yml config
+	@docker compose -f infrastructure/.generated/docker-compose.yml config
 
 # Validate Gateway and Registry production contracts.
 workers-check:

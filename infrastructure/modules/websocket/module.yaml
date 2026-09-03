@@ -1,0 +1,60 @@
+# =============================================================================
+# @file infrastructure/modules/websocket/module.yaml
+# @description WebSocket bi-directional realtime channel.
+#
+# Machine-readable infrastructure module manifest. Validated against
+# infrastructure/modules/schema/module.v1.json at CI time.
+#
+# @security No secrets. Env-var values come from Doppler at runtime;
+#   this file only declares the contract (env-var names + source expressions).
+# =============================================================================
+name: websocket
+version: "1.0.0"
+kind: infrastructure-module
+category: realtime
+maturity: beta
+description: "WebSocket bi-directional realtime channel. Runtime-config module that declares the WebSocket endpoint path, auth strategy, and connection limits. No separate infrastructure provisioned — the deployable's HTTP server handles the upgrade."
+provides: ["realtime.websocket"]
+consumes: []
+runtime_targets:
+  terraform: null
+  docker: null
+  wrangler: null
+schema:
+  type: object
+  properties:
+    path:
+      type: string
+      default: /ws
+      description: WebSocket upgrade path.
+    auth:
+      type: string
+      enum: ["jwt", "cookie", "none"]
+      default: jwt
+      description: Auth strategy for WS connections.
+    max_connections:
+      type: integer
+      minimum: 1
+      default: 10000
+      description: Max concurrent connections.
+    heartbeat_interval_ms:
+      type: integer
+      minimum: 1000
+      default: 30000
+      description: Ping/pong heartbeat interval.
+    max_message_size_kb:
+      type: integer
+      minimum: 1
+      default: 256
+      description: Max inbound message size.
+  required: ["path"]
+env_vars:
+  - name: WEBSOCKET_PATH
+    description: WebSocket upgrade endpoint path.
+    source: module.config.path
+  - name: WEBSOCKET_AUTH
+    description: Auth strategy.
+    source: module.config.auth
+  - name: WEBSOCKET_MAX_CONNECTIONS
+    description: Max concurrent WS connections.
+    source: module.config.max_connections

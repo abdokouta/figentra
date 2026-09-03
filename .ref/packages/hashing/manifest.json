@@ -1,0 +1,26 @@
+{
+  "$schema": "https://gist.githubusercontent.com/stackra-usr/766cbb0d72b6566fdc2642ffcb3d73ee/raw/manifest.schema.json",
+  "slug": "hashing",
+  "version": "0.1.0",
+  "name": {
+    "en": "Hashing",
+    "ar": "التجزئة"
+  },
+  "type": "core",
+  "description": {
+    "en": "Password hashing with pluggable drivers — bcrypt, argon2, scrypt.",
+    "ar": "التجزئة — وحدة أساسية في المنصة."
+  },
+  "author": {
+    "name": "Stackra L.L.C",
+    "email": "dev@stackra.com"
+  },
+  "dependencies": ["support"],
+  "support": {
+    "documentation": "https://docs.stackra.com/infra/hashing",
+    "email": "dev@stackra.com"
+  },
+  "compatibility": {
+    "platform_version": ">=1.0.0"
+  }
+}

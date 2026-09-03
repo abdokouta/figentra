@@ -1,0 +1,55 @@
+<%# ────────────────────────────────────────────────────────────────────────── %>
+<%# @stackra/nestjs-orm — Service Stub Template                                %>
+<%#                                                                             %>
+<%# Available variables:                                                        %>
+<%#   - name          : Service class name without 'Service' suffix             %>
+<%#   - className     : Full class name (e.g., 'ProductService')                %>
+<%#   - entityName    : Entity class name this service manages                  %>
+<%#   - fileName      : Output file name (e.g., 'product.service.ts')           %>
+<%#   - useRepository : Boolean — inject via @InjectRepository                  %>
+<%#   - Str           : @stackra/ts-support string utilities                    %>
+<%#                                                                             %>
+<%# Notes:                                                                      %>
+<%#   - Services extending defineService() get full CRUD automatically          %>
+<%#   - Use @InjectRepository for entity-bound services                         %>
+<%#   - Never inject EntityManager directly (use repo.getEntityManager())       %>
+<%# ────────────────────────────────────────────────────────────────────────── %>
+/**
+ * @file <%= fileName %>
+ * @module @stackra/nestjs-orm/services
+ * @description <%= className %> — business logic for the <%= entityName %> entity.
+ */
+
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@stackra/nestjs-orm';
+import { defineService } from '@stackra/nestjs-orm';
+import type { EntityRepository } from '@mikro-orm/core';
+import { <%= entityName %> } from '../entities/<%= Str.kebab(entityName) %>.entity';
+
+/**
+ * <%= className %> — manages <%= entityName %> entity operations.
+ *
+ * Extends `defineService(<%= entityName %>)` which provides:
+ * - findAll, findById, findByIdOrFail
+ * - count, paginateLengthAware, paginateCursor
+ * - create, update, softDelete, restore, forceDelete
+ *
+ * Add custom business methods below.
+ */
+@Injectable()
+export class <%= className %> extends defineService(<%= entityName %>) {
+  /**
+   * @param repo - <%= entityName %> repository (scoped to this entity)
+   */
+  public constructor(
+    @InjectRepository(<%= entityName %>) repo: EntityRepository<<%= entityName %>>,
+  ) {
+    super(repo);
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // Custom Business Methods
+  // ══════════════════════════════════════════════════════════════════════════
+
+  // TODO: Add domain-specific methods here
+}

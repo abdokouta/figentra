@@ -1,0 +1,41 @@
+{
+  "name": "{{PACKAGE_NAME}}",
+  "version": "0.0.0",
+  "private": true,
+  "description": "{{DESCRIPTION}}",
+  "license": "MIT",
+  "author": {
+    "name": "Figentra L.L.C",
+    "email": "dev@figentra.com",
+    "url": "https://figentra.com"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "wrangler deploy --dry-run",
+    "dev": "wrangler dev",
+    "clean": "rimraf dist .turbo .wrangler",
+    "check-types": "tsc --noEmit",
+    "lint": "oxlint . --max-warnings=0",
+    "lint:fix": "oxlint . --fix",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage --passWithNoTests",
+    "deploy:dev": "wrangler deploy --env development",
+    "deploy:staging": "wrangler deploy --env staging",
+    "deploy:production": "wrangler deploy --env production"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "catalog:",
+    "@cloudflare/vitest-pool-workers": "catalog:",
+    "@stackra/testing": "workspace:*",
+    "@stackra/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "rimraf": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:",
+    "wrangler": "catalog:"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

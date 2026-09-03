@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "expo.vscode-expo-tools",
+    "svelte.svelte-vscode",
+    "usernamehw.errorlens",
+    "yoavbls.pretty-ts-errors",
+    "Orta.vscode-jest",
+    "eamodio.gitlens",
+    "PKief.material-icon-theme"
+  ],
+  "unwantedRecommendations": [
+    "hashicorp.terraform",
+    "ms-python.python"
+  ]
+}

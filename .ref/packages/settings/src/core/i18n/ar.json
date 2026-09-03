@@ -1,0 +1,43 @@
+{
+  "hub": {
+    "title": "الإعدادات",
+    "description": "اختر فئة لتكوينها.",
+    "empty": "لا توجد مجموعات إعدادات مسجّلة.",
+    "open_cta": "فتح"
+  },
+  "group_page": {
+    "back_cta": "العودة إلى الإعدادات",
+    "not_found_title": "المجموعة غير موجودة",
+    "not_found_description": "هذه المجموعة من الإعدادات غير مسجّلة."
+  },
+  "section_page": {
+    "not_found_title": "القسم غير موجود",
+    "not_found_description": "هذا القسم لا ينتمي إلى مجموعة الإعدادات الحالية."
+  },
+  "select_field": {
+    "no_selection": "غير محدد",
+    "open_hint": "يفتح قائمة الاختيار.",
+    "selected_indicator": "محدد"
+  },
+  "text_field": {
+    "empty_hint": "اضغط للضبط",
+    "open_hint": "يفتح المحرر."
+  },
+  "permission_field": {
+    "manage_hint": "قم بالإدارة في إعدادات النظام.",
+    "press_hint": "يفتح إعدادات النظام.",
+    "state_granted": "مُمنوح",
+    "state_denied": "مرفوض — قم بالإدارة في إعدادات النظام",
+    "state_undetermined": "لم يُطلب بعد"
+  },
+  "field_editor": {
+    "save_label": "حفظ",
+    "cancel_label": "إلغاء",
+    "not_found_title": "الحقل غير موجود",
+    "not_found_description": "هذا الحقل لا ينتمي إلى مجموعة الإعدادات الحالية.",
+    "errors": {
+      "invalid_number": "أدخل رقمًا صالحًا.",
+      "invalid_json": "أدخل JSON صالحًا."
+    }
+  }
+}

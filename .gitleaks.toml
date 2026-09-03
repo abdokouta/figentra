@@ -12,5 +12,8 @@ description = "Generated/example identifiers that are intentionally non-secret."
 paths = [
   '''(^|/)\.ref/''',
   '''(^|/)docs/''',
-  '''(^|/)\.kiro/'''
+  '''(^|/)\.kiro/''',
+  # Machine-owned infrastructure output — catalog + generated compose + tf
+  # plans. Regenerated on demand; never carries live secrets by contract.
+  '''(^|/)infrastructure/\.generated/'''
 ]

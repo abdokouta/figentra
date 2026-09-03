@@ -9,9 +9,11 @@ by more than one infrastructure subsystem.
 
 Discovers local and configured external deployables from `cloud.yaml` and emits:
 
-`infrastructure/catalog.json`
+`infrastructure/.generated/catalog.json`
 
-Terraform and Docker both consume this generated catalog.
+Terraform and Docker both consume this generated catalog. The `.generated/`
+folder is machine-owned + gitignored; regenerate with `pnpm run catalog` before
+every Terraform plan or Docker Compose generation.
 
 Docker-only scripts belong in `infrastructure/docker/scripts/`.
 Terraform-only scripts belong in `infrastructure/terraform/scripts/`.

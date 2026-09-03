@@ -19,10 +19,10 @@ Read alongside:
 
 - [`data-ownership.md`](data-ownership.md) — the sibling row-ownership contract
   that delegates cross-service cascade to this doc.
-- [`observability-signals.md`](observability-signals.md) — the parallel
+- [`observability-signals.md`](../../.ref/steering/observability-signals.md) — the parallel
   three-signal contract that services already emit through `@stackra/events`
   (the workspace event bus). Same substrate, different payloads.
-- [`events-authoring.md`](events-authoring.md) — the frontend sibling; the
+- [`events-authoring.md`](../../.ref/steering/events-authoring.md) — the frontend sibling; the
   three-pillar rule (constant + typed payload + discovery docblock) applies
   identically to backend TypeScript event catalogs.
 
@@ -362,9 +362,9 @@ suite (every listener ships a Vitest test that asserts idempotency).
   same event fanout shape applied to audit + activity.
 - Steering — [`data-ownership.md`](data-ownership.md) — sibling ownership
   contract; this doc's Rule 3 satisfies its Rule 3.
-- Steering — [`observability-signals.md`](observability-signals.md) — audit +
+- Steering — [`observability-signals.md`](../../.ref/steering/observability-signals.md) — audit +
   activity fanout via the same event substrate.
-- Steering — [`events-authoring.md`](events-authoring.md) — three-pillar event
+- Steering — [`events-authoring.md`](../../.ref/steering/events-authoring.md) — three-pillar event
   rule (constant + payload type + docblock).
 - Package — `@stackra/events` — the event bus (Cloudflare Queues fanout) every
   event routes through.

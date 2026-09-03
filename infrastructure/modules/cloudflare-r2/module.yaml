@@ -1,0 +1,43 @@
+# =============================================================================
+# @file infrastructure/modules/cloudflare-r2/module.yaml
+# @description Cloudflare R2 object-storage binding.
+#
+# Machine-readable infrastructure module manifest. Validated against
+# infrastructure/modules/schema/module.v1.json at CI time.
+#
+# @security No secrets. Env-var values come from Doppler at runtime;
+#   this file only declares the contract (env-var names + source expressions).
+# =============================================================================
+name: cloudflare-r2
+version: "1.0.0"
+kind: infrastructure-module
+category: cloudflare
+maturity: stable
+description: Cloudflare R2 object-storage binding. Provisions an R2 bucket per deployable for file/blob storage compatible with the S3 API.
+provides: ["cloudflare.r2"]
+consumes: []
+runtime_targets:
+  terraform: terraform.tf
+  docker: null
+  wrangler: wrangler.jsonc.tmpl
+schema:
+  type: object
+  properties:
+    bucket_name:
+      type: string
+      pattern: "^[a-z][a-z0-9-]{0,62}$"
+      description: R2 bucket name.
+    allowed_origins:
+      type: array
+      items:
+        type: string
+      default: []
+      description: CORS origins.
+  required: ["bucket_name"]
+env_vars:
+  - name: R2_BUCKET_NAME
+    description: R2 bucket name.
+    source: module.config.bucket_name
+  - name: R2_ACCOUNT_ID
+    description: Cloudflare account hosting the bucket.
+    source: terraform_output.r2_account_id

@@ -1,0 +1,57 @@
+# =============================================================================
+# @file infrastructure/modules/meilisearch/module.yaml
+# @description Meilisearch full-text search engine.
+#
+# Machine-readable infrastructure module manifest. Validated against
+# infrastructure/modules/schema/module.v1.json at CI time.
+#
+# @security No secrets. Env-var values come from Doppler at runtime;
+#   this file only declares the contract (env-var names + source expressions).
+# =============================================================================
+name: meilisearch
+version: "1.0.0"
+kind: infrastructure-module
+category: search
+maturity: beta
+description: "Meilisearch full-text search engine. Provisions a Meilisearch instance (managed cloud in prod, Docker locally) and injects the host URL + API key."
+provides: ["search.meilisearch"]
+consumes: []
+runtime_targets:
+  terraform: terraform.tf
+  docker: compose.yaml
+  wrangler: null
+schema:
+  type: object
+  properties:
+    indexes:
+      type: array
+      items:
+        type: object
+        properties:
+          uid:
+            type: string
+            description: Index UID.
+          primary_key:
+            type: string
+            default: id
+            description: Primary key field.
+          searchable_attributes:
+            type: array
+            items:
+              type: string
+          filterable_attributes:
+            type: array
+            items:
+              type: string
+          sortable_attributes:
+            type: array
+            items:
+              type: string
+        required: ["uid"]
+env_vars:
+  - name: MEILISEARCH_HOST
+    description: Meilisearch instance URL.
+    source: terraform_output.meilisearch_host
+  - name: MEILISEARCH_API_KEY
+    description: Admin API key (from Doppler).
+    source: terraform_output.meilisearch_api_key

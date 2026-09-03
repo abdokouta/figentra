@@ -1,0 +1,32 @@
+{
+  "$schema": "../../../.ref/schemas/catalog.v1.json",
+  "name": "@stackra/coordinator",
+  "tier": "framework",
+  "surfaces": ["core", "react", "testing"],
+  "kind": "framework-plumbing",
+  "purpose": "Cross-tab coordination for browser apps — leader election, distributed locks over Web Locks + BroadcastChannel, and event relay across tabs.",
+  "capabilities": [
+    "Leader election across browser tabs",
+    "Compare-and-swap locks (Web Locks API with localStorage fallback)",
+    "BroadcastChannel event relay",
+    "Deduplicated cross-tab side effects (sync, push, refresh)",
+    "React hooks: useIsLeader, useLock",
+    "Testing subpath with in-memory coordinator"
+  ],
+  "when_to_use": "Deduplicating side effects (sync push, refresh token rotation, notification click) across multiple browser tabs.",
+  "when_not_to_use": "For single-tab pub/sub use @stackra/events; for persistent job scheduling use @stackra/scheduler.",
+  "peer_deps": [
+    "@stackra/container",
+    "@stackra/contracts",
+    "@stackra/events",
+    "@stackra/support",
+    "@stackra/testing",
+    "react",
+    "reflect-metadata"
+  ],
+  "backend_pair": null,
+  "size_gzip_kb": {},
+  "maturity": "beta",
+  "owning_agent": "framework-core-builder",
+  "docs": ["packages/framework/src/coordinator/README.md"]
+}

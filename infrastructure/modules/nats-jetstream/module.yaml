@@ -1,0 +1,55 @@
+# =============================================================================
+# @file infrastructure/modules/nats-jetstream/module.yaml
+# @description NATS JetStream event bus.
+#
+# Machine-readable infrastructure module manifest. Validated against
+# infrastructure/modules/schema/module.v1.json at CI time.
+#
+# @security No secrets. Env-var values come from Doppler at runtime;
+#   this file only declares the contract (env-var names + source expressions).
+# =============================================================================
+name: nats-jetstream
+version: "1.0.0"
+kind: infrastructure-module
+category: messaging
+maturity: stable
+description: NATS JetStream event bus. Provisions streams + consumers for internal async messaging between services per ADR-0058. Local dev runs NATS in Docker.
+provides: ["messaging.nats", "messaging.jetstream"]
+consumes: []
+runtime_targets:
+  terraform: terraform.tf
+  docker: compose.yaml
+  wrangler: null
+schema:
+  type: object
+  properties:
+    streams:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+          subjects:
+            type: array
+            items:
+              type: string
+          retention:
+            type: string
+            enum: ["limits", "interest", "workqueue"]
+            default: limits
+          max_age:
+            type: string
+            default: "72h"
+        required: ["name", "subjects"]
+    consumer_group:
+      type: string
+      description: Durable consumer name.
+  required: ["consumer_group"]
+env_vars:
+  - name: NATS_URL
+    description: NATS server connection URL.
+    source: terraform_output.nats_url
+  - name: NATS_CONSUMER_GROUP
+    description: Durable consumer group.
+    source: module.config.consumer_group

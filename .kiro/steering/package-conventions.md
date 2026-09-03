@@ -25,6 +25,29 @@ Every package has, at minimum:
 - `README.md`.
 - `src/core/index.ts` — the public API (package-owned symbols only).
 
+## Figentra platform package standards
+
+Codified standards for all tier-1 platform packages under `packages/*`:
+
+1. **Package naming convention**:
+   - Platform capability packages are named `@figentra/<capability>` (e.g., `@figentra/health`, `@figentra/swagger`, `@figentra/observability`, `@figentra/messaging`, `@figentra/security`, `@figentra/queue`).
+   - Do NOT use runtime or framework prefixes like `@figentra/nestjs-*` or `@figentra/worker-*` for top-level capability packages. Capability packages export multi-runtime subpaths if needed (e.g., `@figentra/health/nest`, `@figentra/health/worker`) or provide top-level adapters.
+
+2. **Build toolchain**:
+   - All packages use **`tsup`** as their standard build tool. `tsup` manages bundling, TypeScript type declaration generation (`.d.ts`), and SWC/esbuild compilation in a unified pass.
+   - `package.json` scripts MUST declare `"build": "tsup"`.
+
+3. **Decorator & metadata flags**:
+   - Any package exporting or consuming NestJS/DI components MUST ensure `tsconfig.json` has:
+     ```json
+     "experimentalDecorators": true,
+     "emitDecoratorMetadata": true
+     ```
+
+4. **Pre-compilation boundary (Dist vs JIT)**:
+   - Workspace packages MUST compile to `dist/` before execution by microservices (`services/*`) or workers (`workers/*`).
+   - Cross-package JIT compilation across workspace boundaries is strictly forbidden to guarantee clean dependency boundaries and prevent decorator metadata mangling.
+
 ## Frontend tooling standards
 
 Every workspace TypeScript package converges on the same three build / test

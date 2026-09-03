@@ -1,2 +1,16 @@
 #!/usr/bin/env sh
-pnpm check
+# =============================================================================
+# @file .husky/pre-push
+# @description Local pre-push verification gate.
+#
+# Runs the lightweight `pnpm verify` (format:check + lint + typecheck) rather
+# than the full `pnpm check` (which additionally runs docker/terraform/CI
+# contract validation + the workers-check + the standards suite).
+#
+# The heavy `pnpm check` runs at CI time (`.gitlab-ci.yml`), not per-push.
+# Splitting the gate keeps push latency < 15s so developers keep the hook
+# enabled instead of routinely bypassing with `--no-verify`.
+#
+# @governance ADR-0084 codifies the pre-push vs CI verification split.
+# =============================================================================
+pnpm run verify

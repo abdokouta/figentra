@@ -1,0 +1,51 @@
+# =============================================================================
+# @file infrastructure/modules/cron/module.yaml
+# @description Scheduled job execution.
+#
+# Machine-readable infrastructure module manifest. Validated against
+# infrastructure/modules/schema/module.v1.json at CI time.
+#
+# @security No secrets. Env-var values come from Doppler at runtime;
+#   this file only declares the contract (env-var names + source expressions).
+# =============================================================================
+name: cron
+version: "1.0.0"
+kind: infrastructure-module
+category: background
+maturity: beta
+description: Scheduled job execution. Provisions Cloudflare Cron Triggers (Workers) or system-level cron (containers). Each job declares a crontab schedule and a target HTTP endpoint the scheduler hits.
+provides: ["background.cron"]
+consumes: []
+runtime_targets:
+  terraform: terraform.tf
+  docker: compose.yaml
+  wrangler: wrangler.jsonc.tmpl
+schema:
+  type: object
+  properties:
+    jobs:
+      type: array
+      minItems: 1
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            description: Human-readable job name.
+          schedule:
+            type: string
+            description: Crontab expression (5-field).
+          target:
+            type: string
+            description: HTTP path the scheduler invokes.
+          timeout_seconds:
+            type: integer
+            minimum: 1
+            default: 60
+            description: Max execution time.
+        required: ["schedule", "target"]
+  required: ["jobs"]
+env_vars:
+  - name: CRON_JOBS
+    description: JSON-encoded job definitions.
+    source: module.config.jobs

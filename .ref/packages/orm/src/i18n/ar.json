@@ -1,0 +1,5 @@
+{
+  "entity_not_found": "{entity} بالمعرف \"{id}\" غير موجود",
+  "no_entity_decorator": "لم يتم العثور على @Entity() على \"{name}\". قم بتطبيق @Entity() أولاً.",
+  "slug_taken": "الرابط \"{slug}\" مستخدم بالفعل"
+}

@@ -564,7 +564,7 @@ library" — the framework brand is what consumers install.
   naming rules (framework layer + scopes).
 - [`docs/monorepo-structure.md`](../../docs/monorepo-structure.md) — the
   frontend/backend split decision + repo layout.
-- [`.kiro/steering/frontend-packages.md`](frontend-packages.md) — package
+- [`.ref/steering/frontend-packages.md`](../../.ref/steering/frontend-packages.md) — package
   architecture (ADR-0023).
 - [`README.md`](../../README.md) — root onboarding walkthrough.
 

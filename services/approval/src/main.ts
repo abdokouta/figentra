@@ -14,6 +14,7 @@ import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 import { createFigentraObservability } from "@figentra/observability/nest";
 import { SERVICE_NAME, SERVICE_VERSION } from "./constants/service.constant";
+import { SwaggerSetupService } from "@figentra/swagger";
 
 /**
  * Bootstraps the HTTP application and applies platform-wide invariants.
@@ -53,6 +54,7 @@ async function bootstrap(): Promise<void> {
   app.enableShutdownHooks();
 
   const port = Number(process.env.PORT ?? 3000);
+  app.get(SwaggerSetupService).setup(app);
   await app.listen(port, '0.0.0.0');
 }
 

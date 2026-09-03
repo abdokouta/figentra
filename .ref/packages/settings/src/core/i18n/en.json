@@ -1,0 +1,43 @@
+{
+  "hub": {
+    "title": "Settings",
+    "description": "Choose a category to configure.",
+    "empty": "No settings groups registered.",
+    "open_cta": "Open"
+  },
+  "group_page": {
+    "back_cta": "Back to Settings",
+    "not_found_title": "Group not found",
+    "not_found_description": "This settings group is not registered."
+  },
+  "section_page": {
+    "not_found_title": "Section not found",
+    "not_found_description": "This section is not part of the current settings group."
+  },
+  "select_field": {
+    "no_selection": "Not set",
+    "open_hint": "Opens a picker.",
+    "selected_indicator": "Selected"
+  },
+  "text_field": {
+    "empty_hint": "Tap to set",
+    "open_hint": "Opens the editor."
+  },
+  "permission_field": {
+    "manage_hint": "Manage in system settings.",
+    "press_hint": "Opens the system settings.",
+    "state_granted": "Granted",
+    "state_denied": "Denied — manage in system settings",
+    "state_undetermined": "Not yet requested"
+  },
+  "field_editor": {
+    "save_label": "Save",
+    "cancel_label": "Cancel",
+    "not_found_title": "Field not found",
+    "not_found_description": "This field is not part of the current settings group.",
+    "errors": {
+      "invalid_number": "Enter a valid number.",
+      "invalid_json": "Enter valid JSON."
+    }
+  }
+}

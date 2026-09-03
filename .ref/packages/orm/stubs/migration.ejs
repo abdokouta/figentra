@@ -1,0 +1,62 @@
+<%# ────────────────────────────────────────────────────────────────────────── %>
+<%# @stackra/nestjs-orm — Migration Stub Template                              %>
+<%#                                                                             %>
+<%# Available variables:                                                        %>
+<%#   - name      : Migration name suffix (e.g., 'CreateUsersTable')            %>
+<%#   - className : Full class name with timestamp prefix                       %>
+<%#   - timestamp : Timestamp string (YYYYMMDDHHmmss)                           %>
+<%#   - fileName  : Output file name                                            %>
+<%#   - Str       : @stackra/ts-support string utilities                        %>
+<%#                                                                             %>
+<%# Notes:                                                                      %>
+<%#   - Migrations extend MikroORM's Migration base class                       %>
+<%#   - Use this.addSql() for raw SQL statements                                %>
+<%#   - up() applies the migration forward                                      %>
+<%#   - down() reverses the migration (rollback)                                %>
+<%#   - Migrations are applied in timestamp order                               %>
+<%# ────────────────────────────────────────────────────────────────────────── %>
+/**
+ * @file <%= fileName %>
+ * @module @stackra/nestjs-orm/migrations
+ * @description Database migration: <%= name %>
+ *
+ *   Generated at: <%= new Date().toISOString() %>
+ */
+
+import { Migration } from '@mikro-orm/migrations';
+
+/**
+ * Migration: <%= name %>
+ *
+ * Apply with:  `stackra migration:run`
+ * Revert with: `stackra migration:rollback`
+ */
+export class <%= className %> extends Migration {
+  /**
+   * Apply the migration (forward).
+   *
+   * Add SQL statements using `this.addSql()`.
+   * Each statement runs within the migration's transaction.
+   */
+  public async up(): Promise<void> {
+    // Example:
+    // this.addSql(`
+    //   CREATE TABLE "my_table" (
+    //     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    //     "name" VARCHAR(255) NOT NULL,
+    //     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    //     CONSTRAINT "my_table_pkey" PRIMARY KEY ("id")
+    //   );
+    // `);
+  }
+
+  /**
+   * Reverse the migration (rollback).
+   *
+   * Undo everything that `up()` did — typically DROP TABLE or ALTER TABLE.
+   */
+  public async down(): Promise<void> {
+    // Example:
+    // this.addSql('DROP TABLE IF EXISTS "my_table";');
+  }
+}

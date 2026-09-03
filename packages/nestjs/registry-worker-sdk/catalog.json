@@ -1,5 +1,0 @@
-{
-  "package": { "name": "@figentra/registry" },
-  "purpose": "NestJS producer-side integration for the Figentra Application Registry, including declarative metadata, discovery, and manifest registration.",
-  "peer_deps": []
-}

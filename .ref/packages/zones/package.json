@@ -1,0 +1,119 @@
+{
+  "name": "@stackra/zones",
+  "version": "3.0.0",
+  "description": "Zone / slot extensibility runtime for the Stackra framework — DI-owned zone registry, before/after/replace ordering, React + native bindings for <Zone> / <FormFieldZone> / <TableColumnZone>.",
+  "license": "MIT",
+  "author": {
+    "name": "Figentra L.L.C",
+    "email": "dev@figentra.com",
+    "url": "https://figentra.com"
+  },
+  "keywords": [
+    "stackra",
+    "zones",
+    "slots",
+    "extensibility",
+    "react",
+    "react-native"
+  ],
+  "homepage": "https://github.com/academorix/academorix-frontend/tree/main/packages/framework/src/zones#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/stackra/frontend/framework.git",
+    "directory": "src/zones"
+  },
+  "bugs": {
+    "url": "https://github.com/academorix/academorix-frontend/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.js"
+    },
+    "./native": {
+      "types": "./dist/native.d.ts",
+      "import": "./dist/native.mjs",
+      "require": "./dist/native.js"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "import": "./dist/testing.mjs",
+      "require": "./dist/testing.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rimraf dist .turbo",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage --passWithNoTests"
+  },
+  "peerDependencies": {
+    "@stackra/container": "workspace:^",
+    "@stackra/contracts": "workspace:^",
+    "@stackra/decorators": "workspace:^",
+    "@stackra/ui": "workspace:^",
+    "react": "catalog:",
+    "react-native": "*",
+    "reflect-metadata": "catalog:"
+  },
+  "peerDependenciesMeta": {
+    "@stackra/decorators": {
+      "optional": true
+    },
+    "@stackra/ui": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-native": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@stackra/container": "workspace:*",
+    "@stackra/contracts": "workspace:*",
+    "@stackra/decorators": "workspace:*",
+    "@stackra/testing": "workspace:*",
+    "@stackra/tsup-config": "^1.0.2",
+    "@stackra/typescript-config": "^1.0.0",
+    "@stackra/ui": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "jsdom": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-native": "catalog:",
+    "reflect-metadata": "catalog:",
+    "rimraf": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

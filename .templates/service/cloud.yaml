@@ -1,0 +1,56 @@
+# =============================================================================
+# @file cloud.yaml
+# @description Deployment manifest for the {{SLUG}} service.
+#   Terraform, Docker, and CI read this file to provision infrastructure,
+#   generate Compose topology, and validate deployment contracts.
+#
+# @security No secrets. Runtime secrets come from Doppler.
+# =============================================================================
+
+kind: service
+slug: {{SLUG}}
+brand: {{BRAND}}
+plane: {{PLANE}}
+runtime: cloudflare-container
+tier: shared
+source:
+  type: local
+  path: {{SOURCE_PATH}}
+subdomain: {{SLUG}}
+cloudflare_name: {{BRAND}}-{{SLUG}}
+doppler_project: {{BRAND}}-{{SLUG}}
+
+container:
+  port: {{PORT}}
+  health_path: /health/live
+  readiness_path: /health/ready
+
+# Infrastructure capability modules — add entries here as the service
+# needs new infrastructure capabilities.
+modules: []
+
+branch:
+  development: develop
+  staging: staging
+  production: main
+
+env_vars:
+  development:
+    LOG_LEVEL: debug
+  staging:
+    LOG_LEVEL: info
+  production:
+    LOG_LEVEL: warn
+
+docker:
+  enabled: true
+  context: .
+  dockerfile: {{SOURCE_PATH}}/Dockerfile
+  target: runtime
+  container_port: {{PORT}}
+  network: figentra
+
+tags:
+  service: {{SLUG}}
+  plane: {{PLANE}}
+  vendor: {{BRAND}}

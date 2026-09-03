@@ -1,0 +1,9 @@
+{
+  "example": {
+    "title": "Examples",
+    "not_found": "Example not found",
+    "created": "Example created successfully",
+    "updated": "Example updated successfully",
+    "deleted": "Example deleted successfully"
+  }
+}

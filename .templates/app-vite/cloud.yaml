@@ -1,0 +1,65 @@
+# =============================================================================
+# Figentra deployable manifest — landing-page web application
+# =============================================================================
+#
+# @file apps/landing-page/cloud.yaml
+# @description Declarative build/deployment contract for the Vite + React +
+#   HeroUI application. Terraform owns durable routing/resources while the
+#   frontend pipeline produces the immutable application artifact.
+#
+# @security No secrets are committed here. Browser-visible variables are not
+#   secrets and must be treated as public at build time.
+# =============================================================================
+
+# Deployable kind used by the catalog collector.
+kind: app
+# Immutable application slug.
+slug: {{SLUG}}
+# Owning product brand.
+brand: {{BRAND}}
+# Platform plane.
+plane: product
+# Runtime for the built web application.
+runtime: cloudflare-assets
+# Shared platform deployment tier.
+tier: shared
+# Monorepo source location.
+source:
+  type: local
+  path: {{SOURCE_PATH}}
+# Public hostname label.
+subdomain: {{SUBDOMAIN}}
+# Stable Cloudflare deployment identity.
+cloudflare_name: {{BRAND}}-{{SLUG}}
+# Runtime/build configuration project in Doppler.
+doppler_project: {{BRAND}}-{{SLUG}}
+# Infrastructure capability modules consumed by this deployable.
+modules:
+  - use: sentry-project
+    version: "^1.0.0"
+    config:
+      platform: javascript
+      traces_sample_rate: 0.1
+
+  - use: betterstack-uptime
+    version: "^1.0.0"
+    config:
+      probe_url: /
+# Branch promotion contract.
+branch:
+  development: develop
+  staging: staging
+  production: main
+# Safe browser/build configuration by environment.
+env_vars:
+  development:
+    LOG_LEVEL: debug
+  staging:
+    LOG_LEVEL: info
+  production:
+    LOG_LEVEL: warn
+# Ownership metadata.
+tags:
+  service: {{SLUG}}
+  plane: product
+  vendor: {{BRAND}}

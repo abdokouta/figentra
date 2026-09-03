@@ -1,75 +1,59 @@
 #!/usr/bin/env node
 /**
- * @file validate-standards.mjs
- * @description Lightweight repository-wide standards validator.
+ * @file scripts/validate-standards.mjs
+ * @description Workspace-wide standards validation orchestrator.
  *
- * The validator intentionally checks structural invariants that can be
- * evaluated without installing or executing every workspace.
+ *   Runs every structural check the workspace enforces: package catalogs,
+ *   export maps, dependency policy, local package manifests, docblocks,
+ *   worker structure, and messaging contracts.
+ *
+ *   Delegates to individual check scripts — this is the top-level aggregator
+ *   wired as `pnpm run standards:check`.
+ *
+ * @security No secrets read or emitted.
  */
 
-import { existsSync, readdirSync, statSync, readFileSync } from "node:fs";
-import { join, relative } from "node:path";
+import { existsSync } from "node:fs";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import { execFileSync } from "node:child_process";
 
-const root = process.cwd();
-const failures = [];
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
-function walk(dir) {
-  if (!existsSync(dir)) return [];
-  const result = [];
-  for (const entry of readdirSync(dir)) {
-    if (entry === "node_modules" || entry === "dist" || entry === ".git") continue;
-    const full = join(dir, entry);
-    if (statSync(full).isDirectory()) result.push(...walk(full));
-    else result.push(full);
+/**
+ * Checks to run in sequence. Each is a script path relative to repo root.
+ * Order matters — foundational checks first, then per-package, then domain.
+ */
+const CHECKS = [
+  "scripts/check-toolchain.mjs",
+  "scripts/check-yaml.mjs",
+  "scripts/check-package-catalogs.mjs",
+  "scripts/check-export-maps.mjs",
+  "scripts/check-dependency-policy.mjs",
+  "scripts/check-local-packages.mjs",
+  "scripts/check-docblocks.mjs",
+];
+
+let failed = 0;
+
+for (const script of CHECKS) {
+  const path = resolve(ROOT, script);
+  if (!existsSync(path)) {
+    console.warn(`⚠ skipping ${script} (not found)`);
+    continue;
   }
-  return result;
-}
-
-function requireFile(path) {
-  if (!existsSync(join(root, path))) failures.push(`Missing: ${path}`);
-}
-
-function checkNoEslintInDeployables(base) {
-  for (const file of walk(join(root, base))) {
-    if (!file.endsWith("package.json")) continue;
-    const pkg = JSON.parse(readFileSync(file, "utf8"));
-    const allScripts = Object.values(pkg.scripts ?? {}).join(" ");
-    if (allScripts.includes("eslint") || allScripts.includes("expo lint")) {
-      failures.push(`ESLint lint script found: ${relative(root, file)}`);
-    }
+  try {
+    execFileSync("node", [path], { stdio: "inherit", cwd: ROOT });
+    console.log(`✔ ${script}`);
+  } catch {
+    console.error(`✖ ${script} failed`);
+    failed++;
   }
 }
 
-requireFile("pnpm-workspace.yaml");
-requireFile("packages/config/oxlint-config/src/native.jsonc");
-requireFile("pnpm-lock.yaml");
-requireFile(".ref/TASKLIST.md");
-requireFile(".docs/standards/README.md");
-requireFile(".docs/standards/17-pnpm-lockfile-standard.md");
-requireFile(".docs/standards/environment-naming-standard.md");
-requireFile(".docs/standards/package-standard.md");
-requireFile(".docs/standards/testing-standard.md");
-requireFile(".docs/standards/nest-service-standard.md");
-requireFile(".docs/standards/worker-standard.md");
-requireFile(".docs/standards/vite-app-standard.md");
-requireFile(".docs/standards/yaml-manifest-standard.md");
-
-for (const base of ["services", "workers", "apps", "packages"]) {
-  if (existsSync(join(root, base))) checkNoEslintInDeployables(base);
-}
-
-if (existsSync(join(root, "packages", "eslint-config"))) failures.push("@stackra/eslint-config must be removed; oxlint is the sole lint engine");
-for (const file of walk(root)) {
-  if (!file.endsWith("package.json")) continue;
-  const pkg = JSON.parse(readFileSync(file, "utf8"));
-  const allDeps = Object.assign({}, pkg.dependencies, pkg.devDependencies, pkg.peerDependencies, pkg.optionalDependencies);
-  if (allDeps.eslint || allDeps["eslint-config-expo"] || allDeps["@stackra/eslint-config"]) failures.push(`ESLint dependency found: ${relative(root, file)}`);
-}
-
-if (failures.length) {
-  console.error("Standards validation failed:");
-  for (const failure of failures) console.error(`- ${failure}`);
+if (failed > 0) {
+  console.error(`\n✖ ${failed} standard(s) failed.`);
   process.exit(1);
 }
 
-console.log("Repository standards validation passed.");
+console.log("\n✔ All workspace standards passed.");

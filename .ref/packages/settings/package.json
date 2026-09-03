@@ -1,0 +1,177 @@
+{
+  "name": "@stackra/settings",
+  "version": "1.0.2",
+  "description": "Unified settings framework for the Stackra platform — registry-based with @Setting()/@Field()/@Group()/@Section() decorators, multi-driver persistence over @stackra/storage + @stackra/http, sync-cache + async-hydrate + debounced persist, real-time broadcast via @stackra/realtime, and HeroUI-driven admin UI.",
+  "license": "MIT",
+  "author": {
+    "name": "Figentra L.L.C",
+    "email": "dev@figentra.com",
+    "url": "https://figentra.com"
+  },
+  "keywords": [
+    "stackra",
+    "settings",
+    "configuration",
+    "registry",
+    "dto",
+    "decorators",
+    "react",
+    "cross-platform"
+  ],
+  "homepage": "https://gitlab.com/stackra/frontend/platform/-/tree/main/src/settings#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/stackra/frontend/platform.git",
+    "directory": "src/settings"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/stackra/frontend/platform/-/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.js"
+    },
+    "./native": {
+      "types": "./dist/native.d.ts",
+      "import": "./dist/native.mjs",
+      "require": "./dist/native.js"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "import": "./dist/testing.mjs",
+      "require": "./dist/testing.js"
+    },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "import": "./dist/config.mjs",
+      "require": "./dist/config.js"
+    }
+  },
+  "files": [
+    "config",
+    "dist",
+    "src/core/i18n",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rimraf dist .turbo",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage --passWithNoTests"
+  },
+  "peerDependencies": {
+    "@react-navigation/native": "*",
+    "@stackra/config": "^1.0.0",
+    "@stackra/container": "^1.0.0",
+    "@stackra/contracts": "^1.0.0",
+    "@stackra/decorators": "^1.0.0",
+    "@stackra/i18n": "^1.0.0",
+    "@stackra/navigation": "^1.0.0",
+    "@stackra/routing": "^1.0.0",
+    "@stackra/support": "^1.0.0",
+    "@stackra/ui": "^1.0.1",
+    "@stackra/zones": "^1.0.0",
+    "@tanstack/react-query": "catalog:",
+    "@vivtel/metadata": "catalog:",
+    "heroui-native": "catalog:",
+    "heroui-native-pro": "catalog:",
+    "react": "catalog:",
+    "react-native": "*",
+    "react-native-safe-area-context": "*",
+    "reflect-metadata": "catalog:"
+  },
+  "peerDependenciesMeta": {
+    "@react-navigation/native": {
+      "optional": true
+    },
+    "@stackra/i18n": {
+      "optional": true
+    },
+    "@stackra/navigation": {
+      "optional": true
+    },
+    "@stackra/routing": {
+      "optional": true
+    },
+    "@stackra/ui": {
+      "optional": true
+    },
+    "@stackra/zones": {
+      "optional": true
+    },
+    "@tanstack/react-query": {
+      "optional": true
+    },
+    "heroui-native": {
+      "optional": true
+    },
+    "heroui-native-pro": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-native": {
+      "optional": true
+    },
+    "react-native-safe-area-context": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@react-navigation/native": "catalog:",
+    "@stackra/config": "^1.0.0",
+    "@stackra/container": "^1.0.0",
+    "@stackra/contracts": "^1.0.0",
+    "@stackra/decorators": "^1.0.0",
+    "@stackra/i18n": "^1.0.0",
+    "@stackra/navigation": "^1.0.0",
+    "@stackra/routing": "^1.0.0",
+    "@stackra/support": "^1.0.0",
+    "@stackra/testing": "^1.0.0",
+    "@stackra/tsup-config": "^1.0.2",
+    "@stackra/typescript-config": "^1.0.0",
+    "@stackra/ui": "^1.0.1",
+    "@stackra/zones": "^1.0.0",
+    "@tanstack/query-core": "catalog:",
+    "@tanstack/react-query": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@vivtel/metadata": "catalog:",
+    "heroui-native": "catalog:",
+    "heroui-native-pro": "catalog:",
+    "jsdom": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-native": "catalog:",
+    "react-native-safe-area-context": "catalog:",
+    "reflect-metadata": "catalog:",
+    "rimraf": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

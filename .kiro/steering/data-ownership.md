@@ -21,7 +21,7 @@ Read alongside:
   (`tenant_id` / `application_id` / `scope_node_id`) every domain row satisfies.
 - [`cross-service-events.md`](cross-service-events.md) — the cascade contract
   this doc's Rule 3 delegates to.
-- [`observability-signals.md`](observability-signals.md) — the parallel
+- [`observability-signals.md`](../../.ref/steering/observability-signals.md) — the parallel
   three-signal contract that services already emit through `@stackra/events`
   (the workspace event bus).
 
@@ -405,7 +405,7 @@ parallel row-attribution enforcement layer.
   contract.
 - Steering — [`cross-service-events.md`](cross-service-events.md) — the cascade
   event contract Rule 3 delegates to.
-- Steering — [`observability-signals.md`](observability-signals.md) — parallel
+- Steering — [`observability-signals.md`](../../.ref/steering/observability-signals.md) — parallel
   three-signal contract via `@stackra/events`.
 - Package — `@stackra/database` — the canonical column helpers + schema utilities.
 - Package — `@stackra/events` — the event bus (Cloudflare Queues fanout).

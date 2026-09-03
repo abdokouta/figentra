@@ -1,0 +1,28 @@
+{
+  "$schema": "https://gist.githubusercontent.com/stackra-usr/766cbb0d72b6566fdc2642ffcb3d73ee/raw/manifest.schema.json",
+  "slug": "nestjs-link",
+  "version": "0.1.0",
+  "name": {
+    "en": "Nestjs Link"
+  },
+  "type": "core",
+  "description": {
+    "en": "NestJS link infrastructure module."
+  },
+  "author": {
+    "name": "Stackra L.L.C",
+    "email": "dev@stackra.com"
+  },
+  "events": {
+    "publishes": ["attached", "detached", "restored", "synced"],
+    "subscribes": []
+  },
+  "dependencies": ["link", "orm", "pubsub", "support"],
+  "support": {
+    "documentation": "https://docs.stackra.com/infra/nestjs-link",
+    "email": "dev@stackra.com"
+  },
+  "compatibility": {
+    "platform_version": ">=1.0.0"
+  }
+}

@@ -1,0 +1,39 @@
+# =============================================================================
+# @file cloud.yaml
+# @description Deployment manifest for the {{SLUG}} Worker.
+# @security No secrets. Runtime secrets come from Doppler/Wrangler secrets.
+# =============================================================================
+
+kind: worker
+slug: {{SLUG}}
+brand: {{BRAND}}
+plane: {{PLANE}}
+runtime: cloudflare-worker
+tier: shared
+source:
+  type: local
+  path: {{SOURCE_PATH}}
+subdomain: {{SLUG}}
+cloudflare_name: {{BRAND}}-{{SLUG}}
+doppler_project: {{BRAND}}-{{SLUG}}
+
+# Infrastructure capability modules.
+modules: []
+
+branch:
+  development: develop
+  staging: staging
+  production: main
+
+env_vars:
+  development:
+    LOG_LEVEL: debug
+  staging:
+    LOG_LEVEL: info
+  production:
+    LOG_LEVEL: warn
+
+tags:
+  service: {{SLUG}}
+  plane: {{PLANE}}
+  vendor: {{BRAND}}

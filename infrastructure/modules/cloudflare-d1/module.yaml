@@ -1,0 +1,41 @@
+# =============================================================================
+# @file infrastructure/modules/cloudflare-d1/module.yaml
+# @description Cloudflare D1 SQLite database binding.
+#
+# Machine-readable infrastructure module manifest. Validated against
+# infrastructure/modules/schema/module.v1.json at CI time.
+#
+# @security No secrets. Env-var values come from Doppler at runtime;
+#   this file only declares the contract (env-var names + source expressions).
+# =============================================================================
+name: cloudflare-d1
+version: "1.0.0"
+kind: infrastructure-module
+category: cloudflare
+maturity: stable
+description: Cloudflare D1 SQLite database binding. Provisions a D1 database per deployable and injects the binding name + database ID into the Worker runtime.
+provides: ["cloudflare.d1"]
+consumes: []
+runtime_targets:
+  terraform: terraform.tf
+  docker: null
+  wrangler: wrangler.jsonc.tmpl
+schema:
+  type: object
+  properties:
+    database_name:
+      type: string
+      pattern: "^[a-z][a-z0-9_-]{0,62}$"
+      description: D1 database name.
+    migrations_dir:
+      type: string
+      default: database/migrations
+      description: Relative path to the SQL migration folder.
+  required: ["database_name"]
+env_vars:
+  - name: D1_DATABASE_ID
+    description: Cloudflare D1 database UUID.
+    source: terraform_output.d1_database_id
+  - name: D1_DATABASE_NAME
+    description: D1 database name.
+    source: module.config.database_name

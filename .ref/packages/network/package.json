@@ -1,0 +1,129 @@
+{
+  "name": "@stackra/network",
+  "version": "3.0.0",
+  "description": "Network detection for the Stackra framework — online/offline + connection-type/speed, browser/native/node detectors, event emission, and React bindings.",
+  "license": "MIT",
+  "author": {
+    "name": "Figentra L.L.C",
+    "email": "dev@figentra.com",
+    "url": "https://figentra.com"
+  },
+  "keywords": [
+    "stackra",
+    "network",
+    "online",
+    "offline",
+    "connectivity",
+    "react",
+    "react-native"
+  ],
+  "homepage": "https://github.com/academorix/academorix-frontend/tree/main/packages/framework/src/network#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/stackra/frontend/framework.git",
+    "directory": "src/network"
+  },
+  "bugs": {
+    "url": "https://github.com/academorix/academorix-frontend/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "sideEffects": [
+    "./dist/index.js",
+    "./dist/index.mjs"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.js"
+    },
+    "./native": {
+      "types": "./dist/native.d.ts",
+      "import": "./dist/native.mjs",
+      "require": "./dist/native.js"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "import": "./dist/testing.mjs",
+      "require": "./dist/testing.js"
+    }
+  },
+  "files": [
+    "config",
+    "dist",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rimraf dist .turbo",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage --passWithNoTests"
+  },
+  "peerDependencies": {
+    "@react-native-community/netinfo": "*",
+    "@stackra/container": "workspace:^",
+    "@stackra/contracts": "workspace:^",
+    "@stackra/logger": "workspace:^",
+    "@stackra/support": "workspace:^",
+    "@stackra/testing": "workspace:^",
+    "@stackra/ui": "workspace:^",
+    "react": "catalog:",
+    "react-native": "*",
+    "reflect-metadata": "catalog:"
+  },
+  "peerDependenciesMeta": {
+    "@react-native-community/netinfo": {
+      "optional": true
+    },
+    "@stackra/testing": {
+      "optional": true
+    },
+    "@stackra/ui": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-native": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@react-native-community/netinfo": "catalog:",
+    "@stackra/container": "workspace:*",
+    "@stackra/contracts": "workspace:*",
+    "@stackra/logger": "workspace:*",
+    "@stackra/support": "workspace:*",
+    "@stackra/testing": "workspace:*",
+    "@stackra/tsup-config": "^1.0.2",
+    "@stackra/typescript-config": "^1.0.0",
+    "@stackra/ui": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "react": "catalog:",
+    "react-native": "catalog:",
+    "reflect-metadata": "catalog:",
+    "rimraf": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

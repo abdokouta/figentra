@@ -1,0 +1,44 @@
+# =============================================================================
+# @file infrastructure/modules/redis-cache/module.yaml
+# @description Redis cache and session store.
+#
+# Machine-readable infrastructure module manifest. Validated against
+# infrastructure/modules/schema/module.v1.json at CI time.
+#
+# @security No secrets. Env-var values come from Doppler at runtime;
+#   this file only declares the contract (env-var names + source expressions).
+# =============================================================================
+name: redis-cache
+version: "1.0.0"
+kind: infrastructure-module
+category: storage
+maturity: stable
+description: "Redis cache and session store. Provisions a Redis instance (Upstash / ElastiCache in prod, Docker locally) for caching, rate limiting, and ephemeral state."
+provides: ["cache.redis"]
+consumes: []
+runtime_targets:
+  terraform: terraform.tf
+  docker: compose.yaml
+  wrangler: null
+schema:
+  type: object
+  properties:
+    databases:
+      type: array
+      items:
+        type: string
+      default: ["cache"]
+      description: Named logical databases.
+    max_memory_mb:
+      type: integer
+      minimum: 16
+      default: 256
+      description: Max memory in MB (prod).
+    eviction_policy:
+      type: string
+      enum: ["allkeys-lru", "volatile-lru", "noeviction"]
+      default: allkeys-lru
+env_vars:
+  - name: REDIS_URL
+    description: Redis connection URL.
+    source: terraform_output.redis_url

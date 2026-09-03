@@ -1,0 +1,88 @@
+# =============================================================================
+# Figentra configuration manifest
+# =============================================================================
+#
+# @file apps/{{SLUG}}/.ci/{{SLUG}}-build-submit.yml
+# @description This file is part of the Figentra declarative configuration
+#   system. It is consumed by the appropriate build, deployment, CI, local
+#   development, or release tooling. It is NOT a source of business logic.
+#
+# @security Secrets, private keys, credentials, access tokens, database URLs,
+#   and other sensitive material MUST NOT be committed to this file. Inject
+#   secrets through Doppler, CI protected variables, Wrangler secrets, or the
+#   target provider's secret-management facility.
+#
+# @change Any schema/data change must be reviewed with the owning service and
+#   the corresponding Terraform/CI/deployment generator. Generated files must
+#   not become a second source of truth.
+#
+# @environment Environment-specific values are explicit and limited to safe
+#   non-secret configuration. The canonical environments are dev, stg, and prd.
+# =============================================================================
+
+# =============================================================================
+# EAS Workflow — @figentra/{{SLUG}}  build + submit
+# =============================================================================
+#
+# An Expo EAS Workflow (runs on EAS servers, not GitLab CI). It builds the iOS
+# + Android production artifacts, then submits each to its store.
+#
+# Invoke:
+#     doppler run --project figentra-{{SLUG}} --config prd -- \
+#         eas workflow:run .ci/{{SLUG}}-build-submit.yml
+#
+# Why .ci/ (not .eas/workflows/)
+#   Workspace convention keeps CI definitions under .ci/. EAS auto-triggers
+#   `on:` events ONLY for workflows under `.eas/workflows/` (GitHub App). From
+#   .ci/ this workflow is invoked explicitly (command above) or wired from the
+#   platform pipeline. Move/symlink into `.eas/workflows/` to enable push
+#   auto-trigger.
+#
+# Config + secrets (no hardcoding — spec 15 §9)
+#   Build env  : EXPO_PUBLIC_* from eas.json build profiles (public, inlined).
+#   Submit creds: eas.json submit profile references $APPLE_ID / $ASC_APP_ID /
+#                 $APPLE_TEAM_ID / $GOOGLE_PLAY_SERVICE_ACCOUNT_KEY_PATH — supplied
+#                 from Doppler (figentra-{{SLUG}}) via `doppler run` above, or from
+#                 EAS project secrets. EXPO_TOKEN authenticates the EAS CLI.
+#
+# The EAS project itself is provisioned by Terraform (modules/expo); run
+# `eas init --id <expo_app_id>` once before the first workflow run.
+# =============================================================================
+
+name: {{SLUG}}-build-submit
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_ios:
+    name: Build iOS (production)
+    type: build
+    params:
+      platform: ios
+      profile: production
+
+  build_android:
+    name: Build Android (production)
+    type: build
+    params:
+      platform: android
+      profile: production
+
+  submit_ios:
+    name: Submit iOS to App Store Connect
+    needs: [build_ios]
+    type: submit
+    params:
+      platform: ios
+      profile: production
+
+  submit_android:
+    name: Submit Android to Google Play
+    needs: [build_android]
+    type: submit
+    params:
+      platform: android
+      profile: production

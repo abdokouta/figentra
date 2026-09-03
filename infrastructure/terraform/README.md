@@ -7,10 +7,14 @@ is `infrastructure/terraform`; environments are isolated by Terraform workspace.
 
 1. Root `cloud.yaml` explicitly enrolls local deployment paths and external repos.
 2. Each enrolled source must provide its own `cloud.yaml`.
-3. `pnpm run catalog` produces `infrastructure/catalog.json`.
+3. `pnpm run catalog` produces `infrastructure/.generated/catalog.json`.
 4. Terraform decodes the generated catalog and composes reusable modules.
 5. Terraform outputs durable resource identifiers consumed by Worker/Wrangler
    rendering and deployment automation.
+
+Every generated artefact (catalog + tf plans) lives under
+`infrastructure/.generated/` — machine-owned, gitignored, regenerated on demand.
+Saved plans land at `infrastructure/.generated/terraform/plans/tfplan-<env>`.
 
 ## Canonical environments
 

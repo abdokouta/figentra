@@ -1,0 +1,59 @@
+# =============================================================================
+# Figentra deployable manifest — Family mobile application
+# =============================================================================
+#
+# @file apps/family/cloud.yaml
+# @description Declarative contract for the Expo/EAS Family application.
+#   Terraform provisions EAS/Firebase prerequisites; EAS builds and submits
+#   mobile artifacts. This manifest contains no secrets.
+# =============================================================================
+
+# Deployable kind consumed by the catalog collector.
+kind: app
+# Immutable platform slug.
+slug: {{SLUG}}
+# Owning product brand.
+brand: {{BRAND}}
+# Client/mobile plane.
+plane: client
+# Native mobile runtime.
+runtime: expo-mobile
+# Shared application tier.
+tier: shared
+# Monorepo source location.
+source:
+  type: local
+  path: {{SOURCE_PATH}}
+# Doppler project for EAS/native credentials.
+doppler_project: {{BRAND}}-{{SLUG}}
+# Mobile identity consumed by EAS and Firebase provisioning.
+mobile:
+  display_name: {{DISPLAY_NAME}}
+  eas_slug: {{BRAND}}-{{SLUG}}
+  bundle_id: {{BUNDLE_ID}}
+  scheme: {{SCHEME}}
+  associated_domain: {{ASSOCIATED_DOMAIN}}
+# Infrastructure capability modules consumed by this deployable.
+modules:
+  - use: firebase-fcm
+    version: "^1.0.0"
+    config:
+      project_id: {{FIREBASE_PROJECT_ID}}
+      android_package: {{BUNDLE_ID}}
+      ios_bundle_id: {{BUNDLE_ID}}
+
+  - use: sentry-project
+    version: "^1.0.0"
+    config:
+      platform: react-native
+      traces_sample_rate: 0.1
+# Branch-to-release-channel mapping.
+branch:
+  development: develop
+  staging: staging
+  production: main
+# Ownership metadata.
+tags:
+  service: {{SLUG}}
+  plane: client
+  vendor: {{BRAND}}

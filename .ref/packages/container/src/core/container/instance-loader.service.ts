@@ -1,0 +1,428 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/**
+ * @file instance-loader.service.ts
+ * @module injector/instance-loader
+ * @description InstanceLoader — Provider Instantiation & Lifecycle Orchestrator
+ *
+ *   After the scanner has built the module graph, the InstanceLoader:
+ *   1. Resolves all providers in all modules (via the Injector)
+ *   2. Resolves entry providers (eager initialization)
+ *   3. Calls `onModuleInit()` on providers that implement it
+ *   4. Calls `onApplicationBootstrap()` on providers that implement it
+ *
+ *   It also provides `destroy()` for calling shutdown lifecycle hooks.
+ *
+ *   ## Bootstrap flow:
+ *
+ *   ```
+ *   InstanceLoader.createInstances()
+ *     ├── Phase 1: Resolve all providers (Injector.resolveProviders)
+ *     ├── Phase 2: Resolve entry providers (eager initialization)
+ *     ├── Phase 3: Call onModuleInit() lifecycle hooks (breadth-first)
+ *     └── Phase 4: Call onApplicationBootstrap() lifecycle hooks (breadth-first)
+ *
+ *   InstanceLoader.destroy(signal?)
+ *     ├── Phase 1: Call beforeApplicationShutdown(signal) (reverse order)
+ *     ├── Phase 2: Call onApplicationShutdown(signal) (reverse order)
+ *     └── Phase 3: Call onModuleDestroy() (reverse order)
+ *   ```
+ */
+
+import { Injector } from "@/core/container/injector.service";
+import { Module } from "@/core/container/module";
+
+/**
+ * True when running under Hermes / React Native.
+ *
+ * The check reads `navigator.product` which React Native's polyfill
+ * sets to `"ReactNative"`. Guarded so it never throws on a bare
+ * Node/Vitest runner where `navigator` is undefined.
+ */
+const IS_REACT_NATIVE =
+  typeof navigator !== "undefined" &&
+  (navigator as { product?: string }).product === "ReactNative";
+
+/**
+ * Cross-platform loader-log emitter for the ALWAYS-fires error paths.
+ *
+ * On browsers: forwards `%c[loader]` + CSS style + message as-is so
+ * the browser's built-in DevTools console renders the coloured prefix.
+ * On React Native: prints `[loader] message` (no CSS, no `%c`).
+ *
+ * Only invoked on lifecycle-hook failure — a silent lifecycle failure
+ * is worse than a noisy one.
+ *
+ * @param kind - `log` / `warn` / `error` — the console method to invoke.
+ * @param style - CSS style string for the browser prefix.
+ * @param message - The log message itself.
+ * @param rest - Additional args forwarded verbatim.
+ */
+function loaderLog(
+  kind: "log" | "warn" | "error",
+  style: string,
+  message: string,
+  ...rest: unknown[]
+): void {
+  if (IS_REACT_NATIVE) {
+    console[kind](`[loader]${message}`, ...rest);
+  } else {
+    console[kind]("%c[loader]", style, message, ...rest);
+  }
+}
+import type {
+  OnApplicationShutdown,
+  OnApplicationBootstrap,
+  BeforeApplicationShutdown,
+} from "@stackra/contracts";
+import { ModuleContainer } from "@/core/container/container.registry";
+import { hasOnModuleInit } from "@/core/utils/has-on-module-init.util";
+import { hasOnModuleDestroy } from "@/core/utils/has-on-module-destroy.util";
+
+/**
+ * Type guard for OnApplicationBootstrap interface.
+ */
+export function hasOnApplicationBootstrap(
+  instance: any,
+): instance is OnApplicationBootstrap {
+  return instance && typeof instance.onApplicationBootstrap === "function";
+}
+
+/**
+ * Type guard for BeforeApplicationShutdown interface.
+ */
+export function hasBeforeApplicationShutdown(
+  instance: any,
+): instance is BeforeApplicationShutdown {
+  return instance && typeof instance.beforeApplicationShutdown === "function";
+}
+
+/**
+ * Type guard for OnApplicationShutdown interface.
+ */
+export function hasOnApplicationShutdown(
+  instance: any,
+): instance is OnApplicationShutdown {
+  return instance && typeof instance.onApplicationShutdown === "function";
+}
+
+/**
+ * Loads (instantiates) all providers and runs lifecycle hooks.
+ *
+ * Created with a reference to the `ModuleContainer` and internally creates
+ * an `Injector` for dependency resolution. Orchestrates the two-phase
+ * bootstrap (resolve → init hooks) and the shutdown sequence.
+ *
+ * @example
+ * ```typescript
+ * const container = new ModuleContainer();
+ * const scanner = new DependenciesScanner(container);
+ * await scanner.scan(AppModule);
+ *
+ * const loader = new InstanceLoader(container);
+ * await loader.createInstances();
+ *
+ * // During shutdown:
+ * await loader.destroy();
+ * ```
+ */
+export class InstanceLoader {
+  /**
+   * The injector used for resolving provider dependencies.
+   * Created once in the constructor and reused for all modules.
+   */
+  private readonly injector: Injector;
+
+  /**
+   * Create a new InstanceLoader.
+   *
+   * @param container - The `ModuleContainer` holding all registered modules
+   *   and their provider bindings
+   */
+  constructor(private readonly container: ModuleContainer) {
+    this.injector = new Injector();
+  }
+
+  /**
+   * Instantiate all providers in all modules.
+   *
+   * Runs in four phases:
+   * 1. **Resolution** — Iterates all modules and resolves each module's
+   *    providers via the injector. Dependencies are resolved recursively.
+   * 2. **Entry providers** — Force-resolves entry providers for eager initialization.
+   * 3. **Module init hooks** — Calls `onModuleInit()` on all providers (breadth-first).
+   * 4. **Application bootstrap hooks** — Calls `onApplicationBootstrap()` on all providers.
+   *
+   * Modules are processed in breadth-first order (sorted by distance from root)
+   * to ensure lifecycle hooks run in predictable order.
+   *
+   * @param onInstancesReady - Optional callback fired AT THE END OF
+   *   PHASE 1 (`resolveProviders`), BEFORE PHASE 2 (`onModuleInit`).
+   *   At this point every provider is instantiated and its
+   *   `wrapper.instance` is set — the provider Map is fully
+   *   populated. Callers that own an `isInitialized` gate on provider
+   *   resolution (like `ApplicationContext`) flip the flag here so
+   *   `ModuleRef.get(...)` works inside BOTH `onModuleInit` (phase 2)
+   *   and `onApplicationBootstrap` (phase 3) hooks. Common patterns:
+   *   a registry seeding built-in handlers via `ModuleRef.get(...)`
+   *   in its own `onModuleInit`, and a `forFeature` registrar class
+   *   resolving a consumer-supplied class via `ModuleRef.get(...)`
+   *   in `onApplicationBootstrap` per ADR-0052 §Canonical shape.
+   * @returns A Promise that resolves when all providers are instantiated
+   *   and all lifecycle hooks have completed
+   *
+   * @example
+   * ```typescript
+   * const loader = new InstanceLoader(container);
+   * await loader.createInstances(() => {
+   *   context.markInitialized(); // ← between phase 1 and phase 2
+   * });
+   * // All providers are now ready to use
+   * ```
+   */
+  public async createInstances(
+    onInstancesReady?: () => void | Promise<void>,
+  ): Promise<void> {
+    const modules = [...this.container.getModules().values()].sort(
+      (a, b) => a.distance - b.distance,
+    ); // Sort by distance for breadth-first
+
+    // Phase 1: Resolve all providers
+    for (const moduleRef of modules) {
+      await this.injector.resolveProviders(moduleRef);
+    }
+
+    // ── Container graph is now populated ────────────────────────────
+    // Every provider is resolved and `wrapper.instance` is set. Fire
+    // the ready callback here so callers can flip an `isInitialized`
+    // gate BEFORE the lifecycle hooks run — that lets both
+    // `onModuleInit` (phase 2) and `onApplicationBootstrap` (phase 3)
+    // use `ModuleRef.get(...)` freely. Common patterns:
+    //
+    //   - A registry that seeds built-in handlers by looking them up
+    //     via `ModuleRef.get(HandlerClass)` in its own `onModuleInit`
+    //     (see `@stackra/actions` ActionRegistry).
+    //   - A `forFeature` registrar class implementing
+    //     `OnApplicationBootstrap` that resolves a consumer-supplied
+    //     class via `ModuleRef.get(...)` per ADR-0052 §Canonical
+    //     shape.
+    //
+    // Both need the provider Map to be populated AND
+    // `ApplicationContext.isInitialized === true`; phase 1's end is
+    // the earliest point where both are true.
+    if (onInstancesReady) {
+      await onInstancesReady();
+    }
+
+    // Phase 2: Call onModuleInit() lifecycle hooks
+    for (const moduleRef of modules) {
+      await this.callModuleInitHooks(moduleRef);
+    }
+
+    // Phase 3: Call onApplicationBootstrap() lifecycle hooks
+    for (const moduleRef of modules) {
+      await this.callApplicationBootstrapHooks(moduleRef);
+    }
+  }
+
+  /**
+   * Call shutdown lifecycle hooks on all providers.
+   *
+   * Called during application shutdown. Runs in three phases:
+   * 1. **Before shutdown** — Calls `beforeApplicationShutdown(signal)` on all providers
+   * 2. **Application shutdown** — Calls `onApplicationShutdown(signal)` on all providers
+   * 3. **Module destroy** — Calls `onModuleDestroy()` on all providers
+   *
+   * Iterates modules in reverse order (leaf modules first, root module last)
+   * to ensure dependencies are still available when a provider's hooks run.
+   *
+   * @param signal - Optional shutdown signal (e.g., 'SIGTERM', 'SIGINT')
+   * @returns A Promise that resolves when all shutdown hooks have completed
+   *
+   * @example
+   * ```typescript
+   * // During application shutdown:
+   * await loader.destroy('SIGTERM');
+   * ```
+   */
+  public async destroy(signal?: string): Promise<void> {
+    const modules = [...this.container.getModules().values()].sort(
+      (a, b) => b.distance - a.distance,
+    ); // Reverse order (leaf → root)
+
+    // Phase 1: beforeApplicationShutdown
+    for (const moduleRef of modules) {
+      await this.callBeforeApplicationShutdownHooks(moduleRef, signal);
+    }
+
+    // Phase 2: onApplicationShutdown
+    for (const moduleRef of modules) {
+      await this.callApplicationShutdownHooks(moduleRef, signal);
+    }
+
+    // Phase 3: onModuleDestroy
+    for (const moduleRef of modules) {
+      await this.callModuleDestroyHooks(moduleRef);
+    }
+  }
+
+  /**
+   * Get the injector instance.
+   *
+   * Provides access to the internal injector for direct resolution
+   * outside the normal module system (e.g., in the `ApplicationContext`).
+   *
+   * @returns The `Injector` instance used by this loader
+   *
+   * @example
+   * ```typescript
+   * const injector = loader.getInjector();
+   * const result = injector.lookupProvider(UserService, moduleRef);
+   * ```
+   */
+  public getInjector(): Injector {
+    return this.injector;
+  }
+
+  // ── Private: Lifecycle hooks ─────────────────────────────────────────────
+
+  /**
+   * Call `onModuleInit()` on all resolved providers in a module.
+   *
+   * Iterates the module's providers and calls `onModuleInit()` on each
+   * resolved instance that implements the `OnModuleInit` interface.
+   * Async hooks are awaited before proceeding to the next provider.
+   *
+   * @param moduleRef - The module whose providers to initialize
+   */
+  private async callModuleInitHooks(moduleRef: Module): Promise<void> {
+    for (const [, wrapper] of moduleRef.providers) {
+      if (
+        wrapper.isResolved &&
+        wrapper.instance &&
+        hasOnModuleInit(wrapper.instance)
+      ) {
+        const name =
+          wrapper.metatype?.name ?? wrapper.token?.toString() ?? "unknown";
+        const t0 = performance.now();
+
+        try {
+          await wrapper.instance.onModuleInit();
+        } catch (error: Error | any) {
+          const elapsed = performance.now() - t0;
+          // Errors always surface — even in production. A silent
+          // lifecycle failure is worse than a noisy one.
+          loaderLog(
+            "error",
+            "color: #dc2626; font-weight: bold",
+            `  onModuleInit ✗ ${name} (${elapsed.toFixed(0)}ms)`,
+            error,
+          );
+          throw error;
+        }
+      }
+    }
+  }
+
+  /**
+   * Call `onApplicationBootstrap()` on all resolved providers in a module.
+   *
+   * Called after all `onModuleInit()` hooks have completed.
+   *
+   * @param moduleRef - The module whose providers to bootstrap
+   */
+  private async callApplicationBootstrapHooks(
+    moduleRef: Module,
+  ): Promise<void> {
+    for (const [, wrapper] of moduleRef.providers) {
+      if (
+        wrapper.isResolved &&
+        wrapper.instance &&
+        hasOnApplicationBootstrap(wrapper.instance)
+      ) {
+        const name =
+          wrapper.metatype?.name ?? wrapper.token?.toString() ?? "unknown";
+        const t0 = performance.now();
+
+        try {
+          await wrapper.instance.onApplicationBootstrap();
+        } catch (error: Error | any) {
+          const elapsed = performance.now() - t0;
+          // Errors always surface — even in production. A silent
+          // lifecycle failure is worse than a noisy one.
+          loaderLog(
+            "error",
+            "color: #dc2626; font-weight: bold",
+            `  onApplicationBootstrap ✗ ${name} (${elapsed.toFixed(0)}ms)`,
+            error,
+          );
+          throw error;
+        }
+      }
+    }
+  }
+
+  /**
+   * Call `beforeApplicationShutdown()` on all resolved providers in a module.
+   *
+   * First shutdown phase — called before main shutdown logic.
+   *
+   * @param moduleRef - The module whose providers to prepare for shutdown
+   * @param signal - Optional shutdown signal
+   */
+  private async callBeforeApplicationShutdownHooks(
+    moduleRef: Module,
+    signal?: string,
+  ): Promise<void> {
+    for (const [, wrapper] of moduleRef.providers) {
+      if (
+        wrapper.isResolved &&
+        wrapper.instance &&
+        hasBeforeApplicationShutdown(wrapper.instance)
+      ) {
+        await wrapper.instance.beforeApplicationShutdown(signal);
+      }
+    }
+  }
+
+  /**
+   * Call `onApplicationShutdown()` on all resolved providers in a module.
+   *
+   * Second shutdown phase — main shutdown logic.
+   *
+   * @param moduleRef - The module whose providers to shut down
+   * @param signal - Optional shutdown signal
+   */
+  private async callApplicationShutdownHooks(
+    moduleRef: Module,
+    signal?: string,
+  ): Promise<void> {
+    for (const [, wrapper] of moduleRef.providers) {
+      if (
+        wrapper.isResolved &&
+        wrapper.instance &&
+        hasOnApplicationShutdown(wrapper.instance)
+      ) {
+        await wrapper.instance.onApplicationShutdown(signal);
+      }
+    }
+  }
+
+  /**
+   * Call `onModuleDestroy()` on all resolved providers in a module.
+   *
+   * Third shutdown phase — final cleanup.
+   *
+   * @param moduleRef - The module whose providers to destroy
+   */
+  private async callModuleDestroyHooks(moduleRef: Module): Promise<void> {
+    for (const [, wrapper] of moduleRef.providers) {
+      if (
+        wrapper.isResolved &&
+        wrapper.instance &&
+        hasOnModuleDestroy(wrapper.instance)
+      ) {
+        await wrapper.instance.onModuleDestroy();
+      }
+    }
+  }
+}

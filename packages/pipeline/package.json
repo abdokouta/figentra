@@ -1,0 +1,90 @@
+{
+  "name": "@stackra/pipeline",
+  "version": "3.0.0",
+  "description": "Laravel-style middleware pipeline with fluent API, DI integration, and Hub presets.",
+  "license": "MIT",
+  "author": {
+    "name": "Figentra L.L.C",
+    "email": "dev@figentra.com",
+    "url": "https://figentra.com"
+  },
+  "keywords": [
+    "stackra",
+    "pipeline",
+    "middleware",
+    "hub",
+    "laravel"
+  ],
+  "homepage": "https://gitlab.com/stackra/frontend/framework/-/tree/main/src/pipeline#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/stackra/frontend/framework.git",
+    "directory": "src/pipeline"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/stackra/frontend/framework/-/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "import": "./dist/testing.mjs",
+      "require": "./dist/testing.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rimraf dist .turbo",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage --passWithNoTests"
+  },
+  "peerDependencies": {
+    "@stackra/container": "workspace:^",
+    "@stackra/contracts": "workspace:^",
+    "@stackra/support": "workspace:^",
+    "@stackra/testing": "workspace:^",
+    "reflect-metadata": "catalog:"
+  },
+  "peerDependenciesMeta": {
+    "@stackra/testing": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@stackra/container": "workspace:*",
+    "@stackra/contracts": "workspace:*",
+    "@stackra/support": "workspace:*",
+    "@stackra/testing": "workspace:*",
+    "@stackra/tsup-config": "^1.0.2",
+    "@stackra/typescript-config": "^1.0.0",
+    "@types/node": "catalog:",
+    "reflect-metadata": "catalog:",
+    "rimraf": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

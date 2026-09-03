@@ -1,0 +1,65 @@
+{
+  "name": "@stackra/nestjs-rate-limit",
+  "version": "0.1.0",
+  "description": "Unified rate limiting — token-bucket algorithm with pluggable backends (Redis Lua, memory, cache), decorator-driven throttling, and named policies",
+  "private": true,
+  "license": "MIT",
+  "author": {
+    "name": "Stackra L.L.C",
+    "email": "dev@stackra.com",
+    "url": "https://stackra.com"
+  },
+  "keywords": [
+    "stackra",
+    "rate-limit",
+    "nestjs",
+    "backend"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "echo \"⚡ JIT mode — skipping build\"",
+    "dev": "echo \"⚡ JIT mode — no watch needed\"",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "check-types": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage --passWithNoTests"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "catalog:nestjs",
+    "@nestjs/core": "catalog:nestjs",
+    "@stackra/contracts": "catalog:stackra",
+    "@stackra/redis": "*",
+    "@stackra/ts-support": "*",
+    "@vivtel/metadata": ">=1.0.0",
+    "reflect-metadata": ">=0.2.0",
+    "rxjs": ">=7.0.0"
+  },
+  "devDependencies": {
+    "@nestjs/common": "catalog:nestjs",
+    "@nestjs/core": "catalog:nestjs",
+    "@stackra/contracts": "catalog:stackra",
+    "@stackra/redis": "*",
+    "@stackra/testing": "catalog:stackra",
+    "@stackra/ts-support": "*",
+    "@stackra/typescript-config": "catalog:",
+    "@types/node": "catalog:",
+    "reflect-metadata": "catalog:",
+    "rxjs": ">=7.0.0",
+    "tslib": "catalog:build",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "module": "./src/index.ts"
+}

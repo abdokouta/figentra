@@ -1,0 +1,72 @@
+# =============================================================================
+# @file infrastructure/modules/kafka/module.yaml
+# @description Apache Kafka persistent event log.
+#
+# Machine-readable infrastructure module manifest. Validated against
+# infrastructure/modules/schema/module.v1.json at CI time.
+#
+# @security No secrets. Env-var values come from Doppler at runtime;
+#   this file only declares the contract (env-var names + source expressions).
+# =============================================================================
+name: kafka
+version: "1.0.0"
+kind: infrastructure-module
+category: messaging
+maturity: beta
+description: "Apache Kafka persistent event log. Provisions topics + consumer groups via Confluent Cloud (prod) or Docker-based Kafka (local dev). Suitable for high-throughput, ordered, replayable event streams."
+provides: ["messaging.kafka", "messaging.kafka.topic"]
+consumes: []
+runtime_targets:
+  terraform: terraform.tf
+  docker: compose.yaml
+  wrangler: null
+schema:
+  type: object
+  properties:
+    version:
+      type: string
+      enum: ["3.7", "4.0"]
+      default: "4.0"
+      description: Kafka broker version.
+    topics:
+      type: array
+      minItems: 1
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            pattern: "^[a-z0-9][a-z0-9.-]{0,248}$"
+          partitions:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 3
+          retention:
+            type: string
+            pattern: "^\\d+[dhm]$"
+            default: "7d"
+          compaction:
+            type: boolean
+            default: false
+        required: ["name"]
+    consumer_group:
+      type: string
+      pattern: "^[a-z0-9][a-z0-9-]{0,62}$"
+    ssl:
+      type: boolean
+      default: true
+  required: ["topics", "consumer_group"]
+env_vars:
+  - name: KAFKA_BROKERS
+    description: Comma-separated broker URL list.
+    source: terraform_output.brokers_url
+  - name: KAFKA_CONSUMER_GROUP
+    description: Consumer group name.
+    source: module.config.consumer_group
+  - name: KAFKA_TOPICS
+    description: Comma-separated topic names.
+    source: "module.config.topics[].name"
+  - name: KAFKA_SSL_ENABLED
+    description: Whether TLS is enabled.
+    source: module.config.ssl

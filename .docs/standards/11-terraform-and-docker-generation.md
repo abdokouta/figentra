@@ -57,10 +57,11 @@ pnpm run docker:compose
 Output:
 
 ```text
-infrastructure/docker/docker-compose.generated.yml
+infrastructure/.generated/docker-compose.yml
 ```
 
-The generated file is disposable and must not be hand-edited.
+The generated file is disposable, gitignored, and must not be hand-edited. See
+[`infrastructure/.generated/README.md`](../../infrastructure/.generated/README.md).
 
 ## Internal service networking
 

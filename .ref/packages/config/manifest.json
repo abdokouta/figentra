@@ -1,0 +1,26 @@
+{
+  "$schema": "https://gist.githubusercontent.com/stackra-usr/766cbb0d72b6566fdc2642ffcb3d73ee/raw/manifest.schema.json",
+  "slug": "config",
+  "version": "0.1.0",
+  "name": {
+    "en": "Config",
+    "ar": "الإعدادات"
+  },
+  "type": "core",
+  "description": {
+    "en": "Unified config — core + react + nestjs via subpath exports.",
+    "ar": "الإعدادات — وحدة أساسية في المنصة."
+  },
+  "author": {
+    "name": "Stackra L.L.C",
+    "email": "dev@stackra.com"
+  },
+  "dependencies": ["console", "container", "support"],
+  "support": {
+    "documentation": "https://docs.stackra.com/platform/config",
+    "email": "dev@stackra.com"
+  },
+  "compatibility": {
+    "platform_version": ">=1.0.0"
+  }
+}

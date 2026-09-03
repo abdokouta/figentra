@@ -3249,7 +3249,7 @@ Docker Compose may be generated from the canonical deployment manifests and infr
 Generated output belongs under:
 
 ```text
-infrastructure/docker/docker-compose.generated.yml
+infrastructure/.generated/docker-compose.yml
 ```
 
 rather than duplicating service definitions manually in unrelated Terraform directories.

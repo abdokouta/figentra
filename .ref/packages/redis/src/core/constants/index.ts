@@ -1,0 +1,21 @@
+/**
+ * @file index.ts
+ * @module @stackra/ts-redis/constants
+ * @description Barrel export for Redis constants.
+ */
+
+export {
+  DEFAULT_CACHE_TTL,
+  DEFAULT_CACHE_PREFIX,
+  DEFAULT_TAG_PREFIX,
+  DEFAULT_SLOW_QUERY_THRESHOLD,
+  DEFAULT_MAX_RETRIES,
+  DEFAULT_RETRY_DELAY_MS,
+  DEFAULT_BACKOFF_MULTIPLIER,
+  DEFAULT_LOCK_TTL,
+  DEFAULT_LOCK_TIMEOUT,
+  DEFAULT_LOCK_RETRY_DELAY,
+  DEFAULT_SLOT_RELEASE_AFTER,
+  DEFAULT_LIMITER_BLOCK_TIMEOUT,
+  DEFAULT_LIMITER_SLEEP_MS,
+} from './defaults.constant';

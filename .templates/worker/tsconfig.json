@@ -1,0 +1,11 @@
+{
+  "extends": "@stackra/typescript-config/base",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./dist",
+    "paths": { "@/*": ["./src/*"] },
+    "types": ["@cloudflare/workers-types/2023-07-01", "node"]
+  },
+  "include": ["src/**/*", "worker-configuration.d.ts"],
+  "exclude": ["node_modules", "dist", "__tests__"]
+}

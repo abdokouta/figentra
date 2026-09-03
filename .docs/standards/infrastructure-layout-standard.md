@@ -2,17 +2,21 @@
 
 ## Decision
 
-Infrastructure is split into two top-level concerns:
+Infrastructure is split into three top-level concerns:
 
 ```text
 infrastructure/
+├── .generated/                 # machine-owned; gitignored (README is tracked)
+│   ├── catalog.json            # emitted by collect-cloud-yaml.mjs
+│   ├── docker-compose.yml      # emitted by generate-compose.mjs
+│   └── terraform/plans/        # tfplan-<env> files emitted by tf-plan
+│
 ├── docker/
 │   ├── environments/
 │   ├── postgres/
 │   │   └── migrations/
 │   ├── scripts/
-│   ├── catalog.yaml
-│   └── docker-compose.generated.yml
+│   └── catalog.yaml
 │
 └── terraform/
     ├── modules/
@@ -38,15 +42,18 @@ automation scripts.
 
 The generated Compose file is:
 
-`infrastructure/docker/docker-compose.generated.yml`
+`infrastructure/.generated/docker-compose.yml`
 
 It must be treated as generated output and must not become a competing source
-of truth.
+of truth. Every artefact under `infrastructure/.generated/` is machine-owned +
+gitignored; see [`infrastructure/.generated/README.md`](../../infrastructure/.generated/README.md).
 
 ## Catalog naming
 
-Do not use `infrastructure/catalog.json` for Docker Compose metadata.
-`catalog.json` is reserved for reusable Stackra package metadata.
+Do not use `infrastructure/.generated/catalog.json` for Docker Compose metadata.
+`catalog.json` at the workspace-package tier is reserved for reusable Stackra
+package metadata; the infrastructure catalog inside `.generated/` is a
+build-time deployment map.
 
 Docker infrastructure uses `infrastructure/docker/catalog.yaml` because it is
 an infrastructure generation contract rather than a publishable package

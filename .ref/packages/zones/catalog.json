@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../.ref/schemas/catalog.v1.json",
+  "name": "@stackra/zones",
+  "tier": "framework",
+  "surfaces": ["core", "react", "native", "testing"],
+  "kind": "framework-plumbing",
+  "purpose": "Zone / slot extensibility runtime — DI-owned zone registry, before/after/replace ordering, React + native bindings for <Zone> / <FormFieldZone> / <TableColumnZone>.",
+  "capabilities": [
+    "DI-owned ZoneRegistry (BaseRegistry-backed) — one bucket per zoneId, idempotent-by-id",
+    "Pure resolveZoneOrder algorithm — before/after/replace/start/end + order tiebreak + when(ctx) filter",
+    "<Zone> compound React + native component for cross-module UI extension",
+    "<FormFieldZone> render-prop wrapper for form-field contributions",
+    "<TableColumnZone> render-prop wrapper for table-column contributions",
+    "useZone(zoneId) + useZoneContext hooks — permissions / features / params / tenant",
+    "SDUI Zone node component + registry — cross-module contributions on SDUI screens",
+    "Testing subpath — MockZoneRegistry + TestZonesProvider + canned contributions",
+    "ZoneMountRegistry bound to ZONE_MOUNT_REGISTRY — records live zone mounts from DOM sweeps",
+    "WebZonesModule composes ZonesModule.forRoot() + panel + inspector source + mount registry"
+  ],
+  "when_to_use": "Host pages need to be extended by other modules — UserGroup adding a table column, AgeRestriction inserting a form field, plug-in dropping a marketing banner into the hero.",
+  "when_not_to_use": "For a fixed, non-extensible layout use plain React composition; for one-off feature flags use @stackra/authorization directly.",
+  "peer_deps": [
+    "@stackra/container",
+    "@stackra/contracts",
+    "@stackra/decorators",
+    "@stackra/ui",
+    "react",
+    "react-native",
+    "reflect-metadata"
+  ],
+  "backend_pair": null,
+  "size_gzip_kb": {},
+  "maturity": "beta",
+  "owning_agent": "framework-core-builder",
+  "docs": ["packages/framework/src/zones/README.md"]
+}

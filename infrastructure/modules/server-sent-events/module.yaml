@@ -1,0 +1,47 @@
+# =============================================================================
+# @file infrastructure/modules/server-sent-events/module.yaml
+# @description Server-Sent Events (SSE) one-way push channel.
+#
+# Machine-readable infrastructure module manifest. Validated against
+# infrastructure/modules/schema/module.v1.json at CI time.
+#
+# @security No secrets. Env-var values come from Doppler at runtime;
+#   this file only declares the contract (env-var names + source expressions).
+# =============================================================================
+name: server-sent-events
+version: "1.0.0"
+kind: infrastructure-module
+category: realtime
+maturity: beta
+description: "Server-Sent Events (SSE) one-way push channel. Runtime-config module that declares the SSE endpoint path and heartbeat interval. No separate infrastructure — the deployable's HTTP server emits the event stream."
+provides: ["realtime.sse"]
+consumes: []
+runtime_targets:
+  terraform: null
+  docker: null
+  wrangler: null
+schema:
+  type: object
+  properties:
+    path:
+      type: string
+      default: /events
+      description: SSE stream endpoint path.
+    heartbeat_interval_ms:
+      type: integer
+      minimum: 1000
+      default: 15000
+      description: Keep-alive comment interval.
+    max_connections:
+      type: integer
+      minimum: 1
+      default: 5000
+      description: Max concurrent SSE connections.
+  required: ["path"]
+env_vars:
+  - name: SSE_PATH
+    description: SSE stream endpoint.
+    source: module.config.path
+  - name: SSE_HEARTBEAT_INTERVAL_MS
+    description: Keep-alive interval.
+    source: module.config.heartbeat_interval_ms

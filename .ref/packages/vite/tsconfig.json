@@ -1,0 +1,14 @@
+{
+  "extends": "@stackra/typescript-config/base",
+  "compilerOptions": {
+    "types": ["node"],
+    "rootDir": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "outDir": "./dist"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "__tests__"],
+  "compileOnSave": false
+}

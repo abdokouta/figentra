@@ -1,0 +1,43 @@
+# =============================================================================
+# @file infrastructure/modules/custom-domain/module.yaml
+# @description Bring-your-own-domain + TLS provisioning.
+#
+# Machine-readable infrastructure module manifest. Validated against
+# infrastructure/modules/schema/module.v1.json at CI time.
+#
+# @security No secrets. Env-var values come from Doppler at runtime;
+#   this file only declares the contract (env-var names + source expressions).
+# =============================================================================
+name: custom-domain
+version: "1.0.0"
+kind: infrastructure-module
+category: networking
+maturity: beta
+description: "Bring-your-own-domain + TLS provisioning. Provisions a Cloudflare custom hostname + origin certificate for the deployable, enabling tenant-branded URLs (e.g. academy.example.com)."
+provides: ["networking.custom-domain", "networking.tls"]
+consumes: []
+runtime_targets:
+  terraform: terraform.tf
+  docker: null
+  wrangler: null
+schema:
+  type: object
+  properties:
+    wildcard:
+      type: boolean
+      default: false
+      description: "Provision a wildcard cert (*.domain)."
+    min_tls_version:
+      type: string
+      enum: ["1.2", "1.3"]
+      default: "1.2"
+      description: Minimum TLS version.
+    ssl_mode:
+      type: string
+      enum: ["full", "full_strict"]
+      default: full_strict
+      description: Cloudflare SSL mode.
+env_vars:
+  - name: CUSTOM_DOMAIN_ENABLED
+    description: Whether custom domain is active.
+    source: "literal:true"

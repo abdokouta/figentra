@@ -180,13 +180,25 @@ test:
   script:
     - pnpm -r --filter "./services/*" run test
 
-# catalog.json is generated (cloud.yaml → infrastructure catalog). Fail if it's stale.
-catalog:drift:
+# catalog.json lives under the machine-owned infrastructure/.generated/ folder
+# (gitignored). We regenerate it on every CI run to guarantee freshness — no
+# committed copy to drift against.
+catalog:build:
   stage: quality
   extends: .pnpm
   script:
     - pnpm run catalog
-    - git diff --exit-code infrastructure/catalog.json
+    - test -f infrastructure/.generated/catalog.json
+
+# Infrastructure capability modules — validate the registry + every deployable's
+# modules[] entries against the module schemas. Fail-fast on unknown module
+# names, semver mismatches, config-schema violations, and unresolved
+# consumes/provides tokens.
+modules:check:
+  stage: quality
+  extends: .pnpm
+  script:
+    - pnpm run modules:check
 
 # =============================================================================
 # build — turbo build (affected on MRs, full on env branches)

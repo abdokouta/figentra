@@ -1,0 +1,70 @@
+{
+  "name": "@stackra/nestjs-swagger",
+  "version": "0.1.0",
+  "description": "Production-ready Swagger/OpenAPI documentation module for NestJS with auth schemes, theming, and response envelope interceptor.",
+  "private": true,
+  "license": "MIT",
+  "author": {
+    "name": "Stackra L.L.C",
+    "email": "dev@stackra.com",
+    "url": "https://stackra.com"
+  },
+  "keywords": [
+    "stackra",
+    "swagger",
+    "nestjs",
+    "backend"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "echo \"⚡ JIT mode — skipping build\"",
+    "dev": "echo \"⚡ JIT mode — no watch needed\"",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "check-types": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage --passWithNoTests"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "catalog:nestjs",
+    "@nestjs/core": "catalog:nestjs",
+    "@nestjs/swagger": ">=8.0.0",
+    "@stackra/contracts": "catalog:stackra",
+    "@vivtel/metadata": ">=1.0.0",
+    "reflect-metadata": ">=0.2.0",
+    "rxjs": ">=7.0.0",
+    "swagger-themes": ">=1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "swagger-themes": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@nestjs/common": "catalog:nestjs",
+    "@nestjs/core": "catalog:nestjs",
+    "@nestjs/swagger": ">=8.0.0",
+    "@stackra/contracts": "catalog:stackra",
+    "@stackra/testing": "catalog:stackra",
+    "@stackra/typescript-config": "catalog:",
+    "@types/node": "catalog:",
+    "reflect-metadata": "catalog:",
+    "rxjs": ">=7.0.0",
+    "swagger-themes": ">=1.0.0",
+    "tslib": "catalog:build",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "module": "./src/index.ts"
+}

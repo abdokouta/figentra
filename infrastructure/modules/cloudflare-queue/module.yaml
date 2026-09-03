@@ -1,0 +1,49 @@
+# =============================================================================
+# @file infrastructure/modules/cloudflare-queue/module.yaml
+# @description Cloudflare Queues binding.
+#
+# Machine-readable infrastructure module manifest. Validated against
+# infrastructure/modules/schema/module.v1.json at CI time.
+#
+# @security No secrets. Env-var values come from Doppler at runtime;
+#   this file only declares the contract (env-var names + source expressions).
+# =============================================================================
+name: cloudflare-queue
+version: "1.0.0"
+kind: infrastructure-module
+category: cloudflare
+maturity: stable
+description: Cloudflare Queues binding. Provisions a message queue per deployable for async event processing inside the Workers runtime.
+provides: ["cloudflare.queue"]
+consumes: []
+runtime_targets:
+  terraform: terraform.tf
+  docker: null
+  wrangler: wrangler.jsonc.tmpl
+schema:
+  type: object
+  properties:
+    queue_name:
+      type: string
+      pattern: "^[a-z][a-z0-9_-]{0,62}$"
+      description: Queue name.
+    max_batch_size:
+      type: integer
+      minimum: 1
+      maximum: 100
+      default: 10
+      description: Max messages per batch delivery.
+    max_retries:
+      type: integer
+      minimum: 0
+      maximum: 10
+      default: 3
+      description: Max delivery retries before DLQ.
+  required: ["queue_name"]
+env_vars:
+  - name: QUEUE_ID
+    description: Cloudflare Queue ID.
+    source: terraform_output.queue_id
+  - name: QUEUE_NAME
+    description: Queue name.
+    source: module.config.queue_name

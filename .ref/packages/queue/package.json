@@ -1,0 +1,78 @@
+{
+  "name": "@stackra/queue",
+  "version": "0.1.0",
+  "description": "Unified queue — core + react + nestjs via subpath exports.",
+  "private": true,
+  "license": "MIT",
+  "author": {
+    "name": "Stackra L.L.C",
+    "email": "dev@stackra.com",
+    "url": "https://stackra.com"
+  },
+  "keywords": [
+    "stackra",
+    "queue",
+    "cross-platform",
+    "unified"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./src/core/index.ts",
+  "types": "./src/core/index.ts",
+  "exports": {
+    ".": "./src/core/index.ts",
+    "./react": "./src/react/index.ts",
+    "./nestjs": "./src/nestjs/index.ts"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "echo \"⚡ JIT mode — skipping build\"",
+    "dev": "echo \"⚡ JIT mode — no watch needed\"",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "check-types": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage --passWithNoTests"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "catalog:nestjs",
+    "@nestjs/core": "catalog:nestjs",
+    "@stackra/contracts": "catalog:stackra",
+    "@stackra/ts-container": "catalog:stackra",
+    "react": "catalog:react",
+    "reflect-metadata": ">=0.2.0",
+    "rxjs": ">=7.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@nestjs/common": {
+      "optional": true
+    },
+    "@nestjs/core": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@nestjs/common": "catalog:nestjs",
+    "@nestjs/core": "catalog:nestjs",
+    "@stackra/contracts": "catalog:stackra",
+    "@stackra/testing": "catalog:stackra",
+    "@stackra/ts-container": "catalog:stackra",
+    "@stackra/typescript-config": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:types",
+    "react": "catalog:react",
+    "reflect-metadata": "catalog:",
+    "rxjs": ">=7.0.0",
+    "tslib": "catalog:build",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "module": "./src/core/index.ts"
+}

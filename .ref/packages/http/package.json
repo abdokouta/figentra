@@ -1,0 +1,154 @@
+{
+  "name": "@stackra/http",
+  "version": "3.0.0",
+  "description": "Multi-driver HTTP client for the Stackra framework — axios/fetch connectors, middleware + interceptor pipelines, streaming (SSE/NDJSON), circuit breaker, rate limiting, and React hooks.",
+  "license": "MIT",
+  "author": {
+    "name": "Figentra L.L.C",
+    "email": "dev@figentra.com",
+    "url": "https://figentra.com"
+  },
+  "keywords": [
+    "stackra",
+    "http",
+    "axios",
+    "fetch",
+    "sse",
+    "streaming",
+    "react",
+    "client-side"
+  ],
+  "homepage": "https://github.com/academorix/academorix-frontend/tree/main/packages/framework/src/http#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/stackra/frontend/framework.git",
+    "directory": "src/http"
+  },
+  "bugs": {
+    "url": "https://github.com/academorix/academorix-frontend/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.js"
+    },
+    "./fetch": {
+      "types": "./dist/fetch.d.ts",
+      "import": "./dist/fetch.mjs",
+      "require": "./dist/fetch.js"
+    },
+    "./rxjs": {
+      "types": "./dist/rxjs.d.ts",
+      "import": "./dist/rxjs.mjs",
+      "require": "./dist/rxjs.js"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "import": "./dist/testing.mjs",
+      "require": "./dist/testing.js"
+    },
+    "./actions": {
+      "types": "./dist/actions.d.ts",
+      "import": "./dist/actions.mjs",
+      "require": "./dist/actions.js"
+    },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "import": "./dist/config.mjs",
+      "require": "./dist/config.js"
+    }
+  },
+  "files": [
+    "config",
+    "dist",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rimraf dist .turbo",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage --passWithNoTests"
+  },
+  "peerDependencies": {
+    "@stackra/config": "workspace:^",
+    "@stackra/container": "workspace:^",
+    "@stackra/contracts": "workspace:^",
+    "@stackra/decorators": "workspace:^",
+    "@stackra/logger": "workspace:^",
+    "@stackra/support": "workspace:^",
+    "@stackra/testing": "workspace:^",
+    "@stackra/ui": "workspace:^",
+    "@vivtel/metadata": "catalog:",
+    "axios": "catalog:",
+    "react": "catalog:",
+    "reflect-metadata": "catalog:",
+    "rxjs": "catalog:"
+  },
+  "peerDependenciesMeta": {
+    "@stackra/config": {
+      "optional": true
+    },
+    "@stackra/decorators": {
+      "optional": true
+    },
+    "@stackra/testing": {
+      "optional": true
+    },
+    "@stackra/ui": {
+      "optional": true
+    },
+    "axios": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "rxjs": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@stackra/config": "workspace:*",
+    "@stackra/container": "workspace:*",
+    "@stackra/contracts": "workspace:*",
+    "@stackra/decorators": "workspace:*",
+    "@stackra/logger": "workspace:*",
+    "@stackra/support": "workspace:*",
+    "@stackra/testing": "workspace:*",
+    "@stackra/tsup-config": "^1.0.2",
+    "@stackra/typescript-config": "^1.0.0",
+    "@stackra/ui": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@vivtel/metadata": "catalog:",
+    "axios": "catalog:",
+    "react": "catalog:",
+    "reflect-metadata": "catalog:",
+    "rimraf": "catalog:",
+    "rxjs": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

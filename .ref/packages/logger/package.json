@@ -1,0 +1,101 @@
+{
+  "name": "@stackra/logger",
+  "version": "0.1.0",
+  "description": "Unified logger — core + react + nestjs via subpath exports.",
+  "private": true,
+  "license": "MIT",
+  "author": {
+    "name": "Stackra L.L.C",
+    "email": "dev@stackra.com",
+    "url": "https://stackra.com"
+  },
+  "keywords": [
+    "stackra",
+    "logger",
+    "cross-platform",
+    "unified"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/core/index.cjs",
+  "module": "./dist/core/index.js",
+  "types": "./dist/core/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js",
+      "require": "./dist/core/index.cjs"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js",
+      "require": "./dist/react/index.cjs"
+    },
+    "./nestjs": {
+      "types": "./dist/nestjs/index.d.ts",
+      "import": "./dist/nestjs/index.js",
+      "require": "./dist/nestjs/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "check-types": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage --passWithNoTests"
+  },
+  "dependencies": {
+    "@vivtel/metadata": "^1.0.5",
+    "consola": "^3.4.2"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "catalog:nestjs",
+    "@nestjs/core": "catalog:nestjs",
+    "@stackra/contracts": "catalog:stackra",
+    "@stackra/ts-container": "catalog:stackra",
+    "@stackra/ts-support": "*",
+    "pino": ">=9.0.0",
+    "react": "catalog:react",
+    "reflect-metadata": ">=0.2.0",
+    "rxjs": ">=7.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@nestjs/common": {
+      "optional": true
+    },
+    "@nestjs/core": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "pino": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@nestjs/common": "catalog:nestjs",
+    "@nestjs/core": "catalog:nestjs",
+    "@stackra/contracts": "catalog:stackra",
+    "@stackra/testing": "catalog:stackra",
+    "@stackra/ts-container": "catalog:stackra",
+    "@stackra/ts-support": "*",
+    "@stackra/typescript-config": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:types",
+    "pino": ">=9.0.0",
+    "react": "catalog:react",
+    "reflect-metadata": "catalog:",
+    "rxjs": ">=7.0.0",
+    "tslib": "catalog:build",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

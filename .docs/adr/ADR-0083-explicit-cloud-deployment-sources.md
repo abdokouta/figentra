@@ -43,12 +43,14 @@ must never be treated as the same configuration.
 cloud.yaml
   -> explicit local paths + explicit external repos
   -> per-source cloud.yaml validation
-  -> infrastructure/catalog.json
+  -> infrastructure/.generated/catalog.json
   -> Terraform / Docker / CI generators
 ```
 
 `catalog.json` is generated and must never become a manually maintained source
-of truth.
+of truth. It lives under `infrastructure/.generated/` — machine-owned +
+gitignored (see
+[`infrastructure/.generated/README.md`](../../infrastructure/.generated/README.md)).
 
 ## Consequences
 

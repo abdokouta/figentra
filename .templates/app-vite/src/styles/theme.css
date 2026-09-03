@@ -1,0 +1,49 @@
+/*
+ * @file theme.css
+ * @description Academorix tenant dashboard — brand palette overlay.
+ *
+ *   ## What this file does
+ *
+ *   Ships the HeroUI Pro "glass" theme as a FOUC-safe baseline
+ *   until `@stackra/theming`'s runtime `applyDocumentTheme()` kicks
+ *   in from `main.tsx` and writes CSS variables inline on `<html>`
+ *   (inline styles beat every stylesheet rule).
+ *
+ *   The prior version of this file hardcoded a hue-148.67 green
+ *   palette as a static `:root {...}` override. That approach had
+ *   two failure modes:
+ *
+ *     1. First paint showed green regardless of the resolved theme.
+ *        A Track-Orange-preset visitor saw a green flash for ~50ms
+ *        before `applyDocumentTheme()` rewrote the tokens inline.
+ *
+ *     2. The hardcoded green was WRONG per the 2026-08 Academorix
+ *        rebrand — the brand accent is now Track Orange
+ *        (`oklch(68.51% 0.192 40.29)`, docs/brand/academorix/
+ *        01-color-system.md §8). Green was a pre-rebrand relic.
+ *
+ *   Retiring the hardcoded overlay means:
+ *     - FOUC baseline uses HeroUI Pro's glass theme (a neutral
+ *       carrier palette that harmonizes with any accent hue).
+ *     - Runtime tokens come from the Academorix Track-Orange preset
+ *       registered via `ThemingModule.forFeature([ACADEMORIX_ORANGE_THEME])`
+ *       in `src/app.module.ts` + activated by `applyDocumentTheme()`
+ *       in `main.tsx`.
+ *     - Post-auth tenant white-label overrides via `applyPayload`
+ *       cascade through cleanly (no stylesheet-baseline drag).
+ *
+ *   ## Signal ramp aliasing (deferred)
+ *
+ *   Dashboard has zero `--signal-*` consumers today (that convention
+ *   lives in the landing app). If the dashboard adopts the
+ *   `bg-[color:var(--signal-500)]` shape later, add an aliasing
+ *   block here that maps `--signal-100..900` to
+ *   `oklch(from var(--accent) l c h / α)` recipes — see
+ *   `apps/landing/src/styles/theme.css` for the reference shape.
+ *
+ * @see docs/brand/academorix/01-color-system.md — full palette spec
+ * @see src/config/academorix-orange-theme.constant.ts — Track-Orange preset
+ * @see https://heroui.com/docs/react/getting-started/theming
+ */
+
+@import "@heroui-pro/react/themes/glass";

@@ -9,6 +9,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check-types": "turbo run check-types",
+    "verify": "pnpm run format:check && pnpm run lint && pnpm run check-types",
     "catalog": "node infrastructure/scripts/collect-cloud-yaml.mjs",
     "docs:check": "node scripts/check-docblocks.mjs",
     "docker:compose": "node infrastructure/docker/scripts/generate-compose.mjs",
@@ -21,9 +22,13 @@
     "packages:catalog:check": "node scripts/check-package-catalogs.mjs",
     "packages:exports:check": "node scripts/check-export-maps.mjs",
     "dependencies:check": "node scripts/check-dependency-policy.mjs",
-    "standards:all": "pnpm run standards:check && pnpm run packages:catalog:check && pnpm run packages:exports:check && pnpm run packages:local:check && pnpm run dependencies:check && pnpm run workers:check && pnpm run docs:check && pnpm run ci:contract",
+    "standards:all": "pnpm run standards:check && pnpm run packages:catalog:check && pnpm run packages:exports:check && pnpm run packages:local:check && pnpm run dependencies:check && pnpm run workers:check && pnpm run modules:check && pnpm run docs:check && pnpm run ci:contract",
     "test": "turbo run test",
     "test:coverage": "turbo run test:coverage",
+    "test:packages": "turbo run test --filter=\"./packages/*\"",
+    "test:workers": "turbo run test --filter=\"./workers/*\"",
+    "test:services": "turbo run test --filter=\"./services/*\"",
+    "test:apps": "turbo run test --filter=\"./apps/*\"",
     "typecheck": "turbo run typecheck",
     "check": "pnpm run standards:all && pnpm run infra:check",
     "ci": "pnpm run check && pnpm run build",
@@ -53,7 +58,9 @@
     "commitlint:ci": "commitlint --from ${CI_MERGE_REQUEST_DIFF_BASE_SHA:-HEAD~1} --to ${CI_COMMIT_SHA:-HEAD} --verbose",
     "toolchain:check": "node scripts/check-toolchain.mjs",
     "control-planes:check": "node scripts/check-control-planes.mjs",
-    "workers:check": "node scripts/validate-workers-structure.mjs"
+    "workers:check": "node scripts/validate-workers-structure.mjs",
+    "modules:check": "node infrastructure/scripts/validate-modules.mjs",
+    "modules:validate": "node infrastructure/scripts/validate-modules.mjs"
   },
   "devDependencies": {
     "@stackra/prettier-config": "workspace:*",

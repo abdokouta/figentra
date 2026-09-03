@@ -1,0 +1,129 @@
+{
+  "name": "{{PACKAGE_NAME}}",
+  "main": "expo-router/entry",
+  "version": "0.0.0",
+  "description": "Academorix \u2014 family mobile app for parents and enrolled athletes (Option B two-app strategy per .kiro/steering/mobile-apps-strategy.md). Built on the Stackra React Native platform (Expo Router + DI-first architecture via @stackra/container + HeroUI Native + Pro + Uniwind + offline-first storage + i18n + push notifications + theming + Doppler-backed secrets + jest-expo). Targets iOS 15.1+ and Android SDK 24+.",
+  "private": true,
+  "scripts": {
+    "dev": "expo start --clear",
+    "start": "expo start",
+    "typecheck": "tsc --noEmit",
+    "doctor": "expo-doctor",
+    "build": "expo export --platform all",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:ci": "jest --ci --runInBand --coverage",
+    "test:e2e:build:ios": "pnpm prebuild:ios && detox build --configuration ios.sim.debug",
+    "test:e2e:ios": "detox test --configuration ios.sim.debug",
+    "test:e2e:build:android": "pnpm prebuild:android && detox build --configuration android.emu.debug",
+    "test:e2e:android": "detox test --configuration android.emu.debug",
+    "lint": "oxlint src",
+    "lint:fix": "oxlint src --fix",
+    "prebuild": "expo prebuild",
+    "prebuild:ios": "expo prebuild --platform ios",
+    "prebuild:android": "expo prebuild --platform android",
+    "rebuild:ios": "expo prebuild --clean --platform ios && expo run:ios",
+    "rebuild:android": "expo prebuild --clean --platform android && expo run:android",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "clean": "rm -rf node_modules ios android .expo dist"
+  },
+  "expo": {
+    "install": {
+      "exclude": [
+        "typescript",
+        "@shopify/react-native-skia",
+        "react",
+        "react-dom",
+        "react-native-reanimated",
+        "react-native-svg",
+        "react-native-worklets"
+      ]
+    }
+  },
+  "dependencies": {
+    "@expo/vector-icons": "catalog:",
+    "@internationalized/date": "catalog:",
+    "@internationalized/number": "catalog:",
+    "@react-native-community/netinfo": "catalog:",
+    "@shopify/react-native-skia": "catalog:",
+    "@tanstack/react-query": "catalog:",
+    "expo": "catalog:",
+    "expo-constants": "catalog:",
+    "expo-dev-client": "catalog:",
+    "expo-font": "catalog:",
+    "expo-haptics": "catalog:",
+    "expo-image": "catalog:",
+    "expo-linking": "catalog:",
+    "expo-local-authentication": "catalog:",
+    "expo-localization": "catalog:",
+    "expo-notifications": "catalog:",
+    "expo-router": "catalog:",
+    "expo-secure-store": "catalog:",
+    "expo-splash-screen": "catalog:",
+    "expo-status-bar": "catalog:",
+    "expo-system-ui": "catalog:",
+    "expo-web-browser": "catalog:",
+    "heroui-native": "catalog:",
+    "heroui-native-pro": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-native": "catalog:",
+    "react-native-gesture-handler": "catalog:",
+    "react-native-nitro-modules": "catalog:",
+    "react-native-reanimated": "catalog:",
+    "react-native-safe-area-context": "catalog:",
+    "react-native-screens": "catalog:",
+    "react-native-svg": "catalog:",
+    "react-native-worklets": "catalog:",
+    "reflect-metadata": "catalog:",
+    "tailwind-merge": "catalog:",
+    "tailwind-variants": "catalog:",
+    "tailwindcss": "catalog:",
+    "uniwind": "catalog:",
+    "@stackra/container": "workspace:*"
+  },
+  "trustedDependencies": [
+    "uniwind"
+  ],
+  "devDependencies": {
+    "@babel/plugin-proposal-decorators": "catalog:",
+    "@testing-library/react-native": "catalog:",
+    "@types/jest": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-test-renderer": "catalog:",
+    "babel-plugin-transform-typescript-metadata": "catalog:",
+    "babel-preset-expo": "catalog:",
+    "detox": "catalog:",
+    "expo-doctor": "catalog:",
+    "jest": "catalog:",
+    "jest-circus": "catalog:",
+    "jest-expo": "catalog:",
+    "prettier": "catalog:",
+    "react-test-renderer": "catalog:",
+    "typescript": "catalog:",
+    "@stackra/oxlint-config": "workspace:*",
+    "@stackra/prettier-config": "workspace:*",
+    "@stackra/typescript-config": "workspace:*"
+  },
+  "author": {
+    "name": "Figentra L.L.C",
+    "email": "dev@figentra.com",
+    "url": "https://figentra.com"
+  },
+  "homepage": "https://gitlab.com/academorix/mobile/-/tree/main/apps/family#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/academorix/mobile.git",
+    "directory": "apps/family"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/academorix/mobile/-/issues"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "prettier": "@stackra/prettier-config"
+}

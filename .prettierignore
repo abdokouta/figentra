@@ -20,14 +20,21 @@ coverage
 .dev.vars
 .dev.vars.*
 
-# Terraform (state + provider mirror + generated catalog)
+# Terraform (state + provider mirror)
 .terraform
 *.tfstate
 *.tfstate.*
-infrastructure/terraform/catalog.json
+
+# Machine-owned infrastructure output (catalog, docker-compose, tf plans).
+# Every file inside is regenerated on demand; never reformat.
+infrastructure/.generated/
 
 # Lockfiles (owned by the package manager, not the formatter)
 pnpm-lock.yaml
 
 # Reference material — inherited architecture snapshot, never reformatted
 .ref
+
+# Project templates — carry {{PLACEHOLDER}} tokens that Prettier can't parse.
+# The bootstrap scripts replace tokens at copy time; Prettier runs AFTER copy.
+.templates

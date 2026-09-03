@@ -15,7 +15,9 @@ Split infrastructure by execution/provisioning concern:
 - root `scripts/` is reserved for repository-wide automation.
 
 The generated Docker Compose output is
-`infrastructure/docker/docker-compose.generated.yml`.
+`infrastructure/.generated/docker-compose.yml` — machine-owned + gitignored per
+the `.generated/` folder contract (see
+[`infrastructure/.generated/README.md`](../../infrastructure/.generated/README.md)).
 
 `catalog.json` remains a reusable package metadata contract and must not be
 repurposed for Docker infrastructure. Docker uses `catalog.yaml` for its

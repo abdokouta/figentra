@@ -1,0 +1,50 @@
+/**
+ * @file <%= fileName %>
+ * @module <%= moduleName ?? '@stackra/nestjs-orm' %>/factories
+ * @description Factory for generating <%= entityName %> test data.
+ */
+
+import type { EntityData } from '@mikro-orm/core';
+import { BaseFactory } from '@stackra/nestjs-orm';
+import { <%= entityName %> } from '<%= entityImportPath %>';
+
+/**
+ * Factory for generating <%= entityName %> instances.
+ *
+ * @example
+ * ```typescript
+ * const factory = <%= className %>.make(em);
+ *
+ * // Make without persisting
+ * const entity = factory.makeOne();
+ * const entities = factory.make(10);
+ *
+ * // Create and persist
+ * const persisted = await factory.createOne();
+ * const batch = await factory.create(20);
+ *
+ * // With overrides
+ * const custom = factory.makeOne({ name: 'Custom' });
+ *
+ * // With state helpers
+ * const withStamps = factory.withTimestamps().withUuid().create(5);
+ * ```
+ */
+export class <%= className %> extends BaseFactory<<%= entityName %>> {
+  /** The entity class this factory produces. */
+  public readonly model = <%= entityName %>;
+
+  /**
+   * Define the default attribute values for the entity.
+   *
+   * @returns Default entity data using faker for realistic values
+   */
+  protected definition(): EntityData<<%= entityName %>> {
+    return {
+      // TODO: Define default attributes using this.faker
+      // name: this.faker.person.fullName(),
+      // email: this.faker.internet.email(),
+      // status: 'active',
+    } as EntityData<<%= entityName %>>;
+  }
+}

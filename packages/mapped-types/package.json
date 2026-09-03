@@ -1,0 +1,112 @@
+{
+  "name": "@pixielity/mapped-types",
+  "version": "1.0.0",
+  "description": "A utility library for creating mapped types in TypeScript with support for class-validator and class-transformer metadata inheritance",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint \"**/*.ts\"",
+    "format": "prettier --write \"**/*.ts\"",
+    "docs": "typedoc --out docs src",
+    "prepare-husky": "husky",
+    "prepublishOnly": "npm test && npm run lint && npm run build",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A",
+    "postversion": "git push && git push --tags",
+    "changeset": "changeset",
+    "version-packages": "changeset version && git add . && git commit -m \"Version Packages\"",
+    "release": "npm run build && changeset publish",
+    "commit": "git-cz"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pixielity/mapped-types.git"
+  },
+  "keywords": [
+    "typescript",
+    "mapped-types",
+    "class-validator",
+    "class-transformer",
+    "dto",
+    "validation",
+    "transformation"
+  ],
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pixielity/mapped-types/issues"
+  },
+  "homepage": "https://github.com/pixielity/mapped-types#readme",
+  "devDependencies": {
+    "@changesets/cli": "^2.29.8",
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
+    "@jest/globals": "^30.2.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.10.1",
+    "@typescript-eslint/eslint-plugin": "^8.48.0",
+    "@typescript-eslint/parser": "^8.48.0",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "git-cz": "^4.9.0",
+    "husky": "^9.1.7",
+    "jest": "^30.2.0",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.3",
+    "ts-jest": "^29.4.5",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.5.1",
+    "typedoc": "^0.28.15",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.0"
+  },
+  "peerDependencies": {
+    "class-transformer": "",
+    "class-validator": "",
+    "reflect-metadata": "^0.2.2"
+  },
+  "peerDependenciesMeta": {
+    "class-transformer": {
+      "optional": true
+    },
+    "class-validator": {
+      "optional": true
+    }
+  },
+  "files": [
+    "dist/**/*",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "lint-staged": {
+    "*.ts": [
+      "prettier --write",
+      "eslint --fix"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "packageManager": "bun@1.3.3"
+}

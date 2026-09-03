@@ -1,0 +1,106 @@
+{
+  "name": "@nesvel/nestjs-mail",
+  "version": "1.0.0",
+  "description": "Production-ready email module for NestJS with multiple transports (SMTP, SES, SendGrid, Mailgun, Postmark), React templates, and JSON-LD email markup support",
+  "license": "MIT",
+  "author": "Nesvel",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./resources/*": {
+      "types": "./src/resources/*",
+      "require": "./src/resources/*",
+      "import": "./src/resources/*"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./jest-e2e.config.js",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write \"src/**/*.ts\""
+  },
+  "dependencies": {
+    "@nestjs-modules/mailer": "^2.0.2",
+    "@nestjs/bullmq": "^11.0.4",
+    "@react-email/components": "^1.0.0",
+    "@react-email/render": "^2.0.0",
+    "@react-email/tailwind": "^2.0.0",
+    "bullmq": "^5.63.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "ioredis": "^5.8.2",
+    "nodemailer": "^7.0.10",
+    "tsx": "^4.20.6",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
+    "react-intl": "^7.1.14"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/config": "^4.0.0",
+    "@nestjs/core": "^11.0.0",
+    "reflect-metadata": "^0.2.0",
+    "rxjs": "^7.8.0"
+  },
+  "peerDependenciesMeta": {
+    "@nestjs/config": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@nesvel/eslint-config": "workspace:*",
+    "@nesvel/jest-config": "workspace:*",
+    "@nesvel/tsup-config": "workspace:*",
+    "@nesvel/typescript-config": "workspace:*",
+    "@nestjs/common": "catalog:nestjs",
+    "@nestjs/config": "catalog:nestjsModules",
+    "@nestjs/core": "catalog:nestjs",
+    "@nestjs/testing": "catalog:nestjsCli",
+    "@types/nodemailer": "^7.0.3",
+    "@types/react": "catalog:types",
+    "@types/react-dom": "catalog:types",
+    "reflect-metadata": "catalog:nestjs",
+    "rxjs": "catalog:nestjs"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20",
+    "npm": ">=10"
+  },
+  "packageManager": "bun@1.3.2",
+  "keywords": [
+    "nestjs",
+    "mail",
+    "email",
+    "mailer",
+    "nodemailer",
+    "smtp",
+    "ses",
+    "sendgrid",
+    "mailgun",
+    "postmark",
+    "react-email",
+    "templates",
+    "json-ld",
+    "email-markup",
+    "transactional-email",
+    "typescript"
+  ]
+}

@@ -1,0 +1,50 @@
+# =============================================================================
+# @file infrastructure/modules/stripe-payments/module.yaml
+# @description Stripe payment processing integration.
+#
+# Machine-readable infrastructure module manifest. Validated against
+# infrastructure/modules/schema/module.v1.json at CI time.
+#
+# @security No secrets. Env-var values come from Doppler at runtime;
+#   this file only declares the contract (env-var names + source expressions).
+# =============================================================================
+name: stripe-payments
+version: "1.0.0"
+kind: infrastructure-module
+category: third-party
+maturity: beta
+description: "Stripe payment processing integration. Configures the Stripe API key, webhook secret, and default currency for the deployable to process payments, subscriptions, and invoices."
+provides: ["payments.stripe"]
+consumes: []
+runtime_targets:
+  terraform: terraform.tf
+  docker: null
+  wrangler: null
+schema:
+  type: object
+  properties:
+    default_currency:
+      type: string
+      pattern: "^[a-z]{3}$"
+      default: usd
+      description: ISO 4217 currency code.
+    webhook_path:
+      type: string
+      default: /webhooks/stripe
+      description: Webhook endpoint path.
+    payment_methods:
+      type: array
+      items:
+        type: string
+        enum: ["card", "sepa_debit", "apple_pay", "google_pay"]
+      default: ["card"]
+env_vars:
+  - name: STRIPE_SECRET_KEY
+    description: Stripe secret API key (from Doppler).
+    source: terraform_output.stripe_secret_key
+  - name: STRIPE_WEBHOOK_SECRET
+    description: Stripe webhook signing secret (from Doppler).
+    source: terraform_output.stripe_webhook_secret
+  - name: STRIPE_DEFAULT_CURRENCY
+    description: Default currency.
+    source: module.config.default_currency

@@ -1,0 +1,38 @@
+{
+  "extends": "@nesvel/typescript-config/nest-lib",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./",
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@adapters/*": ["./src/adapters/*"],
+      "@adapters": ["./src/adapters"],
+      "@classes/*": ["./src/classes/*"],
+      "@classes": ["./src/classes"],
+      "@constants/*": ["./src/constants/*"],
+      "@constants": ["./src/constants"],
+      "@decorators/*": ["./src/decorators/*"],
+      "@decorators": ["./src/decorators"],
+      "@enums/*": ["./src/enums/*"],
+      "@enums": ["./src/enums"],
+      "@exceptions/*": ["./src/exceptions/*"],
+      "@exceptions": ["./src/exceptions"],
+      "@interfaces/*": ["./src/interfaces/*"],
+      "@interfaces": ["./src/interfaces"],
+      "@markup/*": ["./src/markup/*"],
+      "@markup": ["./src/markup"],
+      "@processors/*": ["./src/processors/*"],
+      "@processors": ["./src/processors"],
+      "@providers/*": ["./src/providers/*"],
+      "@providers": ["./src/providers"],
+      "@resources/*": ["./src/resources/*"],
+      "@resources": ["./src/resources"],
+      "@services/*": ["./src/services/*"],
+      "@services": ["./src/services"]
+    },
+    "jsx": "react-jsx"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"]
+}

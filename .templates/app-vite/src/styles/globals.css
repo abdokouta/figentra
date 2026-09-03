@@ -1,0 +1,59 @@
+/*
+ * Global stylesheet — mounted once by `main.tsx` at boot.
+ *
+ * Order matters:
+ *   1. `@stackra/ui/react/styles` → base HeroUI + Tailwind v4 layer,
+ *      HeroUI Pro's default component styles, and Iconify support.
+ *      Ships HeroUI's canonical default theme (see
+ *      `@heroui/styles/themes/default/variables.css`) which becomes
+ *      the FOUC baseline every visitor sees before the container
+ *      resolves.
+ *
+ *   2. `theme.css` → Academorix brand palette overlay. Re-declares
+ *      HeroUI's default palette tokens so first-paint colours match
+ *      the brand before the DI container resolves. Inline styles
+ *      from `@stackra/theming`'s runtime engine win over these
+ *      stylesheet rules, so tenant white-label overrides continue
+ *      to apply on top. See `theme.css` for the full token list.
+ *
+ *   3. Runtime theme overrides land via
+ *      `document.documentElement.style.setProperty(...)` calls
+ *      issued by `@stackra/theming`'s `WebThemeBindings.applyTokens`
+ *      once `ThemeService.setTheme(...)` or `setMode(...)` runs.
+ *      The palette engine expands the theme's 7-scalar
+ *      `IThemeValues` bag into the full ~30-token map at runtime.
+ *
+ * ## How to customize the dashboard's default look
+ *
+ * - Change the active preset via `themingConfig.defaultTheme` (see
+ *   `src/config/theming.config.ts`).
+ * - Author a custom preset with `ThemingModule.forFeature([{...}])`
+ *   in `app.module.ts`.
+ * - Override radius / form-radius / font via `themingConfig.radius`
+ *   / `.formRadius` / `.fontFamily`.
+ * - Ship a tenant-brand theme from the backend — the boot payload
+ *   carries `tenant.theming` (see `IThemingPayload`), and
+ *   `ThemeService.applyPayload` writes it before first paint.
+ *
+ * ## `@source` scans
+ *
+ * Tailwind v4 needs every framework package that ships React
+ * components with utility classes listed so it can generate the
+ * corresponding CSS. Missing an entry = classes silently drop from
+ * the output + components look unstyled.
+ *
+ * Path anchor — `@source` paths are relative to this file
+ * (`src/styles/globals.css`), so `../../../../packages/frontend/<pkg>/src/`
+ * walks up four levels (styles → src → app-root → apps → workspace-root)
+ * and back down.
+ */
+@import "tailwindcss";
+@import "@heroui/styles";
+@import "./theme.css";
+
+/*
+ * Dark-mode variant selector — `dark:*` utility classes apply when
+ * any ancestor carries the `.dark` class. `@stackra/theming`
+ * toggles `.dark` on `<html>` when `resolvedMode === "dark"`.
+ */
+@custom-variant dark (&:is(.dark *));

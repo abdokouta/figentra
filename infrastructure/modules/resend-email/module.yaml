@@ -1,0 +1,46 @@
+# =============================================================================
+# @file infrastructure/modules/resend-email/module.yaml
+# @description Resend transactional email integration.
+#
+# Machine-readable infrastructure module manifest. Validated against
+# infrastructure/modules/schema/module.v1.json at CI time.
+#
+# @security No secrets. Env-var values come from Doppler at runtime;
+#   this file only declares the contract (env-var names + source expressions).
+# =============================================================================
+name: resend-email
+version: "1.0.0"
+kind: infrastructure-module
+category: third-party
+maturity: beta
+description: "Resend transactional email integration. Configures the Resend API key and default sender domain for the deployable to send transactional emails (password resets, notifications, receipts)."
+provides: ["email.transactional"]
+consumes: []
+runtime_targets:
+  terraform: terraform.tf
+  docker: null
+  wrangler: null
+schema:
+  type: object
+  properties:
+    from_domain:
+      type: string
+      description: Default sender domain (e.g. noreply.figentra.com).
+    from_name:
+      type: string
+      default: Figentra
+      description: Default sender display name.
+    reply_to:
+      type: string
+      description: Default reply-to address.
+  required: ["from_domain"]
+env_vars:
+  - name: RESEND_API_KEY
+    description: Resend API key (from Doppler).
+    source: terraform_output.resend_api_key
+  - name: EMAIL_FROM_DOMAIN
+    description: Default sender domain.
+    source: module.config.from_domain
+  - name: EMAIL_FROM_NAME
+    description: Default sender display name.
+    source: module.config.from_name

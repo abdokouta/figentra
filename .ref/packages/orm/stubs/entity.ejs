@@ -1,0 +1,77 @@
+<%# ────────────────────────────────────────────────────────────────────────── %>
+<%# @stackra/nestjs-orm — Entity Stub Template                                 %>
+<%#                                                                             %>
+<%# Available variables:                                                        %>
+<%#   - name        : Entity class name (PascalCase, e.g., 'Product')           %>
+<%#   - className   : Same as name (for consistency with other stubs)           %>
+<%#   - tableName   : Database table name (snake_case plural, e.g., 'products') %>
+<%#   - fileName    : Output file name (e.g., 'product.entity.ts')              %>
+<%#   - timestamps  : Boolean — include @Timestamps() trait                     %>
+<%#   - softDeletes : Boolean — include @SoftDeletes() trait                    %>
+<%#   - Str         : @stackra/ts-support string utilities                      %>
+<%#                                                                             %>
+<%# Usage in make:entity:                                                       %>
+<%#   stackra make:entity Product --table products --timestamps --soft-deletes  %>
+<%#                                                                             %>
+<%# Notes:                                                                      %>
+<%#   - BaseEntity provides `id` (UUID) — do NOT redeclare it                  %>
+<%#   - Trait fields (createdAt, deletedAt, etc.) are auto-added by decorators  %>
+<%#   - Use @Property() for every column with correct type/nullable/unique      %>
+<%# ────────────────────────────────────────────────────────────────────────── %>
+/**
+ * @file <%= fileName %>
+ * @module @stackra/nestjs-orm/entities
+ * @description <%= className %> entity — represents a row in the `<%= tableName %>` table.
+ *
+ *   Traits:<% if (timestamps) { %> @Timestamps()<% } %><% if (softDeletes) { %> @SoftDeletes()<% } %>
+ */
+
+import { BaseEntity } from '@stackra/nestjs-orm';
+import {
+  Entity,
+  Property,
+<% if (timestamps) { -%>
+  Timestamps,
+<% } -%>
+<% if (softDeletes) { -%>
+  SoftDeletes,
+<% } -%>
+} from '@stackra/nestjs-orm';
+
+/**
+ * <%= className %> entity.
+ *
+ * Represents a record in the `<%= tableName %>` database table.
+ * Extends `BaseEntity` which provides a UUID `id` primary key.
+ *
+ * @example
+ * ```typescript
+ * const item = em.create(<%= className %>, { name: 'Example' } as any);
+ * em.persist(item);
+ * await em.flush();
+ * ```
+ */
+@Entity({ tableName: '<%= tableName %>' })
+<% if (timestamps) { -%>
+@Timestamps()
+<% } -%>
+<% if (softDeletes) { -%>
+@SoftDeletes()
+<% } -%>
+export class <%= className %> extends BaseEntity {
+  /**
+   * Display name for the <%= Str.lower(className) %>.
+   *
+   * @example 'My First <%= className %>'
+   */
+  @Property()
+  public name!: string;
+
+  /**
+   * Optional description or notes.
+   *
+   * @example 'A detailed description of this record.'
+   */
+  @Property({ nullable: true, type: 'text' })
+  public description?: string;
+}

@@ -1,0 +1,62 @@
+name: Build family — production
+
+# Production builds — App Store + Play Store submission.
+# Fires automatically on every push to `main` + on manual dispatch.
+#
+# ── Why we use EAS Workflows ──
+# Same rationale as build-preview.yml — codify the build+submit
+# sequence as YAML so no operator has to remember the eas CLI
+# incantation on release day. See:
+#   .docs/runbooks/mobile-eas-build.md §"CI/CD via EAS Workflows"
+#
+# ── Submit step ──
+# The submit job depends on the build job's output and pushes the
+# generated .ipa / .aab to the respective store per eas.json's
+# `submit.production` config. Requires the following EAS env vars
+# (project scope, sensitive visibility — provisioned by terraform's
+# mobile module and/or by the operator via `eas credentials`):
+#   APP_STORE_CONNECT_APPLE_ID
+#   APP_STORE_CONNECT_ASC_APP_ID
+#   APP_STORE_CONNECT_APPLE_TEAM_ID
+#   GOOGLE_PLAY_SERVICE_ACCOUNT_JSON  (path to the mounted service-account file)
+#
+# ── Trigger ──
+# push:main         — every merge to main ships a production build.
+# workflow_dispatch — on-demand from the dashboard (e.g. re-submit
+#                     after a rejected build).
+#
+# ── Rollback ──
+# `git revert` on main + push. The workflow re-fires; App Store /
+# Play Store review the reverted build. There is no dashboard
+# "rollback deploy" button — git history is the source of truth,
+# per .kiro/steering/laravel-cloud-conventions.md §Rule 7.
+
+on:
+  push:
+    branches: ['main']
+  workflow_dispatch:
+
+jobs:
+  build_ios_production:
+    type: build
+    params:
+      platform: ios
+      profile: production
+
+  build_android_production:
+    type: build
+    params:
+      platform: android
+      profile: production
+
+  submit_ios:
+    needs: [build_ios_production]
+    type: submit
+    params:
+      build_id: ${{ needs.build_ios_production.outputs.build_id }}
+
+  submit_android:
+    needs: [build_android_production]
+    type: submit
+    params:
+      build_id: ${{ needs.build_android_production.outputs.build_id }}
