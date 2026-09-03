@@ -2,31 +2,40 @@
 authored_by: kiro
 authored_at: 2026-09-03
 source: prompt://workspace-standardization
-reviewed_by: null
-reviewed_at: null
+status: canonical
 ---
 
 # Figentra — 12-Month Enterprise Day-One Architecture & Implementation Plan
 
-**Status:** Canonical cross-package plan  
 **Plan standard:** `.kiro/plans/2026-09-03-enterprise-day-one-plan-standard.md`
+**Service/runtime standard:** `.kiro/plans/01-global/service-worker-architecture.md`
 
-This directory is the canonical planning surface for the Figentra monorepo/framework. Every package plan must follow the repository's established dated-plan structure, existing steering standards, and applicable ADRs. Package plans are implementation contracts, not prototypes.
+This is the canonical cross-platform architecture plan. It governs package, service, worker, runtime, application, infrastructure and contract boundaries. Plans are implementation contracts, not prototypes.
 
-## Planning rules
+## Core ownership law
 
-- Plans describe production-ready architecture, not placeholders or deferred redesigns.
-- Every package defines its complete public API, internal structure, dependencies, contracts, DI tokens, runtime adapters, configuration, security, observability, errors, testing, migration and release behavior before implementation.
-- Contracts are owned centrally by `@stackra/contracts`.
-- Dependency direction is contracts → foundation → capabilities → runtime adapters → applications.
-- Runtime-neutral core packages must not import framework/runtime globals.
-- Storage and cache are distinct concerns; filesystem I/O and object storage are separate operational capabilities even when exposed through a common storage vocabulary.
-- Database owns connectivity, transactions, lifecycle and database-level operations; ORM owns mapping, repositories and persistence behavior.
-- Discovery finds metadata; registries own storage/indexing; populators perform population; factories construct instances; adapters translate boundaries; providers integrate with DI; managers orchestrate.
-- Request scope is explicit and context-bound; no hidden ambient global request state.
-- Security, observability, failure recovery, conformance tests and public exports are day-one requirements.
-- Compatibility adapters may exist only for an explicit migration boundary. Compatibility code must never become the target architecture.
-- No architecture may be left as TODO, stub, shim, placeholder provider, fake production driver or post-implementation redesign.
+```text
+Package      = reusable technical/platform capability
+Service      = bounded-context business/domain implementation
+Worker role  = asynchronous execution role of its owning service
+Contracts    = cross-service typed protocol boundary
+Cloudflare   = explicit edge/serverless runtime, not generic background workers
+```
+
+A domain capability is **not** automatically a package. Business implementation lives in `services/<service>/src/modules`. A worker normally lives in the same service repository/source tree and is deployed as a distinct runtime role when asynchronous scaling or lifecycle requires it. A separate top-level worker application requires an explicit ADR proving an independent boundary.
+
+## Canonical repository architecture
+
+```text
+apps/                         # product applications
+services/                     # deployable bounded contexts
+packages/                    # reusable platform/runtime libraries
+workers/                     # exceptional independent workers only
+infrastructure/              # Docker/Terraform/cloud operations
+.kiro/specs/                 # component specifications
+.kiro/plans/                 # implementation plans
+.docs/adr/                   # architecture decisions
+```
 
 ## Canonical package map
 
@@ -53,18 +62,8 @@ packages/
 │   ├── realtime
 │   └── link
 ├── capabilities/
-│   ├── events
-│   ├── identity
-│   ├── queue
-│   ├── sync
-│   ├── search
-│   ├── media
-│   ├── notifications
-│   ├── analytics
-│   ├── marketing
-│   ├── workflow
-│   ├── query
-│   └── state
+│   ├── identity       # reusable identity/authentication SDK boundary
+│   └── tracking       # reusable client behavioral collection SDK
 ├── runtime/
 │   ├── node
 │   ├── nestjs
@@ -78,208 +77,201 @@ packages/
     ├── navigation
     ├── i18n
     ├── theming
-    ├── tracking
     └── ui
 ```
 
-### Identity/auth boundary
+The capabilities directory is deliberately small. Do not create package implementations for Notifications, Analytics, Marketing, Audit, Search, Media, Workflow, Query, State, Sync or other business bounded contexts merely to share code. Their implementations belong to services.
 
-Authentication and identity are one platform bounded context, exposed through `@stackra/identity`. The package owns authentication orchestration, provider adapters, principal normalization, sessions, credentials/tokens, service identities and identity context. Supabase Auth remains the day-one human authentication provider; its provider state is external to Figentra. There is **no independent `@stackra/auth` capability** in the target architecture. IAM/Policy remains a separate authorization boundary.
-
-The old standalone `@stackra/auth` plan is therefore a migration/merge artifact only and must not be implemented as a separate package.
-
-### Telemetry/analytics boundary
-
-Figentra has four intentionally separate concerns:
+## Canonical service model
 
 ```text
-Operational telemetry
-  = logs + metrics + traces + runtime/resource signals
-  → @stackra/observability + @stackra/logger
-
-Product/ad behavioral collection
-  = track/identify/page/screen/campaign/conversion events + consent
-  → @stackra/tracking
-
-Analytics
-  = durable ingestion + aggregation + attribution + analytical queries/read models
-  → @stackra/analytics
-
-Marketing
-  = audiences + campaigns + journeys + activation + server-side conversion delivery
-  → @stackra/marketing
+services/
+├── identity/
+├── tenant/
+├── scope/
+├── iam/
+├── policy/
+├── approval/
+├── monetization/
+├── entitlements/
+├── usage/
+├── notifications/
+├── audit/
+├── files/
+├── integrations/
+├── reporting/
+├── search/
+└── workflow/
 ```
 
-These are not interchangeable. Logs are not analytics; traces are not tracking; tracking events are not domain events; analytics is not marketing; audit is not any of the above.
+Each service owns its modules, domain logic, persistence, APIs, integrations and internal interfaces under `services/<service>/src/modules`.
 
-`@stackra/events` remains the domain/application fact transport. `@stackra/queue` and `@stackra/nats` transport work/events but do not own analytics or marketing semantics.
+## Service runtime roles
 
-### Runtime placement
-
-Capabilities are runtime-neutral. NestJS is the primary control-plane/application API runtime; Worker runtimes execute edge/background workloads where they fit; dedicated workers execute asynchronous data-plane processing.
+A service can produce multiple deployables from one source tree:
 
 ```text
-NestJS / HTTP
-  → commands, queries, admin/control APIs, webhooks
+services/notifications
+   ├── API instance(s)
+   └── worker/consumer instance(s)
 
-NATS / Queue
-  → durable asynchronous work
-
-Worker / background runtime
-  → ingestion, aggregation, campaign evaluation, notification delivery,
-    indexing, integrations, retries and scheduled work
+services/analytics
+   ├── API/query instance(s)
+   └── ingestion/aggregation worker instance(s)
 ```
 
-A capability plan MUST specify which operations are synchronous control-plane operations and which are asynchronous worker operations. A capability must not become NestJS-only merely because its service exposes an HTTP API.
+The role is selected at bootstrap/configuration time. The service may use NestJS HTTP, NATS microservices, event consumers and queue consumers. NestJS officially supports microservice transports, NATS queue groups and hybrid HTTP + microservice applications. citeturn0search1turn0search3turn2search7
 
-## Dependency law
+A worker role MUST share the service's domain modules and contracts rather than becoming a duplicated implementation. It must support bounded concurrency, idempotency, retries/DLQ where applicable, graceful shutdown and readiness.
+
+## Cloudflare boundary
+
+Cloudflare Workers are not the default Figentra worker runtime. Use them only for workloads that benefit from edge/serverless execution or Cloudflare-native primitives. Conventional NestJS services and service worker roles run on Node.js/container infrastructure.
+
+Cloudflare currently provides substantial Node.js API compatibility, including a growing set of built-in APIs, but Workers remain a distinct runtime with compatibility constraints; this does not turn a NestJS Node process into a native Cloudflare Worker. citeturn0search0turn0search13
+
+## Contracts
+
+`@stackra/contracts` is the only cross-service protocol package. It owns versioned DTOs, schemas, commands, queries, events, errors, enums and public protocol interfaces required by consumers.
 
 ```text
-@stackra/contracts
-        ↓
-container / errors / support / config
-        ↓
-logger / observability / storage / cache / database / schema / pipeline
-        ↓
-orm / http / nats / realtime / pagination / state-machine / link
-        ↓
-events / identity / queue / sync / search / media / notifications
-        / analytics / marketing / workflow / query / state
-        ↓
-runtime adapters + UI
-        ↓
-applications
+Service A
+   │
+   ├── imports @stackra/contracts/foo
+   │
+   ▼
+Typed protocol
+   ▲
+   │
+Service B implementation
 ```
 
-Forbidden regressions include ORM-owned database connection policy, routing inside link/error packages, cache being treated as durable storage, framework dependencies leaking into runtime-neutral cores, duplicate discovery implementations, duplicated canonical identifiers, analytics logic inside tracking SDKs, marketing activation inside analytics ingestion, and application code depending directly on vendor telemetry SDKs.
+Consumers never import another service's implementation, repository, ORM entity, provider SDK or internal interface.
 
-## Mandatory plan structure
+Internal implementation interfaces remain inside the owning service. Provider-specific SDK types remain behind adapters.
 
-Every package plan follows `.kiro/plans/2026-09-03-enterprise-day-one-plan-standard.md` and therefore documents, in order:
+## Identity/authentication
 
-1. frontmatter and ownership metadata
-2. status, ADR anchors, references and dependencies
-3. purpose and non-goals
-4. manager pattern where applicable
-5. complete subpath/file layout
-6. contracts split and DI tokens
-7. locked public API/export map
-8. execution/lifecycle model
-9. drivers/adapters/providers
-10. configuration and validation
-11. discovery/registry behavior
-12. runtime matrix
-13. security
-14. errors/recovery
-15. observability
-16. concurrency/performance/resource limits
-17. enterprise/tenancy/isolation rules
-18. persistence/migrations/compatibility
-19. testing/conformance/runtime matrix
-20. dependencies/exports/versioning
-21. implementation phases with completion gates
-22. exit criteria and cross-references
+`@stackra/identity` is the reusable identity/authentication SDK boundary where reuse is real. It owns authentication orchestration, provider adapters, principal normalization and identity context. Supabase Auth is the day-one human authentication provider. There is no standalone `@stackra/auth` target.
 
-## Canonical signal ownership
+The Identity service owns authoritative Figentra-side principal/session/identity state. IAM and Policy own authorization decisions.
 
-| Concern | Canonical owner | Must not own |
-|---|---|---|
-| Structured application logs | `@stackra/logger` | business analytics, audit persistence |
-| OTel SDK/context/export/instrumentation | `@stackra/observability` | product tracking, campaign logic |
-| Metrics | `@stackra/observability` | billing usage semantics |
-| Distributed tracing | `@stackra/observability` | user journey analytics |
-| Runtime/resource monitoring signals | `@stackra/observability` + infrastructure | product reporting |
-| Security/business audit | audit capability/service | operational logs/traces |
-| Domain/application events | `@stackra/events` | telemetry implementation |
-| Client/product/ad tracking | `@stackra/tracking` | durable analytics warehouse |
-| Analytics ingestion/aggregation/query | `@stackra/analytics` | notification delivery/campaign activation |
-| Marketing campaigns/audiences/activation | `@stackra/marketing` | operational telemetry |
-| Billable usage/metering | existing Usage service/capability | generic analytics |
-| Notification delivery | `@stackra/notifications` | marketing campaign ownership |
-
-## Observability contract
-
-OpenTelemetry is the canonical cross-runtime telemetry model for traces, metrics and telemetry context, with logs correlated to the same execution/resource context. The implementation follows OTel semantic conventions rather than inventing Figentra-specific replacements.
-
-Every runtime propagates, where applicable:
+## Operational telemetry and product signals
 
 ```text
-trace_id
-span_id
-trace_state
-request_id
-correlation_id
-causation_id
-service.name
-service.version
-deployment.environment.name
-tenant_id (safe/allowlisted)
-principal_id (safe/allowlisted)
+@stackra/logger
+  → structured logs
+
+@stackra/observability
+  → OpenTelemetry traces, metrics, propagation, instrumentation
+
+@stackra/tracking
+  → behavioral/product/ad event collection SDK
+
+Analytics service
+  → durable analytical ingestion, aggregation, attribution, queries
+
+Marketing service
+  → audiences, campaigns, journeys, activation
+
+Audit service
+  → immutable security/business audit records
 ```
 
-High-cardinality identifiers and PII MUST NOT become unbounded metric labels. Sensitive fields are centrally redacted before logs or telemetry leave the process. Business telemetry must never contain credentials, access tokens, cookies, authorization headers or raw secrets.
+These concerns are intentionally separate. Logs are not audit records, traces are not tracking, tracking is not domain events, analytics is not marketing, and audit is not operational telemetry.
 
-### Monitoring is an operational consumer, not another application capability
+## Infrastructure and monitoring
 
-"Monitoring" means collection, storage, dashboards, alert rules, SLOs and on-call workflows over operational telemetry. It is not a second `monitoring` package. Runtime instrumentation belongs to `@stackra/observability`; backend/collector deployment and dashboards belong to infrastructure/operations plans; alert definitions are version-controlled operational configuration.
+Monitoring is an operational consumption layer, not a business package. Instrumentation belongs to observability; collectors, storage, dashboards, alerts, SLOs and on-call configuration belong to infrastructure.
 
-## Storage boundary
+Docker and Terraform are first-class infrastructure tooling. Development, staging and production have isolated configuration/state. Production telemetry must have retention, access control, secret management, backup/DR where required, alert validation and failure-mode tests.
 
-`@stackra/storage` is the canonical storage vocabulary, but the plan must preserve the repository's explicit operational distinction between key/value storage, secure storage, filesystem storage and object storage. Durable storage is not cache. Filesystem operations must not be implemented as cache behavior, and object-storage adapters must not leak vendor APIs into application code.
+## Storage/database/ORM law
 
-## Cross-package requirements
+- Storage is not cache.
+- Database owns connections, lifecycle, transactions, health and DB-level routing/migrations.
+- ORM owns mapping, repositories, identity map/unit-of-work and persistence behavior.
+- Object storage, filesystem, secure storage and key/value storage remain explicit adapters.
 
-Every package plan must define:
+## Discovery and construction
 
-- exact package exports and forbidden deep imports
-- contracts and token ownership
-- lifecycle and scope
-- configuration schema and startup validation
-- adapter selection and registration
-- error taxonomy, retryability, timeout and cancellation
-- authentication/authorization and tenant isolation where applicable
-- secret/redaction rules
-- logs, metrics and tracing hooks
-- rate limits, backpressure and resource limits
-- adapter conformance tests
-- runtime-specific behavior for Browser, React Native, Node/NestJS, Desktop and Worker where applicable
-- migration and rollback constraints
-- documentation and examples
-- release/versioning/change-management requirements
+Use one platform-wide lifecycle vocabulary:
 
-## Implementation sequencing
+```text
+Discovery → finds metadata
+Registry  → stores/indexes metadata
+Populator → populates registry
+Factory   → constructs instances
+Adapter   → translates boundaries
+Provider  → integrates construction with DI
+Manager   → orchestrates operations
+```
 
-Foundation packages are implemented first only because downstream packages depend on their contracts. This does not defer downstream architecture: all downstream package plans must be complete before implementation starts.
+No duplicate discovery systems or duplicate canonical identifiers.
 
-Recommended dependency sequence:
+## NestJS enterprise baseline
 
-1. contracts
-2. container
-3. support
-4. errors
-5. config
-6. logger + observability
-7. storage
-8. cache
-9. database
-10. orm
-11. schema
-12. pagination
-13. pipeline/state-machine
-14. HTTP/NATS/realtime/link
-15. events + identity
-16. queue
-17. notifications/sync/search/media
-18. tracking + analytics
-19. marketing/workflow/query/state
-20. runtime adapters
-21. UI/runtime integration
-22. cross-package conformance and release verification
+Every NestJS service/role follows the platform baseline:
+
+- explicit bootstrap/runtime role;
+- modular architecture aligned to bounded contexts;
+- dependency injection and explicit providers;
+- Fastify where required by the repository standard;
+- global runtime validation using the canonical schema/validation policy;
+- versioned OpenAPI for HTTP APIs;
+- NATS request/response and event-based messaging where applicable;
+- queue groups/consumer groups for horizontal worker scaling;
+- correlation/request/trace propagation;
+- structured JSON logging;
+- OpenTelemetry instrumentation;
+- readiness/liveness semantics appropriate to API or worker role;
+- graceful shutdown and connection draining;
+- bounded concurrency, timeouts, cancellation, retries and idempotency;
+- tenant isolation and service authentication;
+- no secrets in logs/telemetry;
+- contract, integration, end-to-end and conformance testing;
+- immutable container builds and automated deployment.
+
+NestJS explicitly documents production deployment, health checks, logging, observability, scaling, Dockerization, validation, OpenAPI and lifecycle shutdown hooks as production concerns. citeturn2search6turn2search4turn2search0turn2search1
+
+## Mandatory package-plan standard
+
+Every reusable package plan must define complete public API, exports, internal file structure, contracts, DI tokens, lifecycle/scopes, configuration, adapters/providers, discovery, runtime matrix, security, errors/recovery, observability, concurrency/resource limits, tenancy/isolation where applicable, persistence/migrations, compatibility, tests, versioning and phase exit criteria.
+
+No target architecture may be left as a TODO, placeholder provider, fake production driver, target shim or deferred redesign.
+
+## Mandatory service-plan standard
+
+Every service plan must define:
+
+1. bounded-context ownership;
+2. module tree under `src/modules`;
+3. HTTP/control-plane API;
+4. NATS/event/queue contracts;
+5. persistence and migrations;
+6. internal interfaces and provider adapters;
+7. API/consumer/worker/scheduler role bootstraps;
+8. idempotency, retries, DLQ and reconciliation;
+9. security and tenant isolation;
+10. audit and observability integration;
+11. health/readiness and graceful shutdown;
+12. scaling/resource limits;
+13. testing and contract conformance;
+14. deployment and rollback.
 
 ## Definition of done
 
-A package plan is implementation-ready only when an engineer can create the package without inventing architecture during coding. The plan must provide concrete interfaces/types, dependency rules, adapter boundaries, file-level structure, lifecycle semantics, tests, security controls, operational behavior, acceptance criteria and migration/release constraints.
+The complete plan set is ready for implementation only when each component has one canonical owner, every cross-service dependency is represented by a versioned contract, asynchronous execution has a clear owning service and runtime role, package reuse is justified, infrastructure is reproducible, and no competing legacy architecture remains.
 
-## Related repository standards and ADRs
+## Cross-references
 
-All plans must remain aligned with `.kiro/steering/*` and the repository ADR set under `.docs/adr`, including decisions governing contracts, identity, transport, NATS, Worker runtime, package standardization, service boundaries, environment identifiers and application/service architecture.
+- `.kiro/plans/01-global/service-worker-architecture.md`
+- `.kiro/plans/01-global/infrastructure-docker-terraform.md`
+- `.kiro/plans/01-global/monitoring-infrastructure.md`
+- `.kiro/plans/2026-09-03-enterprise-day-one-plan-standard.md`
+- `.kiro/plans/services/README.md`
+- `.kiro/plans/packages/README.md`
+- `.kiro/specs/figentra-platform/INDEX.md`
+- `.docs/adr/ADR-0012-versioned-contracts.md`
+- `.docs/adr/ADR-0020-worker-structure-and-infrastructure-orchestrator.md`
+- `.docs/adr/ADR-0022-service-communication.md`
