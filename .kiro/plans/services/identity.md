@@ -1,54 +1,179 @@
 ---
+authored_by: kiro
+authored_at: 2026-09-03
 status: canonical
 component: service
 service: identity
 version: v1
 runtime: nestjs
+anchor_adrs: [ADR-0001, ADR-0002, ADR-0003, ADR-0004, ADR-0010]
+depends_on: ["@stackra/contracts", "@stackra/events", "@stackra/database", "@stackra/orm", "@stackra/security", "@stackra/observability"]
 ---
-# Identity Service — implementation-complete plan
+# Identity Service — implementation plan
 
 ## Mission
-Authenticate principals and manage identity lifecycle. Identity owns authentication orchestration, sessions, credential references, service identities, identity links, principal normalization and impersonation/delegation context. It does not own authorization or tenant policy.
+Identity is the authentication and principal-resolution control plane. It answers **who is authenticated, how they authenticated, and what trusted principal/session context should be attached to a request**. It owns authentication orchestration, provider identities, sessions, service identities, credential references, identity linking and delegated/impersonated context.
 
-## Modules
-`authentication`, `sessions`, `principals`, `credentials`, `service-identities`, `identity-links`, `delegation`, `providers`, `security-events`, `persistence`.
+Identity does **not** own authorization, tenant commercial access, business profiles or product-domain users. IAM authorizes actions. Tenant owns tenant lifecycle and membership metadata. Monetization owns commercial access.
 
-## Models
-`Principal(id,type,status,displayName,createdAt,updatedAt)`; `Identity(id,principalId,provider,subject,verifiedAt,metadata)`; `Session(id,principalId,tenantId,issuedAt,expiresAt,revokedAt,assurance)`; `CredentialRef(id,principalId,type,providerRef,createdAt)`; `ServiceIdentity(id,name,status,credentialRef)`; `IdentityLink(id,principalId,provider,externalSubject,status)`; `Delegation(id,actorPrincipalId,targetPrincipalId,tenantId,reason,startsAt,endsAt,revokedAt)`.
-
-## DTOs
-Sign-in/callback, session refresh/revoke, identity-link attach/detach, service-identity create/revoke, delegation start/end and principal lookup DTOs. Tokens are never DTO fields for persistence; credentials are provider references.
-
-## Interfaces
-```ts
-interface IdentityService { authenticate(input):Promise<AuthenticationResult>; verifyAccessToken(token):Promise<PrincipalContext>; refreshSession(input):Promise<SessionResult>; revokeSession(ctx,id):Promise<void>; }
-interface PrincipalService { get(id):Promise<Principal>; resolveExternal(provider,subject):Promise<Principal>; }
-interface AuthProvider { authenticate(input):Promise<ProviderAuthResult>; verify(token):Promise<ProviderClaims>; }
+## Modules and source tree
+```text
+services/identity/src/
+├── modules/
+│   ├── authentication/
+│   ├── principals/
+│   ├── identities/
+│   ├── sessions/
+│   ├── credentials/
+│   ├── service-identities/
+│   ├── delegation/
+│   ├── providers/
+│   ├── security-events/
+│   └── administration/
+├── infrastructure/{database,providers,cache,messaging,config}
+├── presentation/{http,openapi,mappers}
+├── events/
+├── database/{entities,migrations,seeds}
+├── app.module.ts
+└── main.ts
 ```
 
+Each module contains `domain`, `application`, `infrastructure`, and `presentation` layers. Providers and SDK objects never cross the service boundary.
+
+## Domain model
+
+### Principal
+`Principal(id,type,status,displayName,createdAt,updatedAt,version)` where type is `human | service | integration | system | agent`. Principal is the canonical subject identifier used by IAM and all RequestContexts.
+
+### Identity
+`Identity(id,principalId,provider,externalSubject,verifiedAt,assurance,metadata,createdAt,updatedAt)`. `(provider,externalSubject)` is unique. Provider metadata is bounded and classified.
+
+### Session
+`Session(id,principalId,tenantId?,accessSessionRef,refreshSessionHash,issuedAt,expiresAt,revokedAt,lastSeenAt,assurance,version)`. Raw refresh tokens are never persisted; only a keyed/hashed reference is stored where required by the provider flow.
+
+### CredentialRef
+`CredentialRef(id,principalId,type,secretProvider,keyRef,createdAt,rotatedAt)`. Secret values are resolved from the infrastructure secret manager only at the provider boundary.
+
+### ServiceIdentity
+`ServiceIdentity(id,name,status,credentialRefId,principalType,createdAt,revokedAt)`. Service identities are used for internal service-to-service authentication and must be explicitly scoped.
+
+### IdentityLink
+`IdentityLink(id,principalId,provider,externalSubject,status,linkedAt,unlinkedAt)`. Linking and unlinking are idempotent operations with uniqueness protection.
+
+### Delegation
+`Delegation(id,actorPrincipalId,targetPrincipalId,tenantId,reason,startsAt,endsAt,revokedAt,createdAt)`. Delegation changes RequestContext attribution to `(actor, subject)`; it never bypasses IAM.
+
+## Public contracts
+
+```ts
+interface IdentityService {
+  authenticate(input: AuthenticateInput): Promise<AuthenticationResult>;
+  verifyAccessToken(input: VerifyTokenInput): Promise<PrincipalContext>;
+  refreshSession(input: RefreshSessionInput): Promise<SessionResult>;
+  revokeSession(ctx: RequestContext, sessionId: string): Promise<void>;
+  resolvePrincipal(principalId: string): Promise<PrincipalView>;
+}
+
+interface IdentityProvider {
+  authenticate(input: ProviderAuthenticationInput): Promise<ProviderAuthenticationResult>;
+  verify(token: string): Promise<VerifiedClaims>;
+  createIdentity?(input: CreateProviderIdentityInput): Promise<ProviderIdentityResult>;
+}
+```
+
+DTOs: `SignInDto`, `CallbackDto`, `RefreshSessionDto`, `RevokeSessionDto`, `LinkIdentityDto`, `UnlinkIdentityDto`, `CreateServiceIdentityDto`, `RevokeServiceIdentityDto`, `CreateDelegationDto`, `RevokeDelegationDto`, `PrincipalQueryDto`.
+
+All DTOs use Standard Schema validation, strict unknown-field handling and request-size limits.
+
 ## Controllers
-`POST /v1/auth/sign-in`; `POST /v1/auth/callback`; `POST /v1/auth/refresh`; `POST /v1/auth/sign-out`; `GET /v1/me`; `GET/POST/DELETE /v1/identities`; `POST/DELETE /v1/service-identities`; `POST/DELETE /v1/delegations`.
+```text
+POST   /v1/auth/sign-in
+POST   /v1/auth/callback
+POST   /v1/auth/refresh
+POST   /v1/auth/sign-out
+GET    /v1/me
+GET    /v1/identities
+POST   /v1/identities/link
+DELETE /v1/identities/:id
+GET    /v1/sessions
+DELETE /v1/sessions/:id
+POST   /v1/service-identities
+DELETE /v1/service-identities/:id
+POST   /v1/delegations
+DELETE /v1/delegations/:id
+```
 
-## Supabase Auth boundary
-Supabase Auth is the canonical external authentication provider. The provider adapter validates issuer/audience/signature and normalizes claims into a platform Principal. Provider-specific SDK types do not cross the service boundary. Provider migration requires a versioned adapter and identity-link migration, not changes to IAM consumers.
+Authentication endpoints are public only where explicitly required; management endpoints require authenticated principal context and IAM authorization.
 
-## IAM/Tenant interactions
-Identity establishes `principalId`, `principalType`, authentication assurance and optional tenant context. IAM is called for authorization only when Identity exposes administrative operations that require policy checks; Identity does not maintain role/permission tables. Tenant is queried for tenant membership/status where needed to construct a valid context. Gateway authentication is not the final authorization decision.
+## Supabase boundary
+Supabase Auth is the canonical external authentication provider. The adapter validates issuer, audience, signature, expiry and clock-skew policy, then maps claims to the platform Principal. Supabase SDK types are adapter-local. A future provider is introduced as another `IdentityProvider` implementation plus migration/linking policy; IAM consumers remain unchanged.
 
-## Sessions/security
-Short-lived access tokens, rotating refresh sessions, explicit revocation and replay detection. Service identities use separate credentials and scopes. Impersonation always creates actor/subject fields in RequestContext and is auditable. Session secrets are never logged.
+## RequestContext production flow
+```text
+HTTP/NATS ingress
+  → credential/token extraction
+  → Identity.verifyAccessToken()
+  → PrincipalContext
+  → tenant context resolution when required
+  → IAM authorization
+  → service use case
+```
+
+The Gateway can reject clearly unauthenticated traffic, but services remain responsible for validating trusted internal identity context and authorization. A service never trusts a user-supplied `principalId` header.
 
 ## Persistence
-PostgreSQL: `principals`, `identities`, `sessions`, `credential_refs`, `service_identities`, `identity_links`, `delegations`, `outbox`. Unique provider/subject and active-session constraints. No raw passwords or external provider secrets.
 
-## Workers
-NestJS consumer processes provider/security events; worker cleans expired sessions and stale identity links; scheduler runs bounded session cleanup. Same service source tree for all roles.
+PostgreSQL tables:
+`principals`, `identities`, `sessions`, `credential_refs`, `service_identities`, `identity_links`, `delegations`, `outbox`.
 
-## Reliability/observability
-Authentication latency, provider errors, invalid-token rate, refresh replay, session revocation and identity-link conflicts are metrics. Sensitive token values are never traced/logged. Security-significant events are emitted transactionally to Audit.
+Required indexes: `(provider,external_subject)`, `(principal_id,status)`, `(tenant_id,principal_id)`, active-session expiry, `(actor_principal_id,target_principal_id)`. Cross-service IDs remain opaque strings; no foreign keys to Tenant/IAM databases.
+
+All mutating use cases run transactionally with outbox publication after commit. Migrations use expand/contract and preserve backwards compatibility during rolling deployment.
+
+## Security and threat controls
+
+- JWT issuer/audience/signature validation is mandatory.
+- Clock skew has an explicit bounded tolerance.
+- Refresh-session rotation detects replay and invalidates the session family when replay is confirmed.
+- Service identities use distinct credentials from human sessions.
+- Delegation has explicit start/end/revocation and maximum lifetime.
+- Provider callback state/nonce is validated where applicable.
+- Credential values never enter logs, traces, audit payloads or database rows.
+- Administrative operations require IAM authorization and configured assurance level.
+
+## Reliability and recovery
+
+Provider timeouts are bounded. Authentication does not automatically retry non-idempotent provider operations. Refresh operations use idempotency/session-family guards. Provider outages surface a dependency error rather than accepting unverifiable credentials. Cleanup jobs are resumable and bounded.
+
+Consumers process provider/security events at least once with idempotency keys. Failures use bounded retry + DLQ. A replay tool reprocesses safe events without mutating authentication state twice.
+
+## Runtime roles
+
+`api` handles authentication and identity management. `consumer` handles security/provider events. `worker` performs session cleanup, stale-link reconciliation and derived-security maintenance. `scheduler` runs expiry and retention jobs. All roles execute from the same service source tree.
+
+## Observability
+
+Metrics: authentication success/failure rate, provider latency, invalid token rate, refresh replay detections, active sessions, revocations, identity-link conflicts and dependency failures. OTel spans cover provider calls and security-sensitive operations but exclude tokens and credential values. Audit receives durable security-relevant events after commit.
 
 ## Testing
-Provider verification fixtures, token rotation/replay, session revocation, clock skew, identity linking, service identity authentication, delegation expiry, tenant context construction, concurrent refresh and migration tests.
 
-## Completion gate
-Every authenticated request can produce a canonical PrincipalContext; provider credentials are references only; no authorization logic is duplicated in Identity; production authentication uses a real provider adapter and all security flows are tested.
+Unit: claim validation, provider mapping, session state transitions, replay detection, delegation expiry and identity-link invariants. Contract: provider adapter fixtures and RequestContext compatibility. Integration: database transaction/outbox, concurrent refresh, revocation propagation, service identity authentication and tenant-context resolution. Security: algorithm confusion, invalid issuer/audience, token substitution, replay, privilege escalation through delegation. Load: p95 auth verification and refresh latency under configured limits.
+
+## Implementation phases
+
+1. Package/service scaffold, config, contracts and database migrations.
+2. Principal/identity aggregates and provider adapter.
+3. Session lifecycle and refresh/replay protection.
+4. Service identities, identity linking and delegation.
+5. Controllers/OpenAPI, outbox, events and observability.
+6. Security hardening, failure injection, load and migration compatibility tests.
+7. Production rollout, secret-manager integration and operational runbooks.
+
+## Exit criteria
+
+- Every authenticated request resolves to canonical `PrincipalContext`.
+- Supabase verification is real and signature/issuer/audience checked.
+- No raw credential/token persistence exists.
+- Refresh replay and revocation are deterministic and tested.
+- Delegation never bypasses IAM and is auditable.
+- No `@figentra/*`, legacy actor/user taxonomy or duplicate auth implementation remains.
