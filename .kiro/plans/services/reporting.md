@@ -1,29 +1,47 @@
 ---
 status: canonical
 component: service
-name: reporting
+service: reporting
+version: v1
+runtime: nestjs
 ---
-# Reporting Service — implementation plan
+# Reporting Service — implementation-complete plan
 
-Own operational/reporting read models and report generation. Analytical truth remains Analytics; transactional ownership remains with domain services.
+## Mission
+Provide operational reports over service-owned read models. Reporting owns report definitions, projections, query/export jobs and schedules. Analytics owns analytical facts/metrics; transactional services remain authoritative for business writes.
 
-## Modules
-`report-definition`, `query`, `read-model`, `export`, `schedule`, `access`, `persistence`, `http`, `messaging`.
+## Models
+`ReportDefinition(id,tenantId,key,version,status,columns,filters,sort,authorizationProfile)`; `ReportView(id,definitionId,tenantId,refreshMode,lastBuiltAt,version)`; `ReportJob(id,tenantId,definitionId,requestedBy,status,cursor,objectRef)`; `ReportSchedule(id,tenantId,definitionId,cron,timezone,recipients,status,nextRunAt)`; `ProjectionCheckpoint(source,tenantId,version,updatedAt)`.
 
-## Runtime
-NestJS `api` for report catalog/query/export initiation; `consumer` for source events; `worker` for materialization and large exports; `scheduler` for scheduled reports.
+## DTOs/interfaces
+`CreateReportDto`, `UpdateReportDto`, `ReportQueryDto`, `StartExportDto`, `ReportJobDto`, `ScheduleReportDto`. `ReportService.create/update/query`; `ProjectionService.apply/rebuild`; `ExportService.start/status`; `ScheduleService.create/pause/resume`.
 
-## Contracts
-Versioned report/query/export contracts in `@stackra/contracts`; report definitions validate against allowed fields and tenant scopes.
+## API
+`GET/POST/PATCH/DELETE /v1/reports`; `POST /v1/reports/:key/query`; `POST /v1/reports/:key/exports`; `GET /v1/report-jobs/:id`; `POST/DELETE /v1/report-schedules`.
 
-## Persistence/reliability
-Dedicated read-model storage; projections are replayable and versioned; exports use durable job records, object storage and signed retrieval. Idempotent projections, retry/DLQ and rebuild/reconciliation are mandatory.
+## Data model/projections
+Source domain events update versioned read models through idempotent projections. A projection checkpoint advances only after the corresponding batch is committed. Rebuild creates a new projection version and swaps it after validation. Report definitions reference allowlisted fields rather than arbitrary SQL.
 
-## Security / observability
-Tenant-scoped query enforcement, field-level authorization, export access control and retention. OTel query/export latency, failures, backlog and projection lag; no sensitive row data in telemetry.
+## Identity/IAM/Tenant
+Identity establishes principal context. IAM authorizes report administration, protected columns, execution and exports. Tenant isolation is mandatory in definition, projection, query and export paths. Recipient lists for scheduled reports are validated against IAM/notification contracts.
 
-## Testing/deployment
-Contract, query authorization, projection replay, large-export, concurrency, migration and isolation tests. Docker roles + Terraform resources, readiness and graceful shutdown.
+## Exports
+Small results may stream through API within strict row/byte limits. Large exports create durable jobs and write to Files/object storage, returning short-lived signed retrieval. Export artifacts inherit tenant/classification/retention rules.
 
-## Exit criteria
-Deterministic report definitions/read models, secure exports and replayable projections with production operational controls.
+## Persistence
+PostgreSQL metadata/read models: `report_definitions`, `report_views`, `report_jobs`, `report_schedules`, `projection_checkpoints`, `outbox`. Index tenant/key/status/nextRunAt. Large report rows remain in projection/read storage, not transactional source tables.
+
+## Workers/scheduler
+Consumer applies source events; worker builds projections and exports; scheduler claims due schedules. All roles use the same NestJS service source tree with bounded concurrency and leases.
+
+## Security/reliability
+Field-level allowlists, row-level tenant filters, query cost limits, export authorization, idempotent projections, retry/DLQ, rebuild checkpoints and reconciliation. No arbitrary SQL from report definitions.
+
+## Observability
+Query latency/cost, projection lag, export throughput, failed jobs, schedule lag and read-model drift. Sensitive row data is excluded from logs/traces.
+
+## Testing
+Definition validation, authorization, projection replay/determinism, schema evolution, export limits, scheduled execution, duplicate events, tenant isolation, rebuild cutover and migration tests.
+
+## Completion gate
+Operational reporting is replayable and tenant-safe; analytics is not duplicated; exports are durable and access-controlled; no report definition can execute unrestricted database queries.
