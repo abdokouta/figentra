@@ -1,27 +1,76 @@
 ---
+authored_by: kiro
+authored_at: 2026-09-03
 status: canonical
 component: runtime
 package: "@stackra/react"
+anchor_adrs: [ADR-0091]
+depends_on: ["@stackra/container", "@stackra/events", "@stackra/observability", "react"]
 ---
-# `@stackra/react` — implementation-complete plan
+# `@stackra/react` — implementation plan
 
 ## Purpose
-React integration for platform services and UI packages. It provides context providers, hooks, lifecycle-safe subscriptions and error boundaries without embedding business logic.
+React integration layer for platform packages and application UI. It owns providers, hooks, lifecycle-safe subscriptions, async resource helpers, disposal helpers and error boundaries. It never owns business state or domain logic.
 
-## API
-`RuntimeProvider`, `ContainerProvider`, `RequestContextProvider`, `useInject`, `useRequestContext`, `useEvent`, `useAsyncResource`, `useDisposable`, `ErrorBoundary` and testing helpers. Hooks are stable, cleanup-safe and typed.
+## Public API
+```ts
+function RuntimeProvider(props:{container:Container; children:ReactNode}):ReactElement;
+function ContainerProvider(props:{container:Container; children:ReactNode}):ReactElement;
+function RequestContextProvider(props:{context:RequestContext; children:ReactNode}):ReactElement;
+function useInject<T>(token:Token<T>):T;
+function useRequestContext():RequestContext;
+function useEvent<T>(event:string,handler:(payload:T)=>void|Promise<void>,deps?:unknown[]):void;
+function useAsyncResource<T>(loader:()=>Promise<T>,options?:AsyncResourceOptions):AsyncResource<T>;
+function useDisposable<T extends Disposable>(factory:()=>T,deps:readonly unknown[]):T;
+```
 
-## State/effects
-Network/data synchronization belongs to service clients and `@stackra/sync`; local component state remains React-owned. Effects must clean subscriptions/timers. No hidden singleton mutable state is introduced by providers.
+## Source tree
+```text
+packages/react/
+├── src/core/{providers,contexts,hooks,lifecycle,errors,index.ts}
+├── src/events/{use-event.ts,event-provider.ts,index.ts}
+├── src/async/{use-async-resource.ts,use-cancellable.ts,index.ts}
+├── src/errors/{error-boundary.ts,index.ts}
+├── src/testing/{render-fixture,hook-fixture,mock-container,index.ts}
+└── __tests__/{unit,integration,strict-mode,conformance}/
+```
+
+## Provider semantics
+Providers are explicit composition boundaries. `ContainerProvider` exposes the application DI container; request context is immutable and may be nested only when a child request is intentionally created. Providers must not keep mutable tenant/principal state globally.
+
+## Hook lifecycle
+All subscriptions/timers/listeners are registered through React effects and disposed in cleanup. Strict Mode double mount/unmount must not duplicate subscriptions. `useEvent` delegates to `@stackra/events`; cross-tab relay remains the coordinator concern.
+
+## Async resources
+`useAsyncResource` supports abort signals, stale-result suppression and explicit loading/success/error/cancel state. A newer invocation invalidates the previous invocation's completion. No hook retries network calls implicitly.
+
+## Error boundaries
+`ErrorBoundary` catches render/lifecycle errors and renders a typed fallback. It does not swallow errors from event handlers or asynchronous tasks; those use explicit error channels. Error details sent to UI are safe serialized errors.
 
 ## Runtime composition
-React DOM uses browser adapters; React Native uses the native runtime subpath. Shared hooks are implemented against neutral contracts where possible. Cross-tab behavior composes `@stackra/coordinator` rather than creating a second event mechanism.
+React DOM uses `@stackra/browser`; React Native uses `@stackra/react-native`. Shared hooks depend on neutral contracts wherever possible. Browser/native differences stay in runtime adapters, not business hooks.
 
 ## Security
-Context providers do not expose secrets through React devtools or serialized state. Authentication context is obtained from Identity clients and authorization is evaluated by service/IAM boundaries.
+Do not expose secrets through context values, component props used for persistence, devtools state or serialized hydration payloads. Auth state comes from Identity integration; authorization is service/IAM behavior. Error boundaries never render raw provider/database errors.
+
+## Performance
+Use stable context values and memoization where justified. Avoid unnecessary global subscriptions. Async resources have cancellation and bounded result retention. Large lists use pagination/virtualization owned by UI/data layers.
 
 ## Testing
-Strict-mode double mount/unmount, provider nesting, context isolation, async cancellation, subscription cleanup, error boundaries and browser/native conformance. Hooks have deterministic test fixtures with no real network dependencies.
+Tests cover Strict Mode double mount, provider ordering, context isolation, subscription cleanup, async cancellation/stale result suppression, error boundary fallback, unmount during network work and browser/native runtime composition. Hooks use deterministic test doubles; no hidden real network.
 
-## Completion criteria
-Every React integration has explicit provider ownership and cleanup semantics; no business service logic is hidden in hooks; browser/native differences remain adapter-level.
+## Accessibility/runtime concerns
+The core package does not own UI styling or navigation. Error fallback contracts expose accessible status semantics. Browser lifecycle cancellation is delegated to runtime adapters.
+
+## Implementation phases
+1. Provider/context core.
+2. DI/request/event hooks.
+3. Async resource/cancellation helpers.
+4. Error boundary/testing fixtures.
+5. Browser/RN conformance and performance verification.
+
+## Exit criteria
+- Strict Mode does not duplicate effects/subscriptions.
+- Every hook has deterministic cleanup/cancellation semantics.
+- No business logic or mutable tenant state is hidden in React providers.
+- Browser/native behavior remains adapter-level.
