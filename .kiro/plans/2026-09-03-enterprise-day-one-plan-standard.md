@@ -7,199 +7,159 @@ status: canonical
 
 # Figentra Enterprise Day-One Plan Standard
 
-**Status:** Mandatory architecture standard
-**Applies to:** Packages, services, service runtime roles, workers, applications and infrastructure plans
+**Status:** Mandatory architecture standard  
+**Applies to:** Packages, services, service runtime roles, independent Workers, applications and infrastructure plans
 
 ## Purpose
 
-Every plan is a production implementation contract, not a feature wishlist or prototype roadmap. Implementation must be possible without inventing architecture during coding.
-
-Phases describe implementation order only. They do not defer architecture.
+Every plan is a production implementation contract, not a feature wishlist or prototype roadmap. Implementation must be possible without inventing architecture during coding. Phases describe implementation order only; they never defer architecture.
 
 ## Ownership model
 
 ```text
 Package     = reusable technical/platform capability
 Service     = bounded-context business/domain implementation
-Worker role = async execution role of the owning service
+Worker role = async execution role of owning NestJS service
+Edge Worker = explicit Cloudflare/serverless workload
 Contracts   = cross-service typed protocol boundary
-Edge Worker = explicit Cloudflare/serverless runtime, not generic backend worker
 ```
 
-Business code belongs under `services/<service>/src/modules`. A service may expose API, NATS consumer, queue worker and scheduler roles from the same codebase. A separate top-level worker requires explicit architectural justification.
+Business code belongs under `services/<service>/src/modules`. A service may expose API, consumer, worker and scheduler roles from the same NestJS source tree. A separate worker requires an explicit independent runtime/deployment boundary.
+
+## Package boundary rule
+
+The default decomposition is:
+
+```text
+CAPABILITY = PACKAGE
+PROVIDER / DRIVER = PACKAGE SUBPATH
+RUNTIME INTEGRATION = PACKAGE SUBPATH
+FRAMEWORK INTEGRATION = PACKAGE SUBPATH
+TESTING INTEGRATION = PACKAGE SUBPATH
+```
+
+Examples:
+
+```text
+@stackra/cache
+@stackra/cache/redis
+@stackra/cache/worker
+@stackra/cache/react
+@stackra/cache/testing
+
+@stackra/http
+@stackra/http/fetch
+@stackra/http/axios
+@stackra/http/nestjs
+@stackra/http/react
+@stackra/http/worker
+@stackra/http/testing
+```
+
+A separate package is allowed only where there is an independently meaningful ownership, lifecycle, dependency graph, deployment/runtime role or release boundary. Do not create one package per provider or framework adapter.
+
+Root exports MUST stay runtime-neutral unless the package itself is a runtime foundation. Optional provider/framework dependencies are isolated behind explicit subpath exports and may be peer/optional dependencies as appropriate.
 
 ## Package plan structure
 
 1. YAML frontmatter
-2. package title
-3. status / ADRs / references / dependencies / design effort
-4. purpose
-5. non-goals
-6. manager pattern
-7. subpath/file layout
-8. contracts split
-9. locked public API/export map
-10. core architecture/execution
-11. drivers/adapters/providers
-12. configuration/validation
-13. discovery/registry
-14. runtime matrix
-15. security
-16. errors/recovery
-17. observability
-18. concurrency/performance/resource limits
-19. tenancy/isolation where applicable
-20. persistence/migration/compatibility where applicable
-21. testing/conformance
-22. dependencies/exports/versioning
-23. implementation phases
-24. exit criteria
-25. cross-references
+2. title/status/ADRs/references/dependencies
+3. ownership/purpose
+4. non-goals
+5. manager pattern where applicable
+6. exact subpath/source layout
+7. contract split
+8. locked public API/export map
+9. core architecture/execution
+10. drivers/adapters/providers
+11. configuration/validation
+12. discovery/registry
+13. runtime matrix
+14. security
+15. errors/recovery
+16. observability
+17. concurrency/performance/resource limits
+18. tenancy/isolation where applicable
+19. persistence/migrations/compatibility where applicable
+20. testing/conformance
+21. dependencies/exports/versioning
+22. implementation phases with files/contracts/tests/security/observability/migration
+23. exit criteria
+24. cross-references
 
 ## Service plan structure
 
 1. bounded-context ownership and invariants
 2. explicit module tree under `src/modules`
-3. internal application/domain/infrastructure boundaries
-4. HTTP/control-plane API
+3. domain/application/infrastructure boundaries
+4. HTTP API
 5. NATS/event/queue contracts
-6. persistence and migrations
-7. internal interfaces and provider adapters
-8. runtime-role bootstrap (`api`, `consumer`, `worker`, `scheduler` as required)
-9. idempotency, retries, DLQ and reconciliation
-10. authentication, authorization and tenant isolation
-11. audit and operational observability
-12. health/readiness and graceful shutdown
-13. concurrency, resource limits and scaling
-14. testing and contract conformance
-15. container/deployment/rollback
-16. implementation phases and exit criteria
+6. persistence/migrations
+7. internal interfaces/provider adapters
+8. role bootstrap (`api`, `consumer`, `worker`, `scheduler` as required)
+9. idempotency/retries/DLQ/reconciliation
+10. authentication/authorization/tenant isolation
+11. audit/observability
+12. health/readiness/graceful shutdown
+13. concurrency/resource limits/scaling
+14. tests/conformance
+15. deployment/rollback
+16. phases/exit criteria
+
+## Independent Cloudflare Worker plan structure
+
+An independent Worker plan must explicitly define runtime, entrypoint, bindings, D1/KV/R2/Queues where used, unsupported Node APIs, state model, security/trust boundary, routing, Service Bindings, authenticated container calls, limits, deployment, migration, observability, failure behavior and Worker-native integration tests.
+
+Application Registry, Gateway and Infrastructure Orchestrator are independent Cloudflare Workers under the current architecture. They are not generic replacements for service worker roles.
 
 ## Cross-service contracts
 
-`@stackra/contracts` owns externally consumed DTOs, schemas, commands, queries, events, errors, enums and public protocol interfaces.
-
-Consumers MUST NOT import another service's implementation, ORM entity, repository, provider SDK or internal interface.
-
-Internal service interfaces stay inside the owning service.
+`@stackra/contracts` owns externally consumed DTOs, schemas, commands, queries, events, errors, enums and protocol interfaces. Consumers MUST NOT import another service's implementation, ORM entity, repository, provider or internal interface.
 
 ## NestJS standard
 
-NestJS is the canonical Node.js service framework. Use its native modular dependency injection, microservice transports, NATS support, queue integrations, lifecycle hooks, validation, OpenAPI and hybrid application capabilities rather than inventing parallel mechanisms. NestJS supports NATS request/response, event-based handlers and queue groups; it also supports HTTP + microservice hybrid applications. citeturn0search1turn0search3turn2search7
+NestJS is the canonical Node.js service framework. Use its modules/DI, lifecycle hooks, microservice transports, NATS integration, validation and OpenAPI capabilities rather than inventing parallel mechanisms.
 
-Service plans must use:
+## Identity/security standard
 
-- explicit bootstrap and runtime role;
-- dependency injection and module boundaries;
-- platform-standard Fastify adapter where applicable;
-- global schema/runtime validation;
-- versioned OpenAPI for HTTP;
-- NATS/queue consumers for asynchronous workloads;
-- bounded concurrency and backpressure;
-- correlation/request/trace propagation;
-- structured logging;
-- OpenTelemetry instrumentation;
-- role-appropriate health/readiness;
-- graceful shutdown and connection draining;
-- timeouts, cancellation, retry budgets and idempotency;
-- service authentication and authorization;
-- contract/integration/e2e/conformance tests;
-- immutable production containers.
+Supabase Auth is the day-one human authentication provider. `@stackra/identity` is the authentication/identity boundary. IAM owns authorization and policy evaluation. Monetization owns commercial entitlements. Authentication, authorization and commercial checks remain distinct.
 
-NestJS's production guidance explicitly covers health checks, logging, observability, scaling, Dockerization, security, backups, CI/CD and rate limiting. citeturn2search6
-
-## Validation and API contracts
-
-Use the repository's canonical schema policy. NestJS supports `ValidationPipe` and Standard Schema validation; choose one canonical Figentra approach and do not duplicate validation systems inside services. citeturn2search4
-
-OpenAPI generation must remain synchronized with public HTTP DTOs/contracts. Nest's CLI plugin can derive OpenAPI metadata from DTOs and validation decorators, but runtime validation remains mandatory. citeturn2search0
-
-## Worker rules
-
-A worker role is justified by asynchronous execution needs, not by naming. It must:
-
-- run the same service modules as the API where domain logic is shared;
-- consume through NATS/JetStream or the selected queue abstraction;
-- use durable acknowledgement semantics;
-- be idempotent;
-- bound concurrency and memory;
-- implement retry/DLQ/reconciliation behavior;
-- expose readiness/drain semantics;
-- stop accepting new work before shutdown;
-- finish or safely release in-flight work;
-- emit correlated operational telemetry.
-
-Do not create `workers/<service>` when a service worker role is sufficient.
-
-## Cloudflare Worker rules
-
-Cloudflare Workers are reserved for explicit edge/serverless workloads. Cloudflare provides a growing subset of Node.js APIs, with compatibility enabled by default for recent compatibility dates, but this remains a distinct runtime. citeturn0search0turn0search13
-
-A plan must never assume that a normal NestJS Node process can be deployed unchanged as a Cloudflare Worker. If Cloudflare is selected, the plan must explicitly define the Worker entrypoint, supported APIs, state model, bindings, limits, deployment and integration boundary.
-
-## DI, lifecycle and state
-
-Every injectable component defines scope, token, construction, lifecycle and shutdown behavior. Request/execution context is explicit. No hidden global current-user/request state. Worker processes must tolerate restart and never rely on in-memory state for durable correctness.
-
-## Discovery
-
-Use one canonical mechanism:
+## Discovery vocabulary
 
 ```text
 Discovery → locate metadata
-Registry  → store/index
-Populator → populate
-Factory   → construct
-Adapter   → translate
+Registry  → store/index metadata
+Populator → populate from source
+Factory   → construct instances
+Adapter   → translate external/runtime representations
 Provider  → DI construction
-Manager   → orchestrate
+Manager   → orchestrate lifecycle/multiple instances
 ```
+
+## Runtime worker rules
+
+Service worker roles use the owning NestJS source tree, bounded concurrency, idempotency, retry budgets, DLQ/reconciliation, readiness and graceful shutdown. Independent `workers/<service>` applications are forbidden without an ADR.
 
 ## Configuration
 
-Configuration is schema-validated before use. Secrets are never logged, embedded in client bundles, returned by diagnostics or persisted in plaintext application state. Unsafe production configuration fails closed unless a documented safe degraded mode exists.
+Configuration is schema-validated before use. Secrets never enter source, logs, client bundles or ordinary persisted state. Unsafe production configuration fails closed unless a documented safe degraded mode exists.
 
-## Errors and recovery
+## Errors/recovery
 
-Plans define typed errors, error codes/envelopes, causes, retryability, cancellation, timeout semantics, safe serialization and transport mapping. Distributed operations define idempotency and recovery behavior.
+Plans define typed errors, retryability, cancellation, timeout semantics, transport mapping, idempotency and recovery after restart. Distributed operations must have explicit replay/reconciliation behavior.
 
 ## Observability
 
-Logs, metrics and traces are mandatory where applicable. `@stackra/logger` owns structured logging; `@stackra/observability` owns OpenTelemetry traces, metrics, propagation and instrumentation. Monitoring infrastructure consumes these signals; it is not a duplicate application package.
-
-Sensitive fields, credentials, tokens and PII are centrally redacted. High-cardinality identifiers must not become unbounded metric labels.
-
-## Security
-
-Plans cover authentication, authorization, tenant isolation, input validation, output safety, secret handling, SSRF/path traversal where relevant, replay/idempotency, rate limits, resource exhaustion, dependency failure and audit requirements.
+`@stackra/logger` owns structured logs. `@stackra/observability` owns traces, metrics, propagation and instrumentation. Monitoring infrastructure owns collectors/dashboards/alerts/SLOs. Audit and tracking are separate durable/business signals.
 
 ## Testing
 
-Required where applicable:
-
-- unit tests
-- integration tests with real adapters
-- protocol/contract tests
-- adapter conformance tests
-- runtime-specific tests
-- failure/recovery tests
-- security tests
-- concurrency/load tests
-- dependency-boundary/public-export tests
-- deployment/readiness/shutdown tests for services
-
-## Performance
-
-Document time complexity where meaningful, concurrency limits, buffer/queue limits, memory behavior, timeouts, retry budgets, payload limits, pagination limits and cleanup behavior.
+Use unit, integration, contract, adapter-conformance, runtime, security, failure/recovery, concurrency/load and deployment/readiness/shutdown tests where applicable. Real providers are required for release acceptance of provider-backed packages.
 
 ## Migration
 
-Every plan defines current-to-target migration, versioning, compatibility, data migration and rollback. Compatibility adapters require an explicit boundary and removal condition and cannot become the target architecture.
-
-## Phase rule
-
-Every phase lists implementation files/components, contracts touched, tests, observability, security implications, migration/compatibility implications and explicit completion criteria.
+Every plan defines compatibility, data/schema migration and rollback. Legacy aliases or target shims are not accepted as the target architecture.
 
 ## Exit rule
 
-A plan is ready only when ownership, source location, public contracts, dependencies, runtime roles, configuration, failure/recovery, security, observability, testing, deployment and migration are all explicit and no competing legacy architecture remains.
+A plan is implementation-ready only when ownership, exact source location, public API, runtime/provider boundaries, security, tenancy, failure/recovery, observability, testing, deployment and migration are explicit and no competing legacy architecture remains.
