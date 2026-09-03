@@ -2,7 +2,22 @@
 
 Capability packages exist only when a capability is genuinely reusable across multiple bounded contexts or runtimes. A business/domain capability is **not** a package merely because it is important to the platform.
 
-## Canonical ownership
+## Canonical reusable capabilities
+
+- `identity` — authentication/identity orchestration SDK; authorization remains IAM-owned.
+- `tracking` — behavioral event collection SDK.
+- `workflow` — reusable workflow definition/execution client; durable orchestration remains Workflow service-owned.
+- `sync` — reusable synchronization primitives.
+- `queue` — cross-runtime queue abstraction and provider adapters.
+- `query` — server-state query/mutation client.
+- `state` — local reactive state primitives.
+- `media` — reusable secure media ingestion/processing contracts.
+- `search` — provider-neutral indexed-search abstraction.
+- `audit` — reusable audit submission/client contract; Audit service owns durable records.
+- `sdui` — controlled schema-driven UI document, validation, binding and renderer contracts.
+- `page-builder` — visual page authoring engine built on `@stackra/sdui`.
+
+## Ownership
 
 - Domain implementations live in `services/<service>/src/modules`.
 - Asynchronous execution normally lives in a worker role of the owning NestJS service, using the same source tree.
@@ -10,9 +25,27 @@ Capability packages exist only when a capability is genuinely reusable across mu
 - Service implementation packages such as Notifications, Analytics, Marketing and Audit are not created merely to share domain code.
 - `@stackra/identity` is retained where its reusable authentication/identity SDK boundary is required.
 - `@stackra/tracking` is retained where browser/mobile/desktop behavioral collection is genuinely reusable.
+- `@stackra/sdui` does not own pages, templates, publishing or business data.
+- `@stackra/page-builder` does not own a database or publication authority; the owning NestJS service does.
 
-## Candidate reusable capabilities
+## SDUI/page-builder boundary
 
-Each package must pass the reuse test before creation. Technical infrastructure belongs in `packages/base`; runtime-specific integrations belong in `packages/runtime`. Domain-specific implementation belongs in a service.
+```text
+Page Builder
+  -> typed page document
+  -> @stackra/sdui schema/validation
+  -> owning service draft/publish persistence
+  -> production @stackra/sdui renderer
+```
 
-This directory must never become a second home for service source code.
+The builder edits the document model, never a serialized DOM tree. Arbitrary JavaScript, SQL, executable component code and unrestricted network calls are prohibited in documents.
+
+## Runtime placement
+
+Technical infrastructure belongs in `packages/base`; runtime foundations belong in `packages/runtime`; feature-specific framework integrations belong beneath the owning capability package. Domain-specific persistence/business behavior belongs in a service.
+
+Application Registry remains an independent Cloudflare Worker + Hono control-plane runtime and is not replaced by or extended into an SDUI service. It may expose capability metadata/projections used by applications and builders.
+
+## Reuse gate
+
+A new capability package must demonstrate at least two real consumers or a clear cross-runtime contract and must have one canonical implementation plan covering API, source tree, adapters/providers, configuration, security, failure semantics, observability and tests.
