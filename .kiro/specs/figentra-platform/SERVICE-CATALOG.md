@@ -1,78 +1,91 @@
-# Figentra — Canonical Service Catalog & Review Order
+# Figentra — Canonical Service Catalog
 
-**Status:** Normative inventory
-**Count:** 18 deployable bounded-context services
+**Status:** Normative
+**Count:** 14 deployable bounded-context services
 
-This is the review checklist for the service layer. A service is counted only once. Worker roles are not additional services unless an ADR establishes an independent deployment boundary.
+A service exists only when it owns an independent business bounded context, state, lifecycle, security boundary and scaling/deployment boundary. Worker roles are not services.
 
-## Services
+## Canonical services
 
-| # | Service | Spec | Owns | Key consumers/dependencies |
-|---|---|---|---|---|
-| 01 | Identity | `services/01-identity.md` | authentication orchestration, identities, principals, credentials, sessions, provider links | Gateway, every authenticated service |
-| 02 | Tenant | `services/02-tenant.md` | tenants, domains, residency, provisioning, application bindings | Identity, IAM, Scope, commercial services, Gateway |
-| 03 | Scope | `services/03-scope.md` | scope hierarchy, memberships, scope context | IAM, Policy, all scope-aware services |
-| 04 | IAM | `services/04-iam.md` | permissions, roles, assignments, authorization | every protected service |
-| 05 | Policy | `services/05-policy.md` | policies, versions, evaluation context/decisions | IAM, Approval, services needing policy |
-| 06 | Approval | `services/06-approval.md` | approval requests, steps, decisions, escalation | IAM/Policy, Workflow, Notifications, Audit |
-| 07 | Monetization | `services/07-monetization.md` | products/plans/prices, subscriptions, billing/payment references | Tenant, Entitlements, Usage |
-| 08 | Entitlements | `services/08-entitlements.md` | features, grants, limits, effective entitlements | Gateway/services, Monetization, Usage |
-| 09 | Usage | `services/09-usage.md` | usage facts, meters, aggregation, quota inputs | all metered services, Monetization, Entitlements |
-| 10 | Notifications | `services/10-notifications.md` | templates, preferences, channels, deliveries, provider attempts | Marketing, Workflow, product services |
-| 11 | Audit | `services/11-audit.md` | immutable audit records, retention, exports, integrity | all security-sensitive services |
-| 12 | Files | `services/12-files.md` | file metadata, upload sessions, object references, processing | product services, Reporting, Integrations |
-| 13 | Integrations | `services/13-integrations.md` | external connections, credentials refs, webhooks, sync state | product services, Files, Notifications |
-| 14 | Reporting | `services/14-reporting.md` | report definitions/runs, read models, exports | Analytics, Files, product services |
-| 15 | Search | `services/15-search.md` | indexes, mappings, indexing jobs, search APIs | product services, Reporting |
-| 16 | Workflow | `services/16-workflow.md` | workflow definitions/versions/runs/steps/compensation | Approval, Notifications, Integrations, product services |
-| 17 | Analytics | `services/17-analytics.md` | analytical ingestion, facts, dimensions, metrics, attribution, aggregates | Tracking, Reporting, Marketing |
-| 18 | Marketing | `services/18-marketing.md` | audiences, campaigns, journeys, activation, conversion | Analytics, Notifications, Entitlements |
+| # | Service | Owns |
+|---|---|---|
+| 01 | Identity | Authentication orchestration, principals, identities, credentials/references, sessions, provider links, service identities, delegation |
+| 02 | Tenant | Tenants, platform organizations, domains, residency, application bindings, provisioning and tenant settings |
+| 03 | IAM | Permissions, roles, assignments, authorization and policy definitions/evaluation |
+| 04 | Monetization | Products/plans/prices, subscriptions, billing, invoices/payments, discounts/credits and entitlements |
+| 05 | Usage | Usage facts, meters, aggregation, consumption periods, quotas and billable usage |
+| 06 | Workflow | Definitions/versions, executions, steps, timers, signals, retries, compensation, human tasks, approvals and escalation |
+| 07 | Notifications | Templates, preferences, channels, deliveries and provider attempts |
+| 08 | Audit | Immutable audit records, attribution, retention, export, integrity and reconciliation |
+| 09 | Files | File metadata, upload sessions, object references, versions, lifecycle and processing orchestration |
+| 10 | Integrations | External connections, credential references, OAuth state, webhooks, mappings, sync/import/export and reconciliation |
+| 11 | Search | Indexes, mappings, projections, indexing jobs, search contracts and reindexing |
+| 12 | Reporting | Report definitions, parameters, execution, schedules, operational read models and exports |
+| 13 | Analytics | Analytical ingestion, facts, dimensions, metrics, aggregation, attribution and analytical queries |
+| 14 | Marketing | Audiences, segments, campaigns, journeys, eligibility, suppression, scheduling, activation and conversions |
 
-## Review order
+## Removed standalone boundaries
 
-Review in dependency order:
+| Former service | Owner | Decision |
+|---|---|---|
+| Scope | Tenant + IAM context | Remove. Tenant owns tenancy; product domains own resource hierarchies; IAM consumes resource context. |
+| Policy | IAM | Remove. Authorization policy is part of IAM. |
+| Approval | Workflow | Remove. Approval is a durable human-task/workflow primitive. IAM determines authorization/eligibility. |
+| Entitlements | Monetization | Remove. Entitlements are the effective commercial access result of plans, subscriptions, grants, overrides and limits. |
 
-1. Identity
-2. Tenant
-3. Scope
-4. IAM
-5. Policy
-6. Approval
-7. Monetization
-8. Entitlements
-9. Usage
-10. Notifications
-11. Audit
-12. Files
-13. Integrations
-14. Reporting
-15. Search
-16. Workflow
-17. Analytics
-18. Marketing
+## Core relationships
 
-## Supporting runtime components — not services
+```text
+Identity → authenticated principal
+Tenant → tenant context
+IAM → authorization/policy decision
+Monetization → entitlement decision
+Usage → consumption facts
+Workflow → durable orchestration/approval execution
+Audit ← security-sensitive mutations from all services
+Analytics ← tracking/domain facts
+Marketing ← analytics → Notifications
+```
 
-### Independent Cloudflare Workers
+### Identity → IAM
 
-1. Gateway
-2. Registry
-3. Infrastructure Orchestrator
+Identity answers **who**. IAM answers **whether**.
 
-These are runtime/control-plane components and have their own specs/plans. They do not duplicate the 18 service implementations.
+```ts
+const principal = await identity.resolveAuthenticatedPrincipal(token);
+const decision = await iam.authorize({
+  principalId: principal.id,
+  tenantId: ctx.tenantId,
+  resource: { type: resourceType, id: resourceId },
+  action: 'resource.action',
+  context,
+});
+```
 
-### Runtime roles inside services
+No service calls Identity for permission decisions and no service owns a private role/permission database.
 
-API, NATS consumer, ingestion worker, aggregation worker, delivery worker, scheduler, backfill worker and reconciliation worker are roles of the owning service.
+### Monetization → Usage
 
-## Platform packages — not services
+Usage measures consumption. Monetization owns commercial terms and effective entitlements and consumes Usage facts.
 
-Base packages provide reusable technical capabilities. Identity and Tracking are the only explicitly retained capability packages in the canonical capability layer. Business domains such as Audit, Analytics, Marketing, Notifications, Search, Workflow and Files remain services.
+### Workflow → IAM
 
-## No extra default services
+Workflow owns approval execution; IAM owns authorization. An approval step is not an authorization model.
 
-Do not create separate `auth`, `monitoring`, `telemetry`, `event-bus`, `queue`, `cache`, `media`, `analytics-worker`, `marketing-worker`, `notification-worker`, or `audit-worker` services merely because those words describe a capability. They are owned by the corresponding package/service/runtime role.
+### Audit
+
+Audit belongs conceptually to governance/security/compliance, but remains a focused service. Do not create a generic Governance service. A future Compliance/Risk service may consume Audit if it becomes a genuine bounded context.
+
+### Analytics → Marketing → Notifications
+
+Analytics answers what happened; Marketing decides what action to take; Notifications delivers communication.
+
+## Runtime and communication
+
+Every service may expose `api`, `consumer`, `worker` and `scheduler` roles from one NestJS source tree. HTTP + OpenAPI is the default synchronous contract. NATS + JetStream is the canonical durable asynchronous transport. Durable events use transactional outbox. Redis is support infrastructure; Kafka requires an ADR.
+
+Independent Cloudflare components remain Gateway, Registry and Infrastructure Orchestrator. They do not duplicate service implementations.
 
 ## Implementation gate
 
-Before implementation begins for a service, its spec must be reviewed and marked approved. Any missing method, model, endpoint, event, relation, dependency, security rule, migration or worker behavior is a spec defect—not an implementation-time design task.
+Each service spec must lock modules, models, relations, DTOs, interfaces/methods, controllers, events/commands, persistence, authorization, service dependencies, runtime roles, configuration, security, reliability, observability, tests, migrations and deployment. Missing design is a specification defect, not an implementation task.
