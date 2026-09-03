@@ -1,132 +1,174 @@
-# Identity Contracts Package — Kiro Implementation Specification
+# Identity Package — Kiro Implementation Specification
 
-**Package:** `@figentra/identity-contracts`  
+**Package:** `@figentra/identity`  
 **Path:** `packages/identity`  
-**Purpose:** Identity/principal types and service-facing identity contracts.
-
-## Package manifest (repository baseline)
-
-> This section is generated from the current repository `package.json`. The Kiro
-> spec is the target contract; if implementation changes dependencies, update
-> the spec and package manifest together.
-
-### Runtime dependencies
-
-- _None currently._
-
-### Development dependencies
-
-- `@stackra/oxlint-config`
-- `@stackra/prettier-config`
-- `@stackra/testing`
-- `@stackra/tsup-config`
-- `@stackra/typescript-config`
-- `@vitest/coverage-v8`
-- `oxlint`
-- `prettier`
-- `prettier-plugin-tailwindcss`
-- `tsup`
-- `typescript`
-- `vitest`
-
-### Peer dependencies
-
-- _None currently._
-
-### Optional dependencies
-
-- _None currently._
+**Purpose:** Canonical identity and authentication boundary: provider authentication orchestration, principal normalization, sessions, service identities and explicit identity context.
 
 ## 1. Boundary
 
-This package is a reusable library/contract boundary, not a deployable service.
-It owns only the concern stated above and must not accumulate unrelated platform
-behavior.
+This package is the single reusable platform boundary for identity **and authentication**. It is not a deployable service by itself; the Identity service/runtime composes it.
 
-**Hard rule:** must not authenticate directly unless it is an adapter package.
+**Day-one human authentication provider:** Supabase Auth.
+
+### Owns
+
+- Authentication provider adapters and verification.
+- Principal and identity normalization.
+- Identity links.
+- Figentra-side session metadata.
+- Credential references and service identities.
+- Token/session lifecycle abstractions.
+- Identity/actor/tenant context resolution.
+- Explicit impersonation/delegation context.
+
+### Does not own
+
+- Supabase provider database/state.
+- IAM authorization/policy decisions.
+- Tenant business data/profile ownership.
+- Commercial entitlements.
+- Audit persistence.
+
+There is no separate `@figentra/auth` package in the target architecture.
 
 ## 2. API design
 
-- Prefer small explicit exports.
-- Keep internal modules private.
-- Use stable types/interfaces for public contracts.
-- Avoid leaking framework-specific internals unless the package is explicitly
-  framework-bound.
-- Document every public export with JSDoc.
-- Preserve backwards compatibility according to package semver.
+- Provider-neutral public contracts.
+- No provider SDK types in root exports.
+- Explicit runtime subpaths for NestJS, Worker, Browser, React Native and Desktop.
+- Public authentication results must never expose secrets through logging/telemetry helpers.
+- Every public export has JSDoc and semver compatibility rules.
 
 ## 3. Dependencies
 
 ### Runtime
 
-- Only dependencies needed by consumers at runtime.
-- Prefer platform-owned packages over duplicating infrastructure logic.
+- `@figentra/contracts`
+- `@figentra/errors`
+- `@figentra/config`
+- `@figentra/observability`
 
-### Dev
+### Optional provider
 
-- TypeScript strict mode.
-- Vitest.
-- tsup.
-- Oxlint.
-- Prettier.
+- Supabase authentication SDK/integration only under the explicit provider adapter subpath.
 
 ### Peer
 
-Use peer dependencies for consumer-provided frameworks (for example
-NestJS/React) only when the package truly integrates with that framework.
-
-### Optional
-
-Provider-specific integrations may be optional; core exports must remain usable
-without them.
+Runtime/framework dependencies only under their runtime-specific subpaths.
 
 ## 4. Source layout
 
 ```text
 src/
-├── index.ts
-├── public/
-├── internal/
-├── types/
-└── adapters/        # only when required
+├── core/
+│   ├── principal/
+│   ├── identity/
+│   ├── actor/
+│   ├── tenant/
+│   ├── session/
+│   ├── credentials/
+│   ├── authentication/
+│   │   ├── providers/
+│   │   ├── verification/
+│   │   ├── tokens/
+│   │   ├── refresh/
+│   │   └── revocation/
+│   ├── context/
+│   ├── impersonation/
+│   ├── service-identities/
+│   ├── managers/
+│   └── index.ts
+├── providers/supabase/
+├── nestjs/
+├── worker/
+├── browser/
+├── react/
+├── native/
+├── desktop/
+└── testing/
 ```
 
-## 5. Build and package exports
+## 5. Public contracts
 
-- ESM-first.
-- Generate declarations.
-- `exports` map must expose only supported entrypoints.
-- No accidental deep imports.
-- No source/test files in published artifacts.
-- Verify package size and dependency tree in CI.
+`@figentra/contracts/identity` owns:
 
-## 6. Testing
+- `IPrincipal`
+- `IIdentity`
+- `IActor`
+- `ITenantContext`
+- `ISession`
+- `ICredentialReference`
+- `IIdentityContext`
+- `IAuthenticationProvider`
+- `IAuthenticationResult`
+- `ITokenSet`
+- `IIdentityResolver`
+- `IImpersonationContext`
+- `IDENTITY_CONTEXT`
+- `IDENTITY_MANAGER`
+- `AUTHENTICATION_MANAGER`
 
-- Unit tests for every public function/type runtime behavior.
-- Type-level tests for contract compatibility where applicable.
-- Consumer/contract tests for SDKs and adapters.
-- Browser-safety tests for packages intended for frontend use.
-- No network calls in unit tests.
+## 6. Authentication model
 
-## 7. Documentation
+```text
+Supabase Auth / trusted service credential
+              ↓
+      provider adapter
+              ↓
+       verification
+              ↓
+    identity normalization
+              ↓
+      canonical Principal
+              ↓
+       IdentityContext
+              ↓
+         IAM / Policy
+```
 
-README MUST include installation, imports, API examples, compatibility,
-configuration and failure behavior. Public source code MUST explain non-obvious
-invariants.
+Authentication establishes trusted identity. IAM decides authorization. A browser credential is never reused as a service credential.
 
-## 8. Security
+## 7. Lifecycle and security
 
-- Never log tokens/secrets.
-- Never embed environment secrets in published packages.
-- Validate untrusted input at package boundaries.
-- Security-sensitive helpers must have negative tests.
+- Validate issuer, audience, signature, expiry and required claims.
+- Keep raw tokens and provider credentials outside logs, traces, metrics and analytics.
+- Service credentials are scoped and short-lived where supported.
+- Tenant context is resolved from trusted identity/server state, never arbitrary client input.
+- Impersonation requires explicit grant, reason, expiry and audit correlation.
+- Cross-tenant identity resolution fails closed.
 
-## 9. Versioning and release
+## 8. Runtime behavior
 
-Changes use Changesets. Breaking API changes require a major version and
-migration notes. Contract/event packages require explicit compatibility review.
+| Runtime | Responsibility |
+|---|---|
+| Node/NestJS | authentication APIs, callbacks, token verification, identity resolution |
+| Worker | edge verification/prevalidation and identity propagation; no final IAM authority |
+| Browser/React | client authentication/session facade |
+| React Native | mobile authentication/session facade + secure storage adapter |
+| Desktop | authentication/session facade + OS secure credential adapter |
 
-## 10. Acceptance
+## 9. Errors and observability
 
-`lint` + `typecheck` + `test` + `build` + package export validation must pass
-before release.
+Canonical errors distinguish invalid/expired/revoked credentials, unknown identity, invalid tenant context, provider outage and rate limiting.
+
+Authentication telemetry records outcome classes, latency and safe identifiers only. Required operational metrics include authentication success/failure rate, provider latency/errors, refresh/revocation failures and suspicious/replay rejection counts. Security-sensitive operations emit audit events through the audit boundary.
+
+## 10. Testing
+
+- Supabase adapter contract/sandbox tests.
+- Invalid issuer/audience/signature/expiry/nonce/malformed token tests.
+- Session refresh/revocation tests.
+- Service identity/delegation tests.
+- Tenant isolation tests.
+- Impersonation/audit tests.
+- Concurrent request-context isolation tests.
+- Browser/RN/Desktop secure-storage boundary tests.
+- No real secrets in fixtures.
+
+## 11. Versioning
+
+Breaking changes to identity/authentication contracts require semver-major migration notes. Provider token formats remain opaque compatibility boundaries.
+
+## 12. Acceptance
+
+`lint` + `typecheck` + `test` + `build` + export validation pass; Supabase authentication works through the provider adapter; identity context is explicit and isolated; IAM remains separate; and no standalone auth package is required.
