@@ -12,10 +12,13 @@ Capability packages exist only when a capability is genuinely reusable across mu
 - `query` — server-state query/mutation client.
 - `state` — local reactive state primitives.
 - `media` — reusable secure media ingestion/processing contracts.
-- `search` — provider-neutral indexed-search abstraction.
+- `search` — provider-neutral indexed-search abstraction with frontend/mobile HTTP clients and backend provider adapters.
+- `reporting` — typed report-definition/query/export client and builder contracts; Reporting service owns definitions and execution.
+- `dashboard` — cross-runtime dashboard/widget/layout capability with NestJS persistence integration.
 - `audit` — reusable audit submission/client contract; Audit service owns durable records.
 - `sdui` — controlled schema-driven UI document, validation, binding and renderer contracts.
 - `page-builder` — visual page authoring engine built on `@stackra/sdui`.
+- `seo` — end-to-end SEO metadata, canonical/robots/hreflang, JSON-LD, sitemap and React/Nest integration.
 
 ## Ownership
 
@@ -25,6 +28,10 @@ Capability packages exist only when a capability is genuinely reusable across mu
 - Service implementation packages such as Notifications, Analytics, Marketing and Audit are not created merely to share domain code.
 - `@stackra/identity` is retained where its reusable authentication/identity SDK boundary is required.
 - `@stackra/tracking` is retained where browser/mobile/desktop behavioral collection is genuinely reusable.
+- `@stackra/search` keeps provider SDKs behind backend-only subpaths; browser/mobile use typed HTTP clients.
+- `@stackra/reporting` keeps query definitions provider-neutral and never exposes raw SQL to clients.
+- `@stackra/dashboard` owns presentation/document contracts but persistence authority stays with the host service through `/nestjs`.
+- `@stackra/seo` does not own products/pages/content; it normalizes and renders SEO metadata for resources owned elsewhere.
 - `@stackra/sdui` does not own pages, templates, publishing or business data.
 - `@stackra/page-builder` does not own a database or publication authority; the owning NestJS service does.
 
