@@ -4,234 +4,117 @@ authored_at: 2026-09-03
 status: canonical
 package: '@stackra/seo'
 ---
+# `@stackra/seo` — Full-stack SEO capability
 
-# `@stackra/seo` — end-to-end SEO capability
+## Ownership
+A reusable contract and runtime toolkit from backend/domain/page metadata to rendered web metadata and crawl artifacts. Domain/page services own the underlying content and publication truth; SEO owns normalization, precedence, validation and generation. There is no SEO microservice.
 
-## Purpose
-
-Provide a single typed SEO contract spanning backend metadata, page rendering, React document head, sitemap/robots generation, structured data, canonical URLs, localization, social previews, indexing controls and cache invalidation. SEO is a reusable capability, not a standalone SEO service in the 14-service architecture.
-
-## Subpaths
-
+## Public exports
 ```text
 @stackra/seo
+@stackra/seo/schema
 @stackra/seo/react
 @stackra/seo/native
 @stackra/seo/nestjs
+@stackra/seo/sitemap
+@stackra/seo/robots
+@stackra/seo/json-ld
 @stackra/seo/http
 @stackra/seo/testing
 ```
 
-`/native` exposes only non-web metadata helpers useful to hybrid/native clients. HTML head manipulation belongs to `/react` and web applications.
+## Exact source tree
+```text
+packages/capabilities/seo/
+├── package.json
+├── README.md
+├── src/
+│   ├── core/{seo-document,resolver,precedence,policy,url-normalizer,validation,errors,index.ts}
+│   ├── schema/{versions,migrations,json-schema,index.ts}
+│   ├── react/{SeoProvider,SeoHead,metadata,links,json-ld,ssr,index.tsx}
+│   ├── native/{SeoMetadata,useSeo,index.ts}
+│   ├── nestjs/{seo.module,controllers,resolver-registry,dto,ports,guards,index.ts}
+│   ├── sitemap/{eligibility,builder,segmenter,checkpoint,index.ts}
+│   ├── robots/{policy,builder,environment-gate,index.ts}
+│   ├── json-ld/{builders,validators,serializer,index.ts}
+│   ├── http/{client,cache,index.ts}
+│   └── testing/{fixtures,assertions,ssr,index.ts}
+└── tests/{unit,integration,conformance,security,e2e,load}/
+```
 
-## Ownership
-
-The host application/domain service owns authoritative content such as products, articles, pages and locales. `@stackra/seo` owns the normalized SEO representation and rendering/generation contracts. It never owns the underlying domain entity.
-
-## Canonical SEO document
-
+## Canonical model
 ```ts
 interface SeoDocument {
+  schemaVersion: string;
+  sourceRevision: string;
+  resourceType: string;
+  resourceId: string;
+  url: string;
+  indexable: boolean;
   title: string;
   description?: string;
-  canonicalUrl?: string;
-  robots?: RobotsDirectives;
-  alternates?: readonly SeoAlternate[];
+  canonicalUrl: string;
+  robots: RobotsDirectives;
+  alternates: readonly SeoAlternate[];
   openGraph?: OpenGraphMetadata;
   twitter?: TwitterMetadata;
-  icons?: readonly SeoIcon[];
-  structuredData?: readonly JsonLdDocument[];
-  keywords?: readonly string[];
-  locale?: string;
-  localeGroup?: string;
-  breadcrumb?: readonly BreadcrumbItem[];
+  structuredData: readonly JsonLdDocument[];
+  images: readonly SeoImage[];
+  breadcrumbs: readonly BreadcrumbItem[];
+  resourceHints: readonly ResourceHint[];
 }
 ```
 
-Every field has normalization, length/scheme constraints and precedence rules.
-
-## Resolution pipeline
-
+## Resolution
 ```text
-Domain entity / Page / Page Builder / Template
-            ↓
-SEO source resolver
-            ↓
-SEO policy + defaults
-            ↓
-locale/canonical resolution
-            ↓
-structured-data builder
-            ↓
-SeoDocument
-            ↓
-React head renderer / HTTP metadata / sitemap generator
+platform defaults
+ → tenant/application/site defaults
+ → locale defaults
+ → template defaults
+ → published page/resource overrides
+ → generated derived data
+ → validation
+ → immutable SeoDocument
 ```
 
-Application defaults are applied first, entity/page overrides second, route-specific overrides third, with an explicit precedence table. Conflicting canonical URLs are rejected rather than silently guessed.
+Each layer is explicit. A lower-priority source can never silently override a higher-priority source. Conflicting canonical URLs are blocking errors.
 
-## React integration
+## React
+Exports `SeoProvider`, `SeoHead`, `useSeo`, `useResolvedSeo`, `createMetaTags`, `createLinkTags`, `JsonLd`, `OpenGraph`, `TwitterCard`, `CanonicalLink`, `HreflangLinks`, `RobotsMeta`, and SSR serializers. SSR and hydration consume the same normalized document; canonical/robots changes after hydration are prohibited unless explicitly configured as runtime state.
 
-`@stackra/seo/react` exports:
-
-```text
-SeoProvider
-SeoHead
-useSeo
-useResolvedSeo
-createMetaTags
-createLinkTags
-createJsonLd
-```
-
-It supports React SSR and CSR. SSR must emit the same normalized metadata that hydration expects. Client-only mutations are limited to explicitly volatile fields and must not change canonical/robots semantics unexpectedly.
-
-## NestJS integration
-
-`@stackra/seo/nestjs` exports:
-
-```text
-SeoModule
-SeoResolverRegistry
-SeoControllerFactory
-SeoMetadataDto
-SitemapControllerFactory
-RobotsControllerFactory
-SeoCacheInvalidationHandler
-SeoRenderContract
-```
-
-The module integrates with page/domain resolvers and can expose:
-
+## NestJS
+`@stackra/seo/nestjs` exports `SeoModule`, `SeoResolverRegistry`, `SeoControllerFactory`, `SeoMetadataDto`, `SitemapControllerFactory`, `RobotsControllerFactory`, `SeoSourceChangedHandler`, `SeoCachePort`, `SeoSourcePort`, and policy guards. Example endpoints:
 ```text
 GET /v1/seo/:resource/:id
 GET /sitemap.xml
 GET /sitemaps/:segment.xml
 GET /robots.txt
 ```
+Private metadata routes remain protected by the host service. Public crawl artifacts are served only from validated public projections.
 
-The service hosting the controller remains responsible for authentication where metadata is private and for selecting the domain resource.
+## Page Builder
+Structured fields: title, description, canonical, robots, OG image, social title/description, JSON-LD blocks, locale/alternate references. No arbitrary head HTML, scripts or unsafe URL schemes.
 
-## Page Builder integration
+## JSON-LD
+Typed builders for `WebSite`, `WebPage`, `Organization`, `Product`, `Offer`, `Article`, `BreadcrumbList`, `Event`, `ItemList`, `FAQPage` and `LocalBusiness`. Raw JSON-LD extensions must pass a schema/allowlist validator and safe serializer.
 
-Page Builder components may declare SEO capabilities:
+## Sitemaps and robots
+Public URLs are eligible only when all are true: published, public, canonical, indexable, valid hostname and allowed by SEO policy. Large sitemaps are segmented/checkpointed. Failed replacements do not replace the last-known-good snapshot. Non-production environments have an environment gate that defaults to non-indexable.
 
-```text
-seo.title
-seo.description
-seo.canonical
-seo.noIndex
-seo.ogImage
-seo.jsonLd
-```
+## Redirects
+Redirect rules are normalized by `@stackra/seo` and may be consumed by Gateway, but domain ownership of aliases/redirect intent remains with the host application. Loop and chain limits are enforced.
 
-The builder edits structured SEO fields with validation. It never permits arbitrary `<head>` HTML/scripts. Published page revisions carry an SEO projection hash so cache invalidation can be deterministic.
+## Caching/invalidation
+Published output is keyed by tenant/application/domain/locale/resource/sourceRevision/policyVersion. `SeoSourceChanged` invalidates affected metadata and sitemap segments. Public immutable output may use ETag/CDN caching. Personalized/private output is always private.
 
-## Dynamic metadata
+## Security/privacy
+Absolute URLs require configured origin allowlists. Reject CRLF injection, unsafe schemes, secret-bearing metadata, private resources in public sitemap, arbitrary executable script, cross-tenant references and unapproved structured-data fields.
 
-A resolver can derive metadata from approved domain data:
-
-```text
-product → title/description/canonical/og image/product JSON-LD
-article → title/description/canonical/article JSON-LD
-category → title/description/canonical/item-list JSON-LD
-page-builder page → explicit metadata + breadcrumbs + WebPage JSON-LD
-```
-
-Resolvers receive a typed context and cannot issue raw database queries. The host domain service supplies the entity snapshot.
-
-## Canonical URLs
-
-Canonical URL generation is configuration-driven and tenant/domain-aware. It normalizes scheme, hostname, locale path, trailing-slash policy and known tracking parameters. Unsupported or ambiguous hostnames are rejected. Canonical URLs never include authentication/session data.
-
-## Localization and hreflang
-
-A locale group identifies equivalent localized resources. The resolver generates deterministic `alternate` links and `hreflang` entries, including a configured default/fallback locale. Missing locale variants are handled by explicit policy (`omit`, `fallback`, or `noindex`) rather than implicit duplication.
-
-## Robots/indexing controls
-
-Supported directives include `index/noindex`, `follow/nofollow`, `noarchive`, `nosnippet`, max-image/video/preview values and HTTP-equivalent directives where needed. Sensitive/private routes default to non-indexable and are denied from sitemap generation.
-
-## Structured data
-
-JSON-LD is represented as typed validated objects. Built-in builders include:
-
-```text
-WebSite
-WebPage
-BreadcrumbList
-Product
-Offer
-Article
-Organization
-LocalBusiness
-Event
-ItemList
-FAQPage
-```
-
-Schemas are allowlisted by resource type. Circular references, invalid URLs and unsafe script content are rejected. The renderer serializes JSON-LD safely without HTML injection.
-
-## Open Graph and social previews
-
-Image references use Files/media IDs or validated absolute URLs. The backend can return transformed image metadata (dimensions, mime, CDN URL) without leaking storage credentials. Preview variants are deterministic by revision/hash.
-
-## Sitemap generation
-
-Sitemaps are generated from an indexed, authorized list of public canonical URLs. Large sites use segmented sitemap files plus an index. Generation is checkpointed and cacheable. A URL appears only when it is public, canonical, indexable and policy-compliant.
-
-A page/domain change emits a versioned SEO invalidation event. The sitemap worker regenerates only affected segments when possible.
-
-## Robots.txt
-
-`robots.txt` is generated from tenant/application policy plus managed routes. Private, administrative and authenticated routes are never exposed as crawl targets. Per-domain configuration is resolved server-side.
-
-## Caching
-
-SEO output is cache-friendly because it is deterministic by domain revision + locale + host configuration. Public output may use ETag/CDN caching. Personalized/private metadata is never publicly cacheable.
-
-Cache keys include tenant/application/domain/locale/resource/revision and SEO policy version. Invalidations occur from page publication, content update, locale update, domain change and policy change events.
-
-## Security
-
-Reject unsafe schemes, CRLF/header injection, script injection and secret-bearing metadata. Only public canonical URLs may enter public sitemap output. Tenant hostname resolution is server-validated. SEO metadata must respect IAM visibility and page publication status.
-
-## Reliability
-
-SEO metadata generation is synchronous for HTML page rendering when cheap; sitemap/preview batch work is asynchronous and resumable. Failed sitemap segments remain retryable and do not corrupt existing published sitemap snapshots. Last-known-good public sitemap output remains served until replacement passes validation.
-
-## Observability
-
-Metrics include resolver latency, metadata validation failures, sitemap generation duration, sitemap lag, cache hit rate, canonical conflicts and structured-data rejection rate. OTel traces identify resource/revision/policy versions without logging private content.
+## Failure semantics
+Sitemap jobs are durable/resumable. A generation failure keeps the previous valid artifact active. HTML metadata resolution fails closed for indexability changes: an unknown safety state must not accidentally turn a private page public/indexable.
 
 ## Testing
+Precedence, canonical normalization, hreflang matrix, JSON-LD validation, robots environment gate, sitemap eligibility/segmentation/checksum, redirect-loop detection, tenant isolation, publication invalidation, SSR/hydration parity and browser HTML E2E are mandatory.
 
-Required suites:
-
-- metadata precedence;
-- title/description normalization;
-- canonical URL normalization;
-- locale/hreflang determinism;
-- robots policy;
-- JSON-LD schema validation;
-- unsafe input rejection;
-- React SSR/CSR parity;
-- sitemap eligibility and segmentation;
-- robots.txt generation;
-- tenant/domain isolation;
-- publication/revision cache invalidation;
-- real browser HTML inspection;
-- end-to-end NestJS → HTTP → React rendering tests.
-
-## Versioning
-
-SEO documents and policy definitions carry explicit schema versions. Breaking changes require migration/conformance fixtures. Search-engine-sensitive behavior must remain deterministic for a published revision.
-
-## Exit criteria
-
-- One typed SEO contract works from NestJS/domain data to React HTML.
-- Canonical, robots, hreflang, Open Graph, Twitter and JSON-LD are covered.
-- Sitemap and robots output are generated from the same eligibility policy.
-- Page Builder SEO fields are structured and safe.
-- Public caching and invalidation are revision-aware.
-- No SEO feature requires a new microservice or Worker.
+## Completion criteria
+A published resource can deterministically produce one SEO document and HTML head; sitemap/robots use the same eligibility authority; revisions invalidate only affected output; private resources never enter public artifacts; all integrations have conformance fixtures.
