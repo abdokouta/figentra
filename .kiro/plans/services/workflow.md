@@ -1,51 +1,130 @@
 ---
+authored_by: kiro
+authored_at: 2026-09-03
 status: canonical
 component: service
 service: workflow
 version: v1
 runtime: nestjs
+anchor_adrs: [ADR-0020, ADR-0024, ADR-0025]
+depends_on: ["@stackra/workflow", "@stackra/contracts", "@stackra/identity", "@stackra/iam", "@stackra/tenant", "@stackra/database", "@stackra/orm", "@stackra/nats", "@stackra/observability"]
 ---
-# Workflow Service — implementation-complete plan
+# Workflow Service — implementation plan
 
-## Mission
-Durable orchestration control plane for long-running workflows. Owns workflow definitions, immutable versions, executions, step state, timers, retries, signals, human tasks, compensation and recovery. Business services own their aggregates and business state.
+## Mission and boundary
+Workflow is the durable orchestration control plane. It owns workflow definitions, immutable definition versions, executions, step state, timers, retries, compensation, signals, human tasks, leases, recovery and execution history. Business services own business aggregates and business state. `@stackra/workflow` is the reusable SDK used by those services to define/submit workflows; it is not a second execution engine.
 
-## Models
-`WorkflowDefinition(id,tenantId,key,version,status,inputSchemaHash,definitionHash)`; `WorkflowRun(id,tenantId,definitionId,definitionVersion,status,idempotencyKey,inputRef,startedAt,completedAt,version)`; `WorkflowStepRun(id,runId,stepKey,attempt,status,inputRef,outputRef,startedAt,completedAt,errorCode)`; `WorkflowTimer(id,runId,stepKey,dueAt,status)`; `WorkflowSignal(id,runId,name,payloadRef,receivedAt,dedupeKey)`; `HumanTask(id,runId,assigneeRef,roleKey,status,dueAt,decision)`; `WorkflowCompensation(id,runId,stepKey,status,attempt)`.
-
-## DTOs/interfaces
-`RegisterDefinitionDto`, `StartWorkflowDto`, `SignalWorkflowDto`, `CancelWorkflowDto`, `WorkflowRunDto`, `StepCommandDto`, `HumanTaskDecisionDto`, `WorkflowQueryDto`.
-```ts
-interface WorkflowEngine { start(def,input,ctx):Promise<WorkflowRun>; signal(runId,name,payload):Promise<void>; cancel(runId,reason):Promise<void>; recover(runId):Promise<void>; }
-interface ActivityDispatcher { dispatch(step:StepCommand):Promise<void>; }
+## Source tree
+```text
+services/workflow/src/
+├── modules/{definitions,runs,steps,activities,timers,retries,signals,human-tasks,compensation,recovery,history}
+├── application/{commands,queries,handlers}
+├── domain/{aggregates,state-machine,value-objects}
+├── infrastructure/{database,nats,locks,storage,config}
+├── presentation/{http,openapi}
+├── workers/{activity-consumer,recovery-consumer}
+├── database/{entities,migrations}
+├── events/
+└── main.ts
 ```
 
-## Controllers
-`POST /v1/definitions`; `GET /v1/definitions/:key/:version`; `POST /v1/runs`; `GET /v1/runs/:id`; `POST /v1/runs/:id/signal`; `POST /v1/runs/:id/cancel`; `GET /v1/runs/:id/tasks`; `POST /v1/tasks/:id/decision`.
+## Models
+`WorkflowDefinition(id,tenantId,key,status,currentVersion,createdBy,createdAt)`
+`WorkflowDefinitionVersion(id,definitionId,version,definitionHash,inputSchemaHash,status,createdAt)`
+`WorkflowRun(id,tenantId,definitionId,definitionVersion,status,idempotencyKey,inputRef,startedAt,completedAt,version)`
+`WorkflowStepRun(id,runId,stepKey,attempt,status,inputRef,outputRef,errorCode,startedAt,completedAt,version)`
+`WorkflowTimer(id,runId,stepKey,dueAt,status,leaseOwner,leaseExpiresAt)`
+`WorkflowSignal(id,runId,name,payloadRef,dedupeKey,receivedAt)`
+`HumanTask(id,runId,taskKey,assigneeRef,roleKey,status,dueAt,decision,actorPrincipalId)`
+`WorkflowCompensation(id,runId,stepKey,status,attempt)`
+`WorkflowLease(id,runId,stepKey,owner,fencingToken,expiresAt)`
 
-## Execution model
-Every transition is a compare-and-swap on run version and produces an outbox command/event in the same transaction. Step completion is durable before advancing. External activity results include a stable activity/attempt ID. Duplicate completion is ignored after the recorded attempt state. Timers are database-backed and scheduler-driven; process memory is never authoritative.
+Large input/output payloads are stored as bounded content references through Files/Object Storage; database JSON is capped.
 
-## Cross-service interactions
-Workflow calls business services through versioned contracts/commands. Identity context and IAM authorization are evaluated at workflow start and again for sensitive human/activity actions. Tenant status is checked for tenant-owned runs. Workflow never imports another service implementation or repository.
+## SDK/contract boundary
+Business services define workflow graphs through `@stackra/workflow`. A definition contains stable step keys, version, input/output schemas, timeout policy, retry policy, compensation metadata and activity reference names. The SDK emits versioned `StartWorkflow`, `SignalWorkflow`, `CancelWorkflow` commands and consumes `WorkflowRun` status events.
+
+```ts
+interface WorkflowEngineClient {
+  start<TInput,TOutput>(definition:string,input:TInput,options?:StartOptions):Promise<WorkflowHandle<TOutput>>;
+  signal(runId:string,name:string,payload:unknown):Promise<void>;
+  cancel(runId:string,reason:string):Promise<void>;
+  get(runId:string):Promise<WorkflowRunView>;
+}
+interface ActivityDispatcher {
+  dispatch(command:WorkflowActivityCommand):Promise<void>;
+}
+```
+
+Workflow service itself exposes `ExecutionEngine`, `DefinitionRegistry`, `LeaseManager`, `TimerScheduler`, `RecoveryService`, `CompensationManager` and `HumanTaskService`.
+
+## HTTP controllers
+```text
+POST   /v1/definitions
+GET    /v1/definitions/:key
+GET    /v1/definitions/:key/:version
+POST   /v1/runs
+GET    /v1/runs/:id
+POST   /v1/runs/:id/signal
+POST   /v1/runs/:id/cancel
+POST   /v1/runs/:id/recover
+GET    /v1/runs/:id/steps
+GET    /v1/runs/:id/tasks
+POST   /v1/tasks/:id/decision
+```
+
+Definition registration is administrative and validates schema/hash consistency. Run APIs are tenant-scoped and rate-limited.
+
+## Execution algorithm
+1. Validate definition/version and input schema.
+2. Resolve trusted RequestContext and verify tenant status.
+3. Authorize start through IAM.
+4. Create run + first step atomically with idempotency key.
+5. Publish durable activity command through outbox/NATS.
+6. Worker claims activity using lease/fencing token.
+7. Activity result is recorded transactionally.
+8. Engine advances only after durable result; next step/timer/compensation is selected deterministically.
+9. Terminal completion writes final history and emits run-completed event.
+
+Every transition is version checked. Duplicate command/result is idempotently ignored when the same execution/attempt has already been recorded.
+
+## Human tasks and authorization
+Sensitive actions re-evaluate IAM at decision time, not only when a workflow starts. Human task actions preserve actor vs subject identity. Workflow never bypasses IAM because a task was generated by an authorized workflow.
 
 ## Persistence
-PostgreSQL tables above plus `workflow_outbox`, `workflow_leases`, `workflow_execution_history`. JSON payloads are bounded and may be stored in Files/object storage for large values using content references. Index tenant/status/dueAt/runId and unique idempotency keys.
+PostgreSQL tables listed above plus `workflow_outbox` and `workflow_execution_history`. Indexes: tenant/status, run/status, due timers, `(run_id,step_key,attempt)`, task assignee/status and idempotency keys. Migrations use expand/contract. History is append-oriented and retention controlled.
 
-## Workers/scheduler
-Consumer receives workflow commands/events; worker executes ready steps and recovery; scheduler claims due timers/leases. Claims use short leases with fencing tokens. Retry/DLQ policies are bounded. Stuck runs are reconciled from durable history.
-
-## Security/tenancy
-Tenant isolation on every query. Definition registration is admin-only. Secrets are references, not payloads. Activity authorization is checked at execution. Human task actions record actor/subject and are auditable. Workflow payloads are classified and redacted from logs.
+## Messaging
+NATS JetStream is canonical durable transport. Transactional outbox guarantees database state and command/event publication are consistent. Consumers use explicit durable consumer groups, bounded concurrency, acknowledgement deadlines and replay/DLQ controls.
 
 ## Reliability
-At-least-once commands with idempotent transitions. Retries use exponential backoff/jitter and per-step budgets. Compensation runs only for steps that declare it and only after explicit failure semantics. Partial external side effects are handled by compensating activities or reconciliation; no distributed transaction is assumed.
+Retries are per-step and finite with exponential backoff/jitter. Timeouts are explicit. Lease fencing prevents two workers from committing the same step after ownership changes. Recovery scans stuck leases/runs. Compensation is deterministic and only defined for steps with explicit compensation actions. No distributed transaction spans business services.
+
+## Security/tenancy
+All definition/run/task queries require tenant context. Secrets are references only. Workflow payloads are classified; logs contain IDs/status/error codes rather than raw input/output. Activity commands require service identity and signed context. Large payload references use short-lived authorized object access.
+
+## Runtime roles
+`api` handles definition/run/task APIs; `consumer` receives commands/results; `worker` executes activities and recovery; `scheduler` claims due timers and expired leases. All roles compile from the same service tree. No mirrored workflow worker application exists.
 
 ## Observability
-Metrics: active runs, step latency, timer lag, retry count, failure rate, stuck leases, queue depth and compensation outcomes. Traces connect run/step/activity spans using correlation/causation IDs. Health checks verify database and NATS readiness.
+Metrics: active runs, step latency, timer lag, queue lag, retries, failures, compensation rate, lease expirations and stuck-run age. OTel spans correlate run → step → activity across NATS. Health checks validate DB/NATS readiness; workflow execution must not fail merely because telemetry fails.
 
 ## Testing
-State-machine transition matrix, duplicate commands, crash/restart, timer recovery, lease fencing, compensation ordering, signal races, human-task authorization, tenant isolation, long-running load and migration compatibility.
+Deterministic transition matrix; duplicate start/signal/result; concurrent lease claim; fencing; crash/restart recovery; timer correctness; compensation ordering; human-task IAM authorization; tenant isolation; large payload references; migration compatibility; load tests for throughput and timer lag.
 
-## Completion gate
-Durable recovery works after process loss; every workflow is versioned and immutable; no service runs a second workflow engine; no business aggregate is persisted in Workflow tables.
+## Implementation phases
+1. SDK/contracts and workflow definition registry.
+2. Definition versioning and execution persistence.
+3. Step/command engine and durable NATS delivery.
+4. Activity workers, leases, retries and timers.
+5. Signals, human tasks and compensation.
+6. Recovery/reconciliation/history/retention.
+7. Security, failure-injection, load and production deployment.
+
+## Exit criteria
+- Workflow definitions are immutable/versioned.
+- Execution survives process/worker loss without losing state.
+- Duplicate commands/results have exactly-once effect.
+- Compensation and retry semantics are explicit and bounded.
+- Business services use the SDK; no second workflow engine is introduced.
+- Tenant/IAM/Identity boundaries are enforced at every sensitive operation.
