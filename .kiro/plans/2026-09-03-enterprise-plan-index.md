@@ -7,127 +7,93 @@ status: canonical
 
 # Figentra — Enterprise Day-One Plan Index
 
-**Planning standard:** `.kiro/plans/2026-09-03-enterprise-day-one-plan-standard.md`
-**Master plan:** `.kiro/plans/00-master-platform-plan.md`
-**Service/runtime standard:** `.kiro/plans/01-global/service-worker-architecture.md`
+**Planning standard:** `.kiro/plans/2026-09-03-enterprise-day-one-plan-standard.md`  
+**Master plan:** `.kiro/plans/00-master-platform-plan.md`  
+**Architecture/spec index:** `.kiro/specs/figentra-platform/INDEX.md`
 
 ## Ownership model
 
-This index separates implementation ownership cleanly:
+- **Packages:** reusable technical/platform capabilities and SDKs.
+- **Services:** business/domain bounded contexts under `services/<service>/src/modules`.
+- **Service runtime roles:** API, consumer, worker and scheduler from the owning NestJS source tree.
+- **Independent Workers:** only explicitly justified Cloudflare edge/control-plane applications.
+- **Contracts:** versioned cross-service DTOs, schemas, commands, queries, events, errors and protocol interfaces in `@stackra/contracts`.
+- **Applications:** product experiences and application-owned business rules/data.
 
-- **Packages:** reusable technical/platform libraries and genuine SDKs.
-- **Services:** business/domain bounded contexts; implementation lives under `services/<service>/src/modules`.
-- **Worker roles:** API/consumer/worker/scheduler deployments of the owning service source tree.
-- **Contracts:** versioned cross-service DTOs, schemas, commands, queries, events, errors and public protocol interfaces in `@stackra/contracts`.
-- **Cloudflare Workers:** explicit edge/serverless workloads only.
+## Canonical services — 14
 
-There is no default package + service + worker triplet.
+1. Identity
+2. Tenant
+3. IAM
+4. Monetization
+5. Usage
+6. Workflow
+7. Notifications
+8. Audit
+9. Files
+10. Integrations
+11. Search
+12. Reporting
+13. Analytics
+14. Marketing
 
-## Canonical reusable packages
+Retired standalone boundaries: Scope → Tenant/IAM context; Policy → IAM; Approval → Workflow; Entitlements → Monetization.
+
+## Canonical package groups
 
 ### Base
 
-- `.kiro/plans/packages/base/contracts.md` — `@stackra/contracts`
-- `.kiro/plans/packages/base/container.md` — `@stackra/container`
-- `.kiro/plans/packages/base/support.md` — `@stackra/support`
-- `.kiro/plans/packages/base/errors.md` — `@stackra/errors`
-- `.kiro/plans/packages/base/config.md` — `@stackra/config`
-- `.kiro/plans/packages/base/logger.md` — `@stackra/logger`
-- `.kiro/plans/packages/base/observability.md` — `@stackra/observability`
-- `.kiro/plans/packages/base/storage.md` — `@stackra/storage`
-- `.kiro/plans/packages/base/cache.md` — `@stackra/cache`
-- `.kiro/plans/packages/base/database.md` — `@stackra/database`
-- `.kiro/plans/packages/base/orm.md` — `@stackra/orm`
-- `.kiro/plans/packages/base/schema.md` — `@stackra/schema`
-- `.kiro/plans/packages/base/pagination.md` — `@stackra/pagination`
-- `.kiro/plans/packages/base/state-machine.md` — `@stackra/state-machine`
-- `.kiro/plans/packages/base/pipeline.md` — `@stackra/pipeline`
-- `.kiro/plans/packages/base/http.md` — `@stackra/http`
-- `.kiro/plans/packages/base/nats.md` — `@stackra/nats`
-- `.kiro/plans/packages/base/realtime.md` — `@stackra/realtime`
-- `.kiro/plans/packages/base/link.md` — `@stackra/link`
+`contracts`, `container`, `support`, `errors`, `config`, `logger`, `observability`, `storage`, `cache`, `database`, `orm`, `schema`, `pagination`, `state-machine`, `pipeline`, `http`, `nats`, `realtime`, `link`, `events`, `security`, `coordinator`
 
-### Reusable capabilities / SDKs
+### Capabilities
 
-- `.kiro/plans/packages/capabilities/identity.md` — `@stackra/identity`; authentication + identity SDK boundary.
-- `.kiro/plans/packages/capabilities/tracking.md` — `@stackra/tracking`; client behavioral collection SDK.
-- `.kiro/plans/packages/capabilities/events.md` — `@stackra/events`; domain/application event infrastructure.
-- `.kiro/plans/packages/capabilities/queue.md` — `@stackra/queue`; durable job abstraction.
-- `.kiro/plans/packages/capabilities/sync.md` — `@stackra/sync`; reusable offline synchronization engine.
-- `.kiro/plans/packages/capabilities/search.md` — `@stackra/search`; provider-neutral indexing/search abstraction.
-- `.kiro/plans/packages/capabilities/media.md` — `@stackra/media`; reusable media boundary where domain-neutral.
-- `.kiro/plans/packages/capabilities/workflow.md` — `@stackra/workflow`; durable workflow runtime.
-- `.kiro/plans/packages/capabilities/query.md` — `@stackra/query`; reusable query infrastructure only.
-- `.kiro/plans/packages/capabilities/state.md` — `@stackra/state`; reusable state infrastructure only.
+`identity`, `tracking`, `workflow`, `sync`, `queue`, `query`, `state`, `media`, `search`, `audit`
 
-No domain implementation package is created for Notifications, Analytics, Marketing or Audit.
+### Runtime foundations
 
-## Runtime and UI packages
+`node`, `nestjs`, `browser`, `react`, `react-native`, `desktop`, `worker`
 
-- `.kiro/plans/packages/runtime/node.md` — `@stackra/node`
-- `.kiro/plans/packages/runtime/nestjs.md` — `@stackra/nestjs`
-- `.kiro/plans/packages/runtime/browser.md` — `@stackra/browser`
-- `.kiro/plans/packages/runtime/react.md` — `@stackra/react`
-- `.kiro/plans/packages/runtime/react-native.md` — `@stackra/react-native`
-- `.kiro/plans/packages/runtime/desktop.md` — `@stackra/desktop`
-- `.kiro/plans/packages/runtime/worker.md` — `@stackra/worker`
-- `.kiro/plans/packages/ui/router.md` — `@stackra/router`
-- `.kiro/plans/packages/ui/navigation.md` — `@stackra/navigation`
-- `.kiro/plans/packages/ui/i18n.md` — `@stackra/i18n`
-- `.kiro/plans/packages/ui/theming.md` — `@stackra/theming`
-- `.kiro/plans/packages/ui/ui.md` — `@stackra/ui`
+### UI
 
-## Canonical services
+`router`, `navigation`, `i18n`, `theming`, `ui`
 
-Each service owns its domain implementation under `services/<name>/src/modules` and may expose API, NATS consumer, worker and scheduler roles from that same source tree.
+### Tooling
 
-- `.kiro/plans/services/identity.md`
-- `.kiro/plans/services/tenant.md`
-- `.kiro/plans/services/scope.md`
-- `.kiro/plans/services/iam.md`
-- `.kiro/plans/services/policy.md`
-- `.kiro/plans/services/approval.md`
-- `.kiro/plans/services/monetization.md`
-- `.kiro/plans/services/entitlements.md`
-- `.kiro/plans/services/usage.md`
-- `.kiro/plans/services/notifications.md`
-- `.kiro/plans/services/audit.md`
-- `.kiro/plans/services/files.md`
-- `.kiro/plans/services/integrations.md`
-- `.kiro/plans/services/reporting.md`
-- `.kiro/plans/services/search.md`
-- `.kiro/plans/services/workflow.md`
-- `.kiro/plans/services/analytics.md`
-- `.kiro/plans/services/marketing.md`
+`build`, `testing`, plus console/Vite/OpenAPI tooling when implemented; tooling integration plans live under `.kiro/plans/packages/tooling/`.
 
-## Independent workers
+## Package decomposition law
 
-Top-level `.kiro/plans/workers/` is reserved for genuinely independent worker applications. Service-owned background processing must remain a service runtime role. Existing exceptional workers (gateway/registry/infrastructure-orchestrator) require their existing ADR/spec boundary to remain valid.
+```text
+capability          → package
+provider/driver     → subpath
+runtime integration → subpath
+framework adapter   → subpath
+testing integration → subpath
+```
 
-## Applications
+Independent runtime foundations remain standalone only when they provide shared platform primitives across multiple capabilities.
 
-Applications consume service APIs/events and public contracts and may use reusable SDK packages. They never import service implementation internals.
+## Independent Cloudflare Workers
 
-## Governance / infrastructure
+- `.kiro/plans/workers/gateway.md` — public edge gateway, Hono.
+- `.kiro/plans/workers/registry.md` — Application Registry, Hono + D1/KV.
+- `.kiro/plans/workers/infrastructure-orchestrator.md` — infrastructure control/orchestration edge component.
 
-- `.kiro/plans/01-global/service-worker-architecture.md`
-- `.kiro/plans/01-global/infrastructure-docker-terraform.md`
-- `.kiro/plans/01-global/monitoring-infrastructure.md`
-- `.kiro/plans/01-global/gap-closure-2026-09-03.md`
-- `.kiro/plans/2026-09-03-global-standards-plan.md`
-- `.kiro/plans/2026-09-03-adr-reconciliation-plan.md`
-- `.kiro/plans/2026-09-03-implementation-checklist-plan.md`
+The Application Registry is **not** a NestJS service. The authoritative specification selects Cloudflare Worker + Hono and D1 for registry metadata, with KV used only as cache/optimization. fileciteturn601file0
 
-## Removed duplicate targets
+## Global implementation plans
 
-The following are intentionally absent from the canonical graph:
+- `01-global/service-worker-architecture.md`
+- `01-global/infrastructure-docker-terraform.md`
+- `01-global/messaging-nats-jetstream-redis-kafka.md`
+- `01-global/monitoring-infrastructure.md`
+- `01-global/gap-closure-2026-09-03.md`
+- `2026-09-03-global-standards-plan.md`
+- `2026-09-03-enterprise-observability-plan.md`
+- `2026-09-03-enterprise-day-one-plan-standard.md`
+- `2026-09-03-adr-reconciliation-plan.md`
+- `2026-09-03-implementation-checklist-plan.md`
 
-- standalone `@stackra/auth`;
-- `@stackra/notifications` domain package;
-- `@stackra/analytics` domain package;
-- `@stackra/marketing` domain package;
-- mirrored `workers/<service>` implementations where the owning service can provide the worker role.
+## Canonical quality gate
 
-## Plan quality gate
-
-Every package/service/runtime plan must define ownership, exact source layout, public contracts, dependencies, DI/lifecycle, configuration, security, errors/recovery, observability, concurrency/resource limits, tenancy/isolation, persistence/migrations where applicable, tests, deployment and exit criteria. No TODO, target shim, placeholder provider, fake production driver or deferred architecture may be used as the target design.
+Every package, service, independent Worker and tooling/runtime plan must define ownership, exact source layout, contracts/public exports, dependencies, lifecycle/DI, configuration, security, tenancy/isolation where applicable, errors/recovery, observability, concurrency/resource limits, persistence/migrations where applicable, tests/conformance, deployment and exit criteria. No TODO/TBD, fake production provider, target shim or deferred architectural decision is allowed.
