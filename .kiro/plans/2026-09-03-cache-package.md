@@ -8,12 +8,12 @@ reviewed_at: null
 
 # @stackra/cache — architecture plan
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
+**Status:** Planned **Anchor ADRs:**
+[ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
 [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
-[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md)
-**Reference:** `.ref/packages/cache/` (`@stackra/cache` v0.1.0)
-**Depends on:** `@stackra/container` (Task 13), `@stackra/contracts` (Task 6),
+[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md) **Reference:**
+`.ref/packages/cache/` (`@stackra/cache` v0.1.0) **Depends on:**
+`@stackra/container` (Task 13), `@stackra/contracts` (Task 6),
 `@stackra/support` (Manager base), `@stackra/storage` (for storage-backed
 store), `@stackra/redis` (for redis-backed store — optional peer)
 
@@ -35,13 +35,11 @@ Enterprise-grade features required day one:
   call (already codified in `.ref/packages/cache/src/core/tags/`).
 - **TTL + sliding expiration** per key.
 - **LRU eviction** for bounded memory stores.
-- **Namespace prefixing** — every cache is namespace-scoped so tenants
-  can't collide.
+- **Namespace prefixing** — every cache is namespace-scoped so tenants can't
+  collide.
 - **Stale-while-revalidate** — return stale value + refresh in background.
-- **Serialisation** — pluggable serializer (JSON default; MessagePack
-  optional).
-- **Multi-tier** — memory-first, fall through to Redis, transparent to
-  callers.
+- **Serialisation** — pluggable serializer (JSON default; MessagePack optional).
+- **Multi-tier** — memory-first, fall through to Redis, transparent to callers.
 - **Metrics** — hits, misses, evictions, latency histograms.
 - **Warm-up** — cache warming decorators for critical paths.
 
@@ -62,8 +60,18 @@ CacheModule.forRoot({
   default: "memory",
   stores: {
     memory: { driver: "memory", maxItems: 1000, defaultTtl: 300 },
-    sessions: { driver: "redis", connection: "primary", prefix: "sess:", defaultTtl: 3600 },
-    users: { driver: "redis", connection: "primary", prefix: "user:", defaultTtl: 900 },
+    sessions: {
+      driver: "redis",
+      connection: "primary",
+      prefix: "sess:",
+      defaultTtl: 3600,
+    },
+    users: {
+      driver: "redis",
+      connection: "primary",
+      prefix: "user:",
+      defaultTtl: 900,
+    },
     rateLimit: { driver: "memory", maxItems: 10_000, defaultTtl: 60 },
   },
 });
@@ -74,7 +82,9 @@ Runtime usage:
 ```typescript
 @Injectable()
 export class SessionService {
-  public constructor(@Inject(CACHE_MANAGER) private readonly cache: ICacheManager) {}
+  public constructor(
+    @Inject(CACHE_MANAGER) private readonly cache: ICacheManager,
+  ) {}
 
   public async get(id: string): Promise<ISession | null> {
     return this.cache.instance("sessions").get<ISession>(id);
@@ -141,18 +151,18 @@ packages/cache/
 
 Contracts symbols (in `@stackra/contracts`):
 
-| Symbol                    | Kind      |
-| ------------------------- | --------- |
-| `ICacheStore`             | interface |
-| `ICacheManager`           | interface |
-| `ICacheOptions`           | interface |
-| `ITaggedCache`            | interface |
-| `ITagSet`                 | interface |
-| `ICacheSerializer`        | interface |
-| `CACHE_MANAGER`           | token     |
-| `CACHE_CONFIG`            | token     |
-| `CacheKeyError`           | class     |
-| `CacheStoreError`         | class     |
+| Symbol             | Kind      |
+| ------------------ | --------- |
+| `ICacheStore`      | interface |
+| `ICacheManager`    | interface |
+| `ICacheOptions`    | interface |
+| `ITaggedCache`     | interface |
+| `ITagSet`          | interface |
+| `ICacheSerializer` | interface |
+| `CACHE_MANAGER`    | token     |
+| `CACHE_CONFIG`     | token     |
+| `CacheKeyError`    | class     |
+| `CacheStoreError`  | class     |
 
 ## Core API (locked)
 
@@ -183,24 +193,24 @@ interface ICacheStore {
 }
 
 interface ICacheOptions {
-  ttl?: number;              // seconds
-  tags?: readonly string[];  // for tag-based invalidation
-  sliding?: boolean;         // reset TTL on every access
-  namespace?: string;        // override store's default namespace
+  ttl?: number; // seconds
+  tags?: readonly string[]; // for tag-based invalidation
+  sliding?: boolean; // reset TTL on every access
+  namespace?: string; // override store's default namespace
 }
 ```
 
 ## Stores (drivers)
 
-| Driver             | Home                                        | Runtime         | Deps                        |
-| ------------------ | ------------------------------------------- | --------------- | --------------------------- |
-| `memory`           | `core/stores/memory.store.ts`               | Every runtime   | None (LRU via `lru-cache`)  |
-| `null`             | `core/stores/null.store.ts`                 | Every runtime   | None (no-op)                |
-| `storage`          | `core/stores/storage.store.ts`              | Browser + RN    | `@stackra/storage`          |
-| `worker-cache-api` | `worker/stores/worker-cache-api.store.ts`   | Cloudflare      | Native `caches` API         |
-| `worker-kv`        | `worker/stores/worker-kv.store.ts`          | Cloudflare      | env.KV binding              |
-| `durable-object`   | `worker/stores/durable-object.store.ts`     | Cloudflare      | DO binding                  |
-| `redis`            | (from `@stackra/redis/cache`)              | Node + Worker   | `@stackra/redis`            |
+| Driver             | Home                                      | Runtime       | Deps                       |
+| ------------------ | ----------------------------------------- | ------------- | -------------------------- |
+| `memory`           | `core/stores/memory.store.ts`             | Every runtime | None (LRU via `lru-cache`) |
+| `null`             | `core/stores/null.store.ts`               | Every runtime | None (no-op)               |
+| `storage`          | `core/stores/storage.store.ts`            | Browser + RN  | `@stackra/storage`         |
+| `worker-cache-api` | `worker/stores/worker-cache-api.store.ts` | Cloudflare    | Native `caches` API        |
+| `worker-kv`        | `worker/stores/worker-kv.store.ts`        | Cloudflare    | env.KV binding             |
+| `durable-object`   | `worker/stores/durable-object.store.ts`   | Cloudflare    | DO binding                 |
+| `redis`            | (from `@stackra/redis/cache`)             | Node + Worker | `@stackra/redis`           |
 
 `@stackra/cache` itself DOES NOT depend on `@stackra/redis` — the Redis-backed
 store lives inside `@stackra/redis/cache` and registers itself via
@@ -218,16 +228,16 @@ await cache.tags("user:123", "org:456").put("profile", data, 300);
 await cache.tags("user:123").flush(); // removes every key tagged user:123
 ```
 
-Implementation: TagSet writes tag-reference keys under
-`<prefix>:tag:<tagName>` pointing at set of value-keys. `flush()` reads +
-deletes every referenced key + the tag-reference itself. Atomic in Redis via
-`MULTI`; best-effort in Memory + Storage.
+Implementation: TagSet writes tag-reference keys under `<prefix>:tag:<tagName>`
+pointing at set of value-keys. `flush()` reads + deletes every referenced key +
+the tag-reference itself. Atomic in Redis via `MULTI`; best-effort in Memory +
+Storage.
 
 ## Decorators (NestJS + framework-tier)
 
-- `@Cacheable(options)` — method-level cache. Auto-generates key from
-  method + args (via `keyHasher`). Interceptor reads/writes cache before/after
-  the method runs.
+- `@Cacheable(options)` — method-level cache. Auto-generates key from method +
+  args (via `keyHasher`). Interceptor reads/writes cache before/after the method
+  runs.
 - `@CacheEvict(options)` — evicts the entry when the method returns.
 - `@CachePut(options)` — always runs the method + writes the return value.
 - `@CacheKey(fn)` — override the auto-generated key.
@@ -239,8 +249,8 @@ Decorators ship in `core/decorators/`; the NestJS Interceptor in
 ## Stale-while-revalidate
 
 `cache.remember(key, ttl, factory, { staleWhileRevalidate: true })` returns the
-cached value even if stale, then triggers a background refresh. The stale
-window defaults to `ttl / 4`. Used by `@Cacheable` under
+cached value even if stale, then triggers a background refresh. The stale window
+defaults to `ttl / 4`. Used by `@Cacheable` under
 `{ staleWhileRevalidate: true }`.
 
 ## Multi-tier composition
@@ -281,7 +291,7 @@ order, `set` writes to all, `delete` removes from all.
     "@nestjs/core": "catalog:nestjs",
     "react": "catalog:react",
     "react-native": "catalog:react-native",
-    "lru-cache": "^11.0.0"
+    "lru-cache": "^11.0.0",
   },
   "peerDependenciesMeta": {
     "@stackra/storage": { "optional": true },
@@ -289,8 +299,8 @@ order, `set` writes to all, `delete` removes from all.
     "@nestjs/common": { "optional": true },
     "@nestjs/core": { "optional": true },
     "react": { "optional": true },
-    "react-native": { "optional": true }
-  }
+    "react-native": { "optional": true },
+  },
 }
 ```
 

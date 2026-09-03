@@ -10,11 +10,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import {
-  createTestContainer,
-  TestContainer,
-  type ITestContainer,
-} from "@/core/container";
+import { createTestContainer, TestContainer, type ITestContainer } from "@/core/container";
 
 describe("TestContainer", () => {
   // ── .provide / .get roundtrip ─────────────────────────────────
@@ -165,9 +161,7 @@ describe("TestContainer", () => {
 
     it("rejects with the same error .get would throw for a missing token", async () => {
       const container = new TestContainer();
-      await expect(container.resolve(Symbol("missing"))).rejects.toThrow(
-        /No provider registered/,
-      );
+      await expect(container.resolve(Symbol("missing"))).rejects.toThrow(/No provider registered/);
     });
   });
 

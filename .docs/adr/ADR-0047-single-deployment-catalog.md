@@ -12,16 +12,16 @@ Figentra uses one generated deployment catalog at:
 
 It is produced by `infrastructure/scripts/collect-cloud-yaml.mjs`.
 
-Terraform and Docker consume this same catalog. No subsystem maintains a
-second manually authored list of deployables.
+Terraform and Docker consume this same catalog. No subsystem maintains a second
+manually authored list of deployables.
 
 The generated Docker Compose file is:
 
 `infrastructure/.generated/docker-compose.yml`
 
-and remains an output artifact, not a source of truth. Both files live under
-the machine-owned `infrastructure/.generated/` folder (gitignored, regenerated
-on demand).
+and remains an output artifact, not a source of truth. Both files live under the
+machine-owned `infrastructure/.generated/` folder (gitignored, regenerated on
+demand).
 
 Terraform modules represent infrastructure capabilities rather than individual
 services or applications.

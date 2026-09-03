@@ -4,7 +4,8 @@
 
 ## Decision
 
-Database-backed services use an outbox pattern where state change and event publication must be atomic.
+Database-backed services use an outbox pattern where state change and event
+publication must be atomic.
 
 ## Consequence
 

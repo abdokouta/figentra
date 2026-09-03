@@ -8,14 +8,14 @@ reviewed_at: null
 
 # `@stackra/contracts` — cross-package interfaces + tokens
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
+**Status:** Planned **Anchor ADRs:**
+[ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
 [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
-[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md)
-**Reference:** `packages/contracts/` (current in-workspace v0.0.1)
-**Depends on:** ZERO runtime dependencies (this is the light tier per
-`.kiro/steering/contract-implementer-split.md`)
-**Design effort:** 15 days across 6 phases
+[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md) **Reference:**
+`packages/contracts/` (current in-workspace v0.0.1) **Depends on:** ZERO runtime
+dependencies (this is the light tier per
+`.kiro/steering/contract-implementer-split.md`) **Design effort:** 15 days
+across 6 phases
 
 ## Purpose
 
@@ -31,8 +31,8 @@ mock the same interfaces.
 
 ## Non-goals
 
-- Concrete classes — `LoggerService`, `HttpClient`, `CacheManager` live in
-  their owning packages.
+- Concrete classes — `LoggerService`, `HttpClient`, `CacheManager` live in their
+  owning packages.
 - Vendor coupling — no imports of `axios`, `pino`, `ioredis`, `bcrypt`,
   `@nestjs/*`, `react`, `react-native`.
 - Business-domain types — `User`, `Tenant`, `Permission` — those live in the
@@ -41,27 +41,27 @@ mock the same interfaces.
 
 ## Rules `@stackra/contracts` MUST follow
 
-Codified below + enforced by review + a workspace-standardization-steward
-audit pass:
+Codified below + enforced by review + a workspace-standardization-steward audit
+pass:
 
 1. **Zero runtime deps.** `package.json.dependencies === {}`. Every dep is a
    `devDependencies` for type-only usage. If a type needs `axios.Request`, use
    `import type { AxiosRequestConfig } from "axios"` under `devDependencies`.
 2. **Zero concrete classes.** Only `interface`, `type`, `enum`, `const`
-   (tokens), and TypeScript utility types. If you find yourself writing
-   `class` — the symbol belongs in the owning package.
+   (tokens), and TypeScript utility types. If you find yourself writing `class`
+   — the symbol belongs in the owning package.
 3. **Zero side effects.** `package.json.sideEffects === false`. Enables full
    tree-shaking.
 4. **Every subpath is INTERFACES-only.** Grouped by concern (`auth`, `cache`,
-   `db`, ...). Consumers import narrow subpaths so unrelated symbols never
-   land in their type-graph.
+   `db`, ...). Consumers import narrow subpaths so unrelated symbols never land
+   in their type-graph.
 5. **DI tokens are `unique symbol` values.** Never string literals — string
    collision at runtime is silent; symbol collision is a TS error.
 
 ## Subpath layout — per-concern splits
 
-Grouped so consumers import only what they need + circular-dep risk stays
-zero. Each subpath is a leaf directory with an `index.ts` barrel.
+Grouped so consumers import only what they need + circular-dep risk stays zero.
+Each subpath is a leaf directory with an `index.ts` barrel.
 
 ```
 packages/contracts/
@@ -277,9 +277,9 @@ class LoggerService implements ILogger { ... }
 constructor(@Inject(LOGGER) private readonly logger: ILogger) {}
 ```
 
-`Symbol.for(name)` guarantees the same symbol across module boundaries even
-if a package is loaded twice (bundle+peer duplication). Using
-`Symbol("LOGGER")` bare would fail cross-bundle DI resolution.
+`Symbol.for(name)` guarantees the same symbol across module boundaries even if a
+package is loaded twice (bundle+peer duplication). Using `Symbol("LOGGER")` bare
+would fail cross-bundle DI resolution.
 
 ## Testing
 
@@ -291,13 +291,14 @@ if a package is loaded twice (bundle+peer duplication). Using
 
 ## Cross-package promotion rule
 
-**When a symbol is used by 2+ packages OR needs to be substitutable, PROMOTE
-it here.** Codified in `.kiro/steering/contracts-and-decorators-promotion.md`:
+**When a symbol is used by 2+ packages OR needs to be substitutable, PROMOTE it
+here.** Codified in `.kiro/steering/contracts-and-decorators-promotion.md`:
 
 - Single-consumer symbols stay in their owning package (`@stackra/cache`'s
   private `IMemoryDriver` doesn't need to be here).
 - Cross-consumer symbols land here (`ILogger` used by every package → HERE).
-- Public API surfaces land here (`IHttpClient` — every service uses HTTP → HERE).
+- Public API surfaces land here (`IHttpClient` — every service uses HTTP →
+  HERE).
 
 Reviewer flags any `interface I<Name>` in a heavy-tier package used from >1
 package that HASN'T been promoted.
@@ -329,11 +330,11 @@ package that HASN'T been promoted.
 
 ### Phase 4 — Consumer migration (3 days)
 
-- [ ] Every heavy-tier package (`@stackra/logger`, `@stackra/cache`, ...) MRs
-      to import from the new narrow subpath.
+- [ ] Every heavy-tier package (`@stackra/logger`, `@stackra/cache`, ...) MRs to
+      import from the new narrow subpath.
 - [ ] Root barrel deprecated (still exported for 90 days).
-- [ ] Grep-based audit: no consumer imports from `@stackra/contracts` root
-      after migration window.
+- [ ] Grep-based audit: no consumer imports from `@stackra/contracts` root after
+      migration window.
 
 ### Phase 5 — Testing + docs (2 days)
 

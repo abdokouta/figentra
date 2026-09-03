@@ -2,7 +2,9 @@
 
 **Active specification root:** `.kiro/specs/figentra/`
 
-The legacy `.kiro/specs/figentra-platform/` tree is reference-only and is intentionally not extended. `.ref/` is historical/reference input. This tree is the active implementation specification.
+The legacy `.kiro/specs/figentra-platform/` tree is reference-only and is
+intentionally not extended. `.ref/` is historical/reference input. This tree is
+the active implementation specification.
 
 ## Reading order
 

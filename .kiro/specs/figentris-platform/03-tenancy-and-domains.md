@@ -1,8 +1,9 @@
 # 03 — Tenancy & Domains
 
-**Status:** Baseline
-**Owner:** Tenant service
-**Related:** [02 Identity & actors](02-identity-and-actors.md), [04 IAM](04-iam-and-authorization.md), [14 Data & persistence](14-data-and-persistence.md)
+**Status:** Baseline **Owner:** Tenant service **Related:**
+[02 Identity & actors](02-identity-and-actors.md),
+[04 IAM](04-iam-and-authorization.md),
+[14 Data & persistence](14-data-and-persistence.md)
 
 ---
 
@@ -18,11 +19,11 @@ module inside the Tenant service, not a separate microservice.
 
 Related but intentionally distinct concepts.
 
-| Supabase Auth Organization (`org_…`)                | Figentra Tenant (`ten_…`)                              |
-| ------------------------------------------- | -------------------------------------------------------- |
-| Identity/access organization                | Business / resource ownership boundary                   |
-| Owns membership + org roles + auth context  | Owns config, region, domains, billing ref, app access    |
-| Managed by Supabase Auth                            | Managed by the Tenant service                            |
+| Supabase Auth Organization (`org_…`)       | Figentra Tenant (`ten_…`)                             |
+| ------------------------------------------ | ----------------------------------------------------- |
+| Identity/access organization               | Business / resource ownership boundary                |
+| Owns membership + org roles + auth context | Owns config, region, domains, billing ref, app access |
+| Managed by Supabase Auth                   | Managed by the Tenant service                         |
 
 ```text
 Supabase Auth Organization
@@ -37,8 +38,8 @@ Figentra Tenant
         └── subscription reference (→ Monetization)
 ```
 
-**Rule:** never treat the application as the tenant; never treat Supabase Auth as the
-full Figentra business domain.
+**Rule:** never treat the application as the tenant; never treat Supabase Auth
+as the full Figentra business domain.
 
 ### 2.1 Tenant record
 
@@ -120,12 +121,12 @@ updated_at
 
 Domain types:
 
-| Type          | Example                        | Notes                                    |
-| ------------- | ------------------------------ | ---------------------------------------- |
-| `platform`    | `app.figentra.com`            | Platform-owned surface.                  |
-| `tenant`      | `acme.figentra.com`           | Tenant subdomain of the platform apex.   |
-| `application` | `crm.figentra.com`            | Maps to a specific application.          |
-| `custom`      | `crm.acme.com`                 | Tenant-owned custom domain (verified).   |
+| Type          | Example             | Notes                                  |
+| ------------- | ------------------- | -------------------------------------- |
+| `platform`    | `app.figentra.com`  | Platform-owned surface.                |
+| `tenant`      | `acme.figentra.com` | Tenant subdomain of the platform apex. |
+| `application` | `crm.figentra.com`  | Maps to a specific application.        |
+| `custom`      | `crm.acme.com`      | Tenant-owned custom domain (verified). |
 
 ---
 
@@ -213,7 +214,8 @@ GET   /v1/resolve?hostname=...
 
 All tenant-scoped operations authorize against the caller's active tenant; a
 caller can never operate on a tenant it is not a member of (enforced server-side
-+ RLS in [14](14-data-and-persistence.md)).
+
+- RLS in [14](14-data-and-persistence.md)).
 
 ---
 
@@ -251,25 +253,26 @@ consumed by IAM, Monetization, Registry, Audit) — see
 `domain.removed`.
 
 **Consumed:** `subscription.updated` / `entitlement.changed` (to reflect tenant
-status where relevant), `organization.updated` (Supabase Auth webhook → mapping sync).
+status where relevant), `organization.updated` (Supabase Auth webhook → mapping
+sync).
 
 ---
 
 ## 10. Non-goals / anti-patterns
 
-| Anti-pattern                                                | Correct                                                       |
-| ----------------------------------------------------------- | ------------------------------------------------------------- |
-| Treating the application as the tenant                      | Tenant is a distinct platform boundary.                       |
-| A separate Domain microservice on day one                   | Domain is a module inside Tenant; extract later if needed.    |
-| Activating a custom domain before verification              | Verify ownership (DNS TXT / HTTP) first.                      |
-| Trusting `hostname`/`tenantId` from the client              | Resolve server-side; cache the trusted result.                |
-| Storing plans/subscriptions in the Tenant service           | Tenant holds a billing-account reference only; Monetization owns billing. |
-| Non-idempotent onboarding                                   | Provisioning tolerates re-runs.                               |
+| Anti-pattern                                      | Correct                                                                   |
+| ------------------------------------------------- | ------------------------------------------------------------------------- |
+| Treating the application as the tenant            | Tenant is a distinct platform boundary.                                   |
+| A separate Domain microservice on day one         | Domain is a module inside Tenant; extract later if needed.                |
+| Activating a custom domain before verification    | Verify ownership (DNS TXT / HTTP) first.                                  |
+| Trusting `hostname`/`tenantId` from the client    | Resolve server-side; cache the trusted result.                            |
+| Storing plans/subscriptions in the Tenant service | Tenant holds a billing-account reference only; Monetization owns billing. |
+| Non-idempotent onboarding                         | Provisioning tolerates re-runs.                                           |
 
 ---
 
 ## 11. Open questions
 
-- **O-2** — Supabase Auth org ↔ tenant 1:1 at launch vs 1:N early. If 1:N is needed
-  soon, the `tenants.supabase_org_id` unique constraint becomes a join table and
-  the org switcher must disambiguate tenant selection.
+- **O-2** — Supabase Auth org ↔ tenant 1:1 at launch vs 1:N early. If 1:N is
+  needed soon, the `tenants.supabase_org_id` unique constraint becomes a join
+  table and the org switcher must disambiguate tenant selection.

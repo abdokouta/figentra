@@ -14,18 +14,7 @@
  *     {{retroUrl}} · {{nextRetroDate}}
  */
 import * as React from "react";
-import {
-  CTA,
-  EmailShell,
-  H1,
-  H2,
-  Kicker,
-  MonoChip,
-  Muted,
-  P,
-  ShellDivider,
-  theme,
-} from "./_theme";
+import { CTA, EmailShell, H1, H2, Kicker, MonoChip, Muted, P, ShellDivider, theme } from "./_theme";
 
 export default function OnboardingRetro(): React.ReactElement {
   return (
@@ -34,16 +23,14 @@ export default function OnboardingRetro(): React.ReactElement {
       <H1>Month 1 receipt, {"{{firstName}}"}.</H1>
       <P>
         {"{{partnerName}}"} authored the retrospective at
-        <MonoChip>{"{{retroUrl}}"}</MonoChip>. The bullet points below
-        are the highlights; the URL carries the full narrative + every
-        signature.
+        <MonoChip>{"{{retroUrl}}"}</MonoChip>. The bullet points below are the highlights; the URL
+        carries the full narrative + every signature.
       </P>
 
       <H2>What shipped</H2>
       <P>
-        <MonoChip>{"{{shippedCount}}"}</MonoChip> features live in
-        production · every one carrying the seven-layer chain (ADR →
-        migration → tests → review → provenance → signed commit →
+        <MonoChip>{"{{shippedCount}}"}</MonoChip> features live in production · every one carrying
+        the seven-layer chain (ADR → migration → tests → review → provenance → signed commit →
         deploy). Every deployment traceable to a partner countersign.
       </P>
 
@@ -51,25 +38,23 @@ export default function OnboardingRetro(): React.ReactElement {
       <P>
         <MonoChip>{"{{adrCount}}"}</MonoChip> ADRs authored ·{" "}
         <MonoChip>{"{{migrationCount}}"}</MonoChip> migrations landed ·
-        <MonoChip>{"{{incidentCount}}"}</MonoChip> incidents · every
-        one caught by a review lane BEFORE production. The number of
-        governance findings that made it past a review lane and into
-        production this month: <MonoChip>0</MonoChip>.
+        <MonoChip>{"{{incidentCount}}"}</MonoChip> incidents · every one caught by a review lane
+        BEFORE production. The number of governance findings that made it past a review lane and
+        into production this month: <MonoChip>0</MonoChip>.
       </P>
 
       <Muted>
-        A production-affecting incident that a review lane missed is the
-        headline number for every retro — we surface it front + centre.
+        A production-affecting incident that a review lane missed is the headline number for every
+        retro — we surface it front + centre.
       </Muted>
 
       <ShellDivider />
 
       <H2>What ships next</H2>
       <P>
-        The Month 2 retrospective lands on{" "}
-        <MonoChip>{"{{nextRetroDate}}"}</MonoChip>. Same cadence · same
-        format · same partner ownership. Between now and then, the
-        governance dashboard is your always-current view.
+        The Month 2 retrospective lands on <MonoChip>{"{{nextRetroDate}}"}</MonoChip>. Same cadence
+        · same format · same partner ownership. Between now and then, the governance dashboard is
+        your always-current view.
       </P>
       <CTA href="{{retroUrl}}" label="Read the full retrospective" />
     </EmailShell>

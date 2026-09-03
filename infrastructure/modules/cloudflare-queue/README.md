@@ -2,7 +2,8 @@
 
 > **Category:** cloudflare · **Maturity:** stable · **Version:** 1.0.0
 
-Cloudflare Queues binding. Provisions a message queue per deployable for async event processing inside the Workers runtime.
+Cloudflare Queues binding. Provisions a message queue per deployable for async
+event processing inside the Workers runtime.
 
 ## Provides
 
@@ -16,10 +17,10 @@ Cloudflare Queues binding. Provisions a message queue per deployable for async e
 
 ## Environment variables
 
-| Variable | Description | Source |
-| -------- | ----------- | ------ |
-| `QUEUE_ID` | Cloudflare Queue ID. | `terraform_output.queue_id` |
-| `QUEUE_NAME` | Queue name. | `module.config.queue_name` |
+| Variable     | Description          | Source                      |
+| ------------ | -------------------- | --------------------------- |
+| `QUEUE_ID`   | Cloudflare Queue ID. | `terraform_output.queue_id` |
+| `QUEUE_NAME` | Queue name.          | `module.config.queue_name`  |
 
 ## Usage in `cloud.yaml`
 
@@ -33,6 +34,8 @@ modules:
 
 ## Cross-references
 
-- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) — module manifest schema.
+- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) —
+  module manifest schema.
 - [`infrastructure/modules/README.md`](../README.md) — registry catalog.
-- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md) — authorising plan.
+- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md)
+  — authorising plan.

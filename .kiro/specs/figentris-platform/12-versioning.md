@@ -1,8 +1,9 @@
 # 12 — Versioning
 
-**Status:** Baseline
-**Owner:** Platform architecture (`@figentra/versioning`)
-**Related:** [08 API Gateway](08-api-gateway.md), [11 Events & workflows](11-events-and-workflows.md), [06 Application Registry](06-application-registry.md)
+**Status:** Baseline **Owner:** Platform architecture (`@figentra/versioning`)
+**Related:** [08 API Gateway](08-api-gateway.md),
+[11 Events & workflows](11-events-and-workflows.md),
+[06 Application Registry](06-application-registry.md)
 
 ---
 
@@ -18,15 +19,15 @@ sunset model across every versioned surface.
 
 `@figentra/versioning` governs versioning for:
 
-| Surface              | Version carrier                                  |
-| -------------------- | ------------------------------------------------ |
-| **REST APIs**        | URL path (`/api/v1/...`)                          |
-| **Webhooks**         | Payload `version` + subscription version         |
-| **Events**           | Envelope `version` field ([11 §3])               |
-| **Workflows**        | Workflow definition version                      |
-| **Integrations**     | Integration manifest version                     |
-| **SDK compatibility**| Package semver + supported-API matrix            |
-| **Application manifests** | `manifestVersion` ([06 §5])                 |
+| Surface                   | Version carrier                          |
+| ------------------------- | ---------------------------------------- |
+| **REST APIs**             | URL path (`/api/v1/...`)                 |
+| **Webhooks**              | Payload `version` + subscription version |
+| **Events**                | Envelope `version` field ([11 §3])       |
+| **Workflows**             | Workflow definition version              |
+| **Integrations**          | Integration manifest version             |
+| **SDK compatibility**     | Package semver + supported-API matrix    |
+| **Application manifests** | `manifestVersion` ([06 §5])              |
 
 ---
 
@@ -37,11 +38,10 @@ sunset model across every versioned surface.
   in-place mutation of `/v1`.
 - Internal service contracts may evolve faster but remain **explicit and
   versioned**.
-- The API Gateway routes each version to the correct service version
-  ([08 §7]).
+- The API Gateway routes each version to the correct service version ([08 §7]).
 
-Breaking change rule: never break an existing contract without a new version +
-a migration/deprecation path.
+Breaking change rule: never break an existing contract without a new version + a
+migration/deprecation path.
 
 ---
 
@@ -64,15 +64,16 @@ A mature, explicit lifecycle for every versioned artifact:
 Active  →  Deprecated  →  Sunset  →  Removed
 ```
 
-| Stage        | Meaning                                                        | Signal                                    |
-| ------------ | -------------------------------------------------------------- | ----------------------------------------- |
-| **Active**   | Fully supported.                                               | —                                         |
-| **Deprecated**| Still works; a newer version exists; migrate.                 | `Deprecation` + `Sunset` headers; changelog |
-| **Sunset**   | Scheduled end-of-life date announced; may warn/throttle.       | `Sunset: <date>` header                   |
-| **Removed**  | No longer available.                                           | `410 Gone` / version-not-found error      |
+| Stage          | Meaning                                                  | Signal                                      |
+| -------------- | -------------------------------------------------------- | ------------------------------------------- |
+| **Active**     | Fully supported.                                         | —                                           |
+| **Deprecated** | Still works; a newer version exists; migrate.            | `Deprecation` + `Sunset` headers; changelog |
+| **Sunset**     | Scheduled end-of-life date announced; may warn/throttle. | `Sunset: <date>` header                     |
+| **Removed**    | No longer available.                                     | `410 Gone` / version-not-found error        |
 
 - Deprecation and sunset are **announced with lead time** and surfaced in
-  response headers + the developer changelog ([docs](01-platform-architecture.md) §3).
+  response headers + the developer changelog
+  ([docs](01-platform-architecture.md) §3).
 - Consumers get a **compatibility matrix** (which SDK version supports which API
   version).
 
@@ -106,13 +107,13 @@ policy + helper package.
 
 ## 8. Non-goals / anti-patterns
 
-| Anti-pattern                                                     | Correct                                                    |
-| ---------------------------------------------------------------- | ---------------------------------------------------------- |
-| Mutating `/v1` in place with a breaking change                   | New version surface (`/v2`) + deprecation of `/v1`.        |
-| Versioning only REST and ignoring events/webhooks/manifests      | Platform-wide versioning via `@figentra/versioning`.      |
-| Removing an event field without a version bump                   | New event `version`; dual-emit during migration.           |
-| Silent breaking changes                                          | Announced deprecation + sunset with lead time + headers.   |
-| Deprecation logic scattered per service                          | Centralized in `@figentra/versioning`.                    |
+| Anti-pattern                                                | Correct                                                  |
+| ----------------------------------------------------------- | -------------------------------------------------------- |
+| Mutating `/v1` in place with a breaking change              | New version surface (`/v2`) + deprecation of `/v1`.      |
+| Versioning only REST and ignoring events/webhooks/manifests | Platform-wide versioning via `@figentra/versioning`.     |
+| Removing an event field without a version bump              | New event `version`; dual-emit during migration.         |
+| Silent breaking changes                                     | Announced deprecation + sunset with lead time + headers. |
+| Deprecation logic scattered per service                     | Centralized in `@figentra/versioning`.                   |
 
 ---
 

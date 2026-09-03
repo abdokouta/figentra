@@ -1,5 +1,5 @@
-import { defineConfig } from 'tsup';
-import { basePreset } from '@nesvel/tsup-config';
+import { defineConfig } from "tsup";
+import { basePreset } from "@nesvel/tsup-config";
 
 /**
  * Build configuration for @pixielity/mapped-types

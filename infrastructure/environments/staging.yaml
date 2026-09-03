@@ -3,7 +3,7 @@ branch: staging
 log_level: info
 production: false
 runtime:
-  node: '24'
+  node: "24"
   http: fastify
   edge: cloudflare-workers
   messaging: nats

@@ -2,7 +2,8 @@
 
 > **Category:** cloudflare · **Maturity:** stable · **Version:** 1.0.0
 
-Cloudflare Workers KV namespace binding. Provisions a KV namespace per deployable and injects the namespace ID into the Worker runtime.
+Cloudflare Workers KV namespace binding. Provisions a KV namespace per
+deployable and injects the namespace ID into the Worker runtime.
 
 ## Provides
 
@@ -16,10 +17,10 @@ Cloudflare Workers KV namespace binding. Provisions a KV namespace per deployabl
 
 ## Environment variables
 
-| Variable | Description | Source |
-| -------- | ----------- | ------ |
-| `KV_NAMESPACE_ID` | Cloudflare KV namespace UUID. | `terraform_output.kv_namespace_id` |
-| `KV_NAMESPACE_NAME` | KV namespace name. | `module.config.namespace_name` |
+| Variable            | Description                   | Source                             |
+| ------------------- | ----------------------------- | ---------------------------------- |
+| `KV_NAMESPACE_ID`   | Cloudflare KV namespace UUID. | `terraform_output.kv_namespace_id` |
+| `KV_NAMESPACE_NAME` | KV namespace name.            | `module.config.namespace_name`     |
 
 ## Usage in `cloud.yaml`
 
@@ -33,6 +34,8 @@ modules:
 
 ## Cross-references
 
-- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) — module manifest schema.
+- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) —
+  module manifest schema.
 - [`infrastructure/modules/README.md`](../README.md) — registry catalog.
-- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md) — authorising plan.
+- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md)
+  — authorising plan.

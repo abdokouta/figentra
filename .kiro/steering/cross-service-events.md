@@ -19,12 +19,13 @@ Read alongside:
 
 - [`data-ownership.md`](data-ownership.md) — the sibling row-ownership contract
   that delegates cross-service cascade to this doc.
-- [`observability-signals.md`](../../.ref/steering/observability-signals.md) — the parallel
-  three-signal contract that services already emit through `@stackra/events`
-  (the workspace event bus). Same substrate, different payloads.
-- [`events-authoring.md`](../../.ref/steering/events-authoring.md) — the frontend sibling; the
-  three-pillar rule (constant + typed payload + discovery docblock) applies
-  identically to backend TypeScript event catalogs.
+- [`observability-signals.md`](../../.ref/steering/observability-signals.md) —
+  the parallel three-signal contract that services already emit through
+  `@stackra/events` (the workspace event bus). Same substrate, different
+  payloads.
+- [`events-authoring.md`](../../.ref/steering/events-authoring.md) — the
+  frontend sibling; the three-pillar rule (constant + typed payload + discovery
+  docblock) applies identically to backend TypeScript event catalogs.
 
 ## Precedence
 
@@ -73,14 +74,14 @@ subscribes.
 
 ### The canonical event set
 
-| Event type            | Module                                | Emitted by       | Cascadeable entity |
-| --------------------- | ------------------------------------- | ---------------- | ------------------ |
-| `TenantDeleted`       | `@stackra/contracts` events/tenancy   | identity-service | Tenant             |
-| `UserDeleted`         | `@stackra/contracts` events/user      | identity-service | User               |
-| `ApplicationDeleted`  | `@stackra/contracts` events/application| identity-service | Application        |
-| `OrganizationDeleted` | `@stackra/contracts` events/organization | platform-service | Organization    |
-| `BranchDeleted`       | `@stackra/contracts` events/branch    | platform-service | Branch             |
-| `RegionDeleted`       | `@stackra/contracts` events/region    | platform-service | Region             |
+| Event type            | Module                                   | Emitted by       | Cascadeable entity |
+| --------------------- | ---------------------------------------- | ---------------- | ------------------ |
+| `TenantDeleted`       | `@stackra/contracts` events/tenancy      | identity-service | Tenant             |
+| `UserDeleted`         | `@stackra/contracts` events/user         | identity-service | User               |
+| `ApplicationDeleted`  | `@stackra/contracts` events/application  | identity-service | Application        |
+| `OrganizationDeleted` | `@stackra/contracts` events/organization | platform-service | Organization       |
+| `BranchDeleted`       | `@stackra/contracts` events/branch       | platform-service | Branch             |
+| `RegionDeleted`       | `@stackra/contracts` events/region       | platform-service | Region             |
 
 Adding a new cascadeable entity requires:
 
@@ -271,7 +272,8 @@ queued consumer. Failure envelope:
 
 - **Transient failure** (DB timeout, deadlock, transient peer outage) →
   automatic retry with exponential backoff. Configuration lives on the
-  subscription via `@OnEvent(TENANT_DELETED, { retries: 5, backoff: "exponential" })`.
+  subscription via
+  `@OnEvent(TENANT_DELETED, { retries: 5, backoff: "exponential" })`.
 - **Persistent failure** (5 retries exhausted) → the event lands in the
   service's local Dead Letter Queue (DLQ). An operator drains the DLQ manually
   via `pnpm events:dlq:replay <event-id>` (or the admin endpoint) after fixing
@@ -362,10 +364,11 @@ suite (every listener ships a Vitest test that asserts idempotency).
   same event fanout shape applied to audit + activity.
 - Steering — [`data-ownership.md`](data-ownership.md) — sibling ownership
   contract; this doc's Rule 3 satisfies its Rule 3.
-- Steering — [`observability-signals.md`](../../.ref/steering/observability-signals.md) — audit +
-  activity fanout via the same event substrate.
-- Steering — [`events-authoring.md`](../../.ref/steering/events-authoring.md) — three-pillar event
-  rule (constant + payload type + docblock).
+- Steering —
+  [`observability-signals.md`](../../.ref/steering/observability-signals.md) —
+  audit + activity fanout via the same event substrate.
+- Steering — [`events-authoring.md`](../../.ref/steering/events-authoring.md) —
+  three-pillar event rule (constant + payload type + docblock).
 - Package — `@stackra/events` — the event bus (Cloudflare Queues fanout) every
   event routes through.
 - Package — `@stackra/idempotency` — the DLQ-safe dedup primitive Rule 4

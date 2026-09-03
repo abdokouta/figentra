@@ -2,7 +2,8 @@
 
 ## Phase 1 — pnpm
 
-The repository uses pnpm as its only package manager. Bootstrap requires Node.js 24+ and the pinned pnpm version.
+The repository uses pnpm as its only package manager. Bootstrap requires Node.js
+24+ and the pinned pnpm version.
 
 ### Frontend
 
@@ -29,7 +30,8 @@ After all official generators complete:
 
 1. remove any nested `pnpm-lock.yaml` / `pnpm-workspace.yaml` files;
 2. use the root `pnpm-workspace.yaml` as the sole workspace definition;
-3. normalize external dependencies to `catalog:` and internal dependencies to `workspace:*`;
+3. normalize external dependencies to `catalog:` and internal dependencies to
+   `workspace:*`;
 4. run `pnpm install --frozen-lockfile`;
 5. run Turbo build/typecheck/test/lint;
 6. commit the generated root `pnpm-lock.yaml`.

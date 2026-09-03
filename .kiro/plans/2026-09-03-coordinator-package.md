@@ -8,14 +8,14 @@ reviewed_at: null
 
 # `@stackra/coordinator` — cross-tab coordination package
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
+**Status:** Planned **Anchor ADRs:**
+[ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
 [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
-[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md)
-**Reference:** `.ref/packages/coordinator/` (`@stackra/coordinator` v0.1.0)
-**Depends on:** `@stackra/container` (Task 13), `@stackra/contracts` (Task 6),
-`@stackra/support`, `@stackra/logger` (optional)
-**Design effort:** 18 days across 8 phases
+[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md) **Reference:**
+`.ref/packages/coordinator/` (`@stackra/coordinator` v0.1.0) **Depends on:**
+`@stackra/container` (Task 13), `@stackra/contracts` (Task 6),
+`@stackra/support`, `@stackra/logger` (optional) **Design effort:** 18 days
+across 8 phases
 
 ## Purpose
 
@@ -27,24 +27,24 @@ Safari + older browsers.
 
 Motivating scenarios:
 
-- **Single WebSocket per browser** — `@stackra/realtime` composes coordinator
-  so only the leader tab opens the socket; followers subscribe via
+- **Single WebSocket per browser** — `@stackra/realtime` composes coordinator so
+  only the leader tab opens the socket; followers subscribe via
   BroadcastChannel. Cuts backend connections by 5-20x per user.
 - **Deduped background sync** — only the leader runs the "refresh every 30 s"
   job; followers wait. Saves server load + battery.
 - **Cross-tab event fan-out** — `@stackra/events` composes coordinator so events
-  matching `broadcastPatterns` fire on every tab. Login in one tab → every
-  other tab receives `session.updated`.
+  matching `broadcastPatterns` fire on every tab. Login in one tab → every other
+  tab receives `session.updated`.
 - **Atomic token refresh** — only ONE tab refreshes the JWT at a time. The
   others `await` the leader's result.
 
 ## Non-goals
 
-- Cross-**browser** coordination — that's a server-side job (WebSocket +
-  Redis pub/sub, delegated to `@stackra/realtime` + `@stackra/redis`).
+- Cross-**browser** coordination — that's a server-side job (WebSocket + Redis
+  pub/sub, delegated to `@stackra/realtime` + `@stackra/redis`).
 - Cross-**device** synchronisation — same story.
-- Persistent state — coordinator is stateless; state lives in
-  `@stackra/storage` or `@stackra/cache`.
+- Persistent state — coordinator is stateless; state lives in `@stackra/storage`
+  or `@stackra/cache`.
 - Cross-runtime — this package is BROWSER-ONLY. Node / Worker / RN import a
   no-op transport so the DI graph stays clean but `TabCoordinator.getRole()`
   returns `"leader"` unconditionally (single-runtime = always leader).
@@ -52,8 +52,8 @@ Motivating scenarios:
 ## Manager pattern — Manager (Shape A per ADR-0090)
 
 `TabTransportManager extends Manager<ITabTransport>` — Shape A because ONE
-transport is active at a time (BroadcastChannel is the only real driver;
-`noop` is the RN / Worker / Node fallback).
+transport is active at a time (BroadcastChannel is the only real driver; `noop`
+is the RN / Worker / Node fallback).
 
 ```typescript
 {
@@ -172,9 +172,9 @@ export const COORDINATOR_EVENTS = {
 ## Leader election — two strategies
 
 **Strategy 1 — Web Locks (preferred).** `navigator.locks.request()` with
-`{ steal: false, mode: "exclusive" }` gives atomic acquire semantics. First
-tab wins the lock; when it closes, the browser releases the lock and the next
-tab wins immediately. No timing hacks, no race conditions.
+`{ steal: false, mode: "exclusive" }` gives atomic acquire semantics. First tab
+wins the lock; when it closes, the browser releases the lock and the next tab
+wins immediately. No timing hacks, no race conditions.
 
 **Strategy 2 — Heartbeat protocol (Safari fallback).** Every tab writes a
 heartbeat to a shared `localStorage` key with its `tabId` + timestamp every
@@ -183,21 +183,25 @@ leader's heartbeat is `> staleThresholdMs` old (default 3000). Compare-and-swap
 via `localStorage.setItem` (atomic on same-origin same-frame).
 
 Runtime picks Strategy 1 when `preferWebLocks: true` AND
-`navigator.locks !== undefined`. Falls back to Strategy 2 in Safari < 15.4
-and old Edge / Firefox.
+`navigator.locks !== undefined`. Falls back to Strategy 2 in Safari < 15.4 and
+old Edge / Firefox.
 
 ## LockManager — cross-tab mutex
 
 ```typescript
-await locks.run("token-refresh", async () => {
-  const token = await api.refresh();
-  await cache.set("token", token);
-  return token;
-}, { timeoutMs: 10_000 });
+await locks.run(
+  "token-refresh",
+  async () => {
+    const token = await api.refresh();
+    await cache.set("token", token);
+    return token;
+  },
+  { timeoutMs: 10_000 },
+);
 ```
 
-Only one tab per browser executes the callback at a time. Every other tab
-waits (or throws `LockTimeoutError` on `timeoutMs`). Uses Web Locks API when
+Only one tab per browser executes the callback at a time. Every other tab waits
+(or throws `LockTimeoutError` on `timeoutMs`). Uses Web Locks API when
 available; localStorage-CAS fallback for older browsers.
 
 ## Composition — how events + realtime use coordinator
@@ -215,9 +219,9 @@ imports: [
 ```
 
 `CoordinatorTransport` subscribes to `@stackra/events` and re-fires matching
-events on every tab via `BroadcastChannel`. Zero API surface change to
-consumers of `@stackra/events` — they call `events.emit("session.updated", ...)`
-as usual; coordinator handles the fan-out.
+events on every tab via `BroadcastChannel`. Zero API surface change to consumers
+of `@stackra/events` — they call `events.emit("session.updated", ...)` as usual;
+coordinator handles the fan-out.
 
 ### `@stackra/realtime` leader-only WebSocket
 
@@ -266,13 +270,17 @@ socket.
 ## React hooks
 
 ```tsx
-import { useIsLeader, useTabCount, useTabRole, useCrossTabLock }
-  from "@stackra/coordinator/react";
+import {
+  useIsLeader,
+  useTabCount,
+  useTabRole,
+  useCrossTabLock,
+} from "@stackra/coordinator/react";
 
 function SyncStatus() {
-  const isLeader = useIsLeader();          // boolean
-  const tabCount = useTabCount();          // number
-  const role = useTabRole();               // 'leader' | 'follower'
+  const isLeader = useIsLeader(); // boolean
+  const tabCount = useTabCount(); // number
+  const role = useTabRole(); // 'leader' | 'follower'
   return isLeader ? <Badge>Syncing</Badge> : <span>{tabCount} tab(s)</span>;
 }
 
@@ -282,15 +290,17 @@ function AtomicButton() {
     <Button
       onPress={() => run(() => performExpensiveWork())}
       isLoading={isRunning}
-    >Sync all tabs</Button>
+    >
+      Sync all tabs
+    </Button>
   );
 }
 ```
 
 ## Testing
 
-- `MockTabCoordinator` — scriptable `role` transitions; consumer tests
-  simulate elections without a real browser.
+- `MockTabCoordinator` — scriptable `role` transitions; consumer tests simulate
+  elections without a real browser.
 - `InMemoryTransport` — every tab lives in one JS process; useful for
   integration tests without spinning up N Playwright contexts.
 - Coverage target: 90% branch coverage per the workspace testing standard.
@@ -332,19 +342,18 @@ function AtomicButton() {
 ### Phase 6 — React bindings (2 days)
 
 - [ ] `WebCoordinatorModule` + `<CoordinatorProvider>`.
-- [ ] Hooks: `useIsLeader`, `useTabCount`, `useTabRole`,
-      `useCrossTabLock`.
+- [ ] Hooks: `useIsLeader`, `useTabCount`, `useTabRole`, `useCrossTabLock`.
 
 ### Phase 7 — Testing (2 days)
 
 - [ ] `MockTabCoordinator`, `InMemoryTransport`.
-- [ ] Multi-tab election tests using multiple `BroadcastChannel` instances
-      in one process.
+- [ ] Multi-tab election tests using multiple `BroadcastChannel` instances in
+      one process.
 
 ### Phase 8 — Verification (3 days)
 
-- [ ] Playwright integration test — 3 real browser tabs, kill leader, verify
-      new leader elected within 3× `heartbeatMs`.
+- [ ] Playwright integration test — 3 real browser tabs, kill leader, verify new
+      leader elected within 3× `heartbeatMs`.
 - [ ] `@stackra/events` composition test — cross-tab event round-trip.
 - [ ] `@stackra/realtime` composition test — follower receives leader's WS
       messages via BC.
@@ -355,8 +364,7 @@ function AtomicButton() {
 - [ ] 4 subpath exports build cleanly (`.`, `./react`, `./testing`, barrel).
 - [ ] `TabCoordinator.getRole()` returns `"leader"` in the ONLY open tab
       immediately after boot.
-- [ ] Opening a second tab produces exactly one leader (verified in
-      Playwright).
+- [ ] Opening a second tab produces exactly one leader (verified in Playwright).
 - [ ] `LockManager.run()` serialises callbacks across tabs.
 - [ ] `@stackra/events` cross-tab relay round-trip verified.
 - [ ] `@stackra/realtime` composition (leader-only WebSocket) verified with a
@@ -378,5 +386,5 @@ function AtomicButton() {
   (currently deferred; BroadcastChannel is enough for the events volumes we
   ship).
 - `@stackra/coordinator/native` subpath — react-native single-runtime shim
-  (`getRole` always `"leader"`; `run(fn)` runs `fn` directly). Not shipped in
-  v1 — RN doesn't have the multi-tab problem.
+  (`getRole` always `"leader"`; `run(fn)` runs `fn` directly). Not shipped in v1
+  — RN doesn't have the multi-tab problem.

@@ -21,9 +21,10 @@ use raw `Transport.TCP` as the production platform-wide protocol.
 - Raw TCP is permitted only for local development, benchmarks, or a deliberately
   isolated low-latency service where the trade-off is documented.
 
-Nest officially supports request-response and event-based messaging and abstracts
-multiple transports behind `@nestjs/microservices`. Its current NATS transport
-uses `@nats-io/transport-node` in NestJS v12. citeturn0search0turn0search2
+Nest officially supports request-response and event-based messaging and
+abstracts multiple transports behind `@nestjs/microservices`. Its current NATS
+transport uses `@nats-io/transport-node` in NestJS v12.
+citeturn0search0turn0search2
 
 ## Why not raw TCP everywhere?
 
@@ -74,24 +75,26 @@ const app = await NestFactory.create<NestFastifyApplication>(
 app.connectMicroservice<MicroserviceOptions>({
   transport: Transport.NATS,
   options: {
-    servers: config.getOrThrow<string[]>('NATS_SERVERS'),
-    queue: 'iam',
+    servers: config.getOrThrow<string[]>("NATS_SERVERS"),
+    queue: "iam",
   },
 });
 ```
 
-This preserves one application composition root while allowing internal
-message handlers where required.
+This preserves one application composition root while allowing internal message
+handlers where required.
 
 ## Consequences
 
 Positive:
+
 - Nest abstraction remains available.
 - Transport can evolve without rewriting domain/application code.
 - NATS provides queue groups and event-based pub/sub.
 - Public HTTP API and internal messaging remain clearly separated.
 
 Negative:
+
 - NATS becomes infrastructure to operate.
 - Message contracts need versioning and compatibility rules.
 - Request-response over a broker needs timeout/retry/idempotency discipline.

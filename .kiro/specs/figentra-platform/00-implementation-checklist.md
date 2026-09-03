@@ -1,6 +1,8 @@
 # 00 — Figentra Implementation Checklist
 
-This file is the execution checklist for implementing the component specs. It is intentionally generic so every component can be audited against the same standard.
+This file is the execution checklist for implementing the component specs. It is
+intentionally generic so every component can be audited against the same
+standard.
 
 ## Scaffold
 

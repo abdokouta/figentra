@@ -1,9 +1,10 @@
 # 06 — Application Registry
 
-**Status:** Baseline
-**Owner:** Registry
-**Runtime:** Cloudflare Worker + Hono · **Store:** D1 (+ KV for read cache)
-**Related:** [01 Architecture](01-platform-architecture.md), [07 Integration Platform](07-integration-platform.md), [12 Versioning](12-versioning.md)
+**Status:** Baseline **Owner:** Registry **Runtime:** Cloudflare Worker + Hono ·
+**Store:** D1 (+ KV for read cache) **Related:**
+[01 Architecture](01-platform-architecture.md),
+[07 Integration Platform](07-integration-platform.md),
+[12 Versioning](12-versioning.md)
 
 ---
 
@@ -16,7 +17,8 @@ NestJS container.
 
 An **application** is an independent Figentra product (CRM, Commerce, POS,
 Analytics, …). The registry stores its metadata; the application owns its logic
-and data. An application is **not** an integration ([07](07-integration-platform.md)).
+and data. An application is **not** an integration
+([07](07-integration-platform.md)).
 
 ---
 
@@ -37,14 +39,14 @@ decisions (that is IAM).
 
 ## 3. What an application owns vs. does not
 
-| Application OWNS                         | Application does NOT own                 |
-| ---------------------------------------- | ---------------------------------------- |
-| Business logic + application API         | Authentication (Supabase Auth)                   |
-| Application database                     | Global tenant identity (Tenant)          |
-| Application frontend                     | Global billing/subscription (Monetization)|
-| Application-specific permissions/roles   | Platform entitlement definitions          |
-| Application-specific workflows           |                                          |
-| Application deployment lifecycle         |                                          |
+| Application OWNS                       | Application does NOT own                   |
+| -------------------------------------- | ------------------------------------------ |
+| Business logic + application API       | Authentication (Supabase Auth)             |
+| Application database                   | Global tenant identity (Tenant)            |
+| Application frontend                   | Global billing/subscription (Monetization) |
+| Application-specific permissions/roles | Platform entitlement definitions           |
+| Application-specific workflows         |                                            |
+| Application deployment lifecycle       |                                            |
 
 ---
 
@@ -118,8 +120,10 @@ permissions/roles/entitlements/capabilities. It ties into
   "manifestVersion": "1.0",
   "capabilities": ["customers", "leads", "analytics", "ai"],
   "permissions": [
-    "crm.customer.read", "crm.customer.create",
-    "crm.customer.update", "crm.customer.delete"
+    "crm.customer.read",
+    "crm.customer.create",
+    "crm.customer.update",
+    "crm.customer.delete"
   ],
   "roles": [
     { "key": "crm:admin", "system": true },
@@ -151,7 +155,8 @@ POST  /v1/applications/:key/environments
 
 Read paths are cache-friendly; write paths are low-frequency (release/config
 changes). The portal reads the registry (filtered by IAM access + Monetization
-entitlements) to build the application launcher ([13](13-frontend-architecture.md)).
+entitlements) to build the application launcher
+([13](13-frontend-architecture.md)).
 
 ---
 
@@ -192,21 +197,21 @@ redesigning identity, tenant, billing, or IAM.
 **Emitted:** `application.registered`, `application.updated`,
 `application.enabled`, `application.disabled`, `application.version.released`.
 
-**Consumed:** none required at baseline (registry is upstream of IAM/Monetization
-for manifest declarations).
+**Consumed:** none required at baseline (registry is upstream of
+IAM/Monetization for manifest declarations).
 
 ---
 
 ## 10. Non-goals / anti-patterns
 
-| Anti-pattern                                                | Correct                                                       |
-| ----------------------------------------------------------- | ------------------------------------------------------------- |
-| Building the registry as a NestJS container                 | Worker + Hono + D1.                                           |
-| Storing business data in the registry                       | Registry = metadata/config/routing only.                      |
-| Registry making authorization decisions                     | IAM decides; registry declares.                               |
-| Portal executing code from the registry                     | Metadata + routing only; no arbitrary JS execution.           |
-| Treating an application as an integration                   | Applications ≠ integrations ([07]).                           |
-| Using D1 as a transactional business DB                     | D1 for registry/config; Supabase for transactional data ([14]).|
+| Anti-pattern                                | Correct                                                         |
+| ------------------------------------------- | --------------------------------------------------------------- |
+| Building the registry as a NestJS container | Worker + Hono + D1.                                             |
+| Storing business data in the registry       | Registry = metadata/config/routing only.                        |
+| Registry making authorization decisions     | IAM decides; registry declares.                                 |
+| Portal executing code from the registry     | Metadata + routing only; no arbitrary JS execution.             |
+| Treating an application as an integration   | Applications ≠ integrations ([07]).                             |
+| Using D1 as a transactional business DB     | D1 for registry/config; Supabase for transactional data ([14]). |
 
 ---
 

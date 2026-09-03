@@ -1,4 +1,4 @@
-import 'reflect-metadata';
+import "reflect-metadata";
 
 /**
  * Clears metadata from a target object, either selectively by key or completely.
@@ -82,7 +82,7 @@ import 'reflect-metadata';
 export function clearMetadata(
   metadataKey?: any,
   target?: object,
-  propertyKey?: string | symbol
+  propertyKey?: string | symbol,
 ): void {
   // Handle the case where no target is provided
   if (!target) {

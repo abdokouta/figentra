@@ -17,8 +17,7 @@ import { runPipe, createMockPipeline } from "../../src/testing";
 
 describe("runPipe", () => {
   it("invokes a function pipe with (passable, next)", () => {
-    const pipe = (value: number, next: (v: number) => unknown): unknown =>
-      next(value + 1);
+    const pipe = (value: number, next: (v: number) => unknown): unknown => next(value + 1);
     const result = runPipe<number, number>(pipe, 1, (v) => v * 2);
     // 1 → +1 (pipe) → *2 (next / terminal) = 4.
     expect(result).toBe(4);
@@ -27,8 +26,7 @@ describe("runPipe", () => {
   it("defaults `next` to an identity when none is supplied", () => {
     // Handy for exercising middleware that just wraps a value and
     // returns whatever `next()` produces.
-    const pipe = (value: number, next: (v: number) => unknown): unknown =>
-      next(value + 10);
+    const pipe = (value: number, next: (v: number) => unknown): unknown => next(value + 10);
     const result = runPipe<number, number>(pipe, 5);
     // No terminal → value flows through untouched after the pipe's
     // transform.
@@ -37,9 +35,7 @@ describe("runPipe", () => {
 
   it("invokes an object pipe using the default `handle` method", () => {
     const pipe = {
-      handle: vi.fn((value: number, next: (v: number) => unknown) =>
-        next(value + 3),
-      ),
+      handle: vi.fn((value: number, next: (v: number) => unknown) => next(value + 3)),
     };
     const result = runPipe<number, number>(pipe, 1, (v) => v);
     expect(result).toBe(4);
@@ -48,9 +44,7 @@ describe("runPipe", () => {
 
   it("invokes an object pipe with a custom method name via `options.method`", () => {
     const pipe = {
-      process: vi.fn((value: number, next: (v: number) => unknown) =>
-        next(value * 5),
-      ),
+      process: vi.fn((value: number, next: (v: number) => unknown) => next(value * 5)),
     };
     const result = runPipe<number, number>(pipe, 2, (v) => v, {
       method: "process",
@@ -63,9 +57,7 @@ describe("runPipe", () => {
     // `runPipe` intentionally throws a plain Error (not
     // `PipelineError`) — it's a test helper, not the real dispatcher.
     const pipe = { handle: () => "x" };
-    expect(() => runPipe(pipe, 0, undefined, { method: "nope" })).toThrow(
-      /has no "nope" method/,
-    );
+    expect(() => runPipe(pipe, 0, undefined, { method: "nope" })).toThrow(/has no "nope" method/);
   });
 
   it("forwards extra tuple params to the function pipe after `next`", () => {
@@ -73,11 +65,8 @@ describe("runPipe", () => {
     // tuple params to function pipes — this is intentional so tests
     // can exercise `[pipe, ...params]` shapes without wiring an
     // object pipe.
-    const pipe = (
-      value: number,
-      next: (v: number) => unknown,
-      ...params: number[]
-    ): unknown => next(value + params.reduce((a, b) => a + b, 0));
+    const pipe = (value: number, next: (v: number) => unknown, ...params: number[]): unknown =>
+      next(value + params.reduce((a, b) => a + b, 0));
 
     const result = runPipe<number, number>([pipe, 1, 2, 3], 0, (v) => v);
     expect(result).toBe(6);
@@ -85,9 +74,8 @@ describe("runPipe", () => {
 
   it("forwards extra tuple params to an object pipe after `next`", () => {
     const pipe = {
-      handle: vi.fn(
-        (value: number, next: (v: number) => unknown, offset: number) =>
-          next(value + offset),
+      handle: vi.fn((value: number, next: (v: number) => unknown, offset: number) =>
+        next(value + offset),
       ),
     };
     const result = runPipe<number, number>([pipe, 100], 1, (v) => v);
@@ -101,18 +89,12 @@ describe("runPipe", () => {
     // Strings would require a container — that's outside runPipe's
     // remit; consumers should build a Pipeline with a container
     // instead.
-    expect(() => runPipe("some-token", 0)).toThrow(
-      /String pipes require a container/,
-    );
-    expect(() => runPipe(42 as unknown as never, 0)).toThrow(
-      /unsupported pipe form/,
-    );
+    expect(() => runPipe("some-token", 0)).toThrow(/String pipes require a container/);
+    expect(() => runPipe(42 as unknown as never, 0)).toThrow(/unsupported pipe form/);
   });
 
   it("throws when a tuple's first entry is unsupported", () => {
-    expect(() => runPipe([123 as unknown as never, "p"], 0)).toThrow(
-      /unsupported tuple entry/,
-    );
+    expect(() => runPipe([123 as unknown as never, "p"], 0)).toThrow(/unsupported tuple entry/);
   });
 });
 

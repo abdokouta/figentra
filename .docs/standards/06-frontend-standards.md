@@ -14,7 +14,8 @@ Do not introduce another query framework without architectural approval.
 
 Use React Router 7.
 
-Resource routes may be generated from application code/metadata, but custom routes remain explicit.
+Resource routes may be generated from application code/metadata, but custom
+routes remain explicit.
 
 ## UI
 
@@ -23,6 +24,7 @@ No SDUI.
 No server-provided component trees.
 
 Backend provides:
+
 - data
 - permissions
 - configuration
@@ -32,7 +34,8 @@ Frontend renders the UI.
 
 ## Theme
 
-HeroUI theme tokens can be supplied from application configuration and injected through the application shell.
+HeroUI theme tokens can be supplied from application configuration and injected
+through the application shell.
 
 ## Accessibility
 

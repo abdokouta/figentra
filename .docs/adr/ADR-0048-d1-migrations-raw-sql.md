@@ -39,8 +39,8 @@ not an implicit `down` operation in the normal Wrangler migration stream.
 
 ## Why not Knex
 
-Knex adds a second migration lifecycle to a Worker environment that already
-has a first-class Wrangler/D1 migration lifecycle. It also adds unnecessary
+Knex adds a second migration lifecycle to a Worker environment that already has
+a first-class Wrangler/D1 migration lifecycle. It also adds unnecessary
 runtime/tooling coupling for SQLite/D1.
 
 Raw SQL provides exact SQLite/D1 semantics, lower complexity, smaller runtime

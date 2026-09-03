@@ -21,6 +21,7 @@ It is not a replacement for Figentra IAM.
 ## Files
 
 Object storage can use:
+
 - Cloudflare R2
 - AWS S3
 
@@ -42,4 +43,5 @@ Never make search the business source of truth.
 
 ## Reporting
 
-Reporting should use derived analytical data rather than running uncontrolled reporting workloads against transactional databases.
+Reporting should use derived analytical data rather than running uncontrolled
+reporting workloads against transactional databases.

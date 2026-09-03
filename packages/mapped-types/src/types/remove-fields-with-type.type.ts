@@ -1,4 +1,4 @@
-import { KeysWithType } from './keys-with-type.type';
+import { KeysWithType } from "./keys-with-type.type";
 
 /**
  * @type RemoveFieldsWithType

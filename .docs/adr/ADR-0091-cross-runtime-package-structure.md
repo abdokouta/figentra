@@ -8,23 +8,20 @@ reviewed_at: null
 
 # ADR-0091 — Cross-runtime package structure
 
-**Status:** Accepted
-**Date:** 2026-09-03
-**Supersedes:** —
-**Superseded by:** —
+**Status:** Accepted **Date:** 2026-09-03 **Supersedes:** — **Superseded by:** —
 
 ## Context
 
 Several `@stackra/*` packages need to ship the SAME domain concept — the same
 service, hook, i18n catalogue, or context — across MULTIPLE runtimes at once:
 
-| Package                    | Web (React)        | React Native     | Cloudflare Worker | NestJS server    |
-| -------------------------- | ------------------ | ---------------- | ----------------- | ---------------- |
-| `@stackra/container`       | Browser DI + hooks | RN DI + hooks    | Worker DI         | Nest DI adapter  |
-| `@stackra/logger`          | Console + HTTP sink| Console + HTTP   | Worker console    | Pino / Winston   |
-| `@stackra/i18n`            | Catalog hooks      | Catalog hooks    | —                 | Middleware       |
-| `@stackra/auth-ui`         | Login form UI      | Login form UI    | —                 | —                |
-| `@stackra/notifications-ui`| Toast host         | Push renderer    | —                 | —                |
+| Package                     | Web (React)         | React Native   | Cloudflare Worker | NestJS server   |
+| --------------------------- | ------------------- | -------------- | ----------------- | --------------- |
+| `@stackra/container`        | Browser DI + hooks  | RN DI + hooks  | Worker DI         | Nest DI adapter |
+| `@stackra/logger`           | Console + HTTP sink | Console + HTTP | Worker console    | Pino / Winston  |
+| `@stackra/i18n`             | Catalog hooks       | Catalog hooks  | —                 | Middleware      |
+| `@stackra/auth-ui`          | Login form UI       | Login form UI  | —                 | —               |
+| `@stackra/notifications-ui` | Toast host          | Push renderer  | —                 | —               |
 
 The naive shape — one package per runtime (`@stackra/logger-react`,
 `@stackra/logger-native`, `@stackra/logger-worker`, `@stackra/logger-nest`) —
@@ -56,18 +53,18 @@ instead of the package.**
 
 ### The canonical subpath set
 
-| Subpath                | `package.json` export | Content                                             |
-| ---------------------- | --------------------- | --------------------------------------------------- |
-| `@stackra/<pkg>`       | `.`                   | Runtime-agnostic core: services, factories, non-DI-bound managers, pure utils. Safe for every runtime. |
-| `@stackra/<pkg>/nestjs`| `./nestjs`            | NestJS `DynamicModule` + Nest-specific services, middleware, interceptors, filters, health indicators. |
-| `@stackra/<pkg>/react` | `./react`             | React-only providers, hooks, components. DOM-safe. |
-| `@stackra/<pkg>/native`| `./native`            | React Native providers, hooks, components. RN-safe. |
-| `@stackra/<pkg>/worker`| `./worker`            | Cloudflare Worker module + env-binding integration + `ExecutionContext.waitUntil` hooks. |
-| `@stackra/<pkg>/pino`  | `./pino`              | Optional Pino driver (logger only).                |
-| `@stackra/<pkg>/winston`| `./winston`          | Optional Winston driver (logger only).             |
-| `@stackra/<pkg>/testing`| `./testing`          | In-memory / mock implementations of the package's core. |
-| `@stackra/<pkg>/testing/react` | `./testing/react` | React-specific test helpers (renders provider, mocks).|
-| `@stackra/<pkg>/testing/worker`| `./testing/worker`| Worker-specific test helpers (Miniflare + env stub).|
+| Subpath                         | `package.json` export | Content                                                                                                |
+| ------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------ |
+| `@stackra/<pkg>`                | `.`                   | Runtime-agnostic core: services, factories, non-DI-bound managers, pure utils. Safe for every runtime. |
+| `@stackra/<pkg>/nestjs`         | `./nestjs`            | NestJS `DynamicModule` + Nest-specific services, middleware, interceptors, filters, health indicators. |
+| `@stackra/<pkg>/react`          | `./react`             | React-only providers, hooks, components. DOM-safe.                                                     |
+| `@stackra/<pkg>/native`         | `./native`            | React Native providers, hooks, components. RN-safe.                                                    |
+| `@stackra/<pkg>/worker`         | `./worker`            | Cloudflare Worker module + env-binding integration + `ExecutionContext.waitUntil` hooks.               |
+| `@stackra/<pkg>/pino`           | `./pino`              | Optional Pino driver (logger only).                                                                    |
+| `@stackra/<pkg>/winston`        | `./winston`           | Optional Winston driver (logger only).                                                                 |
+| `@stackra/<pkg>/testing`        | `./testing`           | In-memory / mock implementations of the package's core.                                                |
+| `@stackra/<pkg>/testing/react`  | `./testing/react`     | React-specific test helpers (renders provider, mocks).                                                 |
+| `@stackra/<pkg>/testing/worker` | `./testing/worker`    | Worker-specific test helpers (Miniflare + env stub).                                                   |
 
 The set is a MENU — most packages ship a subset. `@stackra/logger` ships every
 row. `@stackra/i18n` ships root + `/nestjs` + `/react` + `/native` + `/testing`
@@ -142,13 +139,13 @@ packages/<pkg>/
 Every symbol that MUST be importable across runtime boundaries without pulling
 in a runtime implementation lives in `@stackra/contracts`:
 
-| Category                | Example                                              |
-| ----------------------- | ---------------------------------------------------- |
-| Interfaces              | `ILogger`, `ICacheStore`, `IContainerResolver`, `IDiscoveryService` |
-| Injection tokens        | `LOGGER`, `LOGGER_MANAGER`, `CACHE_MANAGER`, `CONTAINER` |
-| Public enums            | `LogLevel`, `Scope`, `SortDirection`                 |
-| Public error classes    | `ContainerResolutionError`, `LoggerConfigError`      |
-| Shared DTO types        | `ILogEntry`, `ICacheOptions`, `IHealthReport`        |
+| Category             | Example                                                             |
+| -------------------- | ------------------------------------------------------------------- |
+| Interfaces           | `ILogger`, `ICacheStore`, `IContainerResolver`, `IDiscoveryService` |
+| Injection tokens     | `LOGGER`, `LOGGER_MANAGER`, `CACHE_MANAGER`, `CONTAINER`            |
+| Public enums         | `LogLevel`, `Scope`, `SortDirection`                                |
+| Public error classes | `ContainerResolutionError`, `LoggerConfigError`                     |
+| Shared DTO types     | `ILogEntry`, `ICacheOptions`, `IHealthReport`                       |
 
 `@stackra/contracts` has ZERO runtime deps. It's the workspace's shared
 vocabulary. Every driver-based `@stackra/*` package + every consuming app
@@ -195,7 +192,7 @@ export function useLogger(): ILogger {
 
 ```typescript
 // packages/logger/src/react/index.ts
-export * from "../core/hooks";  // useLogger, useLogChannel, useRequestLogger
+export * from "../core/hooks"; // useLogger, useLogChannel, useRequestLogger
 export * from "../core/providers"; // <LoggerProvider>
 export * from "../core/contexts"; // LoggerContext (advanced)
 
@@ -206,7 +203,7 @@ export { useNetworkCapture } from "./hooks/use-network-capture";
 
 ```typescript
 // packages/logger/src/native/index.ts
-export * from "../core/hooks";     // same hooks, same behaviour
+export * from "../core/hooks"; // same hooks, same behaviour
 export * from "../core/providers";
 export * from "../core/contexts";
 
@@ -218,8 +215,8 @@ export { useAppStateLogger } from "./hooks/use-app-state-logger";
 ### Rule 4 — Shared i18n catalogues live at `src/core/i18n/`
 
 Every user-facing string ships as JSON. The i18n runtime works identically on
-React DOM and React Native (both consume `t("key")` from the same catalogue).
-So one catalogue per package, at `src/core/i18n/en.json` + `ar.json`. The
+React DOM and React Native (both consume `t("key")` from the same catalogue). So
+one catalogue per package, at `src/core/i18n/en.json` + `ar.json`. The
 `@stackra/i18n` runtime picks them up via convention.
 
 ```
@@ -295,7 +292,7 @@ upward or cross-runtime paths.
     "react-dom": "^19.0.0",
     "react-native": "^0.82.0",
     "pino": "^9.0.0",
-    "winston": "^3.13.0"
+    "winston": "^3.13.0",
   },
   "peerDependenciesMeta": {
     "@nestjs/common": { "optional": true },
@@ -304,8 +301,8 @@ upward or cross-runtime paths.
     "react-dom": { "optional": true },
     "react-native": { "optional": true },
     "pino": { "optional": true },
-    "winston": { "optional": true }
-  }
+    "winston": { "optional": true },
+  },
 }
 ```
 
@@ -359,8 +356,7 @@ Consumers `import { X } from "@stackra/<pkg>/react"` → resolves to
 - **`core/` is the shared authoring surface.** Two runtimes share a hook →
   authored once, tested once, versioned once. Contracts owns the interface.
 - **Optional peers make the package portable.** A CLI script that just wants
-  `Logger.create()` from the `core/` entry doesn't need Nest/React/RN
-  installed.
+  `Logger.create()` from the `core/` entry doesn't need Nest/React/RN installed.
 - **The layout matches what `.ref/packages/container` + `.ref/packages/logger`
   already used.** The ADR pins the rule so future packages don't drift.
 
@@ -410,10 +406,8 @@ Use the `exports` map's runtime conditions:
 **Rejected because:**
 
 - Conditional exports are the LOWEST-LEVEL selector; workspace convention is
-  explicit subpaths, which map 1:1 to `pnpm --filter` + docs + IDE
-  auto-imports.
-- Doesn't scope by USE (React vs NestJS both run in Node); scopes by
-  RUNTIME.
+  explicit subpaths, which map 1:1 to `pnpm --filter` + docs + IDE auto-imports.
+- Doesn't scope by USE (React vs NestJS both run in Node); scopes by RUNTIME.
 - Nest-in-Worker + Nest-on-Node fight over the same `node` condition.
 
 ### Alternative 4 — Monorepo of source, ESM subpath imports from monolithic `dist/`
@@ -442,8 +436,8 @@ Ship one giant `dist/index.mjs`, mark subpaths as re-exports.
 
 - Package folder layout is fixed and verbose (7+ subfolders even for small
   packages). Reviewers must enforce.
-- Subpath dependency direction is a constant grep target (every merge checks
-  no upward import).
+- Subpath dependency direction is a constant grep target (every merge checks no
+  upward import).
 - `tsup.config.ts` grows linearly with subpath count.
 
 ### Neutral
@@ -477,7 +471,8 @@ Reviewers verify per-package:
   `/nestjs` subpath).
 - `.kiro/steering/subpath-layering.md` (frontend) — pre-existing rule for the
   frontend surface; this ADR generalises it to every runtime.
-- `.kiro/steering/contract-reexports.md` — never re-export from `@stackra/contracts`.
+- `.kiro/steering/contract-reexports.md` — never re-export from
+  `@stackra/contracts`.
 - `.kiro/steering/frontend-localization.md` — the i18n catalogue rule this ADR
   extends to cross-runtime packages.
 - `.kiro/plans/2026-09-03-container-package.md` — first consumer.
@@ -485,5 +480,5 @@ Reviewers verify per-package:
   `/winston` optional subpaths).
 - `.ref/packages/container/stackra-container-architecture-plan.md` §33-40 —
   reference implementation.
-- `.ref/packages/logger/stackra-logger-architecture-plan.md` §94-97 —
-  reference implementation.
+- `.ref/packages/logger/stackra-logger-architecture-plan.md` §94-97 — reference
+  implementation.

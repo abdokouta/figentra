@@ -60,7 +60,8 @@ Service accounts can:
 
 ## Integration
 
-External systems may receive integration principals where actions must be attributed and authorized.
+External systems may receive integration principals where actions must be
+attributed and authorized.
 
 ## System
 
@@ -202,7 +203,8 @@ ACTIVE
 ROTATED / EXPIRED / REVOKED
 ```
 
-Rotation should support overlapping validity windows where needed for zero-downtime rollout.
+Rotation should support overlapping validity windows where needed for
+zero-downtime rollout.
 
 ## Service identity
 

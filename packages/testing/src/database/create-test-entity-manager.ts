@@ -82,9 +82,7 @@ export interface ITestEntityManager {
  * });
  * ```
  */
-export async function createTestEntityManager(
-  orm: MikroORM,
-): Promise<ITestEntityManager> {
+export async function createTestEntityManager(orm: MikroORM): Promise<ITestEntityManager> {
   const em = orm.em.fork();
   await em.begin();
 

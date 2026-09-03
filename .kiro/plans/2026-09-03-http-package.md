@@ -8,19 +8,19 @@ reviewed_at: null
 
 # @stackra/http — architecture plan
 
-**Status:** Planned (major refactor of `.ref/packages/http` v3.0.0)
-**Anchor ADRs:** [ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
+**Status:** Planned (major refactor of `.ref/packages/http` v3.0.0) **Anchor
+ADRs:** [ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
 [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
-[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md)
-**Reference:** `.ref/packages/http/` — already at v3.0.0 with 6 subpaths.
-**Depends on:** `@stackra/container`, `@stackra/contracts`, `@stackra/support`,
+[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md) **Reference:**
+`.ref/packages/http/` — already at v3.0.0 with 6 subpaths. **Depends on:**
+`@stackra/container`, `@stackra/contracts`, `@stackra/support`,
 `@stackra/logger`, `@stackra/events` (for `http.*` events)
 
 ## Purpose
 
-`@stackra/http` is the workspace's canonical HTTP client. Consumers type
-against `IHttpClient` from `@stackra/contracts`; the runtime picks the
-connector per named connection:
+`@stackra/http` is the workspace's canonical HTTP client. Consumers type against
+`IHttpClient` from `@stackra/contracts`; the runtime picks the connector per
+named connection:
 
 - **Node / NestJS** — Axios (feature-rich, streaming, interceptors) OR fetch
   (Node 24 native).
@@ -28,8 +28,8 @@ connector per named connection:
 - **Browser** — native `fetch` (via connector).
 - **React Native** — RN `fetch` polyfill (via connector).
 
-Enterprise-grade features required day one — the reference package ALREADY
-ships these; this plan LOCKS them:
+Enterprise-grade features required day one — the reference package ALREADY ships
+these; this plan LOCKS them:
 
 - **N named connections** via `MultipleInstanceManager` per ADR-0090.
 - **Middleware pipeline** — before-request modifier chain.
@@ -46,9 +46,10 @@ ships these; this plan LOCKS them:
   `@stackra/cache`.
 - **Locale filter** — inline-per-locale response bodies (per
   `.kiro/steering/frontend-localization.md`).
-- **RxJS bridge** — separate subpath for consumers that prefer Observable-
-  based streams.
-- **Typed clients** — `HttpModule.forFeature({ typed: [{ tag: 'users', client: UsersHttpClient }] })`
+- **RxJS bridge** — separate subpath for consumers that prefer Observable- based
+  streams.
+- **Typed clients** —
+  `HttpModule.forFeature({ typed: [{ tag: 'users', client: UsersHttpClient }] })`
   generates a typed API SDK from an OpenAPI spec (opt-in — Phase 5).
 
 ## Non-goals
@@ -164,22 +165,22 @@ packages/http/
 
 ## Contracts split
 
-| Symbol                        | Kind      |
-| ----------------------------- | --------- |
-| `IHttpClient`                 | interface |
-| `IHttpManager`                | interface |
-| `IHttpRequest`                | interface |
-| `IHttpResponse<T>`            | interface |
-| `IHttpConnector`              | interface |
-| `IHttpMiddleware`             | interface |
-| `IHttpInterceptor`            | interface |
-| `HttpMethod` enum             | enum      |
-| `HTTP_MANAGER`                | token     |
-| `HTTP_CLIENT`                 | token (default connection) |
-| `HTTP_CONFIG`                 | token     |
-| `HttpError`                   | class     |
-| `TimeoutError`                | class     |
-| `CircuitBreakerOpenError`     | class     |
+| Symbol                    | Kind                       |
+| ------------------------- | -------------------------- |
+| `IHttpClient`             | interface                  |
+| `IHttpManager`            | interface                  |
+| `IHttpRequest`            | interface                  |
+| `IHttpResponse<T>`        | interface                  |
+| `IHttpConnector`          | interface                  |
+| `IHttpMiddleware`         | interface                  |
+| `IHttpInterceptor`        | interface                  |
+| `HttpMethod` enum         | enum                       |
+| `HTTP_MANAGER`            | token                      |
+| `HTTP_CLIENT`             | token (default connection) |
+| `HTTP_CONFIG`             | token                      |
+| `HttpError`               | class                      |
+| `TimeoutError`            | class                      |
+| `CircuitBreakerOpenError` | class                      |
 
 ## Core API (locked from .ref)
 
@@ -187,28 +188,50 @@ packages/http/
 interface IHttpClient {
   request<T>(config: IHttpRequest): Promise<IHttpResponse<T>>;
   get<T>(url: string, options?: IHttpRequestOptions): Promise<IHttpResponse<T>>;
-  post<T>(url: string, data?: unknown, options?: IHttpRequestOptions): Promise<IHttpResponse<T>>;
-  put<T>(url: string, data?: unknown, options?: IHttpRequestOptions): Promise<IHttpResponse<T>>;
-  patch<T>(url: string, data?: unknown, options?: IHttpRequestOptions): Promise<IHttpResponse<T>>;
-  delete<T>(url: string, options?: IHttpRequestOptions): Promise<IHttpResponse<T>>;
+  post<T>(
+    url: string,
+    data?: unknown,
+    options?: IHttpRequestOptions,
+  ): Promise<IHttpResponse<T>>;
+  put<T>(
+    url: string,
+    data?: unknown,
+    options?: IHttpRequestOptions,
+  ): Promise<IHttpResponse<T>>;
+  patch<T>(
+    url: string,
+    data?: unknown,
+    options?: IHttpRequestOptions,
+  ): Promise<IHttpResponse<T>>;
+  delete<T>(
+    url: string,
+    options?: IHttpRequestOptions,
+  ): Promise<IHttpResponse<T>>;
 
   // Streaming
   stream(url: string, options?: IHttpRequestOptions): AsyncIterable<Uint8Array>;
   streamJson<T>(url: string, options?: IHttpRequestOptions): AsyncIterable<T>;
-  streamSse<T>(url: string, options?: IHttpRequestOptions): AsyncIterable<ISseEvent<T>>;
+  streamSse<T>(
+    url: string,
+    options?: IHttpRequestOptions,
+  ): AsyncIterable<ISseEvent<T>>;
 
   // Uploads
-  upload(url: string, file: Blob | ReadableStream, options?: IUploadOptions): Promise<IHttpResponse>;
+  upload(
+    url: string,
+    file: Blob | ReadableStream,
+    options?: IUploadOptions,
+  ): Promise<IHttpResponse>;
 }
 ```
 
 ## Connectors
 
-| Connector      | Home                                    | Runtime         | Deps                        |
-| -------------- | --------------------------------------- | --------------- | --------------------------- |
-| `axios`        | `axios/axios.connector.ts`              | Node + Browser  | `axios` (optional peer)     |
-| `fetch`        | `core/connectors/fetch.connector.ts`    | Every runtime   | Native `fetch`              |
-| `worker-fetch` | `worker/connectors/worker-fetch.connector.ts` | Cloudflare | Native `fetch` + Cloudflare hints |
+| Connector      | Home                                          | Runtime        | Deps                              |
+| -------------- | --------------------------------------------- | -------------- | --------------------------------- |
+| `axios`        | `axios/axios.connector.ts`                    | Node + Browser | `axios` (optional peer)           |
+| `fetch`        | `core/connectors/fetch.connector.ts`          | Every runtime  | Native `fetch`                    |
+| `worker-fetch` | `worker/connectors/worker-fetch.connector.ts` | Cloudflare     | Native `fetch` + Cloudflare hints |
 
 Axios is the enterprise default (feature-rich); fetch is the Worker/browser
 default (no bundle cost). Runtime selects per connection config.
@@ -229,8 +252,7 @@ Runs BEFORE request send:
 Runs AFTER response received, in configured order:
 
 - `retry.interceptor.ts` — exponential backoff on 5xx / network errors.
-- `cache.interceptor.ts` — HTTP-caching-aware, ETag, backed by
-  `@stackra/cache`.
+- `cache.interceptor.ts` — HTTP-caching-aware, ETag, backed by `@stackra/cache`.
 - `logging.interceptor.ts` — request/response log lines w/ redaction.
 - `metrics.interceptor.ts` — histogram + counters.
 - `error-normalizer.interceptor.ts` — 4xx/5xx → typed `HttpError` subclasses.
@@ -239,15 +261,15 @@ Runs AFTER response received, in configured order:
 - `locale-filter.interceptor.ts` — walks response body, filters inline-locale
   fields to the active locale.
 
-Each interceptor is a class implementing `IHttpInterceptor`; ordered by
-config array, per-connection scope.
+Each interceptor is a class implementing `IHttpInterceptor`; ordered by config
+array, per-connection scope.
 
 ## Circuit breaker + rate limiter
 
 Per-connection state kept in `HttpClient`:
 
-- `CircuitBreaker` — `closed` → `open` on N consecutive failures →
-  `half-open` after `resetTimeoutMs` → back to `closed` on success.
+- `CircuitBreaker` — `closed` → `open` on N consecutive failures → `half-open`
+  after `resetTimeoutMs` → back to `closed` on success.
 - `RateLimiter` — token bucket (`requestsPerSecond`, `burst`).
 
 Both emit events on `@stackra/events`:
@@ -273,13 +295,13 @@ Two middleware/interceptors auto-registered:
 
 1. `LocaleHeaderMiddleware` (request-side) — stamps active locale.
 2. `LocaleFilterResponseInterceptor` (response-side) — walks parsed body,
-   replaces every "locale map" (an object whose keys are a subset of
-   supported locales) with just the active locale's value.
+   replaces every "locale map" (an object whose keys are a subset of supported
+   locales) with just the active locale's value.
 
 ## Feature registration
 
-Per `.ref` — `forFeature` register additional drivers, connections,
-middleware, or interceptors:
+Per `.ref` — `forFeature` register additional drivers, connections, middleware,
+or interceptors:
 
 ```typescript
 HttpModule.forFeature({
@@ -304,8 +326,8 @@ resolved via `ModuleRef` (per ADR-0092 pattern).
 `stream()`, `streamJson()`, `streamSse()` return AsyncIterable per web spec.
 Bridged to RxJS Observables via the `/rxjs` subpath.
 
-Cloudflare Workers stream via `ReadableStream` — fully supported.
-Node uses `Readable` streams underneath (Axios) or web streams (fetch).
+Cloudflare Workers stream via `ReadableStream` — fully supported. Node uses
+`Readable` streams underneath (Axios) or web streams (fetch).
 
 ## Dependencies
 
@@ -323,7 +345,7 @@ Node uses `Readable` streams underneath (Axios) or web streams (fetch).
     "react": "catalog:react",
     "react-native": "catalog:react-native",
     "axios": "^1.7.0",
-    "rxjs": "^7.8.0"
+    "rxjs": "^7.8.0",
   },
   "peerDependenciesMeta": {
     "@stackra/cache": { "optional": true },
@@ -332,8 +354,8 @@ Node uses `Readable` streams underneath (Axios) or web streams (fetch).
     "react": { "optional": true },
     "react-native": { "optional": true },
     "axios": { "optional": true },
-    "rxjs": { "optional": true }
-  }
+    "rxjs": { "optional": true },
+  },
 }
 ```
 
@@ -351,8 +373,8 @@ Node uses `Readable` streams underneath (Axios) or web streams (fetch).
 
 ### Phase 3 — Manager alignment (2 days)
 
-- [ ] Refactor `HttpManager` to extend
-      `MultipleInstanceManager<IHttpClient>` from `@stackra/support`.
+- [ ] Refactor `HttpManager` to extend `MultipleInstanceManager<IHttpClient>`
+      from `@stackra/support`.
 - [ ] Verify `forFeature` uses `@Injectable()` registrar class per ADR-0052.
 
 ### Phase 4 — Add missing runtime subpaths (2 days)

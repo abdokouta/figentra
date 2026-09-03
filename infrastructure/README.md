@@ -2,8 +2,8 @@
 
 ## Make include structure
 
-The root `Makefile` includes **one** file — `infrastructure/infrastructure.mk`
-— which fans out to every subsystem-specific `.mk` file:
+The root `Makefile` includes **one** file — `infrastructure/infrastructure.mk` —
+which fans out to every subsystem-specific `.mk` file:
 
 ```text
 Makefile
@@ -18,8 +18,8 @@ Adding a new infrastructure subsystem (e.g. Wrangler, Pulumi) is one edit to
 
 ## Deployment source model
 
-The root `cloud.yaml` explicitly enrolls local deployment sources. The
-collector does not implicitly discover the filesystem.
+The root `cloud.yaml` explicitly enrolls local deployment sources. The collector
+does not implicitly discover the filesystem.
 
 ```text
 cloud.yaml
@@ -70,9 +70,9 @@ contain `outputs.tf`.
 - `postgres/` — local PostgreSQL support.
 - `environments/` — canonical non-secret environment contracts.
 
-The generated Compose file lives at `infrastructure/.generated/docker-compose.yml`
-(machine-owned, gitignored). Only explicitly enrolled local deployables with
-`docker.enabled: true` are included.
+The generated Compose file lives at
+`infrastructure/.generated/docker-compose.yml` (machine-owned, gitignored). Only
+explicitly enrolled local deployables with `docker.enabled: true` are included.
 
 ## Runtime boundary
 

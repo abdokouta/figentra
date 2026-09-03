@@ -21,13 +21,13 @@ Use MikroORM for:
 - application queries
 - migration orchestration
 
-Use reviewed raw PostgreSQL SQL only where the database primitive is part of
-the security/integrity design, including migration DDL and transaction-scoped
+Use reviewed raw PostgreSQL SQL only where the database primitive is part of the
+security/integrity design, including migration DDL and transaction-scoped
 advisory locks.
 
 Knex is not introduced because it would create a second persistence abstraction
-for a service that already benefits from MikroORM's Unit of Work and
-transaction model.
+for a service that already benefits from MikroORM's Unit of Work and transaction
+model.
 
 ### Integrity
 

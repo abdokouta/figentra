@@ -5,5 +5,5 @@ ownership, security assumptions and important invariants.
 
 Public TypeScript APIs use TSDoc/JSDoc.
 
-Terraform and YAML use structured header comments and section comments.
-Comments must explain intent rather than restating syntax.
+Terraform and YAML use structured header comments and section comments. Comments
+must explain intent rather than restating syntax.

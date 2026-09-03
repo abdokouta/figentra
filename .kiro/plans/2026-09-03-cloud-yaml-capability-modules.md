@@ -29,24 +29,24 @@ capabilities:
 This shape has five structural gaps:
 
 1. **Doesn't scale.** Every new capability adds a `needs_X` line. Kafka,
-   WebSockets, Meilisearch, Stripe, Twilio, Resend, cron, custom domains,
-   WAF rules, Redis Streams, Meilisearch, Sentry, OpenTelemetry — that's
-   40+ booleans very quickly.
-2. **Can't carry configuration.** Kafka needs `topics + partitions +
-   consumer_group + version`. WebSockets need `path + auth + max_connections`.
-   A database needs a name + engine version. Booleans can't express any of
-   that.
-3. **No versioning.** `kafka@3.7` vs `kafka@4.0` look the same. Postgres 15
-   vs Postgres 16 look the same.
-4. **No multi-instance support.** A service that needs TWO Kafka clusters
-   (one internal + one external) has no shape.
-5. **Fights ownership.** Who provisions Kafka? Terraform? Docker (local)?
-   Both? A single boolean can't answer.
+   WebSockets, Meilisearch, Stripe, Twilio, Resend, cron, custom domains, WAF
+   rules, Redis Streams, Meilisearch, Sentry, OpenTelemetry — that's 40+
+   booleans very quickly.
+2. **Can't carry configuration.** Kafka needs
+   `topics + partitions + consumer_group + version`. WebSockets need
+   `path + auth + max_connections`. A database needs a name + engine version.
+   Booleans can't express any of that.
+3. **No versioning.** `kafka@3.7` vs `kafka@4.0` look the same. Postgres 15 vs
+   Postgres 16 look the same.
+4. **No multi-instance support.** A service that needs TWO Kafka clusters (one
+   internal + one external) has no shape.
+5. **Fights ownership.** Who provisions Kafka? Terraform? Docker (local)? Both?
+   A single boolean can't answer.
 
 ## The decision — capability modules with a versioned registry
 
-Model each infrastructure capability as a **module** in a canonical registry
-at `infrastructure/modules/<name>/`. Each module owns:
+Model each infrastructure capability as a **module** in a canonical registry at
+`infrastructure/modules/<name>/`. Each module owns:
 
 - Its own JSON Schema for the deployable's configuration.
 - Its own Terraform module reference (when it provisions cloud infrastructure).
@@ -81,25 +81,24 @@ Terraform + Docker generators walk `modules[]` generically — no per-capability
 
 Five rules govern every module in the registry:
 
-1. **One module = one capability.** `kafka`, `websocket`, `cloudflare-d1` —
-   each names exactly one capability. Composite modules (e.g. a hypothetical
-   `messaging` module that bundles Kafka + NATS + Redis Streams) are
-   rejected — the deployable declares each capability explicitly.
+1. **One module = one capability.** `kafka`, `websocket`, `cloudflare-d1` — each
+   names exactly one capability. Composite modules (e.g. a hypothetical
+   `messaging` module that bundles Kafka + NATS + Redis Streams) are rejected —
+   the deployable declares each capability explicitly.
 2. **Every module is self-describing.** A reader opens `module.yaml` +
-   `README.md` and understands the contract without touching source. The
-   schema, runtime targets, provided/consumed capabilities, and env-var
-   envelope all live there.
-3. **Every module is versioned by semver.** A breaking change is a major
-   bump. Consumers pin ranges (`^1.0.0`).
-4. **Every module names its provisioning targets.** `runtime_targets:
-   { docker, terraform, wrangler }` explicitly lists which runtime owns the
-   provisioning. `null` means "not applicable" (a Kafka module isn't
-   Cloudflare-Workers-compatible).
-5. **Modules never mutate consumer code.** A deployable that opts into
-   `kafka` gets env vars + optionally a Docker Compose service — never a
-   generated import at build time. Application-side helpers (client
-   factories, wrappers) live in `@stackra/*` packages the deployable
-   consumes explicitly.
+   `README.md` and understands the contract without touching source. The schema,
+   runtime targets, provided/consumed capabilities, and env-var envelope all
+   live there.
+3. **Every module is versioned by semver.** A breaking change is a major bump.
+   Consumers pin ranges (`^1.0.0`).
+4. **Every module names its provisioning targets.**
+   `runtime_targets: { docker, terraform, wrangler }` explicitly lists which
+   runtime owns the provisioning. `null` means "not applicable" (a Kafka module
+   isn't Cloudflare-Workers-compatible).
+5. **Modules never mutate consumer code.** A deployable that opts into `kafka`
+   gets env vars + optionally a Docker Compose service — never a generated
+   import at build time. Application-side helpers (client factories, wrappers)
+   live in `@stackra/*` packages the deployable consumes explicitly.
 
 ## Module folder shape
 
@@ -145,10 +144,10 @@ Rules for the folder layout:
 
 - **Every module has `module.yaml` + `README.md` — always.** Missing either
   fails the module-registry validator.
-- **`terraform.tf` is present when the module provisions cloud
-  infrastructure.** Absent for pure runtime-config modules (e.g. `websocket`
-  which is a runtime configuration on the deployable's HTTP server, not a
-  separately provisioned resource).
+- **`terraform.tf` is present when the module provisions cloud infrastructure.**
+  Absent for pure runtime-config modules (e.g. `websocket` which is a runtime
+  configuration on the deployable's HTTP server, not a separately provisioned
+  resource).
 - **`compose.yaml` is present when the module participates in local dev.**
   Absent for modules whose infrastructure is provider-owned only (e.g.
   `cloudflare-d1` — Cloudflare-only, no local analog).
@@ -170,11 +169,11 @@ Rules for the folder layout:
 name: kafka
 version: 1.0.0
 kind: infrastructure-module
-category: messaging      # one of: messaging, realtime, storage, search, third-party, background, ai, observability, networking, auth
-maturity: beta           # one of: planned, alpha, beta, stable, deprecated
+category: messaging # one of: messaging, realtime, storage, search, third-party, background, ai, observability, networking, auth
+maturity: beta # one of: planned, alpha, beta, stable, deprecated
 description: >
-  Kafka event-log module. Provisions topics + consumer group; injects broker
-  URL + credentials + topic names into the deployable's environment.
+  Kafka event-log module. Provisions topics + consumer group; injects broker URL
+  + credentials + topic names into the deployable's environment.
 
 # What this module PROVIDES to the deployable.
 provides:
@@ -187,9 +186,9 @@ consumes: []
 
 # Which runtimes CAN provision this module. `null` = not applicable.
 runtime_targets:
-  terraform: terraform.tf     # Cloud provisioning
-  docker: compose.yaml         # Local dev
-  wrangler: null               # Not Worker-compatible
+  terraform: terraform.tf # Cloud provisioning
+  docker: compose.yaml # Local dev
+  wrangler: null # Not Worker-compatible
 
 # JSON Schema for the deployable's config block. Applied per entry in
 # `cloud.yaml`'s `modules: []` array.
@@ -240,23 +239,23 @@ Fields:
 - **`name`** — kebab-case; must match the folder name.
 - **`version`** — semver.
 - **`kind`** — always `infrastructure-module` in v1.
-- **`category`** — closed enum. Adding a category requires an ADR amendment
-  to this plan.
-- **`maturity`** — closed enum (planned / alpha / beta / stable /
-  deprecated). Consumers of `stable` modules are semver-guaranteed;
-  `beta` allows minor-version breaking changes.
-- **`description`** — one paragraph. Reviewers reject one-liners for
-  non-trivial modules.
+- **`category`** — closed enum. Adding a category requires an ADR amendment to
+  this plan.
+- **`maturity`** — closed enum (planned / alpha / beta / stable / deprecated).
+  Consumers of `stable` modules are semver-guaranteed; `beta` allows
+  minor-version breaking changes.
+- **`description`** — one paragraph. Reviewers reject one-liners for non-trivial
+  modules.
 - **`provides`** — capability tokens this module exposes. Other modules can
   declare `consumes` against these tokens for dependency-graph validation.
-- **`consumes`** — capability tokens this module requires. The collector
-  fails a deployable that opts into a `consumes` token without also opting
-  into a module that `provides` it.
+- **`consumes`** — capability tokens this module requires. The collector fails a
+  deployable that opts into a `consumes` token without also opting into a module
+  that `provides` it.
 - **`runtime_targets`** — the three runtime axes (`terraform`, `docker`,
   `wrangler`). Each value is a relative filename OR `null`.
 - **`schema`** — JSON Schema for the deployable's `config` block.
-- **`env_vars`** — the env-var envelope. Each entry names an env var + a
-  source expression (`terraform_output.X`, `module.config.Y`, or a literal).
+- **`env_vars`** — the env-var envelope. Each entry names an env var + a source
+  expression (`terraform_output.X`, `module.config.Y`, or a literal).
 
 ## Deployable manifest shape
 
@@ -323,8 +322,8 @@ Every entry:
 
 - **`use`** — module name; must exist in the registry.
 - **`version`** — semver range (`^1.0.0`, `~2.3`, `>=1.5.0 <2.0.0`).
-- **`config`** — validated against the module's schema at collector time.
-  Fails the catalog build on drift.
+- **`config`** — validated against the module's schema at collector time. Fails
+  the catalog build on drift.
 
 ## Runtime integration
 
@@ -336,13 +335,13 @@ Three consumers walk `modules[]` at build time; each stays generic.
 2. For every deployable's `cloud.yaml`:
    - Parse `modules[]`.
    - For each entry, resolve `use:` against the registry.
-   - Validate semver constraint (compare `version:` range against the
-     module's `module.yaml.version`).
+   - Validate semver constraint (compare `version:` range against the module's
+     `module.yaml.version`).
    - Validate `config:` against the module's JSON Schema.
    - Emit the resolved module tuple into `catalog.json`.
-3. Additionally emit compat data from any remaining `capabilities: {}` block
-   as ephemeral `modules[]` entries with a `_deprecated: true` flag, plus
-   a warning per deployable.
+3. Additionally emit compat data from any remaining `capabilities: {}` block as
+   ephemeral `modules[]` entries with a `_deprecated: true` flag, plus a warning
+   per deployable.
 
 ### Terraform — `infrastructure/terraform/locals.tf`
 
@@ -364,8 +363,8 @@ locals {
 }
 ```
 
-Better: `deploy.tf` iterates every deployable's `modules[]` and dispatches
-to the matching Terraform module reference:
+Better: `deploy.tf` iterates every deployable's `modules[]` and dispatches to
+the matching Terraform module reference:
 
 ```hcl
 # For each deployable, for each module it uses, invoke the matching
@@ -381,8 +380,7 @@ module "d1" {
 
 1. For every deployable with `docker.enabled: true`:
    - Emit the deployable's own service (as today).
-   - For every entry in `modules[]`, load the module's `compose.yaml`
-     fragment.
+   - For every entry in `modules[]`, load the module's `compose.yaml` fragment.
    - Substitute variables (module config, deployable slug).
    - Merge every fragment into the top-level `services:` / `volumes:` /
      `networks:` maps.
@@ -393,8 +391,8 @@ module "d1" {
 Every gate lands as a validator script + a `pnpm run` script + a CI job.
 
 1. **`pnpm run modules:validate`** — validates every module in the registry
-   against `schema/module.v1.json`. Fails on missing fields, unknown
-   category, invalid `runtime_targets`, unresolved `consumes` tokens.
+   against `schema/module.v1.json`. Fails on missing fields, unknown category,
+   invalid `runtime_targets`, unresolved `consumes` tokens.
 
 2. **`pnpm run modules:check`** — validates every deployable's `modules[]`
    against the registry:
@@ -406,8 +404,8 @@ Every gate lands as a validator script + a `pnpm run` script + a CI job.
 
 3. **`pnpm run modules:audit`** — additional cross-cutting checks:
    - Deprecation warnings on modules with `maturity: deprecated`.
-   - Unused-modules warning (registry has module X but no deployable uses
-     it — informational, not blocking).
+   - Unused-modules warning (registry has module X but no deployable uses it —
+     informational, not blocking).
    - Compat-shim warnings (deployables still using `capabilities: {}`).
 
 4. **CI integration** — the `standards:check` composite runs
@@ -417,20 +415,20 @@ Every gate lands as a validator script + a `pnpm run` script + a CI job.
 
 Every existing capability becomes a first-class module:
 
-| Old flag                | New module                    |
-| ----------------------- | ----------------------------- |
-| `needs_d1`              | `cloudflare-d1`               |
-| `needs_kv`              | `cloudflare-kv`               |
-| `needs_queue`           | `cloudflare-queue`            |
-| `needs_r2`              | `cloudflare-r2`               |
-| `needs_durable_object`  | `cloudflare-durable-object`   |
-| `needs_hyperdrive`      | `cloudflare-hyperdrive`       |
-| `needs_supabase`        | `supabase-postgres`           |
-| `needs_firebase`        | `firebase-fcm`                |
-| `needs_nats`            | `nats-jetstream`              |
-| `needs_redis`           | `redis-cache`                 |
-| `observability.sentry`  | `sentry-project`              |
-| `observability.betterstack` | `betterstack-uptime`     |
+| Old flag                    | New module                  |
+| --------------------------- | --------------------------- |
+| `needs_d1`                  | `cloudflare-d1`             |
+| `needs_kv`                  | `cloudflare-kv`             |
+| `needs_queue`               | `cloudflare-queue`          |
+| `needs_r2`                  | `cloudflare-r2`             |
+| `needs_durable_object`      | `cloudflare-durable-object` |
+| `needs_hyperdrive`          | `cloudflare-hyperdrive`     |
+| `needs_supabase`            | `supabase-postgres`         |
+| `needs_firebase`            | `firebase-fcm`              |
+| `needs_nats`                | `nats-jetstream`            |
+| `needs_redis`               | `redis-cache`               |
+| `observability.sentry`      | `sentry-project`            |
+| `observability.betterstack` | `betterstack-uptime`        |
 
 Every Wave 1 module ships:
 
@@ -447,17 +445,17 @@ Every Wave 1 module ships:
 
 10 modules the workspace clearly needs but doesn't yet formalize:
 
-- **`kafka`** — persistent event log; managed via Confluent Cloud or
-  Strimzi on Kubernetes; local Docker for dev.
-- **`websocket`** — bi-directional client-server; runtime-config module
-  (no separate infra) that produces `WEBSOCKET_PATH` + `WEBSOCKET_AUTH` +
+- **`kafka`** — persistent event log; managed via Confluent Cloud or Strimzi on
+  Kubernetes; local Docker for dev.
+- **`websocket`** — bi-directional client-server; runtime-config module (no
+  separate infra) that produces `WEBSOCKET_PATH` + `WEBSOCKET_AUTH` +
   `WEBSOCKET_MAX_CONNECTIONS` env vars.
-- **`server-sent-events`** — one-way server push; runtime-config module
-  emitting `SSE_PATH` + `SSE_HEARTBEAT_INTERVAL` env vars.
+- **`server-sent-events`** — one-way server push; runtime-config module emitting
+  `SSE_PATH` + `SSE_HEARTBEAT_INTERVAL` env vars.
 - **`cron`** — scheduled jobs; provisions Cloudflare Cron Triggers (or
   Kubernetes CronJobs); emits `CRON_JOBS` env var (JSON-encoded).
-- **`meilisearch`** — search; managed on Meilisearch Cloud or Docker
-  Compose locally.
+- **`meilisearch`** — search; managed on Meilisearch Cloud or Docker Compose
+  locally.
 - **`resend-email`** — transactional email; Resend API integration.
 - **`stripe-payments`** — payments; Stripe API integration.
 - **`twilio-sms`** — SMS; Twilio API integration.
@@ -480,8 +478,7 @@ Migration happens in three phases, each shippable independently.
 ### Phase B — Wave 1 modules + deployable migration (blocking)
 
 1. Author every Wave 1 module (12 modules).
-2. Migrate every existing `cloud.yaml` from `capabilities: {}` to `modules:
-   []`.
+2. Migrate every existing `cloud.yaml` from `capabilities: {}` to `modules: []`.
 3. Remove the compat shim from the collector.
 
 ### Phase C — Wave 2 modules (non-blocking, incremental)
@@ -509,7 +506,8 @@ Each capability has typed config but sits at the deployable manifest layer
 without a separate registry.
 
 **Rejected** — every new capability requires editing the collector's schema
-+ the Terraform + the Docker generator. No isolation.
+
+- the Terraform + the Docker generator. No isolation.
 
 ### C — one module registry per runtime (Terraform-only, Docker-only)
 
@@ -524,9 +522,8 @@ surface.
 
 1. **Phase A** — contract + schemas + collector refactor (this session).
 2. **Phase B** — Wave 1 modules + deployable migration (this session).
-3. **Phase C** — Wave 2 modules (this session, reference implementations
-   only — enterprise deployables adopt them incrementally as consumers
-   arrive).
+3. **Phase C** — Wave 2 modules (this session, reference implementations only —
+   enterprise deployables adopt them incrementally as consumers arrive).
 4. **Deprecation** — after every deployable has migrated, remove the
    `capabilities: {}` compat shim from the collector.
 
@@ -535,13 +532,15 @@ surface.
 ### Phase A — contract + collector
 
 - [x] **A.1** — Author `infrastructure/modules/schema/module.v1.json`.
-- [x] **A.2** — Author `infrastructure/modules/schema/deployable-modules.v1.json`.
+- [x] **A.2** — Author
+      `infrastructure/modules/schema/deployable-modules.v1.json`.
 - [x] **A.3** — Author `infrastructure/scripts/_lib/module-registry.mjs`
       (registry loader + resolver).
-- [x] **A.4** — Author `infrastructure/scripts/validate-modules.mjs` +
-      wire `pnpm run modules:check`.
-- [x] **A.5** — Refactor `collect-cloud-yaml.mjs` to accept `modules[]`;
-      keep `capabilities:` compat with deprecation warnings. _(Compat shim lives in `module-registry.mjs`'s `capabilitiesToModules()`.)_
+- [x] **A.4** — Author `infrastructure/scripts/validate-modules.mjs` + wire
+      `pnpm run modules:check`.
+- [x] **A.5** — Refactor `collect-cloud-yaml.mjs` to accept `modules[]`; keep
+      `capabilities:` compat with deprecation warnings. _(Compat shim lives in
+      `module-registry.mjs`'s `capabilitiesToModules()`.)_
 
 ### Phase B — Wave 1 modules
 
@@ -557,7 +556,8 @@ surface.
 - [x] **B.10** — `redis-cache`.
 - [x] **B.11** — `sentry-project`.
 - [x] **B.12** — `betterstack-uptime`.
-- [x] **B.13** — Migrate every existing `cloud.yaml` to `modules[]`. _(portal, landing-page, family, approval — all migrated.)_
+- [x] **B.13** — Migrate every existing `cloud.yaml` to `modules[]`. _(portal,
+      landing-page, family, approval — all migrated.)_
 
 ### Phase C — Wave 2 modules
 
@@ -574,24 +574,27 @@ surface.
 
 ### Phase D — runtime integration
 
-- [x] **D.1** — Refactor `locals.tf` to walk `modules[]` generically. _(Module-driven filters with legacy compat fallback; 13 filter maps including Wave 2 modules.)_
+- [x] **D.1** — Refactor `locals.tf` to walk `modules[]` generically.
+      _(Module-driven filters with legacy compat fallback; 13 filter maps
+      including Wave 2 modules.)_
 - [x] **D.2** — Refactor `generate-compose.mjs` to merge per-module compose
-      fragments. _(Added `mergeModuleComposeFragments()` + module-driven `dependencies()` with legacy compat.)_
+      fragments. _(Added `mergeModuleComposeFragments()` + module-driven
+      `dependencies()` with legacy compat.)_
 - [x] **D.3** — Wire `modules:check` into `.gitlab-ci.yml` quality stage.
-- [x] **D.4** — Author `infrastructure/modules/README.md` — registry
-      catalog + authoring guide.
+- [x] **D.4** — Author `infrastructure/modules/README.md` — registry catalog +
+      authoring guide.
 
 ### Phase E — verification
 
 - [x] **E.1** — `node --check` every `.mjs`.
-- [x] **E.2** — Schema-validate every module against `module.v1.json`. _(22/22 modules pass — validated by folder/name parity + mandatory fields.)_
+- [x] **E.2** — Schema-validate every module against `module.v1.json`. _(22/22
+      modules pass — validated by folder/name parity + mandatory fields.)_
 - [x] **E.3** — Cross-reference from the workspace-standardization plan.
 
 ## Cross-references
 
-- `.kiro/plans/2026-09-03-workspace-standardization.md` — the sibling plan
-  this file extends (Task 8 landed the `.generated/` folder that houses
+- `.kiro/plans/2026-09-03-workspace-standardization.md` — the sibling plan this
+  file extends (Task 8 landed the `.generated/` folder that houses
   `catalog.json` — this plan's collector emits into the same location).
-- `infrastructure/README.md` — Make include structure + deployment source
-  model.
+- `infrastructure/README.md` — Make include structure + deployment source model.
 - `infrastructure/.generated/README.md` — machine-owned output folder.

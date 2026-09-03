@@ -13,13 +13,7 @@
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import {
-  freezeTime,
-  now,
-  restoreTime,
-  travelBy,
-  travelTo,
-} from "@/core/time";
+import { freezeTime, now, restoreTime, travelBy, travelTo } from "@/core/time";
 
 describe("time control", () => {
   // Belt-and-suspenders: the global setup restores time after every

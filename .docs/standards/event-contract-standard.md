@@ -1,6 +1,7 @@
 # Event Contract Standard
 
 Every event contains:
+
 - event ID
 - event type
 - schema version

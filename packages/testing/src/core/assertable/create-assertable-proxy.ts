@@ -61,9 +61,7 @@ const NOT_STUBBED = Symbol("NOT_STUBBED");
  * cache.$.callCount("get");                          // 1
  * ```
  */
-export function createAssertableProxy<T extends object>(
-  target: T,
-): AssertableProxy<T> {
+export function createAssertableProxy<T extends object>(target: T): AssertableProxy<T> {
   const history: IRecordedCall[] = [];
   const stubs = new Map<string, (...args: unknown[]) => unknown>();
   const pendingErrors = new Map<string, Error>();
@@ -72,19 +70,10 @@ export function createAssertableProxy<T extends object>(
     totalCalls: () => history.length,
     wasCalled: (method) => history.some((call) => call.method === method),
     wasCalledWith: (method, args) =>
-      history.some(
-        (call) =>
-          call.method === method && isDeepStrictEqual(call.args, args),
-      ),
+      history.some((call) => call.method === method && isDeepStrictEqual(call.args, args)),
     callCount: (method) =>
-      history.reduce(
-        (count, call) => count + (call.method === method ? 1 : 0),
-        0,
-      ),
-    calls: (method) =>
-      history
-        .filter((call) => call.method === method)
-        .map((call) => call.args),
+      history.reduce((count, call) => count + (call.method === method ? 1 : 0), 0),
+    calls: (method) => history.filter((call) => call.method === method).map((call) => call.args),
     history: () => history.slice(),
     reset: () => {
       history.length = 0;
@@ -93,9 +82,7 @@ export function createAssertableProxy<T extends object>(
     },
     returns: (method, value) => {
       const factory =
-        typeof value === "function"
-          ? (value as (...args: unknown[]) => unknown)
-          : () => value;
+        typeof value === "function" ? (value as (...args: unknown[]) => unknown) : () => value;
       stubs.set(method, factory);
     },
     clearReturn: (method) => {
@@ -126,8 +113,7 @@ export function createAssertableProxy<T extends object>(
     assertCalled(method: string) {
       if (!api.wasCalled(method)) {
         throw new Error(
-          `[assertable] Expected '${method}' to have been called, ` +
-            `but it was never invoked.`,
+          `[assertable] Expected '${method}' to have been called, ` + `but it was never invoked.`,
         );
       }
     },

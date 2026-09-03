@@ -21,8 +21,8 @@ Document every:
 - event/command/query contract
 - important configuration block
 
-Interface/type/enum/constant members should have member documentation when
-their semantics are not obvious; platform code may require every member to be
+Interface/type/enum/constant members should have member documentation when their
+semantics are not obvious; platform code may require every member to be
 documented for generated API documentation.
 
 ## Class example

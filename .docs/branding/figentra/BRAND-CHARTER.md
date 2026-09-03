@@ -2,9 +2,11 @@
 
 ## Positioning
 
-**Figentra is an AI agents development company building production-grade AI-native software for enterprises in MENA and global markets.**
+**Figentra is an AI agents development company building production-grade
+AI-native software for enterprises in MENA and global markets.**
 
-Figentra is not positioned primarily as a generic SaaS vendor or conventional software consultancy. Its differentiation is the combination of:
+Figentra is not positioned primarily as a generic SaaS vendor or conventional
+software consultancy. Its differentiation is the combination of:
 
 - AI agents;
 - governed agentic engineering;
@@ -31,6 +33,7 @@ Figentra Technologies LLC
 ## Audience
 
 Primary:
+
 - enterprise technology leaders;
 - CIO / CTO / CDO;
 - transformation leaders;
@@ -39,6 +42,7 @@ Primary:
 - MENA enterprises and institutions.
 
 Secondary:
+
 - developers and technical talent;
 - strategic partners;
 - investors;
@@ -52,7 +56,8 @@ Secondary:
 
 ### Supporting message
 
-> Figentra builds production-grade AI agents and the enterprise systems around them — from engineering automation to intelligent operational software.
+> Figentra builds production-grade AI agents and the enterprise systems around
+> them — from engineering automation to intelligent operational software.
 
 ### MENA position
 
@@ -65,6 +70,7 @@ This is a positioning statement, not a claim of geographic exclusivity.
 Confident, technical, precise, ambitious and human.
 
 Avoid:
+
 - empty AI hype;
 - “revolutionary” without evidence;
 - fake customer proof;
@@ -74,9 +80,12 @@ Avoid:
 
 ## Visual direction
 
-Retain the established Figentra F-Cursor and Signal Mint system as the foundation, but evolve the expression from a developer/operator-only brand into an enterprise AI company.
+Retain the established Figentra F-Cursor and Signal Mint system as the
+foundation, but evolve the expression from a developer/operator-only brand into
+an enterprise AI company.
 
 The brand should feel:
+
 - intelligent;
 - precise;
 - technical;
@@ -88,6 +97,7 @@ The brand should feel:
 ## Logo and favicon rule
 
 The **same canonical primary mark** must be used across:
+
 - website favicon;
 - browser tabs;
 - app icons;
@@ -98,13 +108,15 @@ The **same canonical primary mark** must be used across:
 
 Do not maintain competing first-screen and second-screen icon variants.
 
-The favicon source must be the canonical vector mark, with generated raster exports from that source.
+The favicon source must be the canonical vector mark, with generated raster
+exports from that source.
 
 ## Illustration system
 
 Figentra illustrations should explain systems, agents, workflows and outcomes.
 
 Preferred subjects:
+
 - agent orchestration;
 - connected systems;
 - workflow graphs;
@@ -112,11 +124,14 @@ Preferred subjects:
 - enterprise operations;
 - intelligent automation.
 
-Use the existing terminal-native visual language where it strengthens technical credibility, but introduce outcome-oriented diagrams and real enterprise contexts for marketing.
+Use the existing terminal-native visual language where it strengthens technical
+credibility, but introduce outcome-oriented diagrams and real enterprise
+contexts for marketing.
 
 ## Photography
 
 Use real team/customer-approved photography for:
+
 - leadership;
 - team;
 - company story;
@@ -129,7 +144,8 @@ Do not use generic stock people to represent Figentra employees or customers.
 
 Existing Signal Mint `#00E5A0` remains the primary accent.
 
-The enterprise system should use neutral ink/paper foundations with semantic supporting colors for status and data visualization.
+The enterprise system should use neutral ink/paper foundations with semantic
+supporting colors for status and data visualization.
 
 ## Typography
 

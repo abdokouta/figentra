@@ -158,9 +158,8 @@ subpath MUST have a matching `tsup` entry — no dead output, no broken import.
 
 Per-package metadata manifest consumed by the workspace CLI
 (`stackra catalog:list`, `stackra catalog:search`) and the `stackra new`
-capability multiselect. Schema
-at `.ref/schemas/catalog.v1.json` (canonical, repo-relative). Every entry MUST
-validate against that schema.
+capability multiselect. Schema at `.ref/schemas/catalog.v1.json` (canonical,
+repo-relative). Every entry MUST validate against that schema.
 
 Canonical shape:
 

@@ -3,12 +3,12 @@
 Shared [oxlint](https://oxc.rs) config presets. Every `.oxlintrc.json` in the
 monorepo extends one of these:
 
-| Preset   | Extends | For                                                       |
-| -------- | ------- | --------------------------------------------------------- |
-| `base`   | —       | Shared categories + ignores. Not consumed directly.       |
-| `react`  | `base`  | Vite + React 19 apps (browser, `react` + `jsx-a11y`).     |
-| `nest`   | `base`  | NestJS services (node env, decorator-friendly rules).     |
-| `worker` | `base`  | Cloudflare Workers / Hono (web-standard globals).         |
+| Preset   | Extends | For                                                   |
+| -------- | ------- | ----------------------------------------------------- |
+| `base`   | —       | Shared categories + ignores. Not consumed directly.   |
+| `react`  | `base`  | Vite + React 19 apps (browser, `react` + `jsx-a11y`). |
+| `nest`   | `base`  | NestJS services (node env, decorator-friendly rules). |
+| `worker` | `base`  | Cloudflare Workers / Hono (web-standard globals).     |
 
 ## Usage
 

@@ -7,6 +7,7 @@
 Default: TypeScript.
 
 Reasons:
+
 - shared contracts
 - frontend/backend alignment
 - AI-assisted development
@@ -16,11 +17,13 @@ Reasons:
 
 Go is allowed when profiling or operational requirements justify it.
 
-Laravel remains valid for existing PHP business systems but is not the default for new Figentra platform services.
+Laravel remains valid for existing PHP business systems but is not the default
+for new Figentra platform services.
 
 ## Hono
 
 Use for:
+
 - Workers
 - edge APIs
 - gateway
@@ -30,6 +33,7 @@ Use for:
 ## Node.js / containers
 
 Use when:
+
 - persistent process
 - heavy runtime
 - filesystem/native dependencies
@@ -41,7 +45,8 @@ Use when:
 
 Workers for lightweight edge execution.
 
-Containers for containerized workloads that benefit from Cloudflare's network/runtime.
+Containers for containerized workloads that benefit from Cloudflare's
+network/runtime.
 
 Cloudflare is not automatically the answer for every service.
 
@@ -58,13 +63,16 @@ Kafka/MSK only for genuine streaming needs.
 ## Terraform
 
 Infrastructure must be:
+
 - declarative
 - version controlled
 - reviewed
 - reproducible
 - auditable
 
-Application deployment can trigger controlled Terraform workflows through a deployment service/API. The application must not gain unrestricted infrastructure credentials.
+Application deployment can trigger controlled Terraform workflows through a
+deployment service/API. The application must not gain unrestricted
+infrastructure credentials.
 
 ## Database
 
@@ -77,6 +85,7 @@ Supabase Auth is not the V1 authentication authority.
 ## Redis
 
 Use for:
+
 - cache
 - rate limit
 - ephemeral coordination

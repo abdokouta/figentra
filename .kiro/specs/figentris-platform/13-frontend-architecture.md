@@ -1,8 +1,9 @@
 # 13 — Frontend Architecture
 
-**Status:** Baseline
-**Owner:** Frontend platform
-**Related:** [02 Identity & actors](02-identity-and-actors.md), [06 Application Registry](06-application-registry.md), [09 Service communication](09-service-communication.md)
+**Status:** Baseline **Owner:** Frontend platform **Related:**
+[02 Identity & actors](02-identity-and-actors.md),
+[06 Application Registry](06-application-registry.md),
+[09 Service communication](09-service-communication.md)
 
 ---
 
@@ -34,8 +35,8 @@ Figentra API (via @figentra/platform-sdk)
 Plus: **Zod** for runtime validation, **Tailwind CSS** for styling.
 
 The reference frontend note ("HeroUI Pro + Stackra UI → Stackra Query") maps to
-`@figentra/ui` (design system, composing HeroUI Pro) and `@figentra/query`
-(data layer). See **O-1**.
+`@figentra/ui` (design system, composing HeroUI Pro) and `@figentra/query` (data
+layer). See **O-1**.
 
 **Explicitly rejected** (R-1): Next.js as the default, Refine, and any SDUI /
 duplicate query-HTTP abstraction.
@@ -100,7 +101,8 @@ Supabase Auth (session / active organization / org switching)
 Figentra APIs (via @figentra/platform-sdk, bearer Supabase Auth token)
 ```
 
-- The frontend uses Supabase Auth as the identity provider and for org switching.
+- The frontend uses Supabase Auth as the identity provider and for org
+  switching.
 - The frontend may **hide** UI based on IAM state, but **UI checks are not
   security boundaries** — every protected operation is authorized server-side
   ([04](04-iam-and-authorization.md), [08](08-api-gateway.md)).
@@ -141,8 +143,8 @@ registered + entitled + granted.
 - Account/security + subscription/billing links (deep-link into the relevant
   service surfaces).
 
-The portal does **not** become a generic runtime for arbitrary application
-pages — application internal UI lives in the application ([§8]).
+The portal does **not** become a generic runtime for arbitrary application pages
+— application internal UI lives in the application ([§8]).
 
 ---
 
@@ -195,8 +197,8 @@ stay inside the application (`crm.figentra.com/customers/:customerId`).
 
 Do **not** start with a module-federation micro-frontend framework. Use
 **independently deployed applications** + shared packages (§9). Consider Module
-Federation only when independent teams need runtime UI composition and there is a
-demonstrated business requirement.
+Federation only when independent teams need runtime UI composition and there is
+a demonstrated business requirement.
 
 ---
 
@@ -209,22 +211,23 @@ Vite build → static assets → Cloudflare (Workers + Workers Assets / CDN)
 - Pure SPA: build static assets, serve via Cloudflare.
 - SSR apps: React Router Framework Mode + the Cloudflare-supported deployment.
 
-Detail in [15](15-infrastructure-and-iac.md) / [19](19-environments-and-cicd.md).
+Detail in [15](15-infrastructure-and-iac.md) /
+[19](19-environments-and-cicd.md).
 
 ---
 
 ## 12. Non-goals / anti-patterns
 
-| Anti-pattern                                                     | Correct                                                     |
-| ---------------------------------------------------------------- | ----------------------------------------------------------- |
-| Next.js as the default frontend                                  | Vite + React Router v7 (R-1).                               |
-| Refine / SDUI / a duplicate query-HTTP abstraction               | HeroUI Pro + `@figentra/ui` + `@figentra/query`.          |
-| One giant route tree built by hand                               | Route modules.                                              |
-| Executing code / generating executable routes from the registry  | Metadata + routing only; never eval registry data.          |
-| Hard-coding the app list in the portal                           | Dynamic launcher from Registry + IAM + Entitlements.        |
-| Business logic in route components                               | Logic in features/services; routes are thin.                |
-| Treating UI permission hiding as security                        | Server-side authorization is the boundary.                  |
-| Module federation from day one                                   | Independent app deploys + shared packages.                  |
+| Anti-pattern                                                    | Correct                                              |
+| --------------------------------------------------------------- | ---------------------------------------------------- |
+| Next.js as the default frontend                                 | Vite + React Router v7 (R-1).                        |
+| Refine / SDUI / a duplicate query-HTTP abstraction              | HeroUI Pro + `@figentra/ui` + `@figentra/query`.     |
+| One giant route tree built by hand                              | Route modules.                                       |
+| Executing code / generating executable routes from the registry | Metadata + routing only; never eval registry data.   |
+| Hard-coding the app list in the portal                          | Dynamic launcher from Registry + IAM + Entitlements. |
+| Business logic in route components                              | Logic in features/services; routes are thin.         |
+| Treating UI permission hiding as security                       | Server-side authorization is the boundary.           |
+| Module federation from day one                                  | Independent app deploys + shared packages.           |
 
 ---
 

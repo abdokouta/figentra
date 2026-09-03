@@ -158,28 +158,72 @@
     "vitest": "catalog:"
   },
   "peerDependenciesMeta": {
-    "@cloudflare/vitest-pool-workers": { "optional": true },
-    "@cloudflare/workers-types": { "optional": true },
-    "@electric-sql/pglite": { "optional": true },
-    "@faker-js/faker": { "optional": true },
-    "@mikro-orm/core": { "optional": true },
-    "@nestjs/common": { "optional": true },
-    "@nestjs/core": { "optional": true },
-    "@nestjs/platform-fastify": { "optional": true },
-    "@nestjs/testing": { "optional": true },
-    "@testing-library/jest-dom": { "optional": true },
-    "@testing-library/react": { "optional": true },
-    "@testing-library/user-event": { "optional": true },
-    "@vitest/coverage-v8": { "optional": true },
-    "fastify": { "optional": true },
-    "jsdom": { "optional": true },
-    "miniflare": { "optional": true },
-    "react": { "optional": true },
-    "react-dom": { "optional": true },
-    "reflect-metadata": { "optional": true },
-    "supertest": { "optional": true },
-    "unplugin-swc": { "optional": true },
-    "vite-tsconfig-paths": { "optional": true }
+    "@cloudflare/vitest-pool-workers": {
+      "optional": true
+    },
+    "@cloudflare/workers-types": {
+      "optional": true
+    },
+    "@electric-sql/pglite": {
+      "optional": true
+    },
+    "@faker-js/faker": {
+      "optional": true
+    },
+    "@mikro-orm/core": {
+      "optional": true
+    },
+    "@nestjs/common": {
+      "optional": true
+    },
+    "@nestjs/core": {
+      "optional": true
+    },
+    "@nestjs/platform-fastify": {
+      "optional": true
+    },
+    "@nestjs/testing": {
+      "optional": true
+    },
+    "@testing-library/jest-dom": {
+      "optional": true
+    },
+    "@testing-library/react": {
+      "optional": true
+    },
+    "@testing-library/user-event": {
+      "optional": true
+    },
+    "@vitest/coverage-v8": {
+      "optional": true
+    },
+    "fastify": {
+      "optional": true
+    },
+    "jsdom": {
+      "optional": true
+    },
+    "miniflare": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "reflect-metadata": {
+      "optional": true
+    },
+    "supertest": {
+      "optional": true
+    },
+    "unplugin-swc": {
+      "optional": true
+    },
+    "vite-tsconfig-paths": {
+      "optional": true
+    }
   },
   "dependencies": {
     "ulid": "catalog:"

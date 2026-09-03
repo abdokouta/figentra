@@ -1,23 +1,23 @@
-import { updateMetadata } from '@/';
-import { getMetadata } from '@/get-metadata';
-import { defineMetadata } from '@/define-metadata';
-import { hasMetadata } from '@/has-metadata';
-import { clearMetadata } from '@/clear-metadata';
+import { updateMetadata } from "@/";
+import { getMetadata } from "@/get-metadata";
+import { defineMetadata } from "@/define-metadata";
+import { hasMetadata } from "@/has-metadata";
+import { clearMetadata } from "@/clear-metadata";
 
-describe('updateMetadata', () => {
-  describe('Basic Update Operations', () => {
+describe("updateMetadata", () => {
+  describe("Basic Update Operations", () => {
     /**
      * Test case: updateMetadata should define metadata when it doesn't exist
      *
      * This test validates that updateMetadata creates new metadata when none exists,
      * using the provided default value as input to the callback.
      */
-    it('should define metadata when it does not exist', () => {
+    it("should define metadata when it does not exist", () => {
       // Arrange: Create a clean target with no existing metadata
       const target = {};
-      const metadataKey = 'new-key';
-      const defaultValue = 'default-value';
-      const callback = jest.fn().mockReturnValue('created-value');
+      const metadataKey = "new-key";
+      const defaultValue = "default-value";
+      const callback = jest.fn().mockReturnValue("created-value");
 
       // Verify no metadata exists initially
       expect(hasMetadata(metadataKey, target)).toBe(false);
@@ -28,7 +28,7 @@ describe('updateMetadata', () => {
       // Assert: Callback should be called with default value and metadata should be created
       expect(callback).toHaveBeenCalledWith(defaultValue);
       expect(callback).toHaveBeenCalledTimes(1);
-      expect(getMetadata(metadataKey, target)).toBe('created-value');
+      expect(getMetadata(metadataKey, target)).toBe("created-value");
       expect(hasMetadata(metadataKey, target)).toBe(true);
     });
 
@@ -38,13 +38,13 @@ describe('updateMetadata', () => {
      * This test validates that updateMetadata correctly retrieves existing metadata
      * and passes it to the callback for transformation.
      */
-    it('should update existing metadata when it exists', () => {
+    it("should update existing metadata when it exists", () => {
       // Arrange: Create target with existing metadata
       const target = {};
-      const metadataKey = 'existing-key';
-      const defaultValue = 'default-value';
-      const existingValue = 'existing-value';
-      const updatedValue = 'updated-value';
+      const metadataKey = "existing-key";
+      const defaultValue = "default-value";
+      const existingValue = "existing-value";
+      const updatedValue = "updated-value";
 
       const callback = jest.fn().mockReturnValue(updatedValue);
 
@@ -67,16 +67,16 @@ describe('updateMetadata', () => {
      * This test ensures that falsy values (false, 0, empty string) are properly
      * distinguished from undefined and passed to the callback.
      */
-    it('should handle falsy existing values correctly', () => {
+    it("should handle falsy existing values correctly", () => {
       // Arrange: Test with various falsy values
       const target = {};
-      const defaultValue = 'default';
+      const defaultValue = "default";
 
       const falsyTestCases = [
-        { key: 'false-key', existing: false, expected: 'false-updated' },
-        { key: 'zero-key', existing: 0, expected: 'zero-updated' },
-        { key: 'empty-key', existing: '', expected: 'empty-updated' },
-        { key: 'null-key', existing: null, expected: 'null-updated' },
+        { key: "false-key", existing: false, expected: "false-updated" },
+        { key: "zero-key", existing: 0, expected: "zero-updated" },
+        { key: "empty-key", existing: "", expected: "empty-updated" },
+        { key: "null-key", existing: null, expected: "null-updated" },
       ];
 
       falsyTestCases.forEach(({ key, existing, expected }) => {
@@ -95,16 +95,16 @@ describe('updateMetadata', () => {
     });
   });
 
-  describe('Complex Transformation Operations', () => {
+  describe("Complex Transformation Operations", () => {
     /**
      * Test case: updateMetadata should handle counter increment operations
      *
      * This test validates common counter increment patterns using updateMetadata.
      */
-    it('should handle counter increment operations', () => {
+    it("should handle counter increment operations", () => {
       // Arrange: Create a counter metadata system
       class EventEmitter {}
-      const counterKey = 'listener-count';
+      const counterKey = "listener-count";
       const defaultCount = 0;
 
       // Initially no counter exists
@@ -130,30 +130,30 @@ describe('updateMetadata', () => {
      *
      * This test validates array manipulation operations like push, filter, and map.
      */
-    it('should handle array manipulation operations', () => {
+    it("should handle array manipulation operations", () => {
       // Arrange: Create array-based metadata
       class TaskManager {}
-      const tasksKey = 'task-list';
+      const tasksKey = "task-list";
       const defaultTasks: string[] = [];
 
       // Act: Add tasks to the list
-      const addTaskCallback = (tasks: string[]) => [...tasks, 'new-task'];
+      const addTaskCallback = (tasks: string[]) => [...tasks, "new-task"];
 
       updateMetadata(tasksKey, defaultTasks, addTaskCallback, TaskManager);
-      expect(getMetadata<string[]>(tasksKey, TaskManager)).toEqual(['new-task']);
+      expect(getMetadata<string[]>(tasksKey, TaskManager)).toEqual(["new-task"]);
 
       updateMetadata(tasksKey, defaultTasks, addTaskCallback, TaskManager);
-      expect(getMetadata<string[]>(tasksKey, TaskManager)).toEqual(['new-task', 'new-task']);
+      expect(getMetadata<string[]>(tasksKey, TaskManager)).toEqual(["new-task", "new-task"]);
 
       // Filter operation
       const filterCallback = (tasks: string[]) => tasks.filter((_, index) => index === 0);
       updateMetadata(tasksKey, defaultTasks, filterCallback, TaskManager);
-      expect(getMetadata<string[]>(tasksKey, TaskManager)).toEqual(['new-task']);
+      expect(getMetadata<string[]>(tasksKey, TaskManager)).toEqual(["new-task"]);
 
       // Map operation
       const mapCallback = (tasks: string[]) => tasks.map((task) => `${task}-completed`);
       updateMetadata(tasksKey, defaultTasks, mapCallback, TaskManager);
-      expect(getMetadata<string[]>(tasksKey, TaskManager)).toEqual(['new-task-completed']);
+      expect(getMetadata<string[]>(tasksKey, TaskManager)).toEqual(["new-task-completed"]);
     });
 
     /**
@@ -161,7 +161,7 @@ describe('updateMetadata', () => {
      *
      * This test validates deep object manipulation and merging operations.
      */
-    it('should handle complex object updates', () => {
+    it("should handle complex object updates", () => {
       // Arrange: Define complex metadata structure
       interface UserPreferences {
         theme: string;
@@ -175,15 +175,15 @@ describe('updateMetadata', () => {
       }
 
       class UserService {}
-      const prefsKey = 'user-preferences';
+      const prefsKey = "user-preferences";
       const defaultPrefs: UserPreferences = {
-        theme: 'light',
+        theme: "light",
         notifications: {
           email: true,
           push: false,
           sms: false,
         },
-        language: 'en',
+        language: "en",
         features: [],
       };
 
@@ -194,12 +194,12 @@ describe('updateMetadata', () => {
       expect(getMetadata<UserPreferences>(prefsKey, UserService)).toEqual(defaultPrefs);
 
       // Update theme
-      const updateTheme = (prefs: UserPreferences) => ({ ...prefs, theme: 'dark' });
+      const updateTheme = (prefs: UserPreferences) => ({ ...prefs, theme: "dark" });
       updateMetadata(prefsKey, defaultPrefs, updateTheme, UserService);
 
       let currentPrefs = getMetadata<UserPreferences>(prefsKey, UserService);
-      expect(currentPrefs.theme).toBe('dark');
-      expect(currentPrefs.language).toBe('en'); // Other properties preserved
+      expect(currentPrefs.theme).toBe("dark");
+      expect(currentPrefs.language).toBe("en"); // Other properties preserved
 
       // Update nested notifications
       const enablePush = (prefs: UserPreferences) => ({
@@ -215,26 +215,26 @@ describe('updateMetadata', () => {
       // Add features
       const addFeature = (prefs: UserPreferences) => ({
         ...prefs,
-        features: [...prefs.features, 'dark-mode', 'notifications'],
+        features: [...prefs.features, "dark-mode", "notifications"],
       });
       updateMetadata(prefsKey, defaultPrefs, addFeature, UserService);
 
       currentPrefs = getMetadata<UserPreferences>(prefsKey, UserService);
-      expect(currentPrefs.features).toEqual(['dark-mode', 'notifications']);
+      expect(currentPrefs.features).toEqual(["dark-mode", "notifications"]);
     });
   });
 
-  describe('Property-specific Updates', () => {
+  describe("Property-specific Updates", () => {
     /**
      * Test case: updateMetadata should work with property-specific metadata
      *
      * This test validates updating metadata associated with specific class properties.
      */
-    it('should update property-specific metadata', () => {
+    it("should update property-specific metadata", () => {
       // Arrange: Create class with property metadata
       class ValidationModel {
-        email: string = '';
-        password: string = '';
+        email: string = "";
+        password: string = "";
       }
 
       interface ValidationRules {
@@ -244,7 +244,7 @@ describe('updateMetadata', () => {
         custom?: string[];
       }
 
-      const rulesKey = 'validation-rules';
+      const rulesKey = "validation-rules";
       const defaultRules: ValidationRules = { required: false };
 
       // Set initial rules for email
@@ -252,15 +252,15 @@ describe('updateMetadata', () => {
         rulesKey,
         { required: true, pattern: /@/ },
         ValidationModel.prototype,
-        'email'
+        "email",
       );
 
       // Act: Update email validation rules
       const addMinLength = (rules: ValidationRules) => ({ ...rules, minLength: 5 });
-      updateMetadata(rulesKey, defaultRules, addMinLength, ValidationModel.prototype, 'email');
+      updateMetadata(rulesKey, defaultRules, addMinLength, ValidationModel.prototype, "email");
 
       // Assert: Email rules should be updated
-      const emailRules = getMetadata<ValidationRules>(rulesKey, ValidationModel.prototype, 'email');
+      const emailRules = getMetadata<ValidationRules>(rulesKey, ValidationModel.prototype, "email");
       expect(emailRules.required).toBe(true); // Preserved from original
       expect(emailRules.minLength).toBe(5); // Added by update
       expect(emailRules.pattern).toEqual(/@/); // Preserved from original
@@ -270,31 +270,31 @@ describe('updateMetadata', () => {
         ...rules,
         required: true,
         minLength: 8,
-        custom: ['no-common-passwords'],
+        custom: ["no-common-passwords"],
       });
       updateMetadata(
         rulesKey,
         defaultRules,
         setPasswordRules,
         ValidationModel.prototype,
-        'password'
+        "password",
       );
 
       // Assert: Password rules should be created from default
       const passwordRules = getMetadata<ValidationRules>(
         rulesKey,
         ValidationModel.prototype,
-        'password'
+        "password",
       );
       expect(passwordRules.required).toBe(true);
       expect(passwordRules.minLength).toBe(8);
-      expect(passwordRules.custom).toEqual(['no-common-passwords']);
+      expect(passwordRules.custom).toEqual(["no-common-passwords"]);
 
       // Email rules should remain unchanged
       const unchangedEmailRules = getMetadata<ValidationRules>(
         rulesKey,
         ValidationModel.prototype,
-        'email'
+        "email",
       );
       expect(unchangedEmailRules.minLength).toBe(5); // Still there
     });
@@ -304,22 +304,22 @@ describe('updateMetadata', () => {
      *
      * This test ensures that class-level and property-level updates are independent.
      */
-    it('should distinguish between class and property metadata updates', () => {
+    it("should distinguish between class and property metadata updates", () => {
       // Arrange: Create class with metadata at both levels
       class ConfigurableService {
-        endpoint: string = '/api';
+        endpoint: string = "/api";
       }
 
-      const configKey = 'config';
+      const configKey = "config";
       const defaultConfig = { timeout: 1000 };
 
       // Set initial metadata at both levels
       defineMetadata(configKey, { timeout: 5000, retries: 3 }, ConfigurableService);
       defineMetadata(
         configKey,
-        { timeout: 2000, endpoint: '/v1' },
+        { timeout: 2000, endpoint: "/v1" },
         ConfigurableService.prototype,
-        'endpoint'
+        "endpoint",
       );
 
       // Act: Update class-level config
@@ -327,34 +327,34 @@ describe('updateMetadata', () => {
       updateMetadata(configKey, defaultConfig, updateClassTimeout, ConfigurableService);
 
       // Act: Update property-level config
-      const updatePropertyEndpoint = (config: any) => ({ ...config, endpoint: '/v2' });
+      const updatePropertyEndpoint = (config: any) => ({ ...config, endpoint: "/v2" });
       updateMetadata(
         configKey,
         defaultConfig,
         updatePropertyEndpoint,
         ConfigurableService.prototype,
-        'endpoint'
+        "endpoint",
       );
 
       // Assert: Updates should be independent
       const classConfig = getMetadata(configKey, ConfigurableService);
-      const propertyConfig = getMetadata(configKey, ConfigurableService.prototype, 'endpoint');
+      const propertyConfig = getMetadata(configKey, ConfigurableService.prototype, "endpoint");
 
       expect(classConfig.timeout).toBe(8000); // Updated
       expect(classConfig.retries).toBe(3); // Preserved
 
       expect(propertyConfig.timeout).toBe(2000); // Unchanged from property
-      expect(propertyConfig.endpoint).toBe('/v2'); // Updated
+      expect(propertyConfig.endpoint).toBe("/v2"); // Updated
     });
   });
 
-  describe('Type Safety and Error Handling', () => {
+  describe("Type Safety and Error Handling", () => {
     /**
      * Test case: updateMetadata should maintain type safety
      *
      * This test validates that TypeScript type inference works correctly.
      */
-    it('should maintain type safety with generic types', () => {
+    it("should maintain type safety with generic types", () => {
       // Arrange: Define strongly typed metadata
       interface ServiceConfig {
         name: string;
@@ -364,10 +364,10 @@ describe('updateMetadata', () => {
       }
 
       class MicroService {}
-      const configKey = 'service-config';
+      const configKey = "service-config";
       const defaultConfig: ServiceConfig = {
-        name: 'default-service',
-        version: '1.0.0',
+        name: "default-service",
+        version: "1.0.0",
         enabled: false,
         ports: [],
       };
@@ -385,8 +385,8 @@ describe('updateMetadata', () => {
       const result = getMetadata<ServiceConfig>(configKey, MicroService);
       expect(result.enabled).toBe(true);
       expect(result.ports).toEqual([8080, 8443]);
-      expect(result.name).toBe('default-service'); // From default
-      expect(result.version).toBe('1.0.0'); // From default
+      expect(result.name).toBe("default-service"); // From default
+      expect(result.version).toBe("1.0.0"); // From default
     });
 
     /**
@@ -394,23 +394,23 @@ describe('updateMetadata', () => {
      *
      * This test validates error handling when the callback throws an exception.
      */
-    it('should handle callback errors appropriately', () => {
+    it("should handle callback errors appropriately", () => {
       // Arrange: Create target with existing metadata
       const target = {};
-      const metadataKey = 'error-test';
-      const existingValue = 'existing';
-      const defaultValue = 'default';
+      const metadataKey = "error-test";
+      const existingValue = "existing";
+      const defaultValue = "default";
 
       defineMetadata(metadataKey, existingValue, target);
 
       // Act & Assert: Callback that throws should propagate the error
       const errorCallback = jest.fn().mockImplementation(() => {
-        throw new Error('Callback error');
+        throw new Error("Callback error");
       });
 
       expect(() => {
         updateMetadata(metadataKey, defaultValue, errorCallback, target);
-      }).toThrow('Callback error');
+      }).toThrow("Callback error");
 
       // Verify callback was called with existing value
       expect(errorCallback).toHaveBeenCalledWith(existingValue);
@@ -420,16 +420,16 @@ describe('updateMetadata', () => {
     });
   });
 
-  describe('Integration with Other Metadata Operations', () => {
+  describe("Integration with Other Metadata Operations", () => {
     /**
      * Test case: updateMetadata should work with other metadata functions
      *
      * This test validates integration with clear, has, and get operations.
      */
-    it('should integrate well with other metadata operations', () => {
+    it("should integrate well with other metadata operations", () => {
       // Arrange: Create comprehensive test scenario
       class IntegrationTest {}
-      const metadataKey = 'integration-data';
+      const metadataKey = "integration-data";
       const defaultValue = { count: 0, items: [] as string[] };
 
       // Start with no metadata
@@ -439,7 +439,7 @@ describe('updateMetadata', () => {
       const initializeCallback = (data: typeof defaultValue) => ({
         ...data,
         count: 1,
-        items: ['first-item'],
+        items: ["first-item"],
       });
 
       updateMetadata(metadataKey, defaultValue, initializeCallback, IntegrationTest);
@@ -448,21 +448,21 @@ describe('updateMetadata', () => {
       expect(hasMetadata(metadataKey, IntegrationTest)).toBe(true);
       expect(getMetadata(metadataKey, IntegrationTest)).toEqual({
         count: 1,
-        items: ['first-item'],
+        items: ["first-item"],
       });
 
       // Update existing metadata
       const addItemCallback = (data: typeof defaultValue) => ({
         ...data,
         count: data.count + 1,
-        items: [...data.items, 'second-item'],
+        items: [...data.items, "second-item"],
       });
 
       updateMetadata(metadataKey, defaultValue, addItemCallback, IntegrationTest);
 
       expect(getMetadata(metadataKey, IntegrationTest)).toEqual({
         count: 2,
-        items: ['first-item', 'second-item'],
+        items: ["first-item", "second-item"],
       });
 
       // Clear metadata
@@ -473,7 +473,7 @@ describe('updateMetadata', () => {
       updateMetadata(metadataKey, defaultValue, initializeCallback, IntegrationTest);
       expect(getMetadata(metadataKey, IntegrationTest)).toEqual({
         count: 1,
-        items: ['first-item'],
+        items: ["first-item"],
       });
     });
 
@@ -482,51 +482,51 @@ describe('updateMetadata', () => {
      *
      * This test validates behavior in inheritance hierarchies.
      */
-    it('should work correctly with inheritance scenarios', () => {
+    it("should work correctly with inheritance scenarios", () => {
       // Arrange: Create inheritance hierarchy
       class BaseClass {}
       class DerivedClass extends BaseClass {}
 
-      const metadataKey = 'inheritance-update';
-      const defaultValue = { level: 'none', count: 0 };
+      const metadataKey = "inheritance-update";
+      const defaultValue = { level: "none", count: 0 };
 
       // Define metadata on base class
-      defineMetadata(metadataKey, { level: 'base', count: 1 }, BaseClass);
+      defineMetadata(metadataKey, { level: "base", count: 1 }, BaseClass);
 
       // Update derived class (should use inherited value)
       const updateLevel = (data: typeof defaultValue) => ({
         ...data,
-        level: 'derived',
+        level: "derived",
         count: data.count + 1,
       });
 
       updateMetadata(metadataKey, defaultValue, updateLevel, DerivedClass);
 
       // Assert: Derived class should have its own metadata now
-      expect(getMetadata(metadataKey, BaseClass)).toEqual({ level: 'base', count: 1 });
-      expect(getMetadata(metadataKey, DerivedClass)).toEqual({ level: 'derived', count: 2 });
+      expect(getMetadata(metadataKey, BaseClass)).toEqual({ level: "base", count: 1 });
+      expect(getMetadata(metadataKey, DerivedClass)).toEqual({ level: "derived", count: 2 });
 
       // Update base class should not affect derived
       const updateBase = (data: typeof defaultValue) => ({ ...data, count: 5 });
       updateMetadata(metadataKey, defaultValue, updateBase, BaseClass);
 
-      expect(getMetadata(metadataKey, BaseClass)).toEqual({ level: 'base', count: 5 });
-      expect(getMetadata(metadataKey, DerivedClass)).toEqual({ level: 'derived', count: 2 }); // Unchanged
+      expect(getMetadata(metadataKey, BaseClass)).toEqual({ level: "base", count: 5 });
+      expect(getMetadata(metadataKey, DerivedClass)).toEqual({ level: "derived", count: 2 }); // Unchanged
     });
   });
 
-  describe('Edge Cases', () => {
+  describe("Edge Cases", () => {
     /**
      * Test case: updateMetadata should handle undefined callback return
      *
      * This test validates behavior when callback returns undefined.
      */
-    it('should handle undefined callback return values', () => {
+    it("should handle undefined callback return values", () => {
       // Arrange
       const target = {};
-      const metadataKey = 'undefined-return';
-      const defaultValue = 'default';
-      const existingValue = 'existing';
+      const metadataKey = "undefined-return";
+      const defaultValue = "default";
+      const existingValue = "existing";
 
       defineMetadata(metadataKey, existingValue, target);
 
@@ -545,13 +545,13 @@ describe('updateMetadata', () => {
      *
      * This test ensures the function works with class instances.
      */
-    it('should work with class instances', () => {
+    it("should work with class instances", () => {
       // Arrange: Create class and instances
       class TestClass {}
       const instance1 = new TestClass();
       const instance2 = new TestClass();
 
-      const metadataKey = 'instance-counter';
+      const metadataKey = "instance-counter";
       const defaultValue = 0;
 
       // Act: Update metadata on different instances

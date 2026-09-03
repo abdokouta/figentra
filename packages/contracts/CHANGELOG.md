@@ -4,48 +4,50 @@
 
 ### Minor Changes
 
-- c32efd4: Add `filterLocale?: boolean` to `IHttpClientConfig`. When set to `true`, `HttpModule.forRoot()` auto-registers `LocaleHeaderMiddleware` + `LocaleFilterResponseInterceptor` on the connection. Consumers with inline-per-locale JSON responses (`{ en: "…", ar: "…", ru: "…" }` per string leaf) opt in once per connection instead of manually wiring both stages.
+- c32efd4: Add `filterLocale?: boolean` to `IHttpClientConfig`. When set to
+  `true`, `HttpModule.forRoot()` auto-registers `LocaleHeaderMiddleware` +
+  `LocaleFilterResponseInterceptor` on the connection. Consumers with
+  inline-per-locale JSON responses (`{ en: "…", ar: "…", ru: "…" }` per string
+  leaf) opt in once per connection instead of manually wiring both stages.
 
 ## 1.6.0
 
 ### Minor Changes
 
 - 01726f0: Wave 4 of the auth-tenancy enterprise alignment — lands the RUNTIME
-  resolver for ADR-0096's declarative guard shortcuts. The typing
-  surface landed in `@stackra/contracts@1.4.0` (this session); this
-  release wires the resolver + the imperative `registerGuard` API.
+  resolver for ADR-0096's declarative guard shortcuts. The typing surface landed
+  in `@stackra/contracts@1.4.0` (this session); this release wires the
+  resolver + the imperative `registerGuard` API.
 
   **@stackra/contracts** — declarative-guard fields on `IPageConfig` +
   `ILayoutConfig`:
 
-  - `authed?: boolean` — appends `"auth"` to the effective guards
-    array (inner position).
-  - `tenanted?: boolean` — prepends `"tenant"` to the effective guards
-    array (outer position).
+  - `authed?: boolean` — appends `"auth"` to the effective guards array (inner
+    position).
+  - `tenanted?: boolean` — prepends `"tenant"` to the effective guards array
+    (outer position).
   - `public?: boolean` — clears THIS ROUTE'S own guards (escape hatch).
 
-  Composition ordering (from `auth-tenancy-composition.md` §Rule 3):
-  tenanted (outer) → authed (inner). Never the reverse.
+  Composition ordering (from `auth-tenancy-composition.md` §Rule 3): tenanted
+  (outer) → authed (inner). Never the reverse.
 
   **@stackra/routing** — runtime resolver + imperative API:
 
-  - New util `expandGuardShorthands({ authed, tenanted, public, guards })`
-    under `core/adapt-page-module/`. Wired into `buildRouteObject`
-    right before `stackraHandle.guards` is populated — declarative
-    shortcuts on `IPageConfig` / `ILayoutConfig` now transparently
-    expand at route-build time.
-  - New static `RoutingModule.registerGuard({ name, ctor, priority? })`
-    API for imperative guard registration (alternative to the `@Guard`
-    decorator when consumers can't decorate a third-party class).
-    Follows the ADR-0052 inline-registrar-class pattern.
-  - New constants `DECLARATIVE_GUARD_NAMES.{auth,tenant}` exported so
-    consumers reference guard names via constants instead of magic
-    strings.
+  - New util `expandGuardShorthands({ authed, tenanted, public, guards })` under
+    `core/adapt-page-module/`. Wired into `buildRouteObject` right before
+    `stackraHandle.guards` is populated — declarative shortcuts on `IPageConfig`
+    / `ILayoutConfig` now transparently expand at route-build time.
+  - New static `RoutingModule.registerGuard({ name, ctor, priority? })` API for
+    imperative guard registration (alternative to the `@Guard` decorator when
+    consumers can't decorate a third-party class). Follows the ADR-0052
+    inline-registrar-class pattern.
+  - New constants `DECLARATIVE_GUARD_NAMES.{auth,tenant}` exported so consumers
+    reference guard names via constants instead of magic strings.
 
-  **Limitation** — RRv7 runs every parent match's loader in the chain,
-  so `public: true` clears THIS ROUTE'S own guards but every parent
-  guard still fires when the route matches. To bypass parent guards
-  entirely, hoist the route out of the guarded parent's subtree.
+  **Limitation** — RRv7 runs every parent match's loader in the chain, so
+  `public: true` clears THIS ROUTE'S own guards but every parent guard still
+  fires when the route matches. To bypass parent guards entirely, hoist the
+  route out of the guarded parent's subtree.
 
   Refs: ADR-0096 (Declarative route guards),
   `.kiro/steering/auth-tenancy-composition.md` §Rule 3.

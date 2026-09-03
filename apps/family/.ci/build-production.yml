@@ -33,7 +33,7 @@ name: Build family — production
 
 on:
   push:
-    branches: ['main']
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:

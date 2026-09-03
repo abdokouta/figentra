@@ -1,14 +1,14 @@
 # Cloudflare Workers Production Standard
 
 /**
- * @file cloudflare-workers-production.md
- * @description Canonical production standard for Figentra Hono/Wrangler
- * control-plane Workers.
- *
- * This standard applies to Gateway, Application Registry, and future
- * Cloudflare-native Workers. It is intentionally stricter than a starter
- * template because these Workers sit on the platform control plane.
- */
+
+- @file cloudflare-workers-production.md
+- @description Canonical production standard for Figentra Hono/Wrangler
+- control-plane Workers.
+-
+- This standard applies to Gateway, Application Registry, and future
+- Cloudflare-native Workers. It is intentionally stricter than a starter
+- template because these Workers sit on the platform control plane. */
 
 ## Required files
 
@@ -70,14 +70,18 @@ uses `wrangler types` to generate the `CloudflareBindings` contract.
 ## Observability
 
 Workers Logs/Observability must be enabled in production. Cloudflare documents
-Workers Logs as the native collection path and supports OpenTelemetry,
-Logpush, and Tail Workers for export. citeturn0search7turn0search9
-
+Workers Logs as the native collection path and supports OpenTelemetry, Logpush,
+and Tail Workers for export. citeturn0search7turn0search9
 
 ## Official references
 
-- Hono Cloudflare Workers starter and Wrangler workflow: https://hono.dev/docs/getting-started/cloudflare-workers
-- Hono Cloudflare Workers + Vite and `cf-typegen`: https://hono.dev/docs/getting-started/cloudflare-workers-vite
-- Cloudflare Service Bindings: https://developers.cloudflare.com/workers/runtime-apis/bindings/service-bindings/
-- Cloudflare D1 migrations: https://developers.cloudflare.com/d1/reference/migrations/
-- Cloudflare Worker observability: https://developers.cloudflare.com/workers/observability/
+- Hono Cloudflare Workers starter and Wrangler workflow:
+  https://hono.dev/docs/getting-started/cloudflare-workers
+- Hono Cloudflare Workers + Vite and `cf-typegen`:
+  https://hono.dev/docs/getting-started/cloudflare-workers-vite
+- Cloudflare Service Bindings:
+  https://developers.cloudflare.com/workers/runtime-apis/bindings/service-bindings/
+- Cloudflare D1 migrations:
+  https://developers.cloudflare.com/d1/reference/migrations/
+- Cloudflare Worker observability:
+  https://developers.cloudflare.com/workers/observability/

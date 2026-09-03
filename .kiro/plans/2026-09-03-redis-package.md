@@ -8,33 +8,31 @@ reviewed_at: null
 
 # @stackra/redis — architecture plan
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
+**Status:** Planned **Anchor ADRs:**
+[ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
 [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
-[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md)
-**Reference:** `.ref/packages/redis/` — has ioredis + upstash backends, event
-transport, Lua scripts, cache backend
-**Depends on:** `@stackra/container`, `@stackra/contracts`, `@stackra/support`,
-`@stackra/logger`, `@stackra/events`
+[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md) **Reference:**
+`.ref/packages/redis/` — has ioredis + upstash backends, event transport, Lua
+scripts, cache backend **Depends on:** `@stackra/container`,
+`@stackra/contracts`, `@stackra/support`, `@stackra/logger`, `@stackra/events`
 
 ## Purpose
 
 `@stackra/redis` is the workspace's canonical Redis client + Redis-adjacent
 infrastructure. Enterprise requirements day one:
 
-- **Dual backends** — `ioredis` (self-hosted Redis / Valkey / Upstash-Redis
-  wire protocol; Node-only), `@upstash/redis` (HTTP-based, Worker-safe,
-  serverless).
+- **Dual backends** — `ioredis` (self-hosted Redis / Valkey / Upstash-Redis wire
+  protocol; Node-only), `@upstash/redis` (HTTP-based, Worker-safe, serverless).
 - **Runtime selection** — Node/NestJS → ioredis; Cloudflare Worker →
   upstash-http.
 - **Pub/Sub** — cross-process event transport via Redis pub/sub channels.
-- **Cache backend** — `RedisCacheStore` implements `ICacheStore` (registers
-  with `@stackra/cache` via `.extend("redis", ...)`).
+- **Cache backend** — `RedisCacheStore` implements `ICacheStore` (registers with
+  `@stackra/cache` via `.extend("redis", ...)`).
 - **Distributed locks** — `IDistributedLock` primitive via Redlock or SET-NX.
 - **Rate limiter** — token-bucket + sliding-window rate limiters using Lua
   scripts.
-- **Streams (XADD/XREAD)** — for high-throughput async processing (adjacent
-  to `@stackra/queue`).
+- **Streams (XADD/XREAD)** — for high-throughput async processing (adjacent to
+  `@stackra/queue`).
 - **BullMQ backend** — provides connection for `@stackra/queue`'s BullMQ
   connector.
 - **Lua scripts** — pre-registered scripts for common atomic ops
@@ -45,8 +43,8 @@ infrastructure. Enterprise requirements day one:
 
 ## Non-goals
 
-- Redis-native full-text search (RediSearch) — separate optional subpath
-  future work.
+- Redis-native full-text search (RediSearch) — separate optional subpath future
+  work.
 - Time-series DB (RedisTimeSeries) — same.
 - Graph (RedisGraph) — same.
 
@@ -57,7 +55,8 @@ applications use ONE active Redis connection. Multiple named connections use
 `MultipleInstanceManager`; both shapes offered but Manager is default.
 
 Actually — for the enterprise case (main + cache + queue + rate-limit
-connections), Shape B is more common. **Locked: `MultipleInstanceManager<IRedisConnection>`**.
+connections), Shape B is more common. **Locked:
+`MultipleInstanceManager<IRedisConnection>`**.
 
 ```typescript
 RedisModule.forRoot({
@@ -154,20 +153,20 @@ packages/redis/
 
 ## Contracts split
 
-| Symbol                    | Kind      |
-| ------------------------- | --------- |
-| `IRedisBackend`           | interface |
-| `IRedisConnection`        | interface |
-| `IRedisManager`           | interface |
-| `IDistributedLock`        | interface |
-| `IRedisPubSub`            | interface |
-| `IRedisStream`            | interface |
-| `REDIS_MANAGER`           | token     |
-| `REDIS_CONNECTION`        | token (default) |
-| `REDIS_PUBSUB`            | token     |
-| `REDIS_LOCK`              | token     |
-| `RedisConnectionError`    | class     |
-| `LockAcquisitionError`    | class     |
+| Symbol                 | Kind            |
+| ---------------------- | --------------- |
+| `IRedisBackend`        | interface       |
+| `IRedisConnection`     | interface       |
+| `IRedisManager`        | interface       |
+| `IDistributedLock`     | interface       |
+| `IRedisPubSub`         | interface       |
+| `IRedisStream`         | interface       |
+| `REDIS_MANAGER`        | token           |
+| `REDIS_CONNECTION`     | token (default) |
+| `REDIS_PUBSUB`         | token           |
+| `REDIS_LOCK`           | token           |
+| `RedisConnectionError` | class           |
+| `LockAcquisitionError` | class           |
 
 ## Core API (locked)
 
@@ -218,11 +217,11 @@ interface IRedisConnection {
 
 ## Backends
 
-| Backend         | Home                                        | Runtime         | Deps                          |
-| --------------- | ------------------------------------------- | --------------- | ----------------------------- |
-| `ioredis`       | `ioredis/ioredis.backend.ts`                | Node            | `ioredis`                     |
-| `upstash-http`  | `upstash/upstash-http.backend.ts`           | Node + Worker   | `@upstash/redis`              |
-| `memory`        | `testing/mock-redis.ts`                     | Every           | None (in-process Map + TTL)   |
+| Backend        | Home                              | Runtime       | Deps                        |
+| -------------- | --------------------------------- | ------------- | --------------------------- |
+| `ioredis`      | `ioredis/ioredis.backend.ts`      | Node          | `ioredis`                   |
+| `upstash-http` | `upstash/upstash-http.backend.ts` | Node + Worker | `@upstash/redis`            |
+| `memory`       | `testing/mock-redis.ts`           | Every         | None (in-process Map + TTL) |
 
 Backend selection per named connection:
 
@@ -311,8 +310,8 @@ export class RedisCacheStoreRegistrar implements OnApplicationBootstrap {
 }
 ```
 
-So `@stackra/cache` consumers who install `@stackra/redis` get a `redis`
-driver automatically. Optional peer link — either package works alone.
+So `@stackra/cache` consumers who install `@stackra/redis` get a `redis` driver
+automatically. Optional peer link — either package works alone.
 
 ## Rate limiter
 
@@ -353,15 +352,15 @@ Implemented via Lua scripts (in `core/scripts/`) — atomic, single round-trip.
     "@nestjs/common": "catalog:nestjs",
     "@nestjs/core": "catalog:nestjs",
     "ioredis": "^5.6.0",
-    "@upstash/redis": "^1.35.0"
+    "@upstash/redis": "^1.35.0",
   },
   "peerDependenciesMeta": {
     "@stackra/cache": { "optional": true },
     "@nestjs/common": { "optional": true },
     "@nestjs/core": { "optional": true },
     "ioredis": { "optional": true },
-    "@upstash/redis": { "optional": true }
-  }
+    "@upstash/redis": { "optional": true },
+  },
 }
 ```
 
@@ -397,8 +396,8 @@ Implemented via Lua scripts (in `core/scripts/`) — atomic, single round-trip.
 
 ### Phase 6 — Cache/Events auto-registration (1 day)
 
-- [ ] `RedisCacheStoreRegistrar` — `.extend("redis", ...)` when
-      `@stackra/cache` present.
+- [ ] `RedisCacheStoreRegistrar` — `.extend("redis", ...)` when `@stackra/cache`
+      present.
 - [ ] `RedisEventTransportRegistrar` — for cross-service events.
 
 ### Phase 7 — Testing (2 days)
@@ -426,5 +425,6 @@ Implemented via Lua scripts (in `core/scripts/`) — atomic, single round-trip.
 - ADR-0090, 0091, 0092.
 - `.kiro/plans/2026-09-03-cache-package.md` — Redis cache store.
 - `.kiro/plans/2026-09-03-queue-package.md` — BullMQ Redis backend.
-- `.kiro/plans/2026-09-03-realtime-package.md` — Redis pub/sub for cross-server relay.
+- `.kiro/plans/2026-09-03-realtime-package.md` — Redis pub/sub for cross-server
+  relay.
 - `.ref/packages/redis/` — reference (dual backends + all features).

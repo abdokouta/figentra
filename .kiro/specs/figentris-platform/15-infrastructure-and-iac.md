@@ -1,8 +1,9 @@
 # 15 — Infrastructure & IaC
 
-**Status:** Baseline
-**Owner:** Platform infrastructure
-**Related:** [01 Architecture](01-platform-architecture.md), [09 Service communication](09-service-communication.md), [19 Environments & CI/CD](19-environments-and-cicd.md)
+**Status:** Baseline **Owner:** Platform infrastructure **Related:**
+[01 Architecture](01-platform-architecture.md),
+[09 Service communication](09-service-communication.md),
+[19 Environments & CI/CD](19-environments-and-cicd.md)
 
 ---
 
@@ -37,8 +38,8 @@ Use for: API Gateway, Application Registry, edge routing, auth middleware, rate
 limiting, webhook ingress, small stateless APIs, frontend asset delivery,
 Cloudflare-native integrations. Prefer **bindings** over REST for Cloudflare
 resources; **service bindings** for Worker→Worker; **Queues/Workflows** for
-async; **Durable Objects** for stateful coordination; **Hyperdrive** for external
-Postgres from Workers.
+async; **Durable Objects** for stateful coordination; **Hyperdrive** for
+external Postgres from Workers.
 
 ### 2.2 Containers (substantial services)
 
@@ -58,10 +59,10 @@ backends that need full Node/NestJS. A Worker sits in front of each Container
 
 ### 2.3 External compute (escape hatch)
 
-AWS/GCP/Azure only when a workload materially exceeds the Cloudflare model:
-GPU, very large memory/CPU, specialized networking, persistent stateful
-workloads, or a required vendor-managed service. It is an **escape hatch**, not
-the default. AWS free-tier/credits do not justify architecture choices.
+AWS/GCP/Azure only when a workload materially exceeds the Cloudflare model: GPU,
+very large memory/CPU, specialized networking, persistent stateful workloads, or
+a required vendor-managed service. It is an **escape hatch**, not the default.
+AWS free-tier/credits do not justify architecture choices.
 
 ---
 
@@ -120,8 +121,9 @@ Rules:
 
 - Pin provider versions; verify each resource against the **pinned** version —
   do not assume every new Cloudflare product has a Terraform resource yet.
-- Do not make Figentra depend on the Supabase Auth provider being able to create every
-  Supabase Auth object; runtime identity remains Supabase Auth's responsibility.
+- Do not make Figentra depend on the Supabase Auth provider being able to create
+  every Supabase Auth object; runtime identity remains Supabase Auth's
+  responsibility.
 - Terraform never contains application secrets in plaintext — use secret
   references / env / CI secret stores.
 
@@ -211,11 +213,11 @@ GET  /v1/infrastructure/runs/:id/logs
 
 Separate **secrets** from **configuration**.
 
-| | Secrets | Configuration |
-| --- | ------- | ------------- |
-| Examples | `DATABASE_URL`, `SUPABASE_ACCESS_TOKEN`, `STRIPE_SECRET_KEY`, integration OAuth tokens | API URLs, timeouts, limits, feature config, region, log level |
-| Store | Secret store (Cloudflare Secrets Store / secret manager); referenced by `credential_ref` ([07 §7]) | Env-based config per environment |
-| Must NOT enter | Registry, frontend runtime, manifest, git, logs, events | — |
+|                | Secrets                                                                                            | Configuration                                                 |
+| -------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| Examples       | `DATABASE_URL`, `SUPABASE_ACCESS_TOKEN`, `STRIPE_SECRET_KEY`, integration OAuth tokens             | API URLs, timeouts, limits, feature config, region, log level |
+| Store          | Secret store (Cloudflare Secrets Store / secret manager); referenced by `credential_ref` ([07 §7]) | Env-based config per environment                              |
+| Must NOT enter | Registry, frontend runtime, manifest, git, logs, events                                            | —                                                             |
 
 Secrets flow: environment-scoped, never committed, never logged. The Integration
 Platform stores only a `credential_ref`; the secret material lives in the secret
@@ -225,16 +227,16 @@ store ([07 §7]). Terraform manages secret **references**, not values.
 
 ## 10. Non-goals / anti-patterns
 
-| Anti-pattern                                                       | Correct                                                      |
-| ------------------------------------------------------------------ | ------------------------------------------------------------ |
-| Building a Figentra Build/Deploy/Artifact/PaaS engine             | Terraform + Wrangler (R-2).                                  |
-| Forcing NestJS into a Worker or rewriting NestJS→Hono              | Worker+Hono for edge; Container+NestJS for substantial.      |
-| Terraform + Wrangler fighting over the same artifact               | Terraform = durable infra; Wrangler = deploy artifact.       |
-| `terraform apply` directly from an HTTP handler                    | Enqueue a run → runner → Terraform → callback.               |
-| Terraform state in the Figentra DB                                | Remote backend with locking.                                 |
-| Secrets in Terraform / registry / frontend / manifest / logs       | Secret store; Terraform manages references only.             |
-| Choosing AWS because of the free tier                              | Choose by total architecture/ops cost; AWS = escape hatch.   |
-| Assuming a container stays warm / disk persists                    | Stateless containers; external system of record.             |
+| Anti-pattern                                                 | Correct                                                    |
+| ------------------------------------------------------------ | ---------------------------------------------------------- |
+| Building a Figentra Build/Deploy/Artifact/PaaS engine        | Terraform + Wrangler (R-2).                                |
+| Forcing NestJS into a Worker or rewriting NestJS→Hono        | Worker+Hono for edge; Container+NestJS for substantial.    |
+| Terraform + Wrangler fighting over the same artifact         | Terraform = durable infra; Wrangler = deploy artifact.     |
+| `terraform apply` directly from an HTTP handler              | Enqueue a run → runner → Terraform → callback.             |
+| Terraform state in the Figentra DB                           | Remote backend with locking.                               |
+| Secrets in Terraform / registry / frontend / manifest / logs | Secret store; Terraform manages references only.           |
+| Choosing AWS because of the free tier                        | Choose by total architecture/ops cost; AWS = escape hatch. |
+| Assuming a container stays warm / disk persists              | Stateless containers; external system of record.           |
 
 ---
 

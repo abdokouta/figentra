@@ -5,30 +5,39 @@
 ### Product portfolio
 
 Removed from the active Figentra portfolio:
+
 - MANGO
 - IMS
 - CyberAI
 - AI Vision
 
 Active product brands:
+
 - Academorix
 - Beautilon
 
-Figentra remains the corporate AI agents development company and technology platform.
+Figentra remains the corporate AI agents development company and technology
+platform.
 
 ### Figentra repositioning
 
 Old emphasis:
+
 > Developer/operator SaaS brand.
 
 New emphasis:
-> AI agents development company building production-grade intelligent software and enterprise systems, rooted in MENA with global ambition.
 
-The existing developer-native visual system is retained as a technical asset, but the website content now leads with customer outcomes, enterprise trust, AI-agent capability and product proof.
+> AI agents development company building production-grade intelligent software
+> and enterprise systems, rooted in MENA with global ambition.
+
+The existing developer-native visual system is retained as a technical asset,
+but the website content now leads with customer outcomes, enterprise trust,
+AI-agent capability and product proof.
 
 ### Academorix
 
 Positioned as the go-to SaaS for:
+
 - sports clubs;
 - academies;
 - schools;
@@ -37,6 +46,7 @@ Positioned as the go-to SaaS for:
 ### Beautilon
 
 Positioned as SaaS for:
+
 - health/care centers;
 - beauty centers;
 - salons;
@@ -45,9 +55,12 @@ Positioned as SaaS for:
 
 ## Branding gap closure
 
-The supplied materials already contain strong technical brand foundations for Figentra and Academorix. The main gap was not lack of assets; it was **brand architecture and enterprise narrative**.
+The supplied materials already contain strong technical brand foundations for
+Figentra and Academorix. The main gap was not lack of assets; it was **brand
+architecture and enterprise narrative**.
 
 The new documentation therefore adds:
+
 - corporate/product brand hierarchy;
 - customer-outcome messaging;
 - enterprise conversion architecture;
@@ -81,10 +94,14 @@ Academorix uses its own approved product mark.
 
 Beautilon will use its own compact mark.
 
-No page may introduce a visually competing favicon or first-screen/second-screen icon variant.
+No page may introduce a visually competing favicon or first-screen/second-screen
+icon variant.
 
 ## Important implementation boundary
 
-The documents are production-grade specifications. They are not a claim that the websites themselves have already been implemented, tested, deployed or passed runtime QA.
+The documents are production-grade specifications. They are not a claim that the
+websites themselves have already been implemented, tested, deployed or passed
+runtime QA.
 
-Runtime completion requires implementation plus the release gates in `RELEASE-GATES.md`.
+Runtime completion requires implementation plus the release gates in
+`RELEASE-GATES.md`.

@@ -55,7 +55,4 @@ export type PipeType = PipeClosure | string | object | PipeTuple;
  * Receives a fresh Pipeline instance and the passable, configures the pipeline,
  * and returns the result.
  */
-export type PipelineDefinition = (
-  pipeline: unknown,
-  passable: unknown,
-) => unknown;
+export type PipelineDefinition = (pipeline: unknown, passable: unknown) => unknown;

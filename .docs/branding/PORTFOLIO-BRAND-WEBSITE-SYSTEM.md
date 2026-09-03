@@ -2,24 +2,26 @@
 
 ## Goal
 
-Bring the corporate site and both product sites to an enterprise standard comparable in information architecture and trust depth to mature technology companies, while preserving distinct product identities.
+Bring the corporate site and both product sites to an enterprise standard
+comparable in information architecture and trust depth to mature technology
+companies, while preserving distinct product identities.
 
 ## Gap closure matrix
 
-| Gap | Figentra | Academorix | Beautilon |
-|---|---|---|---|
-| Customer outcomes | Required | Required | Required |
-| Product differentiation | Required | Required | Required |
-| Enterprise proof | Required | Required | Required |
-| Team storytelling | Required | Optional/selected | Optional/selected |
-| Industry context | MENA + enterprise | Sports | Care/beauty/wellness |
-| Trust/security | Required | Required | Required |
-| Conversion architecture | Enterprise inquiry | Demo | Demo |
-| Distinct visual system | AI/enterprise | Sports | Premium care |
-| Favicon source of truth | F-Cursor | Own mark | Own mark |
-| OG/social system | Required | Required | Required |
-| SEO architecture | Corporate | Vertical | Vertical |
-| Accessibility | WCAG 2.2 AA | WCAG 2.2 AA | WCAG 2.2 AA |
+| Gap                     | Figentra           | Academorix        | Beautilon            |
+| ----------------------- | ------------------ | ----------------- | -------------------- |
+| Customer outcomes       | Required           | Required          | Required             |
+| Product differentiation | Required           | Required          | Required             |
+| Enterprise proof        | Required           | Required          | Required             |
+| Team storytelling       | Required           | Optional/selected | Optional/selected    |
+| Industry context        | MENA + enterprise  | Sports            | Care/beauty/wellness |
+| Trust/security          | Required           | Required          | Required             |
+| Conversion architecture | Enterprise inquiry | Demo              | Demo                 |
+| Distinct visual system  | AI/enterprise      | Sports            | Premium care         |
+| Favicon source of truth | F-Cursor           | Own mark          | Own mark             |
+| OG/social system        | Required           | Required          | Required             |
+| SEO architecture        | Corporate          | Vertical          | Vertical             |
+| Accessibility           | WCAG 2.2 AA        | WCAG 2.2 AA       | WCAG 2.2 AA          |
 
 ## Shared enterprise requirements
 
@@ -55,6 +57,7 @@ Shared infrastructure is allowed.
 Shared visual identity is not required.
 
 Use shared engineering primitives for:
+
 - accessibility;
 - routing;
 - SEO;
@@ -65,6 +68,7 @@ Use shared engineering primitives for:
 - testing.
 
 Use brand-specific design tokens for:
+
 - color;
 - typography;
 - radii;
@@ -109,13 +113,15 @@ Sports action + facilities + coaches + athlete operations.
 
 Care professionals + elegant spaces + real customer experience.
 
-No brand should use generic AI-generated humans as a substitute for real team/customer photography where authenticity matters.
+No brand should use generic AI-generated humans as a substitute for real
+team/customer photography where authenticity matters.
 
 ## Illustration strategy
 
 Illustrations must communicate an idea, not fill whitespace.
 
 Every major illustration should have:
+
 - semantic purpose;
 - alt-text strategy;
 - SVG master;
@@ -152,27 +158,21 @@ Never skip from capability directly to an unsupported market claim.
 
 ### Figentra
 
-Primary:
-`Talk to Figentra`
+Primary: `Talk to Figentra`
 
-Secondary:
-`Explore AI agents`
+Secondary: `Explore AI agents`
 
 ### Academorix
 
-Primary:
-`Book a demo`
+Primary: `Book a demo`
 
-Secondary:
-`See the platform`
+Secondary: `See the platform`
 
 ### Beautilon
 
-Primary:
-`Book a demo`
+Primary: `Book a demo`
 
-Secondary:
-`Explore the platform`
+Secondary: `Explore the platform`
 
 ## Production readiness gate
 

@@ -46,10 +46,8 @@ export const theme = {
   border: "rgba(20, 20, 20, 0.12)",
   borderStrong: "rgba(20, 20, 20, 0.24)",
 
-  fontSans:
-    '"Geist", "Inter", -apple-system, "Segoe UI", Roboto, Helvetica, sans-serif',
-  fontMono:
-    '"Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace',
+  fontSans: '"Geist", "Inter", -apple-system, "Segoe UI", Roboto, Helvetica, sans-serif',
+  fontMono: '"Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace',
 
   radius: 12,
   radiusSm: 8,
@@ -81,10 +79,7 @@ export interface EmailShellProps {
   children: React.ReactNode;
 }
 
-export function EmailShell({
-  preview,
-  children,
-}: EmailShellProps): React.ReactElement {
+export function EmailShell({ preview, children }: EmailShellProps): React.ReactElement {
   return (
     <Html lang="en">
       <Head>
@@ -205,11 +200,7 @@ export function EmailShell({
 
 /* ── body-copy building blocks ───────────────────────────── */
 
-export function Kicker({
-  children,
-}: {
-  children: React.ReactNode;
-}): React.ReactElement {
+export function Kicker({ children }: { children: React.ReactNode }): React.ReactElement {
   return (
     <Text
       style={{
@@ -226,11 +217,7 @@ export function Kicker({
   );
 }
 
-export function H1({
-  children,
-}: {
-  children: React.ReactNode;
-}): React.ReactElement {
+export function H1({ children }: { children: React.ReactNode }): React.ReactElement {
   return (
     <Text
       style={{
@@ -248,11 +235,7 @@ export function H1({
   );
 }
 
-export function H2({
-  children,
-}: {
-  children: React.ReactNode;
-}): React.ReactElement {
+export function H2({ children }: { children: React.ReactNode }): React.ReactElement {
   return (
     <Text
       style={{
@@ -270,11 +253,7 @@ export function H2({
   );
 }
 
-export function P({
-  children,
-}: {
-  children: React.ReactNode;
-}): React.ReactElement {
+export function P({ children }: { children: React.ReactNode }): React.ReactElement {
   return (
     <Text
       style={{
@@ -290,11 +269,7 @@ export function P({
   );
 }
 
-export function Muted({
-  children,
-}: {
-  children: React.ReactNode;
-}): React.ReactElement {
+export function Muted({ children }: { children: React.ReactNode }): React.ReactElement {
   return (
     <Text
       style={{
@@ -311,20 +286,9 @@ export function Muted({
 }
 
 /* ── CTA button · bulletproof table button ─────────────── */
-export function CTA({
-  href,
-  label,
-}: {
-  href: string;
-  label: string;
-}): React.ReactElement {
+export function CTA({ href, label }: { href: string; label: string }): React.ReactElement {
   return (
-    <table
-      role="presentation"
-      cellPadding={0}
-      cellSpacing={0}
-      style={{ margin: "8px 0 24px" }}
-    >
+    <table role="presentation" cellPadding={0} cellSpacing={0} style={{ margin: "8px 0 24px" }}>
       <tbody>
         <tr>
           <td
@@ -438,9 +402,9 @@ export function EmailFooter(): React.ReactElement {
           lineHeight: 1.5,
         }}
       >
-        You're getting this because your team engaged Figentra as your
-        agentic delivery partner. Every message we send carries a plain-
-        text unsubscribe below and links to the master service agreement.
+        You're getting this because your team engaged Figentra as your agentic delivery partner.
+        Every message we send carries a plain- text unsubscribe below and links to the master
+        service agreement.
       </Text>
       <Text
         style={{

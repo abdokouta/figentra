@@ -8,20 +8,19 @@ reviewed_at: null
 
 # `@stackra/encryption` — symmetric encryption + key management
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
+**Status:** Planned **Anchor ADRs:**
+[ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
 [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
-[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md)
-**Reference:** `.ref/packages/encryption/` (`@stackra/nestjs-encryption` v0.1.0)
-**Depends on:** `@stackra/container`, `@stackra/contracts`, `@stackra/support`,
+[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md) **Reference:**
+`.ref/packages/encryption/` (`@stackra/nestjs-encryption` v0.1.0) **Depends
+on:** `@stackra/container`, `@stackra/contracts`, `@stackra/support`,
 `@stackra/logger` (optional), `@stackra/config` (optional — for
-`KEY_MANAGEMENT_URL`)
-**Design effort:** 12 days across 6 phases
+`KEY_MANAGEMENT_URL`) **Design effort:** 12 days across 6 phases
 
 ## Purpose
 
-Cross-runtime symmetric encryption + key management. Every service that
-persists user data behind rest-encryption composes from this. Ships:
+Cross-runtime symmetric encryption + key management. Every service that persists
+user data behind rest-encryption composes from this. Ships:
 
 - **AES-256-GCM** default cipher (authenticated encryption).
 - **ChaCha20-Poly1305** as opt-in for edge-runtime perf (WebCrypto native).
@@ -49,13 +48,13 @@ persists user data behind rest-encryption composes from this. Ships:
 3. **IV is 12 bytes for GCM, 24 for ChaCha20-Poly1305.** Never reused.
 4. **Ciphertext output is always base64url-encoded** with a stable header:
    `<version>.<keyId>.<iv>.<ciphertext>.<tag>`.
-5. **No key material in logs.** Logger integration strips `key` /
-   `plaintext` fields.
+5. **No key material in logs.** Logger integration strips `key` / `plaintext`
+   fields.
 
 ## Manager pattern — Manager (Shape A per ADR-0090)
 
-`EncryptionManager extends Manager<IEncryptionDriver>` — Shape A. ONE
-active cipher at a time (a service can't half-use AES + half-use ChaCha).
+`EncryptionManager extends Manager<IEncryptionDriver>` — Shape A. ONE active
+cipher at a time (a service can't half-use AES + half-use ChaCha).
 
 ```typescript
 {
@@ -70,8 +69,8 @@ active cipher at a time (a service can't half-use AES + half-use ChaCha).
 
 ## Key sources (via KeyManager)
 
-`KeyManager extends MultipleInstanceManager<IKeySource>` — Shape B. N named
-key sources; a service may declare `at-rest` + `backup` sources for redundancy.
+`KeyManager extends MultipleInstanceManager<IKeySource>` — Shape B. N named key
+sources; a service may declare `at-rest` + `backup` sources for redundancy.
 
 ```typescript
 {
@@ -93,15 +92,15 @@ key sources; a service may declare `at-rest` + `backup` sources for redundancy.
 
 Supported key-source drivers:
 
-| Driver           | Provides                                                | Peer                        |
-| ---------------- | ------------------------------------------------------- | --------------------------- |
-| `env`            | Reads `ENCRYPTION_KEY_<KEY_ID>` env vars                | none                        |
-| `static`         | Inline `{ [keyId]: base64Key }` map                     | none                        |
-| `aws-kms`        | AWS KMS wrap / unwrap for DEKs                          | `@aws-sdk/client-kms`       |
-| `gcp-kms`        | GCP Cloud KMS `encrypt` / `decrypt`                     | `@google-cloud/kms`         |
-| `azure-key-vault`| Azure Key Vault `wrapKey` / `unwrapKey`                 | `@azure/keyvault-keys`      |
-| `vault-transit`  | HashiCorp Vault transit engine encrypt / decrypt         | `node-vault` (opt)          |
-| `cloudflare`     | Cloudflare Worker Secrets — reads `env.<binding>`        | Worker runtime              |
+| Driver            | Provides                                          | Peer                   |
+| ----------------- | ------------------------------------------------- | ---------------------- |
+| `env`             | Reads `ENCRYPTION_KEY_<KEY_ID>` env vars          | none                   |
+| `static`          | Inline `{ [keyId]: base64Key }` map               | none                   |
+| `aws-kms`         | AWS KMS wrap / unwrap for DEKs                    | `@aws-sdk/client-kms`  |
+| `gcp-kms`         | GCP Cloud KMS `encrypt` / `decrypt`               | `@google-cloud/kms`    |
+| `azure-key-vault` | Azure Key Vault `wrapKey` / `unwrapKey`           | `@azure/keyvault-keys` |
+| `vault-transit`   | HashiCorp Vault transit engine encrypt / decrypt  | `node-vault` (opt)     |
+| `cloudflare`      | Cloudflare Worker Secrets — reads `env.<binding>` | Worker runtime         |
 
 ## Public API — locked
 
@@ -109,14 +108,20 @@ Supported key-source drivers:
 
 ```typescript
 class EncryptionService {
-  async encrypt(plaintext: string | Buffer, opts?: {
-    aad?: string | Buffer;    // additional authenticated data
-    keyId?: string;            // override current key
-  }): Promise<string>;          // base64url — includes version/keyId/iv/tag
+  async encrypt(
+    plaintext: string | Buffer,
+    opts?: {
+      aad?: string | Buffer; // additional authenticated data
+      keyId?: string; // override current key
+    },
+  ): Promise<string>; // base64url — includes version/keyId/iv/tag
 
-  async decrypt(ciphertext: string, opts?: {
-    aad?: string | Buffer;
-  }): Promise<Buffer>;
+  async decrypt(
+    ciphertext: string,
+    opts?: {
+      aad?: string | Buffer;
+    },
+  ): Promise<Buffer>;
 
   async encryptJson<T>(value: T, opts?): Promise<string>;
   async decryptJson<T>(ciphertext: string, opts?): Promise<T>;
@@ -126,7 +131,10 @@ class EncryptionService {
     ciphertext: string;
     wrappedDataKey: string;
   }>;
-  async decryptEnvelope(ciphertext: string, wrappedDataKey: string): Promise<Buffer>;
+  async decryptEnvelope(
+    ciphertext: string,
+    wrappedDataKey: string,
+  ): Promise<Buffer>;
 }
 ```
 
@@ -138,11 +146,11 @@ class User {
   id!: string;
 
   @Property()
-  @Encrypted()  // ← transparent encryption on write, decryption on load
+  @Encrypted() // ← transparent encryption on write, decryption on load
   ssn!: string;
 
   @Property()
-  @Encrypted({ aad: "email" })  // ← binds ciphertext to this row's email
+  @Encrypted({ aad: "email" }) // ← binds ciphertext to this row's email
   taxId!: string;
 }
 ```
@@ -232,9 +240,10 @@ v1.k-<keyId>.<dek-wrapped>.<iv>.<ct>.<tag>
 ## Rotation flow
 
 1. Deploy new `NEXT_KEY_ID` alongside `CURRENT_KEY_ID`.
-2. `EncryptionService` uses `NEXT_KEY_ID` for encryption; decryption
-   supports both (reads `keyId` from ciphertext header).
-3. Background job re-encrypts old rows (via `@stackra/queue` / `@stackra/scheduler`).
+2. `EncryptionService` uses `NEXT_KEY_ID` for encryption; decryption supports
+   both (reads `keyId` from ciphertext header).
+3. Background job re-encrypts old rows (via `@stackra/queue` /
+   `@stackra/scheduler`).
 4. Once all rows migrated, drop `CURRENT_KEY_ID`.
 
 ## Phases

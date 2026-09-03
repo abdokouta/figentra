@@ -74,9 +74,7 @@ describe("createOutboxHarness", () => {
       });
 
       expect(outbox.all()).toHaveLength(2);
-      expect(outbox.all().every((r) => r.status === "published")).toBe(
-        true,
-      );
+      expect(outbox.all().every((r) => r.status === "published")).toBe(true);
     });
 
     it("pending returns a frozen array", () => {
@@ -204,16 +202,12 @@ describe("createOutboxHarness", () => {
       const outbox = createOutboxHarness();
       outbox.publish("a", {});
       outbox.publish("b", {});
-      expect(() => outbox.assertPublished("c")).toThrow(
-        /Seen types: a, b/,
-      );
+      expect(() => outbox.assertPublished("c")).toThrow(/Seen types: a, b/);
     });
 
     it("says '(none)' when no rows have been published", () => {
       const outbox = createOutboxHarness();
-      expect(() => outbox.assertPublished("anything")).toThrow(
-        /Seen types: \(none\)/,
-      );
+      expect(() => outbox.assertPublished("anything")).toThrow(/Seen types: \(none\)/);
     });
 
     it("supports a matcher predicate", () => {
@@ -222,17 +216,11 @@ describe("createOutboxHarness", () => {
       outbox.publish("user.created", { id: "u2" });
 
       expect(() =>
-        outbox.assertPublished(
-          "user.created",
-          (r) => (r.payload as { id: string }).id === "u2",
-        ),
+        outbox.assertPublished("user.created", (r) => (r.payload as { id: string }).id === "u2"),
       ).not.toThrow();
 
       expect(() =>
-        outbox.assertPublished(
-          "user.created",
-          (r) => (r.payload as { id: string }).id === "u3",
-        ),
+        outbox.assertPublished("user.created", (r) => (r.payload as { id: string }).id === "u3"),
       ).toThrow(/matching predicate/);
     });
   });

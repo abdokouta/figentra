@@ -2,9 +2,9 @@ import {
   inheritValidationMetadata,
   inheritPropertyInitializers,
   inheritTransformationMetadata,
-} from '@/utils';
-import type { MappedType } from '@/interfaces';
-import type { Type, RemoveFieldsWithType } from '@/types';
+} from "@/utils";
+import type { MappedType } from "@/interfaces";
+import type { Type, RemoveFieldsWithType } from "@/types";
 
 /**
  * @type UnionToIntersection
@@ -108,8 +108,8 @@ export function IntersectionType<T extends Type[]>(...classRefs: T) {
   });
 
   // Set the name of the class to reflect that it's an intersection of the source classes
-  const intersectedNames = classRefs.reduce((prev, ref) => prev + ref.name, '');
-  Object.defineProperty(IntersectionClassType, 'name', {
+  const intersectedNames = classRefs.reduce((prev, ref) => prev + ref.name, "");
+  Object.defineProperty(IntersectionClassType, "name", {
     value: `Intersection${intersectedNames}`,
   });
 

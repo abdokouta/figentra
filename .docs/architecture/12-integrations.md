@@ -45,6 +45,7 @@ These must not be collapsed.
 ## Marketplace
 
 Future app store may provide:
+
 - discovery
 - installation
 - OAuth

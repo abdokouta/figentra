@@ -149,15 +149,11 @@ describe("defineFactory", () => {
 
     it("throws when the state name is unknown", () => {
       // Error surfaces at .make() time (states are resolved lazily).
-      expect(() => AthleteFactory.state("unknown").make()).toThrow(
-        /Unknown state 'unknown'/,
-      );
+      expect(() => AthleteFactory.state("unknown").make()).toThrow(/Unknown state 'unknown'/);
     });
 
     it("names known states in the error message", () => {
-      expect(() => AthleteFactory.state("unknown").make()).toThrow(
-        /basketball, swimming, senior/,
-      );
+      expect(() => AthleteFactory.state("unknown").make()).toThrow(/basketball, swimming, senior/);
     });
 
     it("says '(none)' when no states are declared", () => {
@@ -199,9 +195,7 @@ describe("defineFactory", () => {
       // `swim` applied AFTER `bball` — its value wins.
       expect(factory.with("bball", "swim").make().sport).toBe("swimming");
       // Reversed order — `bball` wins.
-      expect(factory.with("swim", "bball").make().sport).toBe(
-        "basketball",
-      );
+      expect(factory.with("swim", "bball").make().sport).toBe("basketball");
     });
   });
 

@@ -120,14 +120,9 @@ export async function createWorkerFetch(
 
   return {
     mf,
-    async fetch(
-      input: string | URL | Request,
-      init?: RequestInit,
-    ): Promise<Response> {
+    async fetch(input: string | URL | Request, init?: RequestInit): Promise<Response> {
       if (disposed) {
-        throw new Error(
-          "[createWorkerFetch] Attempted to fetch after dispose() was called.",
-        );
+        throw new Error("[createWorkerFetch] Attempted to fetch after dispose() was called.");
       }
       // Miniflare's `dispatchFetch` typing widens Request to its own
       // internal shape; a cross-realm cast is safe here because the

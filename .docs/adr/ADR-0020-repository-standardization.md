@@ -13,8 +13,8 @@ packaging, deployment, and documentation conventions.
 
 ## Decisions
 
-1. Canonical environments are `development`, `staging`, and `production`.
-   `dev`, `stg`, and `prd` are CLI aliases only.
+1. Canonical environments are `development`, `staging`, and `production`. `dev`,
+   `stg`, and `prd` are CLI aliases only.
 2. Publishable Stackra packages own `catalog.json`. Deployable applications,
    Workers, and services own `cloud.yaml`.
 3. Packages use `@stackra/typescript-config`, `@stackra/tsup-config`, and
@@ -35,7 +35,7 @@ packaging, deployment, and documentation conventions.
 
 ## Consequences
 
-The repository becomes more predictable for developers, CI, static tooling,
-AI agents, and deployment automation. More files are created for declarations,
-but discovery, ownership, code review, and generated-contract validation become
+The repository becomes more predictable for developers, CI, static tooling, AI
+agents, and deployment automation. More files are created for declarations, but
+discovery, ownership, code review, and generated-contract validation become
 substantially clearer.

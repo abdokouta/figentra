@@ -90,59 +90,59 @@ workspace members that also carry the same script name (its `turbo.json`
 (`"//------- setup -------"`) to group related scripts. Reviewers expect this
 layout; alphabetising scripts is a review-blocking finding.
 
-| Script                   | Purpose                                                                        |
-| ------------------------ | ------------------------------------------------------------------------------ |
-| `prepare`                | `husky \|\| true` — installs git hooks on `npm install` (fails-soft in CI).   |
-| `install:all`            | `turbo run install` — fans out per-language install to every service.          |
-| `dev`                    | `turbo run dev`                                                                |
-| `dev:parallel`           | `turbo run dev --parallel` — for developers running every service at once.     |
-| `build`                  | `turbo run build`                                                              |
-| `lint`                   | `turbo run lint`                                                               |
-| `lint:fix`               | `turbo run lint:fix`                                                           |
-| `format`                 | `prettier --write` on every file pattern (never delegated to turbo).           |
-| `format:check`           | `prettier --check` on every file pattern.                                      |
-| `typecheck`              | `turbo run typecheck`                                                          |
-| `analyse`                | `turbo run analyse` — backend static-analysis gate.                            |
-| `test`                   | `turbo run test`                                                               |
-| `test:watch`             | `turbo run test:watch` — dev-loop.                                             |
-| `test:coverage`          | `turbo run test:coverage` — writes coverage reports per workspace.             |
-| `knip`                   | `knip --no-config-hints` — root-level unused-dep + unused-export check.        |
-| `size`                   | `size-limit` — bundle-size budgets from `.size-limit.json`.                    |
-| `quality`                | `pnpm format:check && pnpm lint && pnpm typecheck && pnpm knip` — static gate. |
-| `quality:fix`            | `pnpm format && pnpm lint:fix` — the auto-fix version.                         |
+| Script                   | Purpose                                                                                                                                                                    |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `prepare`                | `husky \|\| true` — installs git hooks on `npm install` (fails-soft in CI).                                                                                                |
+| `install:all`            | `turbo run install` — fans out per-language install to every service.                                                                                                      |
+| `dev`                    | `turbo run dev`                                                                                                                                                            |
+| `dev:parallel`           | `turbo run dev --parallel` — for developers running every service at once.                                                                                                 |
+| `build`                  | `turbo run build`                                                                                                                                                          |
+| `lint`                   | `turbo run lint`                                                                                                                                                           |
+| `lint:fix`               | `turbo run lint:fix`                                                                                                                                                       |
+| `format`                 | `prettier --write` on every file pattern (never delegated to turbo).                                                                                                       |
+| `format:check`           | `prettier --check` on every file pattern.                                                                                                                                  |
+| `typecheck`              | `turbo run typecheck`                                                                                                                                                      |
+| `analyse`                | `turbo run analyse` — backend static-analysis gate.                                                                                                                        |
+| `test`                   | `turbo run test`                                                                                                                                                           |
+| `test:watch`             | `turbo run test:watch` — dev-loop.                                                                                                                                         |
+| `test:coverage`          | `turbo run test:coverage` — writes coverage reports per workspace.                                                                                                         |
+| `knip`                   | `knip --no-config-hints` — root-level unused-dep + unused-export check.                                                                                                    |
+| `size`                   | `size-limit` — bundle-size budgets from `.size-limit.json`.                                                                                                                |
+| `quality`                | `pnpm format:check && pnpm lint && pnpm typecheck && pnpm knip` — static gate.                                                                                             |
+| `quality:fix`            | `pnpm format && pnpm lint:fix` — the auto-fix version.                                                                                                                     |
 | `verify`                 | `pnpm format:check && pnpm lint && pnpm typecheck` — **pre-push gate** ([ADR-0089](../../.docs/adr/ADR-0089-pre-push-vs-ci-verification-split.md)); fast + cache-friendly. |
-| `check`                  | `pnpm quality && pnpm test` — **CI gate** for the full standards suite ([ADR-0089](../../.docs/adr/ADR-0089-pre-push-vs-ci-verification-split.md)). |
-| `ci`                     | `pnpm quality && pnpm test && pnpm build && pnpm size` — full CI gate.         |
-| `clean`                  | `node scripts/clean.mjs` — reap every regenerable artifact.                    |
-| `clean:dry`              | Same script, `--dry-run` flag.                                                 |
-| `reset`                  | `pnpm clean && npm install` — full cold-start.                                |
-| `dev:secret`             | `doppler run -- turbo run dev --parallel` — with real secrets from Doppler.    |
-| `test:secret`            | `doppler run -- turbo run test`                                                |
-| `test:integration`       | `doppler run -- turbo run test -- --group=integration`                         |
-| `e2e`                    | `playwright test` — full-stack browser suite.                                  |
-| `e2e:ui`                 | `playwright test --ui` — Playwright's watch UI.                                |
-| `e2e:report`             | `playwright show-report` — last-run report.                                    |
-| `changeset`              | `changeset` — opens the wizard for a new changeset.                            |
-| `changeset:status`       | `changeset status` — prints pending changesets.                                |
-| `changeset:version`      | `changeset version` — applies pending changesets to package versions.          |
-| `changeset:publish`      | `changeset publish` — publishes bumped packages to npm.                        |
-| `commit`                 | `cz` — the commitizen wizard for conventional-commit-formatted commits.        |
-| `danger`                 | `danger local --dangerfile .github/dangerfile.mjs` — local PR review check.    |
-| `turbo:login`            | `turbo login` — Vercel/Turbo cache auth.                                       |
-| `turbo:link`             | `turbo link` — binds this repo to the team cache.                              |
-| `turbo:logout`           | `turbo logout`                                                                 |
-| `turbo:info`             | `turbo info` — prints current cache config.                                    |
-| `doppler:login`          | `doppler login`                                                                |
-| `doppler:setup`          | `doppler setup --no-interactive` — attaches workstation to a config.           |
-| `doppler:check`          | Prints active project + config.                                                |
-| `doppler:me`             | `doppler me`                                                                   |
-| `heroui:*`               | HeroUI Pro license CLI wrappers (login, setup, update, status).                |
-| `bootstrap:microservice` | `node scripts/bootstrap-microservice.mjs` — scaffold a Cloudflare Worker service. |
-| `bootstrap:vite`         | `node scripts/bootstrap-vite.mjs` — scaffold a Vite web app.                   |
-| `bootstrap:react-native` | `node scripts/bootstrap-react-native.mjs` — scaffold a RN app.                 |
-| `docs:lint`              | `markdownlint-cli2` on `docs/**/*.md`.                                         |
-| `docs:lint:fix`          | Same with `--fix`.                                                             |
-| `docs:links`             | `lychee` via docker for link-checking every markdown file.                     |
+| `check`                  | `pnpm quality && pnpm test` — **CI gate** for the full standards suite ([ADR-0089](../../.docs/adr/ADR-0089-pre-push-vs-ci-verification-split.md)).                        |
+| `ci`                     | `pnpm quality && pnpm test && pnpm build && pnpm size` — full CI gate.                                                                                                     |
+| `clean`                  | `node scripts/clean.mjs` — reap every regenerable artifact.                                                                                                                |
+| `clean:dry`              | Same script, `--dry-run` flag.                                                                                                                                             |
+| `reset`                  | `pnpm clean && npm install` — full cold-start.                                                                                                                             |
+| `dev:secret`             | `doppler run -- turbo run dev --parallel` — with real secrets from Doppler.                                                                                                |
+| `test:secret`            | `doppler run -- turbo run test`                                                                                                                                            |
+| `test:integration`       | `doppler run -- turbo run test -- --group=integration`                                                                                                                     |
+| `e2e`                    | `playwright test` — full-stack browser suite.                                                                                                                              |
+| `e2e:ui`                 | `playwright test --ui` — Playwright's watch UI.                                                                                                                            |
+| `e2e:report`             | `playwright show-report` — last-run report.                                                                                                                                |
+| `changeset`              | `changeset` — opens the wizard for a new changeset.                                                                                                                        |
+| `changeset:status`       | `changeset status` — prints pending changesets.                                                                                                                            |
+| `changeset:version`      | `changeset version` — applies pending changesets to package versions.                                                                                                      |
+| `changeset:publish`      | `changeset publish` — publishes bumped packages to npm.                                                                                                                    |
+| `commit`                 | `cz` — the commitizen wizard for conventional-commit-formatted commits.                                                                                                    |
+| `danger`                 | `danger local --dangerfile .github/dangerfile.mjs` — local PR review check.                                                                                                |
+| `turbo:login`            | `turbo login` — Vercel/Turbo cache auth.                                                                                                                                   |
+| `turbo:link`             | `turbo link` — binds this repo to the team cache.                                                                                                                          |
+| `turbo:logout`           | `turbo logout`                                                                                                                                                             |
+| `turbo:info`             | `turbo info` — prints current cache config.                                                                                                                                |
+| `doppler:login`          | `doppler login`                                                                                                                                                            |
+| `doppler:setup`          | `doppler setup --no-interactive` — attaches workstation to a config.                                                                                                       |
+| `doppler:check`          | Prints active project + config.                                                                                                                                            |
+| `doppler:me`             | `doppler me`                                                                                                                                                               |
+| `heroui:*`               | HeroUI Pro license CLI wrappers (login, setup, update, status).                                                                                                            |
+| `bootstrap:microservice` | `node scripts/bootstrap-microservice.mjs` — scaffold a Cloudflare Worker service.                                                                                          |
+| `bootstrap:vite`         | `node scripts/bootstrap-vite.mjs` — scaffold a Vite web app.                                                                                                               |
+| `bootstrap:react-native` | `node scripts/bootstrap-react-native.mjs` — scaffold a RN app.                                                                                                             |
+| `docs:lint`              | `markdownlint-cli2` on `docs/**/*.md`.                                                                                                                                     |
+| `docs:lint:fix`          | Same with `--fix`.                                                                                                                                                         |
+| `docs:links`             | `lychee` via docker for link-checking every markdown file.                                                                                                                 |
 
 Add a new script only when it fits an existing section OR justifies a new
 section header. Ad-hoc scripts that break the layout are review- blocking.
@@ -269,12 +269,12 @@ Same shape as tier 2 with these differences:
 Every dep in every `package.json` uses one of these four shapes. Never a bare
 version string on internal or catalog deps.
 
-| Shape         | Where                                                | Meaning                                                         |
-| ------------- | ---------------------------------------------------- | --------------------------------------------------------------- |
+| Shape         | Where                                                | Meaning                                                             |
+| ------------- | ---------------------------------------------------- | ------------------------------------------------------------------- |
 | `catalog:`    | `peerDependencies`, `devDependencies` — third-party  | Version pinned in root `package.json workspaces` `catalogs:` block. |
-| `workspace:^` | `peerDependencies` — internal `@stackra/*`           | Consumer tracks a caret range against the peer's current major. |
-| `workspace:*` | `devDependencies` — internal `@stackra/*`            | Consumer tracks the workspace floor. Used for build-time deps.  |
-| bare version  | `dependencies` — CLI/build-tool exception (ADR-0051) | Only when the package qualifies for the ADR-0051 exception.     |
+| `workspace:^` | `peerDependencies` — internal `@stackra/*`           | Consumer tracks a caret range against the peer's current major.     |
+| `workspace:*` | `devDependencies` — internal `@stackra/*`            | Consumer tracks the workspace floor. Used for build-time deps.      |
+| bare version  | `dependencies` — CLI/build-tool exception (ADR-0051) | Only when the package qualifies for the ADR-0051 exception.         |
 
 Every optional peer additionally carries `{ "optional": true }` in
 `peerDependenciesMeta`.
@@ -377,7 +377,7 @@ noise without value for smaller files.
 
 | Anti-pattern                                                    | Correct                                                                                    |
 | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Bare version string on a third-party dep in a workspace member  | `catalog:` — pin the version in root `package.json workspaces` `catalogs:`.                    |
+| Bare version string on a third-party dep in a workspace member  | `catalog:` — pin the version in root `package.json workspaces` `catalogs:`.                |
 | `workspace:*` on an internal peer                               | `workspace:^` — peers track major-boundary; devDeps track floor.                           |
 | `workspace:^` on an internal devDep                             | `workspace:*` — devDeps track floor.                                                       |
 | Missing `sideEffects: false` on a tier 2 package                | Add it (or the CSS-only exception array).                                                  |
@@ -422,5 +422,5 @@ grep -l '"packageManager"' frontend/packages/*/package.json frontend/apps/*/pack
 - [`subpath-layering.md`](subpath-layering.md) — subpath dependency direction
   (one-way, top-down).
 - [`commit-conventions.md`](commit-conventions.md) — dependency change hygiene.
-- [`frontend-package-audit-checklist.md`](../../.ref/steering/frontend-package-audit-checklist.md) —
-  the per-package audit the `frontend-package-auditor` sub-agent walks.
+- [`frontend-package-audit-checklist.md`](../../.ref/steering/frontend-package-audit-checklist.md)
+  — the per-package audit the `frontend-package-auditor` sub-agent walks.

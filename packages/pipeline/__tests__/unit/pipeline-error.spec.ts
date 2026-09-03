@@ -41,11 +41,7 @@ describe("PipelineError", () => {
 
   it("preserves the original error under `.cause`", () => {
     const original = new TypeError("bad arg");
-    const wrapped = new PipelineError(
-      "pipeline failed",
-      "PIPE_EXECUTION_FAILED",
-      original,
-    );
+    const wrapped = new PipelineError("pipeline failed", "PIPE_EXECUTION_FAILED", original);
 
     // The cause is available for `console.error` chain output and for
     // programmatic root-cause inspection.

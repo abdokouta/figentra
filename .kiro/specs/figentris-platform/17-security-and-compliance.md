@@ -1,8 +1,10 @@
 # 17 — Security & Compliance
 
-**Status:** Baseline (security principles), Deferred (formal compliance programs)
-**Owner:** Platform security
-**Related:** [02 Identity](02-identity-and-actors.md), [04 IAM](04-iam-and-authorization.md), [14 Data](14-data-and-persistence.md), [09 Service communication](09-service-communication.md)
+**Status:** Baseline (security principles), Deferred (formal compliance
+programs) **Owner:** Platform security **Related:**
+[02 Identity](02-identity-and-actors.md), [04 IAM](04-iam-and-authorization.md),
+[14 Data](14-data-and-persistence.md),
+[09 Service communication](09-service-communication.md)
 
 ---
 
@@ -64,8 +66,8 @@ service-to-service channel ([09 §4]).
 
 ## 5. Permission / Entitlement / Quota / Rate limit / Usage
 
-Five distinct controls; conflating them is a security + billing bug
-([05 §6], [04 §3]):
+Five distinct controls; conflating them is a security + billing bug ([05 §6],
+[04 §3]):
 
 ```text
 Permission  IAM         can the actor do the action?
@@ -82,9 +84,8 @@ Usage       Monetization how much consumed?
 - **Custom domains**: verify ownership (DNS TXT / HTTP) before activating any
   routing or certificate ([03 §6]).
 - **Billing**: every payment operation is idempotent and tolerant of provider
-  retries; webhook signatures verified; `idempotency_key` /
-  `provider_event_id` / `external_event_id` prevent duplicate processing
-  ([05 §9]).
+  retries; webhook signatures verified; `idempotency_key` / `provider_event_id`
+  / `external_event_id` prevent duplicate processing ([05 §9]).
 
 ---
 
@@ -111,7 +112,8 @@ rate-limit violations · credential compromise · tenant-isolation violations
 ```
 
 Application-level abuse controls are **P1/P2**; edge protections (Cloudflare WAF
-+ edge rate limiting) are baseline.
+
+- edge rate limiting) are baseline.
 
 ---
 
@@ -119,8 +121,8 @@ Application-level abuse controls are **P1/P2**; edge protections (Cloudflare WAF
 
 **Status: Deferred depth.** Use Cloudflare / cloud-provider secret + KMS
 facilities; do not build a bespoke KMS. Future: tenant encryption, credential
-encryption, key rotation. Baseline: secrets at rest in the secret store,
-TLS in transit (Cloudflare), no secrets in code/logs.
+encryption, key rotation. Baseline: secrets at rest in the secret store, TLS in
+transit (Cloudflare), no secrets in code/logs.
 
 ---
 
@@ -145,11 +147,11 @@ the audit + time-boxed-grant primitives exist at baseline ([04] access_grants
 
 Do not build certification machinery now, but the architecture supports:
 
-| Regime            | Architectural hooks                                                        |
-| ----------------- | -------------------------------------------------------------------------- |
-| GDPR / CCPA       | Data lifecycle, erasure, export, data residency ([14 §7-9]), audit.        |
-| SOC 2 / ISO 27001 | Audit trail, access reviews, least privilege, change control ([19]).       |
-| PCI-DSS           | Payments behind a processor adapter; no card data in Figentra ([05 §9]).  |
+| Regime            | Architectural hooks                                                      |
+| ----------------- | ------------------------------------------------------------------------ |
+| GDPR / CCPA       | Data lifecycle, erasure, export, data residency ([14 §7-9]), audit.      |
+| SOC 2 / ISO 27001 | Audit trail, access reviews, least privilege, change control ([19]).     |
+| PCI-DSS           | Payments behind a processor adapter; no card data in Figentra ([05 §9]). |
 
 Supporting capabilities (P1/P2): **access reviews** (periodic review of who has
 production/admin access → review/approve/revoke/expire), **data export/import**,
@@ -161,21 +163,21 @@ IAM/tenant model).
 
 ## 12. Non-goals / anti-patterns
 
-| Anti-pattern                                                | Correct                                                     |
-| ----------------------------------------------------------- | ----------------------------------------------------------- |
-| Trusting client-supplied tenant/user/role                   | Server-derived context only.                                |
-| UI permission hiding treated as security                    | Server-side authorization is the boundary.                  |
-| Wildcard service credentials                                | Least-privilege scopes.                                     |
-| Secrets in code / logs / registry / manifest                | Secret store; redact logs.                                  |
-| Silent impersonation                                        | Approval + time-boxed + audited.                            |
-| Storing card data in Figentra                              | Processor adapter (Stripe/Paddle); PCI scope minimized.     |
-| Unverified webhooks / non-idempotent billing                | Verify signatures; idempotency keys.                        |
-| Building a bespoke KMS                                       | Use Cloudflare/cloud KMS facilities.                        |
+| Anti-pattern                                 | Correct                                                 |
+| -------------------------------------------- | ------------------------------------------------------- |
+| Trusting client-supplied tenant/user/role    | Server-derived context only.                            |
+| UI permission hiding treated as security     | Server-side authorization is the boundary.              |
+| Wildcard service credentials                 | Least-privilege scopes.                                 |
+| Secrets in code / logs / registry / manifest | Secret store; redact logs.                              |
+| Silent impersonation                         | Approval + time-boxed + audited.                        |
+| Storing card data in Figentra                | Processor adapter (Stripe/Paddle); PCI scope minimized. |
+| Unverified webhooks / non-idempotent billing | Verify signatures; idempotency keys.                    |
+| Building a bespoke KMS                       | Use Cloudflare/cloud KMS facilities.                    |
 
 ---
 
 ## 13. Open questions
 
-- Which compliance regime is the first formal target (drives when access
-  reviews / export / SCIM promote from deferred)?
+- Which compliance regime is the first formal target (drives when access reviews
+  / export / SCIM promote from deferred)?
 - Confirm SSO/SCIM enterprise-provisioning requirements at launch vs later.

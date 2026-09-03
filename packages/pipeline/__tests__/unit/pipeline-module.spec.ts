@@ -45,40 +45,28 @@ describe("PipelineModule", () => {
 
       // …and a factory entry for the PIPELINE_FACTORY.
       const factoryEntry = providers.find(
-        (
-          p,
-        ): p is Exclude<ProviderRecord, new (...args: unknown[]) => unknown> =>
-          typeof p === "object" &&
-          "provide" in p &&
-          p.provide === PIPELINE_FACTORY,
+        (p): p is Exclude<ProviderRecord, new (...args: unknown[]) => unknown> =>
+          typeof p === "object" && "provide" in p && p.provide === PIPELINE_FACTORY,
       );
       expect(factoryEntry).toBeDefined();
       expect(typeof factoryEntry?.useFactory).toBe("function");
 
       // Both symbols are re-exported so downstream modules can inject
       // them without importing PipelineModule directly.
-      expect(dynamic.exports).toEqual(
-        expect.arrayContaining([PipelineHub, PIPELINE_FACTORY]),
-      );
+      expect(dynamic.exports).toEqual(expect.arrayContaining([PipelineHub, PIPELINE_FACTORY]));
     });
 
     it("PIPELINE_FACTORY.useFactory produces a fresh `Pipeline` on each call", () => {
       const dynamic = PipelineModule.forRoot();
       const providers = (dynamic.providers ?? []) as ProviderRecord[];
       const factoryEntry = providers.find(
-        (
-          p,
-        ): p is Exclude<ProviderRecord, new (...args: unknown[]) => unknown> =>
-          typeof p === "object" &&
-          "provide" in p &&
-          p.provide === PIPELINE_FACTORY,
+        (p): p is Exclude<ProviderRecord, new (...args: unknown[]) => unknown> =>
+          typeof p === "object" && "provide" in p && p.provide === PIPELINE_FACTORY,
       );
       // `useFactory(app?)` returns the PipelineFactory closure that
       // finally produces a Pipeline. Simulate the container passing
       // `undefined` for the optional APPLICATION dep.
-      const factory = factoryEntry!.useFactory!(undefined) as <
-        T = unknown,
-      >() => Pipeline<T>;
+      const factory = factoryEntry!.useFactory!(undefined) as <T = unknown>() => Pipeline<T>;
 
       const pipelineA = factory<number>();
       const pipelineB = factory<number>();
@@ -94,12 +82,8 @@ describe("PipelineModule", () => {
       const dynamic = PipelineModule.forRoot();
       const providers = (dynamic.providers ?? []) as ProviderRecord[];
       const factoryEntry = providers.find(
-        (
-          p,
-        ): p is Exclude<ProviderRecord, new (...args: unknown[]) => unknown> =>
-          typeof p === "object" &&
-          "provide" in p &&
-          p.provide === PIPELINE_FACTORY,
+        (p): p is Exclude<ProviderRecord, new (...args: unknown[]) => unknown> =>
+          typeof p === "object" && "provide" in p && p.provide === PIPELINE_FACTORY,
       );
 
       // The inject array carries ONE optional-injection descriptor —

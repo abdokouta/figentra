@@ -6,12 +6,14 @@ This audit reviews all current Workers against:
 
 1. Production correctness and full business/control-plane logic.
 2. Repository and Worker standardization.
-3. Security, reliability, observability, testing, deployment and operational gaps.
-4. The current Figentra architecture: Gateway, Application Registry, and Infrastructure Orchestrator.
+3. Security, reliability, observability, testing, deployment and operational
+   gaps.
+4. The current Figentra architecture: Gateway, Application Registry, and
+   Infrastructure Orchestrator.
 
-The review is based on the V23 repository artifact. It is intentionally a **review
-and task baseline**, not a claim that external Cloudflare/Supabase/NATS resources
-are already provisioned.
+The review is based on the V23 repository artifact. It is intentionally a
+**review and task baseline**, not a claim that external Cloudflare/Supabase/NATS
+resources are already provisioned.
 
 ---
 
@@ -25,11 +27,11 @@ several **P0 correctness blockers**. The most important are:
 - Vitest is configured to discover `__tests__/unit` and `__tests__/integration`,
   while the actual tests are under `src/*.test.ts`; therefore the configured
   test command can pass without running the real tests.
-- Gateway/Registry tests import `createGateway`/`createRegistry` from `index.ts`,
-  but the Worker entrypoints do not export those factories.
+- Gateway/Registry tests import `createGateway`/`createRegistry` from
+  `index.ts`, but the Worker entrypoints do not export those factories.
 - Registry references cache constants without importing them.
-- Infrastructure Orchestrator has an environment-name contract mismatch:
-  API schema uses `development/staging/production`, while the Workflow input and
+- Infrastructure Orchestrator has an environment-name contract mismatch: API
+  schema uses `development/staging/production`, while the Workflow input and
   runner use `dev/stg/prd`.
 - Wrangler environment configuration does not consistently repeat bindings and
   vars for each environment. Cloudflare documents that environment bindings/vars
@@ -41,8 +43,8 @@ several **P0 correctness blockers**. The most important are:
   reference removed Terraform deployables or old migration filenames.
 - Gateway's service OAuth credentials are required by code but are not declared
   in Wrangler configuration as a secret/runtime contract.
-- Registry's registration rate-limit binding is declared in TypeScript but is not
-  configured in Wrangler.
+- Registry's registration rate-limit binding is declared in TypeScript but is
+  not configured in Wrangler.
 - There are currently no actual Worker unit/integration suites in `__tests__`;
   only the setup files exist.
 
@@ -53,11 +55,11 @@ without redesigning the architecture.
 
 # 1. Worker-by-worker verdict
 
-| Worker | Architecture | Logic | Security | Tests | Deployment | Day-1 |
-|---|---|---|---|---|---|---|
-| Gateway | GOOD | BLOCKED | NEEDS HARDENING | BLOCKED | BLOCKED | RED |
-| Registry | GOOD | BLOCKED | NEEDS HARDENING | BLOCKED | BLOCKED | RED |
-| Infrastructure Orchestrator | GOOD | BLOCKED | HIGH-RISK | BLOCKED | BLOCKED | RED |
+| Worker                      | Architecture | Logic   | Security        | Tests   | Deployment | Day-1 |
+| --------------------------- | ------------ | ------- | --------------- | ------- | ---------- | ----- |
+| Gateway                     | GOOD         | BLOCKED | NEEDS HARDENING | BLOCKED | BLOCKED    | RED   |
+| Registry                    | GOOD         | BLOCKED | NEEDS HARDENING | BLOCKED | BLOCKED    | RED   |
+| Infrastructure Orchestrator | GOOD         | BLOCKED | HIGH-RISK       | BLOCKED | BLOCKED    | RED   |
 
 ---
 
@@ -188,8 +190,8 @@ production
 
 everywhere in the application domain.
 
-Only infrastructure adapters may translate to short provider-specific names,
-and that translation must happen at one explicit boundary.
+Only infrastructure adapters may translate to short provider-specific names, and
+that translation must happen at one explicit boundary.
 
 ---
 
@@ -210,7 +212,8 @@ This affects especially:
 - Registry Identity variables.
 - Orchestrator D1/container/workflow bindings.
 
-The Wrangler configuration needs a generated environment-complete representation.
+The Wrangler configuration needs a generated environment-complete
+representation.
 
 ---
 
@@ -323,8 +326,9 @@ upstream
 This is the right boundary.
 
 Cloudflare Service Bindings are also the correct mechanism for private
-Worker-to-Worker communication rather than exposing Registry publicly. Cloudflare
-documents Service Bindings as private, low-latency Worker-to-Worker communication.
+Worker-to-Worker communication rather than exposing Registry publicly.
+Cloudflare documents Service Bindings as private, low-latency Worker-to-Worker
+communication.
 
 ## Gaps
 
@@ -617,8 +621,8 @@ Terraform is correctly kept outside the Worker runtime.
 
 Cloudflare's current Container networking model supports an explicit
 `allowedHosts` deny-by-default allowlist, which is appropriate for the runner.
-The documentation also recommends controlling outbound traffic at the
-container boundary.
+The documentation also recommends controlling outbound traffic at the container
+boundary.
 
 ## P0 — Environment mismatch
 
@@ -745,7 +749,8 @@ Add a distributed execution lock.
 
 D1 status alone is not enough.
 
-Use a durable coordination primitive appropriate to the Terraform state boundary.
+Use a durable coordination primitive appropriate to the Terraform state
+boundary.
 
 ## P1 — Job state machine
 
@@ -851,8 +856,8 @@ Rules:
 - Tenant/scope context is signed or derived from trusted claims, never trusted
   from arbitrary HTTP headers.
 - Correlation ID is propagated.
-- Request ID is regenerated at every boundary if required by the boundary contract,
-  while the parent correlation/trace remains linked.
+- Request ID is regenerated at every boundary if required by the boundary
+  contract, while the parent correlation/trace remains linked.
 
 Cloudflare Service Bindings should remain the preferred Worker-to-Worker path
 where both services are Workers. They avoid a public network route and are
@@ -967,8 +972,8 @@ Use TSDoc for:
 - security-sensitive methods,
 - non-obvious private methods.
 
-Do **not** require meaningless comments on trivial one-line private code just
-to satisfy a checkbox. The standard should enforce useful documentation, not
+Do **not** require meaningless comments on trivial one-line private code just to
+satisfy a checkbox. The standard should enforce useful documentation, not
 comment noise.
 
 ---
@@ -998,7 +1003,8 @@ code, not documentation.
 Workers have observability enabled, which is good.
 
 Cloudflare Workers Logs are available for all newly created Workers, and
-OpenTelemetry/Logpush/Tail Workers can be used for export. citeturn0search1turn0search2
+OpenTelemetry/Logpush/Tail Workers can be used for export.
+citeturn0search1turn0search2
 
 But Day-1 requires more than `observability.enabled`.
 

@@ -104,8 +104,8 @@ a small `@figentra/openapi-components` workspace package.
    rules.
 
 2. **Add an OpenAPI generator** to the service's `package.json` dev deps (e.g.
-   `@asteasolutions/zod-to-openapi`, or the service framework's built-in
-   OpenAPI emitter).
+   `@asteasolutions/zod-to-openapi`, or the service framework's built-in OpenAPI
+   emitter).
 
 3. **Configure the generator** to emit `api/openapi.yaml` at the service repo
    root.

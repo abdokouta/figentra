@@ -4,11 +4,13 @@
 
 ## 1. Purpose
 
-Application/resource/route/event/permission registry and generated platform metadata.
+Application/resource/route/event/permission registry and generated platform
+metadata.
 
 ## 2. Boundary and ownership
 
-Own only the responsibilities defined here. Cross-boundary changes require an ADR. Never write another service database directly.
+Own only the responsibilities defined here. Cross-boundary changes require an
+ADR. Never write another service database directly.
 
 ## 3. Repository/runtime identity
 
@@ -20,7 +22,9 @@ Own only the responsibilities defined here. Cross-boundary changes require an AD
 
 ## 4. Dependencies
 
-Runtime dependencies are production code; dev dependencies are build/test tooling; peer dependencies are public host contracts only. Do not add dependencies without a documented responsibility.
+Runtime dependencies are production code; dev dependencies are build/test
+tooling; peer dependencies are public host contracts only. Do not add
+dependencies without a documented responsibility.
 
 ### Runtime
 
@@ -46,13 +50,16 @@ Runtime dependencies are production code; dev dependencies are build/test toolin
 
 ### Peer / optional peer
 
-
 ## 5. Source organization and documentation
 
-- Use explicit `controllers`, `application`, `domain`, `infrastructure`, `repositories`, `entities`, `dto`, `interfaces`, `types`, `enums`, `constants`, `errors`, `events` and `__tests__` folders only where needed.
-- Public interfaces/types/enums/constants use dedicated appropriately named files.
+- Use explicit `controllers`, `application`, `domain`, `infrastructure`,
+  `repositories`, `entities`, `dto`, `interfaces`, `types`, `enums`,
+  `constants`, `errors`, `events` and `__tests__` folders only where needed.
+- Public interfaces/types/enums/constants use dedicated appropriately named
+  files.
 - No inline exported contracts in controllers/services.
-- Add useful TSDoc/docblocks to every exported symbol, class, public method, adapter, repository method, endpoint and non-obvious configuration block.
+- Add useful TSDoc/docblocks to every exported symbol, class, public method,
+  adapter, repository method, endpoint and non-obvious configuration block.
 - Comments explain invariants and architectural reasons, not syntax.
 
 ## 6. API contract
@@ -60,8 +67,10 @@ Runtime dependencies are production code; dev dependencies are build/test toolin
 - Version routes (`/api/v1/...`).
 - Keep controllers/route handlers thin.
 - Document HTTP endpoints with OpenAPI/Swagger.
-- Use the platform error envelope, pagination, filtering, sorting and idempotency conventions.
-- Internal HTTP is authenticated S2S traffic; never trust arbitrary identity headers.
+- Use the platform error envelope, pagination, filtering, sorting and
+  idempotency conventions.
+- Internal HTTP is authenticated S2S traffic; never trust arbitrary identity
+  headers.
 
 ## 7. Worker standard
 
@@ -72,7 +81,8 @@ Runtime dependencies are production code; dev dependencies are build/test toolin
 - Request/correlation/trace middleware.
 - Secure CORS/security headers.
 - Authentication/authorization fail closed.
-- Service Bindings where appropriate; authenticated HTTPS for container services.
+- Service Bindings where appropriate; authenticated HTTPS for container
+  services.
 - Generated Wrangler bindings are part of the build contract.
 
 ## 8. Reliability/security
@@ -82,7 +92,8 @@ Runtime dependencies are production code; dev dependencies are build/test toolin
 - Bounded retry only for safe/idempotent operations.
 - Edge rate limiting.
 - Webhook signature verification.
-- Never execute arbitrary infrastructure operations from unauthenticated requests.
+- Never execute arbitrary infrastructure operations from unauthenticated
+  requests.
 
 ## 9. Testing
 
@@ -98,7 +109,8 @@ Runtime dependencies are production code; dev dependencies are build/test toolin
 - Non-secret deployment configuration belongs in `cloud.yaml`.
 - Secrets are injected at runtime.
 - Dockerfiles are production-oriented where applicable.
-- Terraform owns infrastructure; generated catalogs/manifests are derived, not manually duplicated.
+- Terraform owns infrastructure; generated catalogs/manifests are derived, not
+  manually duplicated.
 
 ## 14. Current repository inventory
 

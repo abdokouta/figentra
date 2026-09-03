@@ -2,7 +2,9 @@
 
 > **Category:** third-party · **Maturity:** beta · **Version:** 1.0.0
 
-Twilio SMS messaging integration. Configures the Twilio account SID, auth token, and default sender number for transactional SMS (OTP codes, notifications, alerts).
+Twilio SMS messaging integration. Configures the Twilio account SID, auth token,
+and default sender number for transactional SMS (OTP codes, notifications,
+alerts).
 
 ## Provides
 
@@ -16,11 +18,11 @@ Twilio SMS messaging integration. Configures the Twilio account SID, auth token,
 
 ## Environment variables
 
-| Variable | Description | Source |
-| -------- | ----------- | ------ |
+| Variable             | Description                        | Source                                |
+| -------------------- | ---------------------------------- | ------------------------------------- |
 | `TWILIO_ACCOUNT_SID` | Twilio account SID (from Doppler). | `terraform_output.twilio_account_sid` |
-| `TWILIO_AUTH_TOKEN` | Twilio auth token (from Doppler). | `terraform_output.twilio_auth_token` |
-| `TWILIO_FROM_NUMBER` | Default sender number. | `module.config.from_number` |
+| `TWILIO_AUTH_TOKEN`  | Twilio auth token (from Doppler).  | `terraform_output.twilio_auth_token`  |
+| `TWILIO_FROM_NUMBER` | Default sender number.             | `module.config.from_number`           |
 
 ## Usage in `cloud.yaml`
 
@@ -34,6 +36,8 @@ modules:
 
 ## Cross-references
 
-- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) — module manifest schema.
+- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) —
+  module manifest schema.
 - [`infrastructure/modules/README.md`](../README.md) — registry catalog.
-- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md) — authorising plan.
+- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md)
+  — authorising plan.

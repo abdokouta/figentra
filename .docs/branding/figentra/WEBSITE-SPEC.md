@@ -2,7 +2,8 @@
 
 ## Objective
 
-Move the website from a developer/operator showcase to an enterprise AI company site that clearly communicates:
+Move the website from a developer/operator showcase to an enterprise AI company
+site that clearly communicates:
 
 1. what Figentra is;
 2. what AI-agent capability it owns;
@@ -58,22 +59,22 @@ Trust
 
 ## Core pages
 
-| Route | Purpose | Primary CTA |
-|---|---|---|
-| `/` | Corporate positioning | Talk to Figentra |
-| `/products` | Portfolio | Explore products |
-| `/products/academorix` | Sports SaaS | Explore Academorix |
-| `/products/beautilon` | Health/beauty SaaS | Explore Beautilon |
-| `/ai-agents` | Agent development capability | Build an agent |
-| `/solutions` | Enterprise outcomes | Discuss your use case |
-| `/how-we-build` | Governed AI engineering | See our approach |
-| `/company` | Company story | Meet Figentra |
-| `/team` | People | Meet the team |
-| `/careers` | Hiring | View opportunities |
-| `/customers` | Proof/case studies | Read case study |
-| `/security` | Trust | Contact security |
-| `/resources` | Knowledge | Explore resources |
-| `/contact` | Conversion | Start a conversation |
+| Route                  | Purpose                      | Primary CTA           |
+| ---------------------- | ---------------------------- | --------------------- |
+| `/`                    | Corporate positioning        | Talk to Figentra      |
+| `/products`            | Portfolio                    | Explore products      |
+| `/products/academorix` | Sports SaaS                  | Explore Academorix    |
+| `/products/beautilon`  | Health/beauty SaaS           | Explore Beautilon     |
+| `/ai-agents`           | Agent development capability | Build an agent        |
+| `/solutions`           | Enterprise outcomes          | Discuss your use case |
+| `/how-we-build`        | Governed AI engineering      | See our approach      |
+| `/company`             | Company story                | Meet Figentra         |
+| `/team`                | People                       | Meet the team         |
+| `/careers`             | Hiring                       | View opportunities    |
+| `/customers`           | Proof/case studies           | Read case study       |
+| `/security`            | Trust                        | Contact security      |
+| `/resources`           | Knowledge                    | Explore resources     |
+| `/contact`             | Conversion                   | Start a conversation  |
 
 ## Homepage layout
 
@@ -82,16 +83,22 @@ Trust
 **Eyebrow:** `AI AGENTS · ENTERPRISE SOFTWARE · MENA → GLOBAL`
 
 **Headline:**
+
 > **We build AI agents that move businesses forward.**
 
 **Subhead:**
-> Figentra is an AI agents development company building intelligent software, automation and enterprise platforms for organizations ready to operate with AI.
+
+> Figentra is an AI agents development company building intelligent software,
+> automation and enterprise platforms for organizations ready to operate with
+> AI.
 
 CTAs:
+
 - `Talk to Figentra`
 - `Explore our products`
 
 Visual:
+
 - a live agent orchestration diagram, not a generic robot;
 - human approval node;
 - tools;
@@ -101,6 +108,7 @@ Visual:
 ### 2. Outcome strip
 
 Four outcomes:
+
 - Automate complex work
 - Ship intelligent products faster
 - Connect AI to real operations
@@ -109,6 +117,7 @@ Four outcomes:
 ### 3. Why Figentra
 
 Three cards:
+
 - **Agents built for production**
 - **Enterprise engineering discipline**
 - **MENA context, global ambition**
@@ -124,6 +133,7 @@ Understand → Design → Build → Evaluate → Govern → Deploy → Observe �
 ### 5. Product portfolio
 
 Two product-led cards:
+
 - Academorix — sports organizations
 - Beautilon — health, care and beauty
 
@@ -135,14 +145,18 @@ Explain the AI-native engineering model without exposing internal secrets.
 
 ### 7. Enterprise trust
 
-Security, tenant isolation, observability, governance, auditability, deployment options and support.
+Security, tenant isolation, observability, governance, auditability, deployment
+options and support.
 
 ### 8. MENA
 
 A region-aware section:
-> Built close to the markets we understand. Designed for organizations operating at scale.
 
-Do not use generic desert/city stock imagery. Prefer real regional customer/office/industry photography when available.
+> Built close to the markets we understand. Designed for organizations operating
+> at scale.
+
+Do not use generic desert/city stock imagery. Prefer real regional
+customer/office/industry photography when available.
 
 ### 9. Team
 
@@ -168,6 +182,7 @@ No one-size-fits-all landing page.
 ## Trust content
 
 Required before production launch:
+
 - security overview;
 - vulnerability reporting;
 - privacy;
@@ -219,6 +234,7 @@ Built in MENA. Designed for the world.
 ## SEO baseline
 
 Every page requires:
+
 - unique title;
 - unique meta description;
 - canonical URL;
@@ -233,10 +249,12 @@ Every page requires:
 ## Asset requirements
 
 Every major marketing page gets:
+
 - hero visual;
 - supporting illustration/diagram;
 - OG image;
 - mobile crop;
 - dark/light variant where needed.
 
-Vector-first for diagrams and marks. Photography for people and proof. Product UI screenshots must be real product captures.
+Vector-first for diagrams and marks. Photography for people and proof. Product
+UI screenshots must be real product captures.

@@ -1,227 +1,256 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Figentra — business card mockup</title>
-<!--
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Figentra — business card mockup</title>
+    <!--
   Mockup — business-card.html
   Front + back at 3.5" × 2" (350 × 200 CSS px = 1050 × 600 @ 300dpi print).
   Front: ink field, F-Cursor mark, name + title, wordmark bottom-right.
   Back: ink field, cursor-field pattern, big wordmark, Signal underline.
   See docs/brand/13-patterns-and-assets.md §Business card.
 -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --ink: #141414;
-    --paper: #fafafa;
-    --signal: #00E5A0;
-  }
-  * { box-sizing: border-box; }
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: #e5e5e5;
-    font-family: "Geist", "Inter", system-ui, sans-serif;
-    color: var(--ink);
-    min-height: 100vh;
-  }
-  .page {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 48px 32px 96px;
-  }
-  h1 {
-    font-size: 24px;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    margin: 0 0 8px;
-  }
-  .subhead {
-    color: rgba(26, 26, 30, 0.6);
-    font-size: 14px;
-    margin: 0 0 40px;
-  }
-  .cards {
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    align-items: center;
-  }
-  .card {
-    width: 500px;
-    height: 286px;
-    border-radius: 8px;
-    background: var(--ink);
-    color: var(--paper);
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.14),
-                0 2px 4px rgba(0, 0, 0, 0.06);
-  }
-  .card.front {
-    padding: 32px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  .card.back {
-    padding: 32px;
-    background: var(--ink);
-    background-image:
-      linear-gradient(180deg, rgba(0, 229, 160, 0.04), rgba(0, 229, 160, 0)),
-      url("../patterns/p-cursor-field.svg");
-    background-size: auto, 60px 60px;
-  }
-  .front-mark {
-    width: 56px;
-    height: 56px;
-  }
-  .front-name {
-    font-size: 20px;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    margin: 0 0 2px;
-  }
-  .front-title {
-    font-size: 13px;
-    font-weight: 400;
-    letter-spacing: 0.02em;
-    color: rgba(250, 250, 250, 0.6);
-    margin: 0;
-    font-family: "Geist Mono", ui-monospace, monospace;
-  }
-  .front-contact {
-    font-family: "Geist Mono", ui-monospace, monospace;
-    font-size: 11px;
-    color: rgba(250, 250, 250, 0.65);
-    letter-spacing: 0.04em;
-    line-height: 1.8;
-    margin: 0;
-  }
-  .front-contact span { color: var(--signal); }
-  .front-wordmark {
-    position: absolute;
-    right: 32px;
-    bottom: 30px;
-    font-size: 22px;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-  }
-  .front-wordmark::after {
-    content: "";
-    display: inline-block;
-    width: 8px;
-    height: 3px;
-    margin-left: 4px;
-    background: var(--signal);
-    vertical-align: 3px;
-    animation: blink 1s steps(1) infinite;
-  }
-  .back-inner {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  .back-wordmark {
-    font-size: 64px;
-    font-weight: 500;
-    letter-spacing: -0.04em;
-    line-height: 1;
-    margin: 0;
-  }
-  .back-wordmark::after {
-    content: "";
-    display: inline-block;
-    width: 22px;
-    height: 8px;
-    margin-left: 8px;
-    background: var(--signal);
-    vertical-align: 8px;
-    animation: blink 1s steps(1) infinite;
-  }
-  .back-tagline {
-    font-family: "Geist Mono", ui-monospace, monospace;
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    color: rgba(250, 250, 250, 0.55);
-    margin: 0;
-  }
-  .back-tagline strong { color: var(--signal); font-weight: 400; }
-  .back-underline {
-    width: 96px;
-    height: 4px;
-    background: var(--signal);
-    margin-top: 12px;
-  }
-  .caption {
-    text-align: center;
-    font-family: "Geist Mono", ui-monospace, monospace;
-    font-size: 11px;
-    color: rgba(26, 26, 30, 0.5);
-    letter-spacing: 0.08em;
-    margin-top: 8px;
-  }
-  @keyframes blink {
-    0%, 49% { opacity: 1; }
-    50%, 100% { opacity: 0; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .front-wordmark::after, .back-wordmark::after { animation: none; }
-  }
-</style>
-</head>
-<body>
-<main class="page">
-  <h1>Business card — mockup</h1>
-  <p class="subhead">3.5&#8243; × 2&#8243; · print at 300dpi with 0.125&#8243; bleed. Ink stock recommended; matte laminate for depth.</p>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #141414;
+        --paper: #fafafa;
+        --signal: #00e5a0;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #e5e5e5;
+        font-family: "Geist", "Inter", system-ui, sans-serif;
+        color: var(--ink);
+        min-height: 100vh;
+      }
+      .page {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 48px 32px 96px;
+      }
+      h1 {
+        font-size: 24px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        margin: 0 0 8px;
+      }
+      .subhead {
+        color: rgba(26, 26, 30, 0.6);
+        font-size: 14px;
+        margin: 0 0 40px;
+      }
+      .cards {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        align-items: center;
+      }
+      .card {
+        width: 500px;
+        height: 286px;
+        border-radius: 8px;
+        background: var(--ink);
+        color: var(--paper);
+        position: relative;
+        overflow: hidden;
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.14),
+          0 2px 4px rgba(0, 0, 0, 0.06);
+      }
+      .card.front {
+        padding: 32px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .card.back {
+        padding: 32px;
+        background: var(--ink);
+        background-image:
+          linear-gradient(180deg, rgba(0, 229, 160, 0.04), rgba(0, 229, 160, 0)),
+          url("../patterns/p-cursor-field.svg");
+        background-size:
+          auto,
+          60px 60px;
+      }
+      .front-mark {
+        width: 56px;
+        height: 56px;
+      }
+      .front-name {
+        font-size: 20px;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        margin: 0 0 2px;
+      }
+      .front-title {
+        font-size: 13px;
+        font-weight: 400;
+        letter-spacing: 0.02em;
+        color: rgba(250, 250, 250, 0.6);
+        margin: 0;
+        font-family: "Geist Mono", ui-monospace, monospace;
+      }
+      .front-contact {
+        font-family: "Geist Mono", ui-monospace, monospace;
+        font-size: 11px;
+        color: rgba(250, 250, 250, 0.65);
+        letter-spacing: 0.04em;
+        line-height: 1.8;
+        margin: 0;
+      }
+      .front-contact span {
+        color: var(--signal);
+      }
+      .front-wordmark {
+        position: absolute;
+        right: 32px;
+        bottom: 30px;
+        font-size: 22px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+      }
+      .front-wordmark::after {
+        content: "";
+        display: inline-block;
+        width: 8px;
+        height: 3px;
+        margin-left: 4px;
+        background: var(--signal);
+        vertical-align: 3px;
+        animation: blink 1s steps(1) infinite;
+      }
+      .back-inner {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .back-wordmark {
+        font-size: 64px;
+        font-weight: 500;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        margin: 0;
+      }
+      .back-wordmark::after {
+        content: "";
+        display: inline-block;
+        width: 22px;
+        height: 8px;
+        margin-left: 8px;
+        background: var(--signal);
+        vertical-align: 8px;
+        animation: blink 1s steps(1) infinite;
+      }
+      .back-tagline {
+        font-family: "Geist Mono", ui-monospace, monospace;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        color: rgba(250, 250, 250, 0.55);
+        margin: 0;
+      }
+      .back-tagline strong {
+        color: var(--signal);
+        font-weight: 400;
+      }
+      .back-underline {
+        width: 96px;
+        height: 4px;
+        background: var(--signal);
+        margin-top: 12px;
+      }
+      .caption {
+        text-align: center;
+        font-family: "Geist Mono", ui-monospace, monospace;
+        font-size: 11px;
+        color: rgba(26, 26, 30, 0.5);
+        letter-spacing: 0.08em;
+        margin-top: 8px;
+      }
+      @keyframes blink {
+        0%,
+        49% {
+          opacity: 1;
+        }
+        50%,
+        100% {
+          opacity: 0;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .front-wordmark::after,
+        .back-wordmark::after {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <h1>Business card — mockup</h1>
+      <p class="subhead">
+        3.5&#8243; × 2&#8243; · print at 300dpi with 0.125&#8243; bleed. Ink stock recommended;
+        matte laminate for depth.
+      </p>
 
-  <div class="cards">
-    <!-- FRONT -->
-    <div>
-      <div class="card front">
+      <div class="cards">
+        <!-- FRONT -->
         <div>
-          <svg class="front-mark" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-            <g fill="#fafafa">
-              <rect x="30" y="24" width="10" height="72"/>
-              <rect x="30" y="24" width="52" height="10"/>
-              <rect x="30" y="56" width="34" height="10"/>
-            </g>
-            <rect x="88" y="26" width="14" height="6" fill="#00E5A0"/>
-          </svg>
-        </div>
-        <div>
-          <p class="front-name">Aïcha Kouta</p>
-          <p class="front-title">FOUNDER · FIGENTRA</p>
-        </div>
-        <p class="front-contact" style="position:absolute; right:32px; top:32px; text-align:right;">
-          <span>&gt;</span> aicha@figentra.com<br>
-          <span>&gt;</span> figentra.com<br>
-          <span>&gt;</span> @figentra
-        </p>
-        <div class="front-wordmark">figentra</div>
-      </div>
-      <p class="caption">FRONT</p>
-    </div>
-
-    <!-- BACK -->
-    <div>
-      <div class="card back">
-        <div class="back-inner">
-          <p class="back-tagline"><strong>&gt;_</strong> AI-AGENT-FIRST INFRASTRUCTURE</p>
-          <div>
-            <div class="back-wordmark">figentra</div>
-            <div class="back-underline"></div>
+          <div class="card front">
+            <div>
+              <svg class="front-mark" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                <g fill="#fafafa">
+                  <rect x="30" y="24" width="10" height="72" />
+                  <rect x="30" y="24" width="52" height="10" />
+                  <rect x="30" y="56" width="34" height="10" />
+                </g>
+                <rect x="88" y="26" width="14" height="6" fill="#00E5A0" />
+              </svg>
+            </div>
+            <div>
+              <p class="front-name">Aïcha Kouta</p>
+              <p class="front-title">FOUNDER · FIGENTRA</p>
+            </div>
+            <p
+              class="front-contact"
+              style="position: absolute; right: 32px; top: 32px; text-align: right"
+            >
+              <span>&gt;</span> aicha@figentra.com<br />
+              <span>&gt;</span> figentra.com<br />
+              <span>&gt;</span> @figentra
+            </p>
+            <div class="front-wordmark">figentra</div>
           </div>
+          <p class="caption">FRONT</p>
+        </div>
+
+        <!-- BACK -->
+        <div>
+          <div class="card back">
+            <div class="back-inner">
+              <p class="back-tagline"><strong>&gt;_</strong> AI-AGENT-FIRST INFRASTRUCTURE</p>
+              <div>
+                <div class="back-wordmark">figentra</div>
+                <div class="back-underline"></div>
+              </div>
+            </div>
+          </div>
+          <p class="caption">BACK</p>
         </div>
       </div>
-      <p class="caption">BACK</p>
-    </div>
-  </div>
-</main>
-</body>
+    </main>
+  </body>
 </html>

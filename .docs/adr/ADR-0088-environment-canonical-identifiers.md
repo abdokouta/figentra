@@ -1,9 +1,8 @@
 # ADR-0088 — Environment Canonical Identifiers
 
-**Status:** Accepted
-**Date:** 2026-09-03
-**Deciders:** Platform Infrastructure Standards
-**Supersedes:** `infrastructure/ENVIRONMENT-STANDARD.md` (deleted, folded here)
+**Status:** Accepted **Date:** 2026-09-03 **Deciders:** Platform Infrastructure
+Standards **Supersedes:** `infrastructure/ENVIRONMENT-STANDARD.md` (deleted,
+folded here)
 
 ---
 
@@ -30,11 +29,11 @@ that targets a state file no operator has seen.
 
 The repository uses **exactly three canonical environment identifiers**:
 
-| Canonical     | Purpose                                          |
-| ------------- | ------------------------------------------------ |
-| `development` | Shared local + integration + dev-cloud tier.     |
+| Canonical     | Purpose                                           |
+| ------------- | ------------------------------------------------- |
+| `development` | Shared local + integration + dev-cloud tier.      |
 | `staging`     | Pre-production tier for release candidate builds. |
-| `production`  | Live tier receiving customer traffic.            |
+| `production`  | Live tier receiving customer traffic.             |
 
 These are the **only** identifiers accepted by:
 
@@ -62,8 +61,8 @@ explicit mapping at the boundary — never through implicit convention.
 
 **Rules:**
 
-- External aliases are **not** repository environment names. They appear only
-  in external-tool configuration files (`.doppler.yaml`, `wrangler.jsonc`).
+- External aliases are **not** repository environment names. They appear only in
+  external-tool configuration files (`.doppler.yaml`, `wrangler.jsonc`).
 - Every mapping is codified in a versioned manifest under
   `infrastructure/environments/*.yaml` — the single source of truth for the
   environment contract.
@@ -72,10 +71,10 @@ explicit mapping at the boundary — never through implicit convention.
 
 ### 2.2 Source of truth
 
-`infrastructure/environments/*.yaml` is the single environment source of
-truth. Every infrastructure generator (Terraform, Docker Compose, Wrangler
-render) consumes or validates against it. No subsystem may maintain a
-duplicate environment tree.
+`infrastructure/environments/*.yaml` is the single environment source of truth.
+Every infrastructure generator (Terraform, Docker Compose, Wrangler render)
+consumes or validates against it. No subsystem may maintain a duplicate
+environment tree.
 
 ### 2.3 Runtime gates
 
@@ -89,8 +88,8 @@ Before deployment, CI must pass:
 
 `terraform apply` against `production` **additionally** requires the explicit
 `CONFIRM=yes-apply-production` operator gate; `terraform destroy` against
-`production` requires `CONFIRM=yes-destroy-production`. Both gates are
-enforced in `infrastructure/terraform/terraform.mk`.
+`production` requires `CONFIRM=yes-destroy-production`. Both gates are enforced
+in `infrastructure/terraform/terraform.mk`.
 
 ## 3. Alternatives considered
 
@@ -107,14 +106,14 @@ output when environment names co-occur with unrelated identifiers.
 ### 3.2 Per-service environment vocabularies
 
 Each service maintains its own environment name set. The identity service uses
-`local` / `staging` / `live`; the notifications service uses
-`dev` / `qa` / `prod`. Each subsystem declares its own mapping to whatever
-substrate it deploys against.
+`local` / `staging` / `live`; the notifications service uses `dev` / `qa` /
+`prod`. Each subsystem declares its own mapping to whatever substrate it deploys
+against.
 
 **Rejected because:** cross-service integration tests + shared observability
 require every service to agree on which tier is which. Per-service vocabulary
-makes the audit + drift-detection story combinatorial (N services × 3 tiers ×
-M alias-to-canonical mappings) rather than linear (3 canonical × M external
+makes the audit + drift-detection story combinatorial (N services × 3 tiers × M
+alias-to-canonical mappings) rather than linear (3 canonical × M external
 aliases).
 
 ### 3.3 Environment IDs derived from git branch names
@@ -124,9 +123,9 @@ Terraform workspace = current git branch. `main` → `production`, `staging` →
 
 **Rejected because:** production apply requires an out-of-band operator gate
 that ISN'T triggered by branch checkout. The gate is a positive action, not a
-side effect of `git checkout main`. Deriving environments from branch names
-also produces N production candidates per PR (one per branch that touches
-`main`), creating drift the operator can't audit.
+side effect of `git checkout main`. Deriving environments from branch names also
+produces N production candidates per PR (one per branch that touches `main`),
+creating drift the operator can't audit.
 
 ## 4. Consequences
 
@@ -141,29 +140,28 @@ also produces N production candidates per PR (one per branch that touches
 
 **Negative:**
 
-- Reviewers reject PRs that introduce a fourth environment name (e.g.
-  `preview`, `qa`, `sandbox`). Adding a genuine new tier requires a new ADR.
+- Reviewers reject PRs that introduce a fourth environment name (e.g. `preview`,
+  `qa`, `sandbox`). Adding a genuine new tier requires a new ADR.
 - Doppler's `dev` / `stg` / `prd` config-name shape leaks into `.doppler.yaml`
   files — operators must remember the two-form vocabulary at the Doppler
   boundary.
 
 **Enforcement:**
 
-- Every `.mk` file with an environment guard fails hard when `ENV` is not one
-  of the three canonical names.
-- CI's `ci:contract` script asserts every subsystem's environment enum
-  matches the canonical three.
+- Every `.mk` file with an environment guard fails hard when `ENV` is not one of
+  the three canonical names.
+- CI's `ci:contract` script asserts every subsystem's environment enum matches
+  the canonical three.
 - Reviewers reject any string literal `dev` / `stg` / `prd` inside repository
   code where a canonical name is required (external-tool config exempt).
 
 ## 5. References
 
-- `infrastructure/README.md` — infrastructure layout + deployment source
-  model.
+- `infrastructure/README.md` — infrastructure layout + deployment source model.
 - `infrastructure/terraform/terraform.mk` — Terraform environment guard.
 - `infrastructure/docker/docker.mk` — Docker environment guard.
-- `infrastructure/environments/*.yaml` — canonical environment manifests
-  (single source of truth).
+- `infrastructure/environments/*.yaml` — canonical environment manifests (single
+  source of truth).
 - `.kiro/steering/doppler.md` — Doppler config naming (`dev` / `stg` / `prd`
   external aliases).
 - ADR-0083 — explicit cloud deployment sources (upstream constraint).

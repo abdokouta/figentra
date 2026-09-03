@@ -30,23 +30,34 @@ Every package has, at minimum:
 Codified standards for all tier-1 platform packages under `packages/*`:
 
 1. **Package naming convention**:
-   - Platform capability packages are named `@figentra/<capability>` (e.g., `@figentra/health`, `@figentra/swagger`, `@figentra/observability`, `@figentra/messaging`, `@figentra/security`, `@figentra/queue`).
-   - Do NOT use runtime or framework prefixes like `@figentra/nestjs-*` or `@figentra/worker-*` for top-level capability packages. Capability packages export multi-runtime subpaths if needed (e.g., `@figentra/health/nest`, `@figentra/health/worker`) or provide top-level adapters.
+   - Platform capability packages are named `@figentra/<capability>` (e.g.,
+     `@figentra/health`, `@figentra/swagger`, `@figentra/observability`,
+     `@figentra/messaging`, `@figentra/security`, `@figentra/queue`).
+   - Do NOT use runtime or framework prefixes like `@figentra/nestjs-*` or
+     `@figentra/worker-*` for top-level capability packages. Capability packages
+     export multi-runtime subpaths if needed (e.g., `@figentra/health/nest`,
+     `@figentra/health/worker`) or provide top-level adapters.
 
 2. **Build toolchain**:
-   - All packages use **`tsup`** as their standard build tool. `tsup` manages bundling, TypeScript type declaration generation (`.d.ts`), and SWC/esbuild compilation in a unified pass.
+   - All packages use **`tsup`** as their standard build tool. `tsup` manages
+     bundling, TypeScript type declaration generation (`.d.ts`), and SWC/esbuild
+     compilation in a unified pass.
    - `package.json` scripts MUST declare `"build": "tsup"`.
 
 3. **Decorator & metadata flags**:
-   - Any package exporting or consuming NestJS/DI components MUST ensure `tsconfig.json` has:
+   - Any package exporting or consuming NestJS/DI components MUST ensure
+     `tsconfig.json` has:
      ```json
      "experimentalDecorators": true,
      "emitDecoratorMetadata": true
      ```
 
 4. **Pre-compilation boundary (Dist vs JIT)**:
-   - Workspace packages MUST compile to `dist/` before execution by microservices (`services/*`) or workers (`workers/*`).
-   - Cross-package JIT compilation across workspace boundaries is strictly forbidden to guarantee clean dependency boundaries and prevent decorator metadata mangling.
+   - Workspace packages MUST compile to `dist/` before execution by
+     microservices (`services/*`) or workers (`workers/*`).
+   - Cross-package JIT compilation across workspace boundaries is strictly
+     forbidden to guarantee clean dependency boundaries and prevent decorator
+     metadata mangling.
 
 ## Frontend tooling standards
 
@@ -181,12 +192,12 @@ The workspace uses **npm overrides** for pinned third-party versions +
 `workspace:` protocol for internal deps. Every dep in a `@stackra/*` package
 MUST use one of the four shapes below, picked by role.
 
-| Shape         | Where                                               | Meaning                                                                                            |
-| ------------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Shape         | Where                                               | Meaning                                                                                                |
+| ------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | `catalog:`    | `peerDependencies`, `devDependencies` — third-party | Version pinned in the root `package.json workspaces` `catalog:` block. Bumps once, ripples everywhere. |
-| `workspace:^` | `peerDependencies` — internal `@stackra/*`          | Consumer tracks a caret range against the peer's current major.                                    |
-| `workspace:*` | `devDependencies` — internal `@stackra/*`           | Consumer tracks the workspace floor. Used for build-time deps (`@stackra/tsup-config`, ...).       |
-| bare version  | (avoid)                                             | Hand-pinned. Only when the dep isn't in the catalog AND isn't internal — rare.                     |
+| `workspace:^` | `peerDependencies` — internal `@stackra/*`          | Consumer tracks a caret range against the peer's current major.                                        |
+| `workspace:*` | `devDependencies` — internal `@stackra/*`           | Consumer tracks the workspace floor. Used for build-time deps (`@stackra/tsup-config`, ...).           |
+| bare version  | (avoid)                                             | Hand-pinned. Only when the dep isn't in the catalog AND isn't internal — rare.                         |
 
 ### `peerDependencies` + `peerDependenciesMeta` — the required / optional split
 
@@ -356,10 +367,10 @@ publishable. Flow:
 
 **Mega-repo prerequisites** (codified by Bucket K, 2026-08-07):
 
-- `package.json workspaces` at repo root with `packages: - "src/*"`, a `catalog:`
-  block (third-party versions from mobile's lockfile — workspace-wide source of
-  truth), `allowBuilds:` for postinstall scripts, `overrides:` for peer-dep
-  pinning, `minimumReleaseAgeExclude: - "@stackra/*"`.
+- `package.json workspaces` at repo root with `packages: - "src/*"`, a
+  `catalog:` block (third-party versions from mobile's lockfile — workspace-wide
+  source of truth), `allowBuilds:` for postinstall scripts, `overrides:` for
+  peer-dep pinning, `minimumReleaseAgeExclude: - "@stackra/*"`.
 - Root `package.json` self-refs to workspace subpackages use `workspace:*`;
   cross-repo `@stackra/*` peers use pinned `^1.0.X` versions from the group
   registry.

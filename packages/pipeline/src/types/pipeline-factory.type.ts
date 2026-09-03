@@ -13,6 +13,4 @@
  *
  * @typeParam T - The passable type for the created pipeline
  */
-export type PipelineFactory = <
-  T = unknown,
->() => import("../services").Pipeline<T>;
+export type PipelineFactory = <T = unknown>() => import("../services").Pipeline<T>;

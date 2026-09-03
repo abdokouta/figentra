@@ -7,5 +7,5 @@ Figentra has two communication modes: authenticated synchronous request/response
 durable events over NATS JetStream.
 
 Commands/queries require a response. Events are immutable facts and do not
-require a response. No direct cross-service database access is permitted.
-NestJS microservices is an adapter, not the domain protocol.
+require a response. No direct cross-service database access is permitted. NestJS
+microservices is an adapter, not the domain protocol.

@@ -1,5 +1,5 @@
-import type { Config } from 'jest';
-import base from '@nesvel/jest-config/nest-lib';
+import type { Config } from "jest";
+import base from "@nesvel/jest-config/nest-lib";
 
 /**
  * Jest configuration object
@@ -22,12 +22,12 @@ const config: Config = {
    * - Config files (configuration only)
    */
   collectCoverageFrom: [
-    'src/**/*.ts',
-    '!src/**/*.interface.ts',
-    '!src/**/*.type.ts',
-    '!src/**/index.ts',
-    '!src/**/*.constant.ts',
-    '!src/**/*.config.ts',
+    "src/**/*.ts",
+    "!src/**/*.interface.ts",
+    "!src/**/*.type.ts",
+    "!src/**/index.ts",
+    "!src/**/*.constant.ts",
+    "!src/**/*.config.ts",
   ],
 
   /**
@@ -36,15 +36,15 @@ const config: Config = {
    */
   moduleNameMapper: {
     // Interfaces folder
-    '^@/interfaces/(.*)$': '<rootDir>/src/interfaces/$1',
-    '^@/interfaces$': '<rootDir>/src/interfaces',
+    "^@/interfaces/(.*)$": "<rootDir>/src/interfaces/$1",
+    "^@/interfaces$": "<rootDir>/src/interfaces",
 
     // Types folder
-    '^@/types/(.*)$': '<rootDir>/src/types/$1',
-    '^@/types$': '<rootDir>/src/types',
+    "^@/types/(.*)$": "<rootDir>/src/types/$1",
+    "^@/types$": "<rootDir>/src/types",
 
     // Root alias for any src file
-    '^@/(.*)$': '<rootDir>/src/$1',
+    "^@/(.*)$": "<rootDir>/src/$1",
   },
 };
 

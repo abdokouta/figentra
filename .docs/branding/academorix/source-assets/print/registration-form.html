@@ -66,8 +66,14 @@
         gap: 8mm;
       }
       @media print {
-        body { padding: 0; background: white; gap: 0; }
-        .print-nav { display: none; }
+        body {
+          padding: 0;
+          background: white;
+          gap: 0;
+        }
+        .print-nav {
+          display: none;
+        }
         .sheet {
           box-shadow: none;
           width: auto;
@@ -75,7 +81,9 @@
           padding: 0;
           page-break-after: always;
         }
-        .sheet:last-of-type { page-break-after: auto; }
+        .sheet:last-of-type {
+          page-break-after: auto;
+        }
       }
 
       /* ── page header · brand + form-title ─────────── */
@@ -87,9 +95,20 @@
         border-bottom: 2px solid var(--ink);
         padding-bottom: 10px;
       }
-      .rh-brand { display: flex; align-items: center; gap: 10px; }
-      .rh-brand svg { width: 26px; height: 26px; }
-      .rh-brand strong { font-size: 16px; letter-spacing: -0.02em; font-weight: 500; }
+      .rh-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .rh-brand svg {
+        width: 26px;
+        height: 26px;
+      }
+      .rh-brand strong {
+        font-size: 16px;
+        letter-spacing: -0.02em;
+        font-weight: 500;
+      }
       .rh-brand .subline {
         font-family: var(--font-mono);
         font-size: 10px;
@@ -97,7 +116,9 @@
         letter-spacing: 0.14em;
         text-transform: uppercase;
       }
-      .rh-meta { text-align: right; }
+      .rh-meta {
+        text-align: right;
+      }
       .rh-meta .kicker {
         font-family: var(--font-mono);
         font-size: 10px;
@@ -105,7 +126,12 @@
         letter-spacing: 0.16em;
         text-transform: uppercase;
       }
-      .rh-meta h1 { font-size: 20px; font-weight: 500; letter-spacing: -0.02em; margin: 0; }
+      .rh-meta h1 {
+        font-size: 20px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        margin: 0;
+      }
       .rh-meta .stamp {
         font-family: var(--font-mono);
         font-size: 10px;
@@ -143,9 +169,15 @@
         grid-template-columns: repeat(4, 1fr);
         gap: 6mm 5mm;
       }
-      .grid .col-2 { grid-column: span 2; }
-      .grid .col-3 { grid-column: span 3; }
-      .grid .col-4 { grid-column: span 4; }
+      .grid .col-2 {
+        grid-column: span 2;
+      }
+      .grid .col-3 {
+        grid-column: span 3;
+      }
+      .grid .col-4 {
+        grid-column: span 4;
+      }
 
       .field {
         display: flex;
@@ -159,7 +191,10 @@
         letter-spacing: 0.14em;
         text-transform: uppercase;
       }
-      .field label .req { color: var(--signal); margin-left: 4px; }
+      .field label .req {
+        color: var(--signal);
+        margin-left: 4px;
+      }
       .field .fill {
         border: 0;
         border-bottom: 1px solid var(--ink);
@@ -197,8 +232,15 @@
         border-radius: 2px;
         margin-top: 3px;
       }
-      .check .body { color: var(--ink); }
-      .check .body strong { display: block; font-weight: 500; font-size: 12px; margin-bottom: 2px; }
+      .check .body {
+        color: var(--ink);
+      }
+      .check .body strong {
+        display: block;
+        font-weight: 500;
+        font-size: 12px;
+        margin-bottom: 2px;
+      }
       .check .body span {
         display: block;
         color: var(--text-muted);
@@ -281,10 +323,26 @@
       <header class="rh">
         <div class="rh-brand">
           <svg viewBox="0 0 120 120" aria-hidden="true">
-            <line x1="60" y1="24" x2="30" y2="96" stroke="currentColor" stroke-width="10" stroke-linecap="square"/>
-            <line x1="60" y1="24" x2="90" y2="96" stroke="currentColor" stroke-width="10" stroke-linecap="square"/>
-            <rect x="40" y="60" width="40" height="10" fill="currentColor"/>
-            <rect x="56" y="14" width="8" height="6" fill="#FF6B35"/>
+            <line
+              x1="60"
+              y1="24"
+              x2="30"
+              y2="96"
+              stroke="currentColor"
+              stroke-width="10"
+              stroke-linecap="square"
+            />
+            <line
+              x1="60"
+              y1="24"
+              x2="90"
+              y2="96"
+              stroke="currentColor"
+              stroke-width="10"
+              stroke-linecap="square"
+            />
+            <rect x="40" y="60" width="40" height="10" fill="currentColor" />
+            <rect x="56" y="14" width="8" height="6" fill="#FF6B35" />
           </svg>
           <div>
             <strong>Academorix</strong>
@@ -408,7 +466,10 @@
       </div>
 
       <div class="footer-note">
-        <span>Every field marked <span style="color: var(--signal);">*</span> is required to open the file.</span>
+        <span
+          >Every field marked <span style="color: var(--signal)">*</span> is required to open the
+          file.</span
+        >
         <span class="provenance">Sahara Padel Academy · Application APP-2026-000512</span>
         <span>Page 1 / 2</span>
       </div>
@@ -419,10 +480,26 @@
       <header class="rh">
         <div class="rh-brand">
           <svg viewBox="0 0 120 120" aria-hidden="true">
-            <line x1="60" y1="24" x2="30" y2="96" stroke="currentColor" stroke-width="10" stroke-linecap="square"/>
-            <line x1="60" y1="24" x2="90" y2="96" stroke="currentColor" stroke-width="10" stroke-linecap="square"/>
-            <rect x="40" y="60" width="40" height="10" fill="currentColor"/>
-            <rect x="56" y="14" width="8" height="6" fill="#FF6B35"/>
+            <line
+              x1="60"
+              y1="24"
+              x2="30"
+              y2="96"
+              stroke="currentColor"
+              stroke-width="10"
+              stroke-linecap="square"
+            />
+            <line
+              x1="60"
+              y1="24"
+              x2="90"
+              y2="96"
+              stroke="currentColor"
+              stroke-width="10"
+              stroke-linecap="square"
+            />
+            <rect x="40" y="60" width="40" height="10" fill="currentColor" />
+            <rect x="56" y="14" width="8" height="6" fill="#FF6B35" />
           </svg>
           <div>
             <strong>Academorix</strong>
@@ -445,13 +522,13 @@
             <label>Blood group</label>
             <input class="fill" name="med_blood" />
           </div>
-          <div class="field" style="margin-top: 6mm;">
+          <div class="field" style="margin-top: 6mm">
             <label>Allergies · list all</label>
             <div class="lines"></div>
             <div class="lines"></div>
             <div class="lines"></div>
           </div>
-          <div class="field" style="margin-top: 6mm;">
+          <div class="field" style="margin-top: 6mm">
             <label>Chronic conditions</label>
             <div class="lines"></div>
             <div class="lines"></div>
@@ -463,12 +540,12 @@
             <div class="lines"></div>
             <div class="lines"></div>
           </div>
-          <div class="field" style="margin-top: 6mm;">
+          <div class="field" style="margin-top: 6mm">
             <label>Doctor of record · name + phone</label>
             <div class="lines"></div>
             <div class="lines"></div>
           </div>
-          <div class="field" style="margin-top: 6mm;">
+          <div class="field" style="margin-top: 6mm">
             <label>Health insurer · policy no.</label>
             <div class="lines"></div>
             <div class="lines"></div>
@@ -483,9 +560,8 @@
           <span class="box"></span>
           <span class="body">
             <strong>Safeguarding + code of conduct</strong>
-            I&#39;ve read the academy&#39;s safeguarding policy and code
-            of conduct. I understand it and I agree the athlete will
-            follow it during every session, match, and tournament.
+            I&#39;ve read the academy&#39;s safeguarding policy and code of conduct. I understand it
+            and I agree the athlete will follow it during every session, match, and tournament.
             <span>Sahara Padel Academy · Safeguarding v3.2 · Sep 2026</span>
           </span>
         </label>
@@ -493,19 +569,17 @@
           <span class="box"></span>
           <span class="body">
             <strong>Medical release</strong>
-            I authorise the head coach or academy medical officer to
-            administer basic first aid and to seek emergency medical
-            care if I&#39;m unreachable at the time.
+            I authorise the head coach or academy medical officer to administer basic first aid and
+            to seek emergency medical care if I&#39;m unreachable at the time.
           </span>
         </label>
         <label class="check">
           <span class="box"></span>
           <span class="body">
             <strong>Photo + video consent</strong>
-            I agree that photos + video of the athlete may be used
-            internally for coaching review and externally on academy
-            social channels. I understand I can revoke this consent
-            at any time via <em>academorix.com/consent</em>.
+            I agree that photos + video of the athlete may be used internally for coaching review
+            and externally on academy social channels. I understand I can revoke this consent at any
+            time via <em>academorix.com/consent</em>.
             <span>GDPR Art. 8 · minor consent · CAN-SPAM</span>
           </span>
         </label>
@@ -513,10 +587,9 @@
           <span class="box"></span>
           <span class="body">
             <strong>Data + parent digest</strong>
-            I agree the academy stores the data on this form in
-            Academorix (a service of Figentra L.L.C, operated on the
-            Stackra framework). I agree to receive a weekly session
-            digest by SMS + email. I can unsubscribe on any message.
+            I agree the academy stores the data on this form in Academorix (a service of Figentra
+            L.L.C, operated on the Stackra framework). I agree to receive a weekly session digest by
+            SMS + email. I can unsubscribe on any message.
             <span>Sub-processor list · academorix.com/trust/subprocessors</span>
           </span>
         </label>
@@ -537,7 +610,10 @@
       </section>
 
       <div class="footer-note">
-        <span>File complete once every consent box is initialled + both signatures are on the page.</span>
+        <span
+          >File complete once every consent box is initialled + both signatures are on the
+          page.</span
+        >
         <span class="provenance">Verify · academorix.com/registrations/APP-2026-000512</span>
         <span>Page 2 / 2</span>
       </div>

@@ -27,13 +27,7 @@ export { PIPELINE_FACTORY } from "./constants";
 // ════════════════════════════════════════════════════════════════════════════════
 // Interfaces & Types
 // ════════════════════════════════════════════════════════════════════════════════
-export type {
-  PipeClosure,
-  PipeTuple,
-  PipeEntry,
-  PipeType,
-  PipelineDefinition,
-} from "./interfaces";
+export type { PipeClosure, PipeTuple, PipeEntry, PipeType, PipelineDefinition } from "./interfaces";
 export type { PipelineFactory } from "./types";
 
 // ════════════════════════════════════════════════════════════════════════════════

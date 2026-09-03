@@ -1,8 +1,9 @@
 # 01 — Platform Architecture
 
-**Status:** Baseline
-**Owner:** Platform architecture
-**Related:** [00 Overview](00-overview-and-principles.md), [08 API Gateway](08-api-gateway.md), [15 Infrastructure & IaC](15-infrastructure-and-iac.md)
+**Status:** Baseline **Owner:** Platform architecture **Related:**
+[00 Overview](00-overview-and-principles.md),
+[08 API Gateway](08-api-gateway.md),
+[15 Infrastructure & IaC](15-infrastructure-and-iac.md)
 
 ---
 
@@ -39,19 +40,20 @@ IDENTITY     CONTROL PLANE      APPLICATION PLANE   PLATFORM SERVICES  OPERATION
                        Terraform (desired state)
 ```
 
-`*` AI Gateway and Approval are **P2 / deferred** (see [20](20-implementation-roadmap.md)).
+`*` AI Gateway and Approval are **P2 / deferred** (see
+[20](20-implementation-roadmap.md)).
 
 ### Plane definitions
 
-| Plane            | Owns                                                                            | Lifecycle                          |
-| ---------------- | ------------------------------------------------------------------------------- | ---------------------------------- |
-| **Identity**     | Authentication, sessions, MFA, org membership (Supabase Auth).                          | Managed (external).                |
-| **Control**      | Tenancy, IAM, monetization, registry, integrations, versioning, feature flags.  | Platform-owned, high stability.    |
-| **Application**  | Business domains (CRM, Commerce, POS, …). Independent per app.                  | Product-owned, ships independently.|
-| **Platform services** | Shared cross-cutting capabilities (notifications, search, reporting, usage, workflows, files, webhooks, scheduler). | Platform-owned, added as needed. |
-| **Operations**   | Logs, metrics, traces, audit, health, status, backup/DR, FinOps.                | Platform-owned.                    |
-| **Platform (substrate)** | Cloudflare + Supabase + R2 + Queues + D1 + KV + Durable Objects.        | Vendor-managed.                    |
-| **Infrastructure** | Terraform desired-state for everything above the substrate.                   | GitOps / IaC.                      |
+| Plane                    | Owns                                                                                                                | Lifecycle                           |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| **Identity**             | Authentication, sessions, MFA, org membership (Supabase Auth).                                                      | Managed (external).                 |
+| **Control**              | Tenancy, IAM, monetization, registry, integrations, versioning, feature flags.                                      | Platform-owned, high stability.     |
+| **Application**          | Business domains (CRM, Commerce, POS, …). Independent per app.                                                      | Product-owned, ships independently. |
+| **Platform services**    | Shared cross-cutting capabilities (notifications, search, reporting, usage, workflows, files, webhooks, scheduler). | Platform-owned, added as needed.    |
+| **Operations**           | Logs, metrics, traces, audit, health, status, backup/DR, FinOps.                                                    | Platform-owned.                     |
+| **Platform (substrate)** | Cloudflare + Supabase + R2 + Queues + D1 + KV + Durable Objects.                                                    | Vendor-managed.                     |
+| **Infrastructure**       | Terraform desired-state for everything above the substrate.                                                         | GitOps / IaC.                       |
 
 The R-2 scope decision means there is **no Developer/PaaS plane** (no Projects/
 Environments/Builds/Deployments as platform services). Deployment is Terraform +
@@ -104,8 +106,8 @@ Key rules embedded in this topology:
   internal services are not public unless there is a real external use case.
 - The gateway carries **no business logic** — routing, edge auth, rate limiting,
   correlation IDs, versioning, security headers only.
-- Services reach **their own** database only. Cross-service reads go through APIs
-  or event-fed projections.
+- Services reach **their own** database only. Cross-service reads go through
+  APIs or event-fed projections.
 
 ---
 
@@ -146,21 +148,21 @@ tenant + application via the domain-resolution mechanism in
 
 ## 4. Service inventory (baseline)
 
-| Service              | Subdomain                    | Runtime                    | Framework          | Store                   | Status         |
-| -------------------- | ---------------------------- | -------------------------- | ------------------ | ----------------------- | -------------- |
-| Identity             | `identity.figentra.com`     | Managed                    | Supabase Auth              | Supabase Auth                   | External       |
-| API Gateway          | `api.figentra.com`          | Cloudflare Worker          | Hono               | — (KV/D1 as needed)     | Build (P0)     |
-| Application Registry | `registry.figentra.com`     | Cloudflare Worker          | Hono               | D1 (+ KV)               | Build (P0)     |
-| IAM                  | `iam.figentra.com`          | Cloudflare Container       | NestJS / Node 22   | Supabase PostgreSQL     | Build (P0)     |
-| Tenant (+ Domains)   | `tenant.figentra.com`       | Cloudflare Container       | NestJS / Node 22   | Supabase PostgreSQL     | Build (P0)     |
-| Monetization         | `billing.figentra.com`      | Cloudflare Container       | NestJS / Node 22   | Supabase PostgreSQL     | Build (P0)     |
-| Portal               | `app.figentra.com`          | Cloudflare (Workers/Assets)| React + Vite + RR7 | API-driven              | Build (P0)     |
-| Integration Platform | internal (+ marketplace UI)  | Container / Worker          | NestJS / Hono      | Supabase PostgreSQL     | Build (P1)     |
-| Audit                | internal                     | Container / Worker          | NestJS / Hono      | PostgreSQL / event store| Later (P1)     |
-| Usage / Metering     | internal (in Monetization initially) | Container          | NestJS             | PostgreSQL / Queue      | Extract later  |
-| Notifications        | internal                     | Container / Worker          | NestJS / Hono      | Provider / DB / Queue   | Later (P1)     |
-| Workflows            | internal                     | CF Workflows + Worker       | `@figentra/workflows` | Workflow state      | Later (P1)     |
-| CRM / Commerce / POS / Analytics | `*.figentra.com`| Container / Worker          | App-specific       | Supabase (per app)      | Product        |
+| Service                          | Subdomain                            | Runtime                     | Framework             | Store                    | Status        |
+| -------------------------------- | ------------------------------------ | --------------------------- | --------------------- | ------------------------ | ------------- |
+| Identity                         | `identity.figentra.com`              | Managed                     | Supabase Auth         | Supabase Auth            | External      |
+| API Gateway                      | `api.figentra.com`                   | Cloudflare Worker           | Hono                  | — (KV/D1 as needed)      | Build (P0)    |
+| Application Registry             | `registry.figentra.com`              | Cloudflare Worker           | Hono                  | D1 (+ KV)                | Build (P0)    |
+| IAM                              | `iam.figentra.com`                   | Cloudflare Container        | NestJS / Node 22      | Supabase PostgreSQL      | Build (P0)    |
+| Tenant (+ Domains)               | `tenant.figentra.com`                | Cloudflare Container        | NestJS / Node 22      | Supabase PostgreSQL      | Build (P0)    |
+| Monetization                     | `billing.figentra.com`               | Cloudflare Container        | NestJS / Node 22      | Supabase PostgreSQL      | Build (P0)    |
+| Portal                           | `app.figentra.com`                   | Cloudflare (Workers/Assets) | React + Vite + RR7    | API-driven               | Build (P0)    |
+| Integration Platform             | internal (+ marketplace UI)          | Container / Worker          | NestJS / Hono         | Supabase PostgreSQL      | Build (P1)    |
+| Audit                            | internal                             | Container / Worker          | NestJS / Hono         | PostgreSQL / event store | Later (P1)    |
+| Usage / Metering                 | internal (in Monetization initially) | Container                   | NestJS                | PostgreSQL / Queue       | Extract later |
+| Notifications                    | internal                             | Container / Worker          | NestJS / Hono         | Provider / DB / Queue    | Later (P1)    |
+| Workflows                        | internal                             | CF Workflows + Worker       | `@figentra/workflows` | Workflow state           | Later (P1)    |
+| CRM / Commerce / POS / Analytics | `*.figentra.com`                     | Container / Worker          | App-specific          | Supabase (per app)       | Product       |
 
 ---
 
@@ -176,21 +178,21 @@ Detail lives in [09](09-service-communication.md); the shape:
   work.
 - **Cloudflare-native where practical:** Worker→Worker via service bindings;
   Worker→Container via the Worker-in-front pattern.
-- **Never** the user's Supabase Auth token as a machine-to-machine credential — service
-  identity is a first-class concern.
+- **Never** the user's Supabase Auth token as a machine-to-machine credential —
+  service identity is a first-class concern.
 
 ---
 
 ## 6. Non-goals / anti-patterns
 
-| Anti-pattern                                                       | Correct                                                        |
-| ------------------------------------------------------------------ | ------------------------------------------------------------- |
-| Public subdomain for every internal service                       | Behind the gateway unless externally needed.                  |
-| Business logic in the API Gateway                                  | Gateway = edge concerns only.                                 |
-| A service reading another service's DB                             | API call or event-fed projection.                             |
-| One giant database for all applications                            | Per-service and per-application databases.                    |
-| A Developer/PaaS plane (Build/Deploy/Artifact services)            | Terraform + Wrangler (R-2).                                   |
-| Splitting every domain concept into a deployment                   | Start with 4 platform domains; extract on measurable need.    |
+| Anti-pattern                                            | Correct                                                    |
+| ------------------------------------------------------- | ---------------------------------------------------------- |
+| Public subdomain for every internal service             | Behind the gateway unless externally needed.               |
+| Business logic in the API Gateway                       | Gateway = edge concerns only.                              |
+| A service reading another service's DB                  | API call or event-fed projection.                          |
+| One giant database for all applications                 | Per-service and per-application databases.                 |
+| A Developer/PaaS plane (Build/Deploy/Artifact services) | Terraform + Wrangler (R-2).                                |
+| Splitting every domain concept into a deployment        | Start with 4 platform domains; extract on measurable need. |
 
 ---
 

@@ -2,7 +2,9 @@
 
 > **Category:** storage · **Maturity:** stable · **Version:** 1.0.0
 
-Redis cache and session store. Provisions a Redis instance (Upstash / ElastiCache in prod, Docker locally) for caching, rate limiting, and ephemeral state.
+Redis cache and session store. Provisions a Redis instance (Upstash /
+ElastiCache in prod, Docker locally) for caching, rate limiting, and ephemeral
+state.
 
 ## Provides
 
@@ -16,8 +18,8 @@ Redis cache and session store. Provisions a Redis instance (Upstash / ElastiCach
 
 ## Environment variables
 
-| Variable | Description | Source |
-| -------- | ----------- | ------ |
+| Variable    | Description           | Source                       |
+| ----------- | --------------------- | ---------------------------- |
 | `REDIS_URL` | Redis connection URL. | `terraform_output.redis_url` |
 
 ## Usage in `cloud.yaml`
@@ -32,6 +34,8 @@ modules:
 
 ## Cross-references
 
-- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) — module manifest schema.
+- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) —
+  module manifest schema.
 - [`infrastructure/modules/README.md`](../README.md) — registry catalog.
-- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md) — authorising plan.
+- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md)
+  — authorising plan.

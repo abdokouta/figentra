@@ -1,8 +1,10 @@
 # Figentra Platform — Component Completion Checklist
 
-Implement each component against its specification; do not claim external runtime execution without executing it.
+Implement each component against its specification; do not claim external
+runtime execution without executing it.
 
 ## Services
+
 - [ ] services/01-approval.md
 - [ ] services/02-audit.md
 - [ ] services/03-entitlements.md
@@ -21,6 +23,7 @@ Implement each component against its specification; do not claim external runtim
 - [ ] services/16-workflow.md
 
 ## Packages
+
 - [ ] packages/01-contracts.md
 - [ ] packages/02-events.md
 - [ ] packages/03-iam.md
@@ -37,16 +40,19 @@ Implement each component against its specification; do not claim external runtim
 - [ ] packages/14-typescript-config.md
 
 ## Workers
+
 - [ ] workers/01-gateway.md
 - [ ] workers/02-infrastructure-orchestrator.md
 - [ ] workers/01-registry.md
 
 ## Apps
+
 - [ ] apps/01-family.md
 - [ ] apps/02-landing-page.md
 - [ ] apps/03-portal.md
 
 ## Stackra
+
 - [ ] stackra/01-container.md
 - [ ] stackra/02-http.md
 - [ ] stackra/03-logger.md
@@ -59,6 +65,7 @@ Implement each component against its specification; do not claim external runtim
 - [ ] stackra/10-query.md
 
 ## Cross-platform gates
+
 - [ ] Explicit package exports/subpaths
 - [ ] Service clients owned by `@figentra/sdk`
 - [ ] Gateway has no duplicate service clients
@@ -73,14 +80,13 @@ Implement each component against its specification; do not claim external runtim
 - [ ] Tests under standardized `__tests__` trees
 - [ ] development/staging/production naming is consistent
 
-
 ## Canonical Gateway and deployment enrollment amendment
 
-The canonical API Gateway is `services/gateway` using NestJS + Fastify. The former
-Hono Gateway Worker is removed. Cloudflare remains the external edge/WAF/DDoS
-layer.
+The canonical API Gateway is `services/gateway` using NestJS + Fastify. The
+former Hono Gateway Worker is removed. Cloudflare remains the external
+edge/WAF/DDoS layer.
 
-Deployment catalog enrollment is explicit: the root `cloud.yaml` `paths` list
-is the only local-source enrollment mechanism. The collector does not implicitly
+Deployment catalog enrollment is explicit: the root `cloud.yaml` `paths` list is
+the only local-source enrollment mechanism. The collector does not implicitly
 discover apps, services, or workers outside those paths. See ADR-0082 and
 ADR-0083.

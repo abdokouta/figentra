@@ -9,12 +9,12 @@ reviewed_at: null
 # @stackra/storage — architecture plan
 
 **Status:** Planned (port from `.ref/packages/storage` — currently
-`@nesvel/nestjs-storage`)
-**Anchor ADRs:** [ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
+`@nesvel/nestjs-storage`) **Anchor ADRs:**
+[ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
 [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
-[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md)
-**Reference:** `.ref/packages/storage/` — has local + S3 + MinIO drivers.
-**Depends on:** `@stackra/container`, `@stackra/contracts`, `@stackra/support`,
+[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md) **Reference:**
+`.ref/packages/storage/` — has local + S3 + MinIO drivers. **Depends on:**
+`@stackra/container`, `@stackra/contracts`, `@stackra/support`,
 `@stackra/logger`
 
 ## Purpose
@@ -29,8 +29,8 @@ Enterprise requirements day one:
   each with its own driver + config.
 - **5 drivers** — Local (filesystem), S3 (AWS), MinIO (self-hosted S3),
   Cloudflare R2 (Worker-native, S3-API compatible), Azure Blob (optional).
-- **Presigned URLs** — for direct-from-client uploads/downloads without
-  proxying through the server.
+- **Presigned URLs** — for direct-from-client uploads/downloads without proxying
+  through the server.
 - **Multipart uploads** — for large files (>5MB). Client fetches parts, server
   stitches.
 - **Streaming** — put/get via `ReadableStream` / `Readable` for zero-copy on
@@ -156,21 +156,21 @@ packages/storage/
 
 ## Contracts split
 
-| Symbol                        | Kind      |
-| ----------------------------- | --------- |
-| `IStorageDriver`              | interface |
-| `IStorageManager`             | interface |
-| `IStorageService`             | interface |
-| `IStorageObject`              | interface |
-| `IStorageMetadata`            | interface |
-| `IPresignOptions`             | interface |
-| `IMultipartUpload`            | interface |
-| `StorageClass` enum           | enum      |
-| `Acl` enum                    | enum      |
-| `STORAGE_MANAGER`             | token     |
-| `STORAGE_DEFAULT`             | token     |
-| `ObjectNotFoundError`         | class     |
-| `StorageDriverError`          | class     |
+| Symbol                | Kind      |
+| --------------------- | --------- |
+| `IStorageDriver`      | interface |
+| `IStorageManager`     | interface |
+| `IStorageService`     | interface |
+| `IStorageObject`      | interface |
+| `IStorageMetadata`    | interface |
+| `IPresignOptions`     | interface |
+| `IMultipartUpload`    | interface |
+| `StorageClass` enum   | enum      |
+| `Acl` enum            | enum      |
+| `STORAGE_MANAGER`     | token     |
+| `STORAGE_DEFAULT`     | token     |
+| `ObjectNotFoundError` | class     |
+| `StorageDriverError`  | class     |
 
 ## Core API (locked)
 
@@ -189,7 +189,11 @@ interface IStorageDriver {
   deleteMany(keys: string[]): Promise<void>;
 
   // Server-side copy
-  copy(sourceKey: string, destKey: string, options?: ICopyOptions): Promise<IStorageObject>;
+  copy(
+    sourceKey: string,
+    destKey: string,
+    options?: ICopyOptions,
+  ): Promise<IStorageObject>;
   move(sourceKey: string, destKey: string): Promise<IStorageObject>;
 
   // Presigned URLs
@@ -205,7 +209,7 @@ interface IStorageDriver {
 
   // Introspection
   getBucketName(): string;
-  getPublicUrl(key: string): string | null;   // null if bucket is private
+  getPublicUrl(key: string): string | null; // null if bucket is private
 }
 
 type Body = Uint8Array | ReadableStream | Buffer | string | Blob;
@@ -213,15 +217,15 @@ type Body = Uint8Array | ReadableStream | Buffer | string | Blob;
 
 ## Drivers
 
-| Driver         | Home                                        | Runtime         | Deps                                        |
-| -------------- | ------------------------------------------- | --------------- | ------------------------------------------- |
-| `local`        | `core/drivers/local/`                       | Node            | node:fs (no external deps)                  |
-| `s3`           | `s3/s3.driver.ts`                           | Node + Worker   | `@aws-sdk/client-s3`, `@aws-sdk/s3-request-presigner` |
-| `minio`        | `minio/minio.driver.ts`                     | Node            | `minio`                                     |
-| `r2-http`      | `r2/r2-http.driver.ts`                      | Node            | `@aws-sdk/client-s3` (R2 is S3-compat)      |
-| `r2-binding`   | `worker/drivers/r2-binding.driver.ts`       | Worker only     | env.R2_BUCKET binding (no HTTP overhead)    |
-| `azure-blob`   | `azure/azure-blob.driver.ts`                | Node            | `@azure/storage-blob`                       |
-| `memory`       | `testing/mock-storage.ts`                   | Every           | None                                        |
+| Driver       | Home                                  | Runtime       | Deps                                                  |
+| ------------ | ------------------------------------- | ------------- | ----------------------------------------------------- |
+| `local`      | `core/drivers/local/`                 | Node          | node:fs (no external deps)                            |
+| `s3`         | `s3/s3.driver.ts`                     | Node + Worker | `@aws-sdk/client-s3`, `@aws-sdk/s3-request-presigner` |
+| `minio`      | `minio/minio.driver.ts`               | Node          | `minio`                                               |
+| `r2-http`    | `r2/r2-http.driver.ts`                | Node          | `@aws-sdk/client-s3` (R2 is S3-compat)                |
+| `r2-binding` | `worker/drivers/r2-binding.driver.ts` | Worker only   | env.R2_BUCKET binding (no HTTP overhead)              |
+| `azure-blob` | `azure/azure-blob.driver.ts`          | Node          | `@azure/storage-blob`                                 |
+| `memory`     | `testing/mock-storage.ts`             | Every         | None                                                  |
 
 ## Presigned URLs
 
@@ -229,11 +233,13 @@ Client-direct upload pattern (avoid server proxying large files):
 
 ```typescript
 // 1. Server generates presigned PUT URL
-const uploadUrl = await storage.instance("uploads").presignPut("user/123/profile.jpg", {
-  expiresIn: 300,  // seconds
-  contentType: "image/jpeg",
-  contentLengthMax: 10 * 1024 * 1024,  // 10 MB
-});
+const uploadUrl = await storage
+  .instance("uploads")
+  .presignPut("user/123/profile.jpg", {
+    expiresIn: 300, // seconds
+    contentType: "image/jpeg",
+    contentLengthMax: 10 * 1024 * 1024, // 10 MB
+  });
 
 // 2. Client uploads DIRECTLY to storage
 await fetch(uploadUrl, {
@@ -265,9 +271,9 @@ for (const chunk of fileChunks) {
 await upload.complete();
 ```
 
-Under the hood: S3 driver uses `CreateMultipartUpload` +
-`UploadPart` + `CompleteMultipartUpload`. Local driver simulates via
-`fs.createWriteStream` + append.
+Under the hood: S3 driver uses `CreateMultipartUpload` + `UploadPart` +
+`CompleteMultipartUpload`. Local driver simulates via `fs.createWriteStream` +
+append.
 
 ## Cloudflare R2 (Worker native)
 
@@ -307,7 +313,9 @@ export class AvatarController {
 
   @Post()
   @UseInterceptors(FileUploadInterceptor)
-  public async upload(@UploadFile() file: IUploadedFile): Promise<{ url: string }> {
+  public async upload(
+    @UploadFile() file: IUploadedFile,
+  ): Promise<{ url: string }> {
     const key = `avatars/${file.filename}`;
     await this.avatars.put(key, file.buffer, { contentType: file.mimeType });
     return { url: this.avatars.getPublicUrl(key)! };
@@ -338,7 +346,7 @@ export class AvatarController {
     "@aws-sdk/client-s3": "^3.700.0",
     "@aws-sdk/s3-request-presigner": "^3.700.0",
     "minio": "^8.0.0",
-    "@azure/storage-blob": "^12.30.0"
+    "@azure/storage-blob": "^12.30.0",
   },
   "peerDependenciesMeta": {
     "@nestjs/common": { "optional": true },
@@ -346,8 +354,8 @@ export class AvatarController {
     "@aws-sdk/client-s3": { "optional": true },
     "@aws-sdk/s3-request-presigner": { "optional": true },
     "minio": { "optional": true },
-    "@azure/storage-blob": { "optional": true }
-  }
+    "@azure/storage-blob": { "optional": true },
+  },
 }
 ```
 
@@ -406,6 +414,6 @@ export class AvatarController {
 
 - ADR-0090, 0091, 0092.
 - `.kiro/plans/2026-09-03-file-system-package.md` — sibling (local FS I/O).
-- `.kiro/plans/2026-09-03-cache-package.md` — StorageStore uses this
-  package's local driver.
+- `.kiro/plans/2026-09-03-cache-package.md` — StorageStore uses this package's
+  local driver.
 - `.ref/packages/storage/` — reference (3 drivers).

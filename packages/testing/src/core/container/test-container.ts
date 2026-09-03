@@ -27,9 +27,7 @@ export class TestContainer implements ITestContainer {
   public readonly registry: Map<unknown, unknown>;
 
   public constructor(initial?: Iterable<readonly [unknown, unknown]>) {
-    this.registry = new Map<unknown, unknown>(
-      initial as Iterable<[unknown, unknown]> | undefined,
-    );
+    this.registry = new Map<unknown, unknown>(initial as Iterable<[unknown, unknown]> | undefined);
   }
 
   public provide<T>(token: unknown, value: T): void {

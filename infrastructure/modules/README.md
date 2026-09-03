@@ -1,13 +1,13 @@
 # Infrastructure Capability Modules
 
-> **Registry path:** `infrastructure/modules/`
-> **Schema:** `infrastructure/modules/schema/module.v1.json`
-> **Validator:** `pnpm run modules:check`
+> **Registry path:** `infrastructure/modules/` **Schema:**
+> `infrastructure/modules/schema/module.v1.json` **Validator:**
+> `pnpm run modules:check`
 
 ## What is a module?
 
-A module is a self-contained infrastructure capability that a deployable can
-opt into via its `cloud.yaml` `modules[]` array. Each module owns:
+A module is a self-contained infrastructure capability that a deployable can opt
+into via its `cloud.yaml` `modules[]` array. Each module owns:
 
 - A **contract** (`module.yaml`) — machine-readable manifest with the
   capability's identity, schema, runtime targets, and env-var envelope.
@@ -19,70 +19,70 @@ opt into via its `cloud.yaml` `modules[]` array. Each module owns:
 
 ### Cloudflare (6 modules)
 
-| Module | Category | Maturity | Replaces |
-| ------ | -------- | -------- | -------- |
-| [`cloudflare-d1`](cloudflare-d1/) | cloudflare | stable | `needs_d1` |
-| [`cloudflare-kv`](cloudflare-kv/) | cloudflare | stable | `needs_kv` |
-| [`cloudflare-queue`](cloudflare-queue/) | cloudflare | stable | `needs_queue` |
-| [`cloudflare-r2`](cloudflare-r2/) | cloudflare | stable | `needs_r2` |
-| [`cloudflare-durable-object`](cloudflare-durable-object/) | cloudflare | beta | `needs_durable_object` |
-| [`cloudflare-hyperdrive`](cloudflare-hyperdrive/) | cloudflare | beta | `needs_hyperdrive` |
+| Module                                                    | Category   | Maturity | Replaces               |
+| --------------------------------------------------------- | ---------- | -------- | ---------------------- |
+| [`cloudflare-d1`](cloudflare-d1/)                         | cloudflare | stable   | `needs_d1`             |
+| [`cloudflare-kv`](cloudflare-kv/)                         | cloudflare | stable   | `needs_kv`             |
+| [`cloudflare-queue`](cloudflare-queue/)                   | cloudflare | stable   | `needs_queue`          |
+| [`cloudflare-r2`](cloudflare-r2/)                         | cloudflare | stable   | `needs_r2`             |
+| [`cloudflare-durable-object`](cloudflare-durable-object/) | cloudflare | beta     | `needs_durable_object` |
+| [`cloudflare-hyperdrive`](cloudflare-hyperdrive/)         | cloudflare | beta     | `needs_hyperdrive`     |
 
 ### Storage (2 modules)
 
-| Module | Category | Maturity | Replaces |
-| ------ | -------- | -------- | -------- |
-| [`supabase-postgres`](supabase-postgres/) | storage | stable | `needs_supabase` |
-| [`redis-cache`](redis-cache/) | storage | stable | `needs_redis` |
+| Module                                    | Category | Maturity | Replaces         |
+| ----------------------------------------- | -------- | -------- | ---------------- |
+| [`supabase-postgres`](supabase-postgres/) | storage  | stable   | `needs_supabase` |
+| [`redis-cache`](redis-cache/)             | storage  | stable   | `needs_redis`    |
 
 ### Messaging (2 modules)
 
-| Module | Category | Maturity | Replaces |
-| ------ | -------- | -------- | -------- |
-| [`nats-jetstream`](nats-jetstream/) | messaging | stable | `needs_nats` |
-| [`kafka`](kafka/) | messaging | beta | _(new)_ |
+| Module                              | Category  | Maturity | Replaces     |
+| ----------------------------------- | --------- | -------- | ------------ |
+| [`nats-jetstream`](nats-jetstream/) | messaging | stable   | `needs_nats` |
+| [`kafka`](kafka/)                   | messaging | beta     | _(new)_      |
 
 ### Realtime (2 modules)
 
-| Module | Category | Maturity | Replaces |
-| ------ | -------- | -------- | -------- |
-| [`websocket`](websocket/) | realtime | beta | _(new)_ |
-| [`server-sent-events`](server-sent-events/) | realtime | beta | _(new)_ |
+| Module                                      | Category | Maturity | Replaces |
+| ------------------------------------------- | -------- | -------- | -------- |
+| [`websocket`](websocket/)                   | realtime | beta     | _(new)_  |
+| [`server-sent-events`](server-sent-events/) | realtime | beta     | _(new)_  |
 
 ### Observability (3 modules)
 
-| Module | Category | Maturity | Replaces |
-| ------ | -------- | -------- | -------- |
-| [`sentry-project`](sentry-project/) | observability | stable | `observability.sentry` |
-| [`betterstack-uptime`](betterstack-uptime/) | observability | stable | `observability.betterstack` |
-| [`otel-collector`](otel-collector/) | observability | beta | _(new)_ |
+| Module                                      | Category      | Maturity | Replaces                    |
+| ------------------------------------------- | ------------- | -------- | --------------------------- |
+| [`sentry-project`](sentry-project/)         | observability | stable   | `observability.sentry`      |
+| [`betterstack-uptime`](betterstack-uptime/) | observability | stable   | `observability.betterstack` |
+| [`otel-collector`](otel-collector/)         | observability | beta     | _(new)_                     |
 
 ### Third-party (4 modules)
 
-| Module | Category | Maturity | Replaces |
-| ------ | -------- | -------- | -------- |
-| [`firebase-fcm`](firebase-fcm/) | third-party | stable | `needs_firebase` |
-| [`resend-email`](resend-email/) | third-party | beta | _(new)_ |
-| [`stripe-payments`](stripe-payments/) | third-party | beta | _(new)_ |
-| [`twilio-sms`](twilio-sms/) | third-party | beta | _(new)_ |
+| Module                                | Category    | Maturity | Replaces         |
+| ------------------------------------- | ----------- | -------- | ---------------- |
+| [`firebase-fcm`](firebase-fcm/)       | third-party | stable   | `needs_firebase` |
+| [`resend-email`](resend-email/)       | third-party | beta     | _(new)_          |
+| [`stripe-payments`](stripe-payments/) | third-party | beta     | _(new)_          |
+| [`twilio-sms`](twilio-sms/)           | third-party | beta     | _(new)_          |
 
 ### Background (1 module)
 
-| Module | Category | Maturity | Replaces |
-| ------ | -------- | -------- | -------- |
-| [`cron`](cron/) | background | beta | _(new)_ |
+| Module          | Category   | Maturity | Replaces |
+| --------------- | ---------- | -------- | -------- |
+| [`cron`](cron/) | background | beta     | _(new)_  |
 
 ### Search (1 module)
 
-| Module | Category | Maturity | Replaces |
-| ------ | -------- | -------- | -------- |
-| [`meilisearch`](meilisearch/) | search | beta | _(new)_ |
+| Module                        | Category | Maturity | Replaces |
+| ----------------------------- | -------- | -------- | -------- |
+| [`meilisearch`](meilisearch/) | search   | beta     | _(new)_  |
 
 ### Networking (1 module)
 
-| Module | Category | Maturity | Replaces |
-| ------ | -------- | -------- | -------- |
-| [`custom-domain`](custom-domain/) | networking | beta | _(new)_ |
+| Module                            | Category   | Maturity | Replaces |
+| --------------------------------- | ---------- | -------- | -------- |
+| [`custom-domain`](custom-domain/) | networking | beta     | _(new)_  |
 
 ## How to use a module
 
@@ -124,15 +124,16 @@ is validated against the module's JSON Schema at catalog-collection time.
 
 ### Versioning
 
-- **Patch** — docblock fixes, README updates, non-breaking schema additions
-  (new optional field).
+- **Patch** — docblock fixes, README updates, non-breaking schema additions (new
+  optional field).
 - **Minor** — new optional env var, new optional config field.
 - **Major** — renamed env var, removed config field, changed default, schema
   breaking change.
 
 ## Enforcement
 
-- `pnpm run modules:check` — validates registry + every deployable's `modules[]`.
+- `pnpm run modules:check` — validates registry + every deployable's
+  `modules[]`.
 - CI: `modules:check` job runs in the `quality` stage on every merge request.
 - Reviewers reject `cloud.yaml` changes that use the legacy `capabilities:{}`
   block — every capability must be a module reference.
@@ -142,6 +143,6 @@ is validated against the module's JSON Schema at catalog-collection time.
 - [`schema/module.v1.json`](schema/module.v1.json) — module manifest schema.
 - [`schema/deployable-modules.v1.json`](schema/deployable-modules.v1.json) —
   deployable `modules[]` schema.
-- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md) —
-  authorising plan.
+- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md)
+  — authorising plan.
 - [`infrastructure/README.md`](../README.md) — infrastructure overview.

@@ -10,7 +10,8 @@ Do not create `Person` or `User` as core Figentra identity-domain entities.
 
 Human account/profile data belongs to Identity. Authorization uses Principal.
 
-Adding Person/User layers without a concrete requirement increases complexity and creates ambiguous ownership.
+Adding Person/User layers without a concrete requirement increases complexity
+and creates ambiguous ownership.
 
 ## Consequence
 

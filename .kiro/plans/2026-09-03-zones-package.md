@@ -8,19 +8,19 @@ reviewed_at: null
 
 # `@stackra/zones` — extensibility slots (Zone + FormFieldZone + TableColumnZone)
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
-[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md)
-**Reference:** `.ref/packages/zones/` (`@stackra/zones` v0.1.0)
-**Depends on:** `@stackra/container`, `@stackra/contracts`, `@stackra/support`
-(BaseRegistry), `react` + `react-native` (optional peers)
-**Design effort:** 14 days across 7 phases
+**Status:** Planned **Anchor ADRs:**
+[ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
+[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md) **Reference:**
+`.ref/packages/zones/` (`@stackra/zones` v0.1.0) **Depends on:**
+`@stackra/container`, `@stackra/contracts`, `@stackra/support` (BaseRegistry),
+`react` + `react-native` (optional peers) **Design effort:** 14 days across 7
+phases
 
 ## Purpose
 
 Runtime extensibility for React + RN apps — plugin packages contribute
-components / form-fields / table-columns to named "zones" declared by host
-apps. Ships:
+components / form-fields / table-columns to named "zones" declared by host apps.
+Ships:
 
 - `ZoneRegistry` — DI-owned registry of contributions per zone.
 - `<Zone id="header.right">` — React + RN renderer that mounts every
@@ -39,8 +39,8 @@ resolution pipeline; consumers never touch the registry directly.
 
 - Server-side rendering — zones resolve on the client; SSR would need a
   hydration protocol (out of scope for v1).
-- Cross-app zone sharing — every app has its own registry instance; zones
-  don't bleed across mounted micro-frontends.
+- Cross-app zone sharing — every app has its own registry instance; zones don't
+  bleed across mounted micro-frontends.
 - Route contribution — that's `@stackra/routing` (future); zones are UI
   slot-level, not route-level.
 
@@ -219,20 +219,20 @@ packages/zones/
 
 ```typescript
 interface IZoneContribution {
-  id: string;                              // unique per zone
-  weight?: number;                          // default 100
-  after?: string;                           // must render after this id
-  before?: string;                          // must render before this id
-  when?: (ctx: IZoneContext) => boolean;    // conditional visibility
-  hidden?: boolean;                          // programmatic hide
+  id: string; // unique per zone
+  weight?: number; // default 100
+  after?: string; // must render after this id
+  before?: string; // must render before this id
+  when?: (ctx: IZoneContext) => boolean; // conditional visibility
+  hidden?: boolean; // programmatic hide
   render(props: IZoneRenderProps): ReactNode | RN.ReactNode;
 }
 ```
 
 Cycle detection: if `after` / `before` produces a cycle, `resolveZoneOrder`
-drops the last edge participating in the cycle + emits a dev-mode warning
-via `@stackra/logger` (fail-soft rather than throwing — one bad plugin
-shouldn't break the app).
+drops the last edge participating in the cycle + emits a dev-mode warning via
+`@stackra/logger` (fail-soft rather than throwing — one bad plugin shouldn't
+break the app).
 
 ## Runtime discovery
 
@@ -275,14 +275,14 @@ each in the appropriate registry. Follows ADR-0092 auto-registration.
 ### Phase 6 — Testing (2 days)
 
 - [ ] Unit tests for every registry + decorator + hook.
-- [ ] Integration test — plugin contributes a zone; host renders it; hidden
-      by `when()` predicate; visible after context change.
+- [ ] Integration test — plugin contributes a zone; host renders it; hidden by
+      `when()` predicate; visible after context change.
 - [ ] `MockZoneRegistry` + `assertZoneOrder(zoneId, expected)` matcher.
 
 ### Phase 7 — Verification + docs (1 day)
 
-- [ ] Reference example — a demo plugin contributes to `header.right`,
-      renders correctly.
+- [ ] Reference example — a demo plugin contributes to `header.right`, renders
+      correctly.
 - [ ] README documents every decorator + a "your first zone contribution"
       walkthrough.
 - [ ] Cross-refs to consumer patterns (multi-package Nx-workspace, plugin
@@ -290,13 +290,12 @@ each in the appropriate registry. Follows ADR-0092 auto-registration.
 
 ## Exit criteria
 
-- [ ] `resolveZoneOrder` handles every ordering permutation (11+
-      permutations tested).
+- [ ] `resolveZoneOrder` handles every ordering permutation (11+ permutations
+      tested).
 - [ ] Cyclic constraints don't crash — warned + one edge dropped.
 - [ ] `@Zone` / `@FormField` / `@TableColumn` auto-discover on Nest bootstrap.
 - [ ] `<Zone>` renders every contribution in the right order.
-- [ ] `when()` filters correctly when context changes (verified in React
-      test).
+- [ ] `when()` filters correctly when context changes (verified in React test).
 - [ ] RN parity verified on Expo Router.
 - [ ] 95% branch coverage.
 

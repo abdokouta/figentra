@@ -22,7 +22,9 @@ Potentially:
 
 ## Supabase Auth relationship
 
-Supabase Auth organizations may be used for authentication UX and enterprise membership, but must not automatically become the universal Figentra Tenant model.
+Supabase Auth organizations may be used for authentication UX and enterprise
+membership, but must not automatically become the universal Figentra Tenant
+model.
 
 Proposed boundary:
 

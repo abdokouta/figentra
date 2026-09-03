@@ -9,7 +9,11 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
     environment: "jsdom",
-    include: ["__tests__/unit/**/*.test.ts", "__tests__/unit/**/*.test.tsx", "__tests__/integration/**/*.test.tsx"],
+    include: [
+      "__tests__/unit/**/*.test.ts",
+      "__tests__/unit/**/*.test.tsx",
+      "__tests__/integration/**/*.test.tsx",
+    ],
     setupFiles: ["./__tests__/vitest.setup.ts"],
     passWithNoTests: true,
   },

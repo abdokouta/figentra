@@ -10,10 +10,7 @@
  *   Fastify's default logger is noisy in test output.
  */
 
-import {
-  FastifyAdapter,
-  type NestFastifyApplication,
-} from "@nestjs/platform-fastify";
+import { FastifyAdapter, type NestFastifyApplication } from "@nestjs/platform-fastify";
 import type { TestingModule, TestingModuleBuilder } from "@nestjs/testing";
 
 /** Optional overrides for the underlying Fastify adapter. */
@@ -63,9 +60,7 @@ export async function buildFastifyTestApp(
   moduleOrBuilder: TestingModule | TestingModuleBuilder,
   options: IFastifyTestAppOptions = {},
 ): Promise<NestFastifyApplication> {
-  const module = isBuilder(moduleOrBuilder)
-    ? await moduleOrBuilder.compile()
-    : moduleOrBuilder;
+  const module = isBuilder(moduleOrBuilder) ? await moduleOrBuilder.compile() : moduleOrBuilder;
 
   const adapter = new FastifyAdapter({
     logger: options.logger ?? false,

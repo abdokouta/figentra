@@ -23,7 +23,7 @@ export function applyIsOptionalDecorator(targetClass: Function, propertyKey: str
   }
 
   // Import class-validator dynamically
-  const classValidator: typeof import('class-validator') = require('class-validator');
+  const classValidator: typeof import("class-validator") = require("class-validator");
 
   // Create the IsOptional decorator factory
   const decoratorFactory = classValidator.IsOptional();
@@ -44,7 +44,7 @@ export function applyIsOptionalDecorator(targetClass: Function, propertyKey: str
 function isClassValidatorAvailable() {
   try {
     // Attempt to require class-validator
-    require('class-validator');
+    require("class-validator");
     return true;
   } catch {
     // Return false if class-validator is not available

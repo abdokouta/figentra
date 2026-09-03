@@ -1,14 +1,14 @@
 # Workers Production Day-1 Checklist
 
 /**
- * @file workers-production-day1.md
- * @description Completion ledger for the Gateway and Application Registry.
- *
- * A checkbox is marked complete only when the repository contains the
- * implementation/configuration required for the item. Cloud-provider
- * provisioning that requires production credentials is represented separately
- * as a release gate, not falsely marked as source-code complete.
- */
+
+- @file workers-production-day1.md
+- @description Completion ledger for the Gateway and Application Registry.
+-
+- A checkbox is marked complete only when the repository contains the
+- implementation/configuration required for the item. Cloud-provider
+- provisioning that requires production credentials is represented separately
+- as a release gate, not falsely marked as source-code complete. */
 
 ## API Gateway
 
@@ -65,7 +65,8 @@
 
 ## Release gates requiring real Cloudflare credentials
 
-- [ ] Apply Terraform in dev and verify generated D1/KV/rate-limit/service-binding IDs.
+- [ ] Apply Terraform in dev and verify generated
+      D1/KV/rate-limit/service-binding IDs.
 - [ ] Apply Terraform in staging and run integration suite.
 - [ ] Run remote D1 migrations in staging.
 - [ ] Deploy Workers to staging.

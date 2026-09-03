@@ -21,9 +21,9 @@ Read alongside:
   (`tenant_id` / `application_id` / `scope_node_id`) every domain row satisfies.
 - [`cross-service-events.md`](cross-service-events.md) — the cascade contract
   this doc's Rule 3 delegates to.
-- [`observability-signals.md`](../../.ref/steering/observability-signals.md) — the parallel
-  three-signal contract that services already emit through `@stackra/events`
-  (the workspace event bus).
+- [`observability-signals.md`](../../.ref/steering/observability-signals.md) —
+  the parallel three-signal contract that services already emit through
+  `@stackra/events` (the workspace event bus).
 
 ## Precedence
 
@@ -92,15 +92,15 @@ CREATE INDEX push_subscriptions_user_idx
 `@stackra/database` ships schema helpers that emit each canonical reference
 column + its index so every table spells them identically:
 
-| Helper                 | Column            | Origin (owning service) |
-| ---------------------- | ----------------- | ----------------------- |
-| `tenantId()`           | `tenant_id`       | identity-service        |
-| `tenantIdOptional()`   | `tenant_id NULL`  | identity-service        |
-| `applicationId()`      | `application_id`  | identity-service        |
-| `userId()`             | `user_id`         | identity-service        |
-| `organizationId()`     | `organization_id` | platform-service        |
-| `branchId()`           | `branch_id`       | platform-service        |
-| `regionId()`           | `region_id`       | platform-service        |
+| Helper               | Column            | Origin (owning service) |
+| -------------------- | ----------------- | ----------------------- |
+| `tenantId()`         | `tenant_id`       | identity-service        |
+| `tenantIdOptional()` | `tenant_id NULL`  | identity-service        |
+| `applicationId()`    | `application_id`  | identity-service        |
+| `userId()`           | `user_id`         | identity-service        |
+| `organizationId()`   | `organization_id` | platform-service        |
+| `branchId()`         | `branch_id`       | platform-service        |
+| `regionId()`         | `region_id`       | platform-service        |
 
 **Enforcement.** The CI schema-lint check `no-cross-service-foreign-key` fires
 on any FK (`REFERENCES <table>` in a migration) whose target table is owned by a
@@ -340,19 +340,19 @@ semantic parity via composition.
 
 ## Anti-patterns
 
-| Anti-pattern                                                                | Correct                                                                                          |
-| --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `REFERENCES tenants(id)` in a non-identity service's migration              | `tenantId()` column helper. Cascade via a `TenantDeleted` listener.                              |
-| `REFERENCES users(id)` in a non-identity service's migration                | `userId()` column helper. Cascade via a `UserDeleted` listener.                                  |
-| `REFERENCES branches(id)` in a non-platform service's migration             | `branchId()` column helper. Cascade via a `BranchDeleted` listener.                              |
-| `ON DELETE CASCADE` on a cross-service reference column                     | Never. Reference columns emit column + index only; cascade lives in the event listener.          |
-| `@stackra/tenancy` in a non-identity service's `package.json`               | `@stackra/contracts` — declare against the tenant-scoping helper only. tenancy is identity's.    |
-| `@stackra/identity` in a non-identity service's `package.json`              | `@stackra/contracts` — same rule.                                                                |
-| `@stackra/user` in a non-identity service's `package.json`                  | `@stackra/contracts` — same rule.                                                                |
-| Duplicating the `tenants` migration in every service's dependency graph     | `tenants` lives in identity-service only. Every other service references via `tenantId()` + event. |
-| Hand-rolled tenant-scoping helper in a non-identity service                 | Compose `withTenant` from `@stackra/contracts` per Rule 5.                                        |
-| A service reading peer data via SQL (`SELECT ... FROM peer_service.tenants`) | Every peer read goes through the generated SDK per ADR-0087; every peer write via an event.       |
-| Any FK across service boundaries                                            | Rule 2 — reference columns + event cascade. No exceptions.                                        |
+| Anti-pattern                                                                 | Correct                                                                                            |
+| ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `REFERENCES tenants(id)` in a non-identity service's migration               | `tenantId()` column helper. Cascade via a `TenantDeleted` listener.                                |
+| `REFERENCES users(id)` in a non-identity service's migration                 | `userId()` column helper. Cascade via a `UserDeleted` listener.                                    |
+| `REFERENCES branches(id)` in a non-platform service's migration              | `branchId()` column helper. Cascade via a `BranchDeleted` listener.                                |
+| `ON DELETE CASCADE` on a cross-service reference column                      | Never. Reference columns emit column + index only; cascade lives in the event listener.            |
+| `@stackra/tenancy` in a non-identity service's `package.json`                | `@stackra/contracts` — declare against the tenant-scoping helper only. tenancy is identity's.      |
+| `@stackra/identity` in a non-identity service's `package.json`               | `@stackra/contracts` — same rule.                                                                  |
+| `@stackra/user` in a non-identity service's `package.json`                   | `@stackra/contracts` — same rule.                                                                  |
+| Duplicating the `tenants` migration in every service's dependency graph      | `tenants` lives in identity-service only. Every other service references via `tenantId()` + event. |
+| Hand-rolled tenant-scoping helper in a non-identity service                  | Compose `withTenant` from `@stackra/contracts` per Rule 5.                                         |
+| A service reading peer data via SQL (`SELECT ... FROM peer_service.tenants`) | Every peer read goes through the generated SDK per ADR-0087; every peer write via an event.        |
+| Any FK across service boundaries                                             | Rule 2 — reference columns + event cascade. No exceptions.                                         |
 
 ## Enforcement
 
@@ -378,8 +378,8 @@ Every grep MUST return zero hits on a compliant workspace. Any hit is either a
 legacy migration (backlog: rewrite to reference column + event) OR a Rule 2
 violation (reviewer rejects the PR).
 
-The primary enforcement is the CI schema-lint check `no-cross-service-foreign-key`
-at every service's lint gate. See
+The primary enforcement is the CI schema-lint check
+`no-cross-service-foreign-key` at every service's lint gate. See
 [`.kiro/steering/tenancy-columns.md` §Enforcement](tenancy-columns.md) for the
 parallel row-attribution enforcement layer.
 
@@ -405,7 +405,9 @@ parallel row-attribution enforcement layer.
   contract.
 - Steering — [`cross-service-events.md`](cross-service-events.md) — the cascade
   event contract Rule 3 delegates to.
-- Steering — [`observability-signals.md`](../../.ref/steering/observability-signals.md) — parallel
-  three-signal contract via `@stackra/events`.
-- Package — `@stackra/database` — the canonical column helpers + schema utilities.
+- Steering —
+  [`observability-signals.md`](../../.ref/steering/observability-signals.md) —
+  parallel three-signal contract via `@stackra/events`.
+- Package — `@stackra/database` — the canonical column helpers + schema
+  utilities.
 - Package — `@stackra/events` — the event bus (Cloudflare Queues fanout).

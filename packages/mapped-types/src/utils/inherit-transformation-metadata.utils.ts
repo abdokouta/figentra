@@ -1,4 +1,4 @@
-import type { Type, TransformMetadataKey } from '@/types';
+import type { Type, TransformMetadataKey } from "@/types";
 
 /**
  * @function inheritTransformationMetadata
@@ -30,7 +30,7 @@ export function inheritTransformationMetadata(
   parentClass: Type<any>,
   targetClass: Function,
   isPropertyInherited?: (key: string) => boolean,
-  stackDecorators = true
+  stackDecorators = true,
 ) {
   // Check if class-transformer is available in the project
   if (!isClassTransformerAvailable()) {
@@ -40,10 +40,10 @@ export function inheritTransformationMetadata(
   try {
     // Define the metadata keys to inherit
     const transformMetadataKeys: TransformMetadataKey[] = [
-      '_typeMetadatas',
-      '_exposeMetadatas',
-      '_excludeMetadatas',
-      '_transformMetadatas',
+      "_typeMetadatas",
+      "_exposeMetadatas",
+      "_excludeMetadatas",
+      "_transformMetadatas",
     ];
 
     // Inherit each type of metadata
@@ -53,13 +53,13 @@ export function inheritTransformationMetadata(
         parentClass,
         targetClass,
         isPropertyInherited,
-        stackDecorators
-      )
+        stackDecorators,
+      ),
     );
   } catch (err: Error | any) {
     // Log errors that occur during the inheritance process
     console.error(
-      `Transformer ("class-transformer") metadata cannot be inherited for "${parentClass.name}" class.`
+      `Transformer ("class-transformer") metadata cannot be inherited for "${parentClass.name}" class.`,
     );
 
     console.error(err);
@@ -84,18 +84,18 @@ function inheritTransformerMetadata(
   parentClass: Type<any>,
   targetClass: Function,
   isPropertyInherited?: (key: string) => boolean,
-  stackDecorators = true
+  stackDecorators = true,
 ) {
   let classTransformer: any;
 
   try {
     // Try to import class-transformer from the cjs path (for newer versions)
     /** "class-transformer" >= v0.3.x */
-    classTransformer = require('class-transformer/cjs/storage');
+    classTransformer = require("class-transformer/cjs/storage");
   } catch {
     // Fall back to the older import path
     /** "class-transformer" <= v0.3.x */
-    classTransformer = require('class-transformer/storage');
+    classTransformer = require("class-transformer/storage");
   }
 
   // Get the metadata storage from class-transformer
@@ -181,7 +181,7 @@ function inheritTransformerMetadata(
 function isClassTransformerAvailable() {
   try {
     // Attempt to require class-transformer
-    require('class-transformer');
+    require("class-transformer");
     return true;
   } catch {
     // Return false if class-transformer is not available

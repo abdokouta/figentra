@@ -8,32 +8,31 @@ reviewed_at: null
 
 # `@stackra/pagination` — pagination value objects
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md)
+**Status:** Planned **Anchor ADRs:**
+[ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md)
 **Reference:** `.ref/packages/pagination/` (`@stackra/ts-pagination` v0.1.0)
-**Depends on:** `@stackra/support` (Str, Uri, Num)
-**Design effort:** 6 days across 5 phases
+**Depends on:** `@stackra/support` (Str, Uri, Num) **Design effort:** 6 days
+across 5 phases
 
 ## Purpose
 
 Universal pagination primitives every HTTP + query layer composes. Three
 paginator shapes, one abstract base:
 
-- **`LengthAwarePaginator`** — knows total count. Best for admin lists +
-  small tables. Provides `.total()`, `.lastPage()`, `.hasMorePages()`.
+- **`LengthAwarePaginator`** — knows total count. Best for admin lists + small
+  tables. Provides `.total()`, `.lastPage()`, `.hasMorePages()`.
 - **`SimplePaginator`** — knows only "has more?" via `perPage + 1` fetch. Best
   for infinite scroll — no `COUNT(*)` cost.
-- **`CursorPaginator`** — cursor-based, stable across insertions. Best for
-  large tables + external APIs.
+- **`CursorPaginator`** — cursor-based, stable across insertions. Best for large
+  tables + external APIs.
 
-Each paginator serialises to a consistent JSON envelope + parses request
-params (`page`, `per_page`, `cursor`) via `PaginationRequest.from(request)`.
+Each paginator serialises to a consistent JSON envelope + parses request params
+(`page`, `per_page`, `cursor`) via `PaginationRequest.from(request)`.
 
 ## Non-goals
 
-- DB-driver-specific pagination — the paginators consume already-fetched
-  items; DB packages (like `@stackra/database`) call the paginator's
-  constructor.
+- DB-driver-specific pagination — the paginators consume already-fetched items;
+  DB packages (like `@stackra/database`) call the paginator's constructor.
 - Cursor encoding schemes — the abstract cursor is opaque; consumer packages
   encode via base64 / JWT / other.
 - UI rendering — pagination controls (buttons, page numbers) live in
@@ -59,7 +58,9 @@ class PaginationRequest {
   readonly sort: ISortField[];
   readonly filters: Record<string, IFilterClause>;
 
-  static from(input: { url: URL } | { query: Record<string, string> }): PaginationRequest;
+  static from(
+    input: { url: URL } | { query: Record<string, string> },
+  ): PaginationRequest;
   static empty(): PaginationRequest;
 }
 ```
@@ -68,7 +69,12 @@ class PaginationRequest {
 
 ```typescript
 class LengthAwarePaginator<T> {
-  constructor(opts: { items: T[]; total: number; perPage: number; currentPage: number });
+  constructor(opts: {
+    items: T[];
+    total: number;
+    perPage: number;
+    currentPage: number;
+  });
 
   items(): T[];
   total(): number;
@@ -76,8 +82,8 @@ class LengthAwarePaginator<T> {
   currentPage(): number;
   lastPage(): number;
   hasMorePages(): boolean;
-  from(): number;   // 1-based first item index
-  to(): number;     // 1-based last item index
+  from(): number; // 1-based first item index
+  to(): number; // 1-based last item index
 
   toJSON(): {
     data: T[];
@@ -103,7 +109,12 @@ class LengthAwarePaginator<T> {
 
 ```typescript
 class SimplePaginator<T> {
-  constructor(opts: { items: T[]; perPage: number; currentPage: number; hasMore: boolean });
+  constructor(opts: {
+    items: T[];
+    perPage: number;
+    currentPage: number;
+    hasMore: boolean;
+  });
 
   items(): T[];
   perPage(): number;
@@ -147,8 +158,8 @@ class CursorPaginator<T> {
 }
 ```
 
-The cursor is opaque — consumers encode/decode via
-`@stackra/database`'s cursor helper OR their own scheme.
+The cursor is opaque — consumers encode/decode via `@stackra/database`'s cursor
+helper OR their own scheme.
 
 ### `LinkBuilder`
 
@@ -213,7 +224,8 @@ The `PaginationRequest` parses:
 
 - `?filter[status]=active` — `{ status: { operator: "eq", value: "active" } }`
 - `?filter[age][gte]=18` — `{ age: { operator: "gte", value: 18 } }`
-- `?filter[tags]=admin,editor` — comma → array — `{ tags: { operator: "in", value: ["admin", "editor"] } }`
+- `?filter[tags]=admin,editor` — comma → array —
+  `{ tags: { operator: "in", value: ["admin", "editor"] } }`
 - `?filter[created_at][between]=2024-01-01,2024-12-31` — range.
 
 Supported operators: `eq` (default), `neq`, `gt`, `gte`, `lt`, `lte`, `in`,
@@ -242,7 +254,8 @@ their query-builder syntax.
 ### Phase 4 — Filter + sort parsing (1 day)
 
 - [ ] Parse operator syntax.
-- [ ] Type-coerce values (`"true"` → `true`, `"18"` → `18`, `"2024-01-01"` → `Date`).
+- [ ] Type-coerce values (`"true"` → `true`, `"18"` → `18`, `"2024-01-01"` →
+      `Date`).
 
 ### Phase 5 — Testing + docs (1 day)
 

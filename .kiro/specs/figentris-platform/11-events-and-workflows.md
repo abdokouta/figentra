@@ -1,8 +1,9 @@
 # 11 — Events & Workflows
 
-**Status:** Baseline
-**Owner:** Platform architecture
-**Related:** [10 Domain & application patterns](10-domain-and-application-patterns.md), [09 Service communication](09-service-communication.md), [07 Integration Platform](07-integration-platform.md)
+**Status:** Baseline **Owner:** Platform architecture **Related:**
+[10 Domain & application patterns](10-domain-and-application-patterns.md),
+[09 Service communication](09-service-communication.md),
+[07 Integration Platform](07-integration-platform.md)
 
 ---
 
@@ -17,10 +18,10 @@ idempotent consumers) and the workflow model (Queues vs Cloudflare Workflows vs
 
 ## 2. Three distinct concepts (R-6)
 
-| Concept          | Direction | Meaning                                              | Tense    |
-| ---------------- | --------- | ---------------------------------------------------- | -------- |
-| **Command**      | request   | "Do this." A request to change state; may be rejected.| imperative (`RefundOrder`) |
-| **Domain event** | fact      | "This happened." A completed business state transition.| past (`order.refunded`)   |
+| Concept          | Direction | Meaning                                                     | Tense                      |
+| ---------------- | --------- | ----------------------------------------------------------- | -------------------------- |
+| **Command**      | request   | "Do this." A request to change state; may be rejected.      | imperative (`RefundOrder`) |
+| **Domain event** | fact      | "This happened." A completed business state transition.     | past (`order.refunded`)    |
 | **Audit event**  | record    | "This was done, by whom, when." Compliance/security record. | past (`iam.role.assigned`) |
 
 Rules:
@@ -28,11 +29,12 @@ Rules:
 - **Not every action is an event.** Only **meaningful business state
   transitions** become domain events. **Reads never** emit events.
 - A command may produce zero, one, or many domain events.
-- Audit events are a **separate stream** from domain events (different retention,
-  consumers, and query patterns — [16](16-observability.md), [17](17-security-and-compliance.md)).
-- **Events announce facts; commands request change; workflows orchestrate work.**
-  Never model request/reply as two events + a correlation id (that's synchronous
-  HTTP — [09 §2]).
+- Audit events are a **separate stream** from domain events (different
+  retention, consumers, and query patterns — [16](16-observability.md),
+  [17](17-security-and-compliance.md)).
+- **Events announce facts; commands request change; workflows orchestrate
+  work.** Never model request/reply as two events + a correlation id (that's
+  synchronous HTTP — [09 §2]).
 
 ---
 
@@ -50,7 +52,7 @@ Every platform event (domain or audit) uses one envelope:
   "tenantId": "ten_123",
   "subjectId": "sub_123",
   "traceId": "trace_123",
-  "data": { }
+  "data": {}
 }
 ```
 
@@ -164,12 +166,12 @@ Complex application-domain workflow API
 
 ### 7.1 When to use which
 
-| Need                                                         | Use                     |
-| ------------------------------------------------------------ | ----------------------- |
-| Emit and forget; decouple producers/consumers; batch         | Cloudflare Queues       |
-| Multi-step process where each step can retry independently    | Cloudflare Workflows    |
-| Long-running with pause/resume / human approval               | Cloudflare Workflows    |
-| A domain workflow API with compensation (saga) semantics      | `@figentra/workflows`  |
+| Need                                                       | Use                   |
+| ---------------------------------------------------------- | --------------------- |
+| Emit and forget; decouple producers/consumers; batch       | Cloudflare Queues     |
+| Multi-step process where each step can retry independently | Cloudflare Workflows  |
+| Long-running with pause/resume / human approval            | Cloudflare Workflows  |
+| A domain workflow API with compensation (saga) semantics   | `@figentra/workflows` |
 
 ### 7.2 `@figentra/workflows`
 
@@ -227,17 +229,17 @@ consumers. This is what makes the "extract later" principle ([00 §6]) safe.
 
 ## 10. Non-goals / anti-patterns
 
-| Anti-pattern                                                  | Correct                                                     |
-| ------------------------------------------------------------- | ----------------------------------------------------------- |
-| Emitting an event for every action (incl. reads)              | Only meaningful business state transitions; reads never.    |
-| Publishing events without the outbox                          | Append to outbox in the aggregate's transaction.            |
-| Non-idempotent consumers                                      | Dedupe on `event.id`.                                       |
-| Request/reply modeled as two events                           | Synchronous HTTP ([09]).                                    |
-| Building a custom workflow engine now                         | Queues / CF Workflows / `@figentra/workflows` over CF.     |
-| Confusing workflow with event                                 | Workflow orchestrates; event announces.                     |
-| Introducing Kafka by default                                  | Cloudflare Queues; Kafka only when volume justifies it.     |
-| A queue abstraction hiding the transport                      | Define event contracts; let infra pick the transport.       |
-| An async subsystem without a DLQ                              | Every async path has a DLQ + replay.                        |
+| Anti-pattern                                     | Correct                                                  |
+| ------------------------------------------------ | -------------------------------------------------------- |
+| Emitting an event for every action (incl. reads) | Only meaningful business state transitions; reads never. |
+| Publishing events without the outbox             | Append to outbox in the aggregate's transaction.         |
+| Non-idempotent consumers                         | Dedupe on `event.id`.                                    |
+| Request/reply modeled as two events              | Synchronous HTTP ([09]).                                 |
+| Building a custom workflow engine now            | Queues / CF Workflows / `@figentra/workflows` over CF.   |
+| Confusing workflow with event                    | Workflow orchestrates; event announces.                  |
+| Introducing Kafka by default                     | Cloudflare Queues; Kafka only when volume justifies it.  |
+| A queue abstraction hiding the transport         | Define event contracts; let infra pick the transport.    |
+| An async subsystem without a DLQ                 | Every async path has a DLQ + replay.                     |
 
 ---
 

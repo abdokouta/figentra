@@ -8,13 +8,13 @@ reviewed_at: null
 
 # @stackra/realtime — architecture plan
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
+**Status:** Planned **Anchor ADRs:**
+[ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
 [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
-[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md)
-**Reference:** `.ref/packages/realtime/`
-**Depends on:** `@stackra/container`, `@stackra/contracts`, `@stackra/support`,
-`@stackra/logger`, `@stackra/events`, `@stackra/redis` (for cross-server relay)
+[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md) **Reference:**
+`.ref/packages/realtime/` **Depends on:** `@stackra/container`,
+`@stackra/contracts`, `@stackra/support`, `@stackra/logger`, `@stackra/events`,
+`@stackra/redis` (for cross-server relay)
 
 ## Purpose
 
@@ -24,10 +24,10 @@ long-lived server-client and client-client channels. Distinct from
 
 Enterprise requirements day one:
 
-- **Multiple transports** — WebSocket (bi-directional), SSE (server-sent
-  events, unidirectional), `cross-tab` (proxies through
-  `@stackra/coordinator` — a BroadcastChannel-backed leader-election bridge),
-  Durable Object (Worker stateful rooms).
+- **Multiple transports** — WebSocket (bi-directional), SSE (server-sent events,
+  unidirectional), `cross-tab` (proxies through `@stackra/coordinator` — a
+  BroadcastChannel-backed leader-election bridge), Durable Object (Worker
+  stateful rooms).
 - **Rooms** — subscribers join named rooms; server broadcasts to a room.
 - **Presence** — track connected users in a room; emit `presence.joined`,
   `presence.left`.
@@ -39,8 +39,7 @@ Enterprise requirements day one:
   NATS/JetStream (multi-DC).
 - **Authentication** — token-based; the transport rejects unauthed clients.
 - **Rate limiting** — per-connection outbound + inbound rate limits.
-- **Message ordering + at-least-once delivery** — via message-id + client
-  ack.
+- **Message ordering + at-least-once delivery** — via message-id + client ack.
 - **Heartbeat / ping-pong** — every 30s; disconnect on 3 missed.
 - **RN via ws polyfill** — RN doesn't ship native WebSocket in every
   environment; use the `ws` polyfill or React Native's WebSocket.
@@ -55,9 +54,9 @@ Enterprise requirements day one:
 
 ## Manager pattern — MultipleInstanceManager (Shape B per ADR-0090)
 
-`RealtimeManager extends MultipleInstanceManager<IRealtimeConnection>` — an
-app can have multiple named channels/servers (a chat WS, a presence WS, an
-analytics SSE stream).
+`RealtimeManager extends MultipleInstanceManager<IRealtimeConnection>` — an app
+can have multiple named channels/servers (a chat WS, a presence WS, an analytics
+SSE stream).
 
 ```typescript
 RealtimeModule.forRoot({
@@ -151,19 +150,19 @@ packages/realtime/
 
 ## Contracts split
 
-| Symbol                        | Kind      |
-| ----------------------------- | --------- |
-| `IRealtimeConnection`         | interface |
-| `IRealtimeManager`            | interface |
-| `IRealtimeConnector`          | interface |
-| `IRoom`                       | interface |
-| `IPresence`                   | interface |
-| `IRealtimeMessage<T>`         | interface |
-| `ConnectionState` enum        | enum      |
-| `REALTIME_MANAGER`            | token     |
-| `REALTIME_CONNECTION`         | token (default) |
-| `REALTIME_RELAY`              | token (for cross-server) |
-| `RealtimeConnectionError`     | class     |
+| Symbol                    | Kind                     |
+| ------------------------- | ------------------------ |
+| `IRealtimeConnection`     | interface                |
+| `IRealtimeManager`        | interface                |
+| `IRealtimeConnector`      | interface                |
+| `IRoom`                   | interface                |
+| `IPresence`               | interface                |
+| `IRealtimeMessage<T>`     | interface                |
+| `ConnectionState` enum    | enum                     |
+| `REALTIME_MANAGER`        | token                    |
+| `REALTIME_CONNECTION`     | token (default)          |
+| `REALTIME_RELAY`          | token (for cross-server) |
+| `RealtimeConnectionError` | class                    |
 
 ## Core API (locked)
 
@@ -173,7 +172,7 @@ interface IRealtimeConnection {
   connect(): Promise<void>;
   disconnect(): Promise<void>;
   isConnected(): boolean;
-  getState(): ConnectionState;    // "connecting" | "open" | "closing" | "closed" | "reconnecting"
+  getState(): ConnectionState; // "connecting" | "open" | "closing" | "closed" | "reconnecting"
 
   // Rooms
   join(room: string, options?: IJoinOptions): Promise<IRoom>;
@@ -182,7 +181,11 @@ interface IRealtimeConnection {
 
   // Direct messaging (no room)
   send<T>(event: string, payload: T, options?: ISendOptions): Promise<void>;
-  request<TReq, TRes>(event: string, payload: TReq, options?: IRequestOptions): Promise<TRes>;
+  request<TReq, TRes>(
+    event: string,
+    payload: TReq,
+    options?: IRequestOptions,
+  ): Promise<TRes>;
 
   // Subscriptions
   on<T>(event: string, handler: (msg: IRealtimeMessage<T>) => void): () => void;
@@ -196,7 +199,7 @@ interface IRoom {
   readonly name: string;
 
   send<T>(event: string, payload: T): Promise<void>;
-  broadcast<T>(event: string, payload: T): Promise<void>;   // to every member except self
+  broadcast<T>(event: string, payload: T): Promise<void>; // to every member except self
   on<T>(event: string, handler: (msg: IRealtimeMessage<T>) => void): () => void;
   leave(): Promise<void>;
 
@@ -215,13 +218,13 @@ interface IPresence {
 
 ## Connectors
 
-| Connector           | Home                                                | Runtime         |
-| ------------------- | --------------------------------------------------- | --------------- |
-| `websocket`         | `core/connectors/websocket.connector.ts`            | Every runtime   |
-| `sse`               | `core/connectors/sse.connector.ts`                  | Every runtime   |
-| `coordinator`       | `core/connectors/coordinator.connector.ts`          | Browser         |
-| `durable-object`    | `worker/durable-object/room.durable-object.ts`      | Cloudflare      |
-| `null`              | `core/connectors/null.connector.ts`                 | Every           |
+| Connector        | Home                                           | Runtime       |
+| ---------------- | ---------------------------------------------- | ------------- |
+| `websocket`      | `core/connectors/websocket.connector.ts`       | Every runtime |
+| `sse`            | `core/connectors/sse.connector.ts`             | Every runtime |
+| `coordinator`    | `core/connectors/coordinator.connector.ts`     | Browser       |
+| `durable-object` | `worker/durable-object/room.durable-object.ts` | Cloudflare    |
+| `null`           | `core/connectors/null.connector.ts`            | Every         |
 
 ## Leader-only WebSocket pattern — the coordinator connector
 
@@ -320,13 +323,13 @@ RealtimeModule.forRoot({
 ```
 
 `RelayService` subscribes to `realtime:*` Redis channels and rebroadcasts to
-local WS/SSE clients. Every local message publishes to the relay first, so
-every server sees every message.
+local WS/SSE clients. Every local message publishes to the relay first, so every
+server sees every message.
 
 ## Backpressure
 
-Outbound message queue is bounded per connection (default 1000 messages).
-When full:
+Outbound message queue is bounded per connection (default 1000 messages). When
+full:
 
 - Policy `drop-oldest` — drops FIFO.
 - Policy `disconnect` — kicks the slow consumer.
@@ -403,7 +406,7 @@ function ChatRoom({ roomId }: { roomId: string }) {
     "@nestjs/websockets": "catalog:nestjs",
     "react": "catalog:react",
     "react-native": "catalog:react-native",
-    "ws": "^8.18.0"
+    "ws": "^8.18.0",
   },
   "peerDependenciesMeta": {
     "@stackra/redis": { "optional": true },
@@ -412,8 +415,8 @@ function ChatRoom({ roomId }: { roomId: string }) {
     "@nestjs/websockets": { "optional": true },
     "react": { "optional": true },
     "react-native": { "optional": true },
-    "ws": { "optional": true }
-  }
+    "ws": { "optional": true },
+  },
 }
 ```
 
@@ -426,8 +429,7 @@ function ChatRoom({ roomId }: { roomId: string }) {
 - [ ] `RealtimeManager`, `RoomRegistry`, `Presence`, `Heartbeat`,
       `ReconnectService`.
 - [ ] `WebsocketConnector`, `SseConnector`, `CoordinatorConnector` (composes
-      `@stackra/coordinator` as optional peer),
-      `NullConnector`.
+      `@stackra/coordinator` as optional peer), `NullConnector`.
 - [ ] Message framing + serialization.
 - [ ] Rate limiter + backpressure.
 - [ ] `@RealtimeSubscribe`, `@RealtimeRoom` decorators.
@@ -476,8 +478,8 @@ function ChatRoom({ roomId }: { roomId: string }) {
 ## Cross-references
 
 - ADR-0090, 0091, 0092.
-- `.kiro/plans/2026-09-03-events-package.md` — in-process events (distinct
-  from realtime cross-network).
+- `.kiro/plans/2026-09-03-events-package.md` — in-process events (distinct from
+  realtime cross-network).
 - `.kiro/plans/2026-09-03-redis-package.md` — pub/sub relay backing.
 - `.kiro/plans/2026-09-03-network-package.md` — reconnect gates on network
   online.

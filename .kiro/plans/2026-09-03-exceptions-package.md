@@ -8,22 +8,20 @@ reviewed_at: null
 
 # `@stackra/exceptions` — base exception classes
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md)
+**Status:** Planned **Anchor ADRs:**
+[ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md)
 **Reference:** `.ref/packages/excptions/` (typo — `@nesvel/exceptions` v1.0.0)
-**Depends on:** ZERO runtime deps
-**Design effort:** 5 days across 4 phases
+**Depends on:** ZERO runtime deps **Design effort:** 5 days across 4 phases
 
 ## Purpose
 
-Single source of truth for every base exception class the workspace uses.
-Ships:
+Single source of truth for every base exception class the workspace uses. Ships:
 
 - `BaseException` — the workspace-canonical error root (adds `context` +
   `code` + `.toJSON()`).
 - `HttpException` — HTTP-aware error w/ `statusCode` + `body` + `headers`.
-- Concrete HTTP exception subclasses (`BadRequest`, `Unauthorized`,
-  `Forbidden`, `NotFound`, `Conflict`, `UnprocessableEntity`, `InternalServer`,
+- Concrete HTTP exception subclasses (`BadRequest`, `Unauthorized`, `Forbidden`,
+  `NotFound`, `Conflict`, `UnprocessableEntity`, `InternalServer`,
   `ServiceUnavailable`, ...).
 - Every workspace-package exception extends `BaseException`; every HTTP-facing
   package extends `HttpException`.
@@ -59,7 +57,13 @@ class BaseException extends Error {
     cause?: unknown;
   });
 
-  toJSON(): { name: string; message: string; code: string; context: Record<string, unknown>; stack?: string };
+  toJSON(): {
+    name: string;
+    message: string;
+    code: string;
+    context: Record<string, unknown>;
+    stack?: string;
+  };
 }
 ```
 
@@ -69,7 +73,7 @@ class BaseException extends Error {
 class HttpException extends BaseException {
   readonly statusCode: number;
   readonly headers: Record<string, string>;
-  readonly body?: unknown;  // custom response body override
+  readonly body?: unknown; // custom response body override
 
   constructor(opts: {
     message: string;
@@ -86,24 +90,24 @@ class HttpException extends BaseException {
 ### Concrete HTTP subclasses
 
 ```typescript
-class BadRequest        extends HttpException {}  // 400
-class Unauthorized      extends HttpException {}  // 401
-class PaymentRequired   extends HttpException {}  // 402
-class Forbidden         extends HttpException {}  // 403
-class NotFound          extends HttpException {}  // 404
-class MethodNotAllowed  extends HttpException {}  // 405
-class Conflict          extends HttpException {}  // 409
-class Gone              extends HttpException {}  // 410
-class PayloadTooLarge   extends HttpException {}  // 413
-class UnsupportedMedia  extends HttpException {}  // 415
-class UnprocessableEntity extends HttpException {}// 422
-class TooManyRequests   extends HttpException {}  // 429
+class BadRequest extends HttpException {} // 400
+class Unauthorized extends HttpException {} // 401
+class PaymentRequired extends HttpException {} // 402
+class Forbidden extends HttpException {} // 403
+class NotFound extends HttpException {} // 404
+class MethodNotAllowed extends HttpException {} // 405
+class Conflict extends HttpException {} // 409
+class Gone extends HttpException {} // 410
+class PayloadTooLarge extends HttpException {} // 413
+class UnsupportedMedia extends HttpException {} // 415
+class UnprocessableEntity extends HttpException {} // 422
+class TooManyRequests extends HttpException {} // 429
 
-class InternalServerError extends HttpException {}// 500
-class NotImplemented    extends HttpException {}  // 501
-class BadGateway        extends HttpException {}  // 502
+class InternalServerError extends HttpException {} // 500
+class NotImplemented extends HttpException {} // 501
+class BadGateway extends HttpException {} // 502
 class ServiceUnavailable extends HttpException {} // 503
-class GatewayTimeout    extends HttpException {}  // 504
+class GatewayTimeout extends HttpException {} // 504
 ```
 
 Each subclass hard-codes its `statusCode` + provides a default `code`:
@@ -124,7 +128,10 @@ class NotFound extends HttpException {
 ### `isException(err)` type-guard
 
 ```typescript
-function isException<T extends BaseException>(err: unknown, ctor?: Constructor<T>): err is T;
+function isException<T extends BaseException>(
+  err: unknown,
+  ctor?: Constructor<T>,
+): err is T;
 ```
 
 Cross-realm safe (uses `Symbol.for("@stackra/exception-marker")` — no
@@ -167,8 +174,8 @@ Consumer packages extend the code namespace:
 - `RATE_LIMITED` — rate-limit package.
 - `WEBHOOK_DELIVERY_FAILED` — webhook package.
 
-Never re-use codes across packages; namespace by concern (`AUTH_*`,
-`WEBHOOK_*`, `PAYMENT_*`).
+Never re-use codes across packages; namespace by concern (`AUTH_*`, `WEBHOOK_*`,
+`PAYMENT_*`).
 
 ## Phases
 

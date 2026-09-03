@@ -41,17 +41,17 @@ answer for concerns that meet all three tests.
 
 ## The canonical example — `authorization` + `access`
 
-| Concern                                                                  | Package         | Reason                                                |
-| ------------------------------------------------------------------------ | --------------- | ----------------------------------------------------- |
-| `@RequirePermission` + `@RequireRole` + `@AllowGuest`                    | `authorization` | Every route uses them; must be cheap to depend on.    |
-| `AuthorizeRoute` middleware                                              | `authorization` | Same — no DB dependency.                              |
-| `PermissionEnum` / `PermissionContributor` / `RoleContributor` contracts | `authorization` | Contracts live one layer below their implementers.    |
-| `Role` + `Permission` DB models                                          | `access`        | DB-backed.                                            |
-| Migrations for `roles` + `permissions` tables                            | `access`        | DB-backed.                                            |
-| Admin routes (`GET /api/admin/roles`, ...)                               | `access`        | HTTP surface — not every app needs it.                |
-| RBAC vendor wiring                                                       | `access`        | Vendor coupling — kept away from base package.        |
-| Super-admin bypass hook                                                  | `access`        | Runtime hook — kept away from base package.           |
-| Role / permission registry hydration at boot                            | `access`        | Uses contributor tags declared in `authorization`.    |
+| Concern                                                                  | Package         | Reason                                             |
+| ------------------------------------------------------------------------ | --------------- | -------------------------------------------------- |
+| `@RequirePermission` + `@RequireRole` + `@AllowGuest`                    | `authorization` | Every route uses them; must be cheap to depend on. |
+| `AuthorizeRoute` middleware                                              | `authorization` | Same — no DB dependency.                           |
+| `PermissionEnum` / `PermissionContributor` / `RoleContributor` contracts | `authorization` | Contracts live one layer below their implementers. |
+| `Role` + `Permission` DB models                                          | `access`        | DB-backed.                                         |
+| Migrations for `roles` + `permissions` tables                            | `access`        | DB-backed.                                         |
+| Admin routes (`GET /api/admin/roles`, ...)                               | `access`        | HTTP surface — not every app needs it.             |
+| RBAC vendor wiring                                                       | `access`        | Vendor coupling — kept away from base package.     |
+| Super-admin bypass hook                                                  | `access`        | Runtime hook — kept away from base package.        |
+| Role / permission registry hydration at boot                             | `access`        | Uses contributor tags declared in `authorization`. |
 
 The AI service (`apps/ai-service`) pulls in `authorization` (decorators
 
@@ -131,14 +131,14 @@ against the concern don't.
 These concerns already show the shape and should follow the same split when
 their reference implementation is built:
 
-| Light package                                                                       | Heavy package                                                           | Split trigger                                                                               |
-| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| `feature-flags` (decorators, `Checker` contract, middleware)                        | `feature-flags-store` (models + admin CRUD + rollout runner)            | Every domain gates behind flags; only admin apps need the store + rollout UI.               |
-| `settings` (`@AsSetting` + `@SettingField`, contracts, schema builder)              | `settings-store` (`scope_values` backing + admin CRUD)                  | Every domain declares settings; only admin apps need the CRUD surface.                      |
-| `audit` (`@Auditable` contract + observer skeleton)                                 | `audit-log` (audit rows + retention runner + admin viewer)              | Every domain marks auditable; only compliance-aware apps need the DB.                       |
-| `caching` (cache-tag resolver decorators + contracts)                               | `caching-registry` (concrete registry + admin invalidation surface)     | ADR-0004 already implies this split; wire it up when the registry lands.                    |
-| `scheduling` (`@Cron` + `@WithoutOverlapping` + `@OnOneServer` + `@ScheduleName`)   | `scheduling-runtime` (schedule discovery + queue integration + admin)   | Every domain declares scheduled jobs; only long-running apps need the runtime.              |
-| `events` (`@AsEvent` + `@OnEvent` + `@ListensFor`)                                  | `events-bus` (broadcasting store + admin monitor)                       | Every domain publishes + listens; only apps that need broadcast monitoring pull in the bus. |
+| Light package                                                                     | Heavy package                                                         | Split trigger                                                                               |
+| --------------------------------------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `feature-flags` (decorators, `Checker` contract, middleware)                      | `feature-flags-store` (models + admin CRUD + rollout runner)          | Every domain gates behind flags; only admin apps need the store + rollout UI.               |
+| `settings` (`@AsSetting` + `@SettingField`, contracts, schema builder)            | `settings-store` (`scope_values` backing + admin CRUD)                | Every domain declares settings; only admin apps need the CRUD surface.                      |
+| `audit` (`@Auditable` contract + observer skeleton)                               | `audit-log` (audit rows + retention runner + admin viewer)            | Every domain marks auditable; only compliance-aware apps need the DB.                       |
+| `caching` (cache-tag resolver decorators + contracts)                             | `caching-registry` (concrete registry + admin invalidation surface)   | ADR-0004 already implies this split; wire it up when the registry lands.                    |
+| `scheduling` (`@Cron` + `@WithoutOverlapping` + `@OnOneServer` + `@ScheduleName`) | `scheduling-runtime` (schedule discovery + queue integration + admin) | Every domain declares scheduled jobs; only long-running apps need the runtime.              |
+| `events` (`@AsEvent` + `@OnEvent` + `@ListensFor`)                                | `events-bus` (broadcasting store + admin monitor)                     | Every domain publishes + listens; only apps that need broadcast monitoring pull in the bus. |
 
 The check on each row is the same: does every consumer NEED to declare, but only
 some consumers NEED the storage + admin? If yes, split. If no, ship one package.
@@ -155,17 +155,17 @@ some consumers NEED the storage + admin? If yes, split. If no, ship one package.
 
 ## Anti-patterns
 
-| Anti-pattern                                                                                             | Correct                                                                                                                                                               |
-| -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Merging both back into one package "for simplicity"                                                      | Keep split — slim consumers must not pay for the admin surface.                                                                                                       |
-| Light package depends on the heavy package                                                               | Reverse the arrow — heavy depends on light. Light must have zero dependency on any storage.                                                                           |
-| Contracts placed in the heavy package                                                                    | Contracts live in the light package — one layer below their implementers. Otherwise consumers can't type against them without pulling in the storage.                 |
-| Middleware with a concrete DB-model type in the light package                                            | Middleware types against the contract (`UserContract`, `PermissionStore`), never against the concrete model.                                                          |
-| Vendor dependency (RBAC library, feature-flag library) declared in the light package                    | Vendor deps live in the heavy package. The light package's deps declare only framework packages.                                                                     |
+| Anti-pattern                                                                                             | Correct                                                                                                                                                                |
+| -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Merging both back into one package "for simplicity"                                                      | Keep split — slim consumers must not pay for the admin surface.                                                                                                        |
+| Light package depends on the heavy package                                                               | Reverse the arrow — heavy depends on light. Light must have zero dependency on any storage.                                                                            |
+| Contracts placed in the heavy package                                                                    | Contracts live in the light package — one layer below their implementers. Otherwise consumers can't type against them without pulling in the storage.                  |
+| Middleware with a concrete DB-model type in the light package                                            | Middleware types against the contract (`UserContract`, `PermissionStore`), never against the concrete model.                                                           |
+| Vendor dependency (RBAC library, feature-flag library) declared in the light package                     | Vendor deps live in the heavy package. The light package's deps declare only framework packages.                                                                       |
 | Two packages authored but the heavy package's tests reach into the light package's `tests/` for fixtures | Each package's tests are self-contained. Shared fixtures live in `@stackra/testing` (or a dedicated `<concern>-testing` sibling if the fixtures are concern-specific). |
-| Heavy package registers the CONTRACT tag at boot                                                         | Contract tag is registered by the light package's module (it OWNS the contract). Heavy package registers IMPLEMENTERS against the existing tag.                       |
-| Splitting a concern where only one or two consumers exercise it                                          | Ship ONE package. The split's ceremony only pays off when many consumers reference the concern.                                                                       |
-| Naming the heavy package `<concern>-impl`                                                                | Name it for what it does (`access`, `feature-flags-store`, `audit-log`).                                                                                              |
+| Heavy package registers the CONTRACT tag at boot                                                         | Contract tag is registered by the light package's module (it OWNS the contract). Heavy package registers IMPLEMENTERS against the existing tag.                        |
+| Splitting a concern where only one or two consumers exercise it                                          | Ship ONE package. The split's ceremony only pays off when many consumers reference the concern.                                                                        |
+| Naming the heavy package `<concern>-impl`                                                                | Name it for what it does (`access`, `feature-flags-store`, `audit-log`).                                                                                               |
 
 ## Precedence
 

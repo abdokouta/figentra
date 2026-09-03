@@ -20,7 +20,13 @@
  */
 
 import { render as rtlRender, type RenderOptions, type RenderResult } from "@testing-library/react";
-import { createElement, Fragment, type ComponentType, type ReactElement, type ReactNode } from "react";
+import {
+  createElement,
+  Fragment,
+  type ComponentType,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 
 /** Options for the workspace's `customRender`. */
 export interface ICustomRenderOptions extends Omit<RenderOptions, "wrapper"> {
@@ -71,10 +77,7 @@ export interface ICustomRenderOptions extends Omit<RenderOptions, "wrapper"> {
  * });
  * ```
  */
-export function customRender(
-  ui: ReactElement,
-  options: ICustomRenderOptions = {},
-): RenderResult {
+export function customRender(ui: ReactElement, options: ICustomRenderOptions = {}): RenderResult {
   const { wrappers = [], ...rtlOptions } = options;
 
   const Wrapper: ComponentType<{ children: ReactNode }> =

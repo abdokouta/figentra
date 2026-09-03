@@ -41,8 +41,7 @@ export function runPipe<TPassable, TReturn = unknown>(
   next?: NextFn<TPassable>,
   options: { method?: string } = {},
 ): TReturn {
-  const effectiveNext: NextFn<TPassable> =
-    next ?? ((value) => value as unknown);
+  const effectiveNext: NextFn<TPassable> = next ?? ((value) => value as unknown);
   const method = options.method ?? "handle";
 
   // Tuple form: [pipeEntry, ...params]
@@ -50,13 +49,11 @@ export function runPipe<TPassable, TReturn = unknown>(
     const [entry, ...params] = pipe as PipeTuple;
 
     if (typeof entry === "function") {
-      return (
-        entry as (
-          p: TPassable,
-          n: NextFn<TPassable>,
-          ...rest: unknown[]
-        ) => TReturn
-      )(passable, effectiveNext, ...params);
+      return (entry as (p: TPassable, n: NextFn<TPassable>, ...rest: unknown[]) => TReturn)(
+        passable,
+        effectiveNext,
+        ...params,
+      );
     }
 
     if (typeof entry === "object" && entry !== null) {
@@ -77,10 +74,7 @@ export function runPipe<TPassable, TReturn = unknown>(
 
   // Function form
   if (typeof pipe === "function") {
-    return (pipe as (p: TPassable, n: NextFn<TPassable>) => TReturn)(
-      passable,
-      effectiveNext,
-    );
+    return (pipe as (p: TPassable, n: NextFn<TPassable>) => TReturn)(passable, effectiveNext);
   }
 
   // Object form
@@ -89,11 +83,7 @@ export function runPipe<TPassable, TReturn = unknown>(
     if (typeof handler !== "function") {
       throw new Error(`runPipe: object pipe has no "${method}" method.`);
     }
-    return (handler as (...args: unknown[]) => TReturn).call(
-      pipe,
-      passable,
-      effectiveNext,
-    );
+    return (handler as (...args: unknown[]) => TReturn).call(pipe, passable, effectiveNext);
   }
 
   throw new Error(

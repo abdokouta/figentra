@@ -1,4 +1,4 @@
-import type { Type } from '@/types';
+import type { Type } from "@/types";
 
 /**
  * @interface MappedType

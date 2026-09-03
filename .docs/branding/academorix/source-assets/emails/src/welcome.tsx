@@ -44,20 +44,16 @@ export function WelcomeEmail(props: WelcomeEmailProps): React.ReactElement {
       </H1>
 
       <P>
-        Welcome to Academorix. Your 30-day trial is live for{" "}
-        <strong>{p.academyName}</strong> and every module is unlocked. No card
-        on file. Cancel any day between now and {p.trialEndsAt} with a single
-        click.
+        Welcome to Academorix. Your 30-day trial is live for <strong>{p.academyName}</strong> and
+        every module is unlocked. No card on file. Cancel any day between now and {p.trialEndsAt}{" "}
+        with a single click.
       </P>
 
       <CTA href={p.magicLink} label="Verify + open my roster →" />
 
       <Muted>
         The link expires in 24 hours. If it&#39;s already gone stale, hit{" "}
-        <a
-          href="https://academorix.com/auth/re-verify"
-          style={{ color: theme.signal }}
-        >
+        <a href="https://academorix.com/auth/re-verify" style={{ color: theme.signal }}>
           send a fresh link
         </a>
         .
@@ -118,8 +114,8 @@ export function WelcomeEmail(props: WelcomeEmailProps): React.ReactElement {
                 margin: 0,
               }}
             >
-              <strong>Import your roster.</strong> CSV, Google Sheets, or paste
-              a WhatsApp export. Under 3 minutes for up to 200 athletes.
+              <strong>Import your roster.</strong> CSV, Google Sheets, or paste a WhatsApp export.
+              Under 3 minutes for up to 200 athletes.
             </Text>
           </Column>
         </Row>
@@ -146,8 +142,8 @@ export function WelcomeEmail(props: WelcomeEmailProps): React.ReactElement {
                 margin: 0,
               }}
             >
-              <strong>Run one session.</strong> Attendance, drill notes, a
-              scoreline. The whole workflow in 6 minutes.
+              <strong>Run one session.</strong> Attendance, drill notes, a scoreline. The whole
+              workflow in 6 minutes.
             </Text>
           </Column>
         </Row>
@@ -174,8 +170,8 @@ export function WelcomeEmail(props: WelcomeEmailProps): React.ReactElement {
                 margin: 0,
               }}
             >
-              <strong>Invite a parent.</strong> They get one weekly digest.
-              Zero apps to install if they don&#39;t want one.
+              <strong>Invite a parent.</strong> They get one weekly digest. Zero apps to install if
+              they don&#39;t want one.
             </Text>
           </Column>
         </Row>
@@ -189,8 +185,8 @@ export function WelcomeEmail(props: WelcomeEmailProps): React.ReactElement {
           margin: "16px 0 4px",
         }}
       >
-        Stuck? Reply to this email — it lands in a real coach&#39;s inbox
-        (not a bot). Or write to us at{" "}
+        Stuck? Reply to this email — it lands in a real coach&#39;s inbox (not a bot). Or write to
+        us at{" "}
         <a href={`mailto:${p.supportEmail}`} style={{ color: theme.signal }}>
           {p.supportEmail}
         </a>

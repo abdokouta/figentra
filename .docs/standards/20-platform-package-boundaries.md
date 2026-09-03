@@ -11,8 +11,8 @@ The canonical zero-business-logic wire contract package. It contains interfaces,
 DTOs, enums, types, event contracts, DI tokens, and other framework-neutral
 vocabulary shared across service boundaries.
 
-Contracts do not perform HTTP, NATS, Redis, database, authentication, or workflow
-execution.
+Contracts do not perform HTTP, NATS, Redis, database, authentication, or
+workflow execution.
 
 ### `packages/areview/*`
 
@@ -44,8 +44,8 @@ remote service
 ```
 
 Do not create a platform-wide SDK containing clients for every internal service.
-A dedicated reusable SDK is justified only for a stable external consumer base or
-when a client has enough independent behavior to warrant its own versioning.
+A dedicated reusable SDK is justified only for a stable external consumer base
+or when a client has enough independent behavior to warrant its own versioning.
 
 ### IAM and Identity
 

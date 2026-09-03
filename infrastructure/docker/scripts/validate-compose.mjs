@@ -15,7 +15,9 @@ const root = resolve(import.meta.dirname, "../../..");
 // workspace's machine-owned-output contract.
 const path = resolve(root, "infrastructure/.generated/docker-compose.yml");
 const document = parse(readFileSync(path, "utf8"));
-const catalog = JSON.parse(readFileSync(resolve(root, "infrastructure/.generated/catalog.json"), "utf8"));
+const catalog = JSON.parse(
+  readFileSync(resolve(root, "infrastructure/.generated/catalog.json"), "utf8"),
+);
 const errors = [];
 const forbiddenSecretKeys = /token|password|secret|private[_-]?key|api[_-]?key/i;
 
@@ -24,15 +26,19 @@ function scan(value, location = "$") {
   if (!value || typeof value !== "object") return;
   for (const [key, child] of Object.entries(value)) {
     const childLocation = `${location}.${key}`;
-    if (forbiddenSecretKeys.test(key)) errors.push(`${childLocation}: secret-bearing key is forbidden`);
+    if (forbiddenSecretKeys.test(key))
+      errors.push(`${childLocation}: secret-bearing key is forbidden`);
     scan(child, childLocation);
   }
 }
 
 if (document?.name !== "figentra") errors.push("root name must be figentra");
-if (!document?.services || typeof document.services !== "object") errors.push("services must be an object");
+if (!document?.services || typeof document.services !== "object")
+  errors.push("services must be an object");
 if (!document?.networks?.figentra) errors.push("figentra network is required");
-const expectedServices = (catalog.deployables ?? []).filter(d => d.docker?.enabled).map(d => d.slug);
+const expectedServices = (catalog.deployables ?? [])
+  .filter((d) => d.docker?.enabled)
+  .map((d) => d.slug);
 for (const name of expectedServices) {
   const service = document.services?.[name];
   if (!service) errors.push(`${name}: missing from generated Compose`);
@@ -42,10 +48,13 @@ for (const name of expectedServices) {
 for (const [name, service] of Object.entries(document.services ?? {})) {
   if (service.build) {
     const dockerfile = resolve(root, service.build.dockerfile);
-    if (!existsSync(dockerfile)) errors.push(`${name}: Dockerfile does not exist: ${service.build.dockerfile}`);
+    if (!existsSync(dockerfile))
+      errors.push(`${name}: Dockerfile does not exist: ${service.build.dockerfile}`);
   }
-  if (service.environment?.NODE_ENV === "production") errors.push(`${name}: generated Compose must not embed production NODE_ENV`);
-  if (service.ports && !service.profiles?.includes("infra")) errors.push(`${name}: application containers must not publish host ports`);
+  if (service.environment?.NODE_ENV === "production")
+    errors.push(`${name}: generated Compose must not embed production NODE_ENV`);
+  if (service.ports && !service.profiles?.includes("infra"))
+    errors.push(`${name}: application containers must not publish host ports`);
 }
 scan(document);
 

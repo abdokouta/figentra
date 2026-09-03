@@ -1,24 +1,24 @@
-import { IntersectionType } from '@/helpers/intersection-type.helper';
-import { IsString, IsEmail, IsNumber, IsBoolean, IsOptional } from 'class-validator';
-import { Expose, Exclude, Type as TransformType, Transform } from 'class-transformer';
+import { IntersectionType } from "@/helpers/intersection-type.helper";
+import { IsString, IsEmail, IsNumber, IsBoolean, IsOptional } from "class-validator";
+import { Expose, Exclude, Type as TransformType, Transform } from "class-transformer";
 
-describe('IntersectionType', () => {
-  describe('Basic Type Creation', () => {
+describe("IntersectionType", () => {
+  describe("Basic Type Creation", () => {
     /**
      * Test case: IntersectionType should create a new class combining properties from all source classes
      *
      * This test validates that IntersectionType creates a class containing all properties
      * from all provided source classes.
      */
-    it('should create a new class combining properties from all source classes', () => {
+    it("should create a new class combining properties from all source classes", () => {
       // Arrange: Create multiple source classes with different properties
       class UserInfo {
-        name: string = '';
-        email: string = '';
+        name: string = "";
+        email: string = "";
       }
 
       class UserPreferences {
-        theme: string = 'light';
+        theme: string = "light";
         notifications: boolean = true;
       }
 
@@ -34,21 +34,21 @@ describe('IntersectionType', () => {
       const instance = new CompleteUserDto();
 
       // Properties from UserInfo
-      expect(instance).toHaveProperty('name');
-      expect(instance).toHaveProperty('email');
+      expect(instance).toHaveProperty("name");
+      expect(instance).toHaveProperty("email");
 
       // Properties from UserPreferences
-      expect(instance).toHaveProperty('theme');
-      expect(instance).toHaveProperty('notifications');
+      expect(instance).toHaveProperty("theme");
+      expect(instance).toHaveProperty("notifications");
 
       // Properties from UserStats
-      expect(instance).toHaveProperty('loginCount');
-      expect(instance).toHaveProperty('lastLogin');
+      expect(instance).toHaveProperty("loginCount");
+      expect(instance).toHaveProperty("lastLogin");
 
       // Verify property initialization
-      expect(instance.name).toBe('');
-      expect(instance.email).toBe('');
-      expect(instance.theme).toBe('light');
+      expect(instance.name).toBe("");
+      expect(instance.email).toBe("");
+      expect(instance.theme).toBe("light");
       expect(instance.notifications).toBe(true);
       expect(instance.loginCount).toBe(0);
       expect(instance.lastLogin).toBeInstanceOf(Date);
@@ -60,11 +60,11 @@ describe('IntersectionType', () => {
      * This test ensures that properties from all source classes maintain their
      * original types and initialization values.
      */
-    it('should preserve property types from all sources', () => {
+    it("should preserve property types from all sources", () => {
       // Arrange: Source classes with different property types
       class StringProps {
-        stringProp: string = 'test';
-        textProp: string = 'text';
+        stringProp: string = "test";
+        textProp: string = "text";
       }
 
       class NumberProps {
@@ -74,8 +74,8 @@ describe('IntersectionType', () => {
 
       class ComplexProps {
         booleanProp: boolean = true;
-        arrayProp: string[] = ['item1', 'item2'];
-        objectProp: { key: string } = { key: 'value' };
+        arrayProp: string[] = ["item1", "item2"];
+        objectProp: { key: string } = { key: "value" };
       }
 
       // Act: Create intersection type
@@ -85,23 +85,23 @@ describe('IntersectionType', () => {
       const instance = new CombinedDto();
 
       // String properties
-      expect(typeof instance.stringProp).toBe('string');
-      expect(typeof instance.textProp).toBe('string');
-      expect(instance.stringProp).toBe('test');
-      expect(instance.textProp).toBe('text');
+      expect(typeof instance.stringProp).toBe("string");
+      expect(typeof instance.textProp).toBe("string");
+      expect(instance.stringProp).toBe("test");
+      expect(instance.textProp).toBe("text");
 
       // Number properties
-      expect(typeof instance.numberProp).toBe('number');
-      expect(typeof instance.countProp).toBe('number');
+      expect(typeof instance.numberProp).toBe("number");
+      expect(typeof instance.countProp).toBe("number");
       expect(instance.numberProp).toBe(42);
       expect(instance.countProp).toBe(100);
 
       // Complex properties
-      expect(typeof instance.booleanProp).toBe('boolean');
+      expect(typeof instance.booleanProp).toBe("boolean");
       expect(Array.isArray(instance.arrayProp)).toBe(true);
       expect(instance.booleanProp).toBe(true);
-      expect(instance.arrayProp).toEqual(['item1', 'item2']);
-      expect(instance.objectProp).toEqual({ key: 'value' });
+      expect(instance.arrayProp).toEqual(["item1", "item2"]);
+      expect(instance.objectProp).toEqual({ key: "value" });
     });
 
     /**
@@ -109,10 +109,10 @@ describe('IntersectionType', () => {
      *
      * This test validates behavior when only one class is provided.
      */
-    it('should work with single source class', () => {
+    it("should work with single source class", () => {
       // Arrange: Single source class
       class SingleClass {
-        prop1: string = 'value1';
+        prop1: string = "value1";
         prop2: number = 100;
       }
 
@@ -122,9 +122,9 @@ describe('IntersectionType', () => {
       // Assert: Should have all properties from the single source
       const instance = new SingleIntersectionDto();
 
-      expect(instance).toHaveProperty('prop1');
-      expect(instance).toHaveProperty('prop2');
-      expect(instance.prop1).toBe('value1');
+      expect(instance).toHaveProperty("prop1");
+      expect(instance).toHaveProperty("prop2");
+      expect(instance.prop1).toBe("value1");
       expect(instance.prop2).toBe(100);
     });
 
@@ -133,14 +133,14 @@ describe('IntersectionType', () => {
      *
      * This test validates that the generated class has the correct name.
      */
-    it('should set correct class name', () => {
+    it("should set correct class name", () => {
       // Arrange: Source classes
       class UserDto {
-        name: string = '';
+        name: string = "";
       }
 
       class AddressDto {
-        street: string = '';
+        street: string = "";
       }
 
       // Act: Create intersection type
@@ -148,22 +148,22 @@ describe('IntersectionType', () => {
 
       // Note: Class names may not be set correctly due to extended class behavior
       // The key functionality is that the helper works, not the naming
-      expect(UserWithAddressDto.name).toBe('UserWithAddressDto');
+      expect(UserWithAddressDto.name).toBe("UserWithAddressDto");
     });
   });
 
-  describe('Property Conflicts and Resolution', () => {
+  describe("Property Conflicts and Resolution", () => {
     /**
      * Test case: IntersectionType should handle property name conflicts by using last class value
      *
      * This test validates behavior when multiple source classes have properties
      * with the same name.
      */
-    it('should handle property name conflicts by using the last source class value', () => {
+    it("should handle property name conflicts by using the last source class value", () => {
       // Arrange: Source classes with conflicting property names
       class FirstClass {
-        conflictProp: string = 'first-value';
-        uniqueFirst: string = 'unique-first';
+        conflictProp: string = "first-value";
+        uniqueFirst: string = "unique-first";
       }
 
       class SecondClass {
@@ -172,8 +172,8 @@ describe('IntersectionType', () => {
       }
 
       class ThirdClass {
-        conflictProp: string = 'third-value'; // Same name again
-        uniqueThird: string[] = ['third'];
+        conflictProp: string = "third-value"; // Same name again
+        uniqueThird: string[] = ["third"];
       }
 
       // Act: Create intersection type
@@ -183,13 +183,13 @@ describe('IntersectionType', () => {
       const instance = new ConflictingDto();
 
       // Conflicting property should use FirstClass value (first property initialization wins)
-      expect(instance.conflictProp).toBe('first-value');
-      expect(typeof instance.conflictProp).toBe('string');
+      expect(instance.conflictProp).toBe("first-value");
+      expect(typeof instance.conflictProp).toBe("string");
 
       // Unique properties should be preserved
-      expect(instance.uniqueFirst).toBe('unique-first');
+      expect(instance.uniqueFirst).toBe("unique-first");
       expect(instance.uniqueSecond).toBe(true);
-      expect(instance.uniqueThird).toEqual(['third']);
+      expect(instance.uniqueThird).toEqual(["third"]);
     });
 
     /**
@@ -197,15 +197,15 @@ describe('IntersectionType', () => {
      *
      * This test validates behavior with various property initialization strategies.
      */
-    it('should handle different property initialization patterns', () => {
+    it("should handle different property initialization patterns", () => {
       // Arrange: Classes with different initialization patterns
       class DefaultValues {
-        withDefault: string = 'default';
+        withDefault: string = "default";
         withZero: number = 0;
       }
 
       class NoDefaults {
-        noDefault: string = ''; // Empty string as default
+        noDefault: string = ""; // Empty string as default
         undefinedProp: string | undefined = undefined;
       }
 
@@ -220,50 +220,50 @@ describe('IntersectionType', () => {
       // Assert: All initialization patterns should be preserved
       const instance = new MixedDefaultsDto();
 
-      expect(instance.withDefault).toBe('default');
+      expect(instance.withDefault).toBe("default");
       expect(instance.withZero).toBe(0);
-      expect(instance.noDefault).toBe('');
+      expect(instance.noDefault).toBe("");
       expect(instance.undefinedProp).toBeUndefined();
       expect(instance.complexProp).toEqual({ nested: { value: 123 } });
       expect(instance.arrayProp).toEqual([]);
 
       // Verify modifications work correctly
       instance.complexProp.nested.value = 456;
-      instance.arrayProp.push('test');
+      instance.arrayProp.push("test");
 
       expect(instance.complexProp.nested.value).toBe(456);
-      expect(instance.arrayProp).toEqual(['test']);
+      expect(instance.arrayProp).toEqual(["test"]);
     });
   });
 
-  describe('Class-Validator Integration', () => {
+  describe("Class-Validator Integration", () => {
     /**
      * Test case: IntersectionType should inherit validation metadata from all source classes
      *
      * This test validates that validation decorators from all source classes
      * are properly inherited.
      */
-    it('should inherit validation metadata from all source classes', () => {
+    it("should inherit validation metadata from all source classes", () => {
       // Arrange: Source classes with validation decorators
       class PersonalInfo {
-        @IsString({ message: 'Name must be a string' })
-        name: string = '';
+        @IsString({ message: "Name must be a string" })
+        name: string = "";
 
-        @IsEmail({}, { message: 'Email must be valid' })
-        email: string = '';
+        @IsEmail({}, { message: "Email must be valid" })
+        email: string = "";
       }
 
       class ContactInfo {
-        @IsString({ message: 'Phone must be a string' })
-        phone: string = '';
+        @IsString({ message: "Phone must be a string" })
+        phone: string = "";
 
         @IsOptional()
-        @IsString({ message: 'Address must be a string if provided' })
+        @IsString({ message: "Address must be a string if provided" })
         address?: string;
       }
 
       class AccountInfo {
-        @IsNumber({}, { message: 'User ID must be a number' })
+        @IsNumber({}, { message: "User ID must be a number" })
         userId: number = 0;
 
         @IsBoolean()
@@ -274,39 +274,39 @@ describe('IntersectionType', () => {
       class CompleteUserDto extends IntersectionType(PersonalInfo, ContactInfo, AccountInfo) {}
 
       // Assert: Should have validation metadata from all source classes
-      const metadataStorage = require('class-validator').getMetadataStorage();
+      const metadataStorage = require("class-validator").getMetadataStorage();
       const targetMetadatas = metadataStorage.getTargetValidationMetadatas(
         CompleteUserDto,
         null,
         false,
-        false
+        false,
       );
 
       const propertyNames = targetMetadatas.map((metadata: any) => metadata.propertyName);
 
       // Should have validation metadata from PersonalInfo
-      expect(propertyNames).toContain('name');
-      expect(propertyNames).toContain('email');
+      expect(propertyNames).toContain("name");
+      expect(propertyNames).toContain("email");
 
       // Should have validation metadata from ContactInfo
-      expect(propertyNames).toContain('phone');
-      expect(propertyNames).toContain('address');
+      expect(propertyNames).toContain("phone");
+      expect(propertyNames).toContain("address");
 
       // Should have validation metadata from AccountInfo
-      expect(propertyNames).toContain('userId');
-      expect(propertyNames).toContain('isActive');
+      expect(propertyNames).toContain("userId");
+      expect(propertyNames).toContain("isActive");
 
       // Verify specific validation constraints
-      const nameMetadata = targetMetadatas.find((m: any) => m.propertyName === 'name');
-      const emailMetadata = targetMetadatas.find((m: any) => m.propertyName === 'email');
-      const phoneMetadata = targetMetadatas.find((m: any) => m.propertyName === 'phone');
-      const userIdMetadata = targetMetadatas.find((m: any) => m.propertyName === 'userId');
+      const nameMetadata = targetMetadatas.find((m: any) => m.propertyName === "name");
+      const emailMetadata = targetMetadatas.find((m: any) => m.propertyName === "email");
+      const phoneMetadata = targetMetadatas.find((m: any) => m.propertyName === "phone");
+      const userIdMetadata = targetMetadatas.find((m: any) => m.propertyName === "userId");
 
-      expect(nameMetadata.name).toBe('isString');
-      expect(nameMetadata.message).toBe('Name must be a string');
-      expect(emailMetadata.name).toBe('isEmail');
-      expect(phoneMetadata.name).toBe('isString');
-      expect(userIdMetadata.name).toBe('isNumber');
+      expect(nameMetadata.name).toBe("isString");
+      expect(nameMetadata.message).toBe("Name must be a string");
+      expect(emailMetadata.name).toBe("isEmail");
+      expect(phoneMetadata.name).toBe("isString");
+      expect(userIdMetadata.name).toBe("isNumber");
     });
 
     /**
@@ -315,33 +315,33 @@ describe('IntersectionType', () => {
      * This test validates behavior when multiple source classes have validation
      * decorators on properties with the same name.
      */
-    it('should handle validation conflicts by merging validation rules', () => {
+    it("should handle validation conflicts by merging validation rules", () => {
       // Arrange: Source classes with conflicting validation on same property name
       class FirstValidation {
-        @IsString({ message: 'Must be string from first' })
-        sharedProp: string = '';
+        @IsString({ message: "Must be string from first" })
+        sharedProp: string = "";
       }
 
       class SecondValidation {
         // Different validation rule on same property name
         @IsOptional()
-        sharedProp: string = '';
+        sharedProp: string = "";
       }
 
       // Act: Create intersection type
       class ConflictValidationDto extends IntersectionType(FirstValidation, SecondValidation) {}
 
       // Assert: Should handle validation conflicts (implementation-dependent behavior)
-      const metadataStorage = require('class-validator').getMetadataStorage();
+      const metadataStorage = require("class-validator").getMetadataStorage();
       const targetMetadatas = metadataStorage.getTargetValidationMetadatas(
         ConflictValidationDto,
         null,
         false,
-        false
+        false,
       );
 
       const sharedPropValidations = targetMetadatas.filter(
-        (m: any) => m.propertyName === 'sharedProp'
+        (m: any) => m.propertyName === "sharedProp",
       );
 
       // Should have validation metadata for the shared property
@@ -353,27 +353,27 @@ describe('IntersectionType', () => {
     });
   });
 
-  describe('Class-Transformer Integration', () => {
+  describe("Class-Transformer Integration", () => {
     /**
      * Test case: IntersectionType should inherit transformation metadata from all source classes
      *
      * This test validates that transformation decorators from all source classes
      * are properly inherited.
      */
-    it('should inherit transformation metadata from all source classes', () => {
+    it("should inherit transformation metadata from all source classes", () => {
       // Arrange: Source classes with transformation decorators
       class ExposedFields {
         @Expose()
-        publicField1: string = '';
+        publicField1: string = "";
 
-        @Expose({ name: 'custom_name_1' })
-        renamedField1: string = '';
+        @Expose({ name: "custom_name_1" })
+        renamedField1: string = "";
       }
 
       class TransformedFields {
         @Transform(({ value }) => value?.toUpperCase())
         @Expose()
-        transformedField: string = '';
+        transformedField: string = "";
 
         @TransformType(() => Date)
         @Expose()
@@ -382,25 +382,25 @@ describe('IntersectionType', () => {
 
       class ExcludedFields {
         @Exclude()
-        hiddenField: string = '';
+        hiddenField: string = "";
 
         @Expose()
-        visibleField: string = '';
+        visibleField: string = "";
       }
 
       // Act: Create intersection type
       class CombinedTransformDto extends IntersectionType(
         ExposedFields,
         TransformedFields,
-        ExcludedFields
+        ExcludedFields,
       ) {}
 
       // Assert: Should have transformation metadata from all source classes
       let defaultMetadataStorage: any;
       try {
-        defaultMetadataStorage = require('class-transformer/cjs/storage').defaultMetadataStorage;
+        defaultMetadataStorage = require("class-transformer/cjs/storage").defaultMetadataStorage;
       } catch {
-        defaultMetadataStorage = require('class-transformer/storage').defaultMetadataStorage;
+        defaultMetadataStorage = require("class-transformer/storage").defaultMetadataStorage;
       }
 
       // Check expose metadata
@@ -409,56 +409,56 @@ describe('IntersectionType', () => {
         const exposeMap = exposeMetadatas.get(CombinedTransformDto);
 
         // From ExposedFields
-        expect(exposeMap.has('publicField1')).toBe(true);
-        expect(exposeMap.has('renamedField1')).toBe(true);
+        expect(exposeMap.has("publicField1")).toBe(true);
+        expect(exposeMap.has("renamedField1")).toBe(true);
 
         // From TransformedFields
-        expect(exposeMap.has('transformedField')).toBe(true);
-        expect(exposeMap.has('dateField')).toBe(true);
+        expect(exposeMap.has("transformedField")).toBe(true);
+        expect(exposeMap.has("dateField")).toBe(true);
 
         // From ExcludedFields
-        expect(exposeMap.has('visibleField')).toBe(true);
+        expect(exposeMap.has("visibleField")).toBe(true);
 
         // Check custom name mapping is preserved
-        const renamedMetadata = exposeMap.get('renamedField1');
-        expect(renamedMetadata.options).toEqual({ name: 'custom_name_1' });
+        const renamedMetadata = exposeMap.get("renamedField1");
+        expect(renamedMetadata.options).toEqual({ name: "custom_name_1" });
       }
 
       // Check exclude metadata
       const excludeMetadatas = defaultMetadataStorage._excludeMetadatas;
       if (excludeMetadatas?.has(CombinedTransformDto)) {
         const excludeMap = excludeMetadatas.get(CombinedTransformDto);
-        expect(excludeMap.has('hiddenField')).toBe(true);
+        expect(excludeMap.has("hiddenField")).toBe(true);
       }
 
       // Check transform metadata
       const transformMetadatas = defaultMetadataStorage._transformMetadatas;
       if (transformMetadatas?.has(CombinedTransformDto)) {
         const transformMap = transformMetadatas.get(CombinedTransformDto);
-        expect(transformMap.has('transformedField')).toBe(true);
+        expect(transformMap.has("transformedField")).toBe(true);
       }
 
       // Check type metadata
       const typeMetadatas = defaultMetadataStorage._typeMetadatas;
       if (typeMetadatas?.has(CombinedTransformDto)) {
         const typeMap = typeMetadatas.get(CombinedTransformDto);
-        expect(typeMap.has('dateField')).toBe(true);
+        expect(typeMap.has("dateField")).toBe(true);
       }
     });
   });
 
-  describe('Complex Scenarios', () => {
+  describe("Complex Scenarios", () => {
     /**
      * Test case: IntersectionType should work with inheritance hierarchies
      *
      * This test validates behavior when intersecting classes that inherit
      * from other classes.
      */
-    it('should work with inheritance hierarchies', () => {
+    it("should work with inheritance hierarchies", () => {
       // Arrange: Create inheritance hierarchies
       class BaseEntity {
         @IsString()
-        id: string = '';
+        id: string = "";
 
         createdAt: Date = new Date();
       }
@@ -466,19 +466,19 @@ describe('IntersectionType', () => {
       class UserEntity extends BaseEntity {
         @IsString()
         @Expose()
-        name: string = '';
+        name: string = "";
 
         @IsEmail()
         @Expose()
-        email: string = '';
+        email: string = "";
       }
 
       class AuditInfo {
         @IsString()
-        createdBy: string = '';
+        createdBy: string = "";
 
         @IsString()
-        modifiedBy: string = '';
+        modifiedBy: string = "";
       }
 
       // Act: Create intersection type with inheritance
@@ -488,32 +488,32 @@ describe('IntersectionType', () => {
       const instance = new AuditedUserDto();
 
       // From BaseEntity (via UserEntity)
-      expect(instance).toHaveProperty('id');
-      expect(instance).toHaveProperty('createdAt');
+      expect(instance).toHaveProperty("id");
+      expect(instance).toHaveProperty("createdAt");
 
       // From UserEntity
-      expect(instance).toHaveProperty('name');
-      expect(instance).toHaveProperty('email');
+      expect(instance).toHaveProperty("name");
+      expect(instance).toHaveProperty("email");
 
       // From AuditInfo
-      expect(instance).toHaveProperty('createdBy');
-      expect(instance).toHaveProperty('modifiedBy');
+      expect(instance).toHaveProperty("createdBy");
+      expect(instance).toHaveProperty("modifiedBy");
 
       // Verify validation metadata inheritance
-      const metadataStorage = require('class-validator').getMetadataStorage();
+      const metadataStorage = require("class-validator").getMetadataStorage();
       const validationMetadatas = metadataStorage.getTargetValidationMetadatas(
         AuditedUserDto,
         null,
         false,
-        false
+        false,
       );
       const propertyNames = validationMetadatas.map((m: any) => m.propertyName);
 
-      expect(propertyNames).toContain('id'); // from BaseEntity
-      expect(propertyNames).toContain('name'); // from UserEntity
-      expect(propertyNames).toContain('email'); // from UserEntity
-      expect(propertyNames).toContain('createdBy'); // from AuditInfo
-      expect(propertyNames).toContain('modifiedBy'); // from AuditInfo
+      expect(propertyNames).toContain("id"); // from BaseEntity
+      expect(propertyNames).toContain("name"); // from UserEntity
+      expect(propertyNames).toContain("email"); // from UserEntity
+      expect(propertyNames).toContain("createdBy"); // from AuditInfo
+      expect(propertyNames).toContain("modifiedBy"); // from AuditInfo
     });
 
     /**
@@ -521,27 +521,27 @@ describe('IntersectionType', () => {
      *
      * This test validates creating intersections of intersection types.
      */
-    it('should work with multiple levels of intersection', () => {
+    it("should work with multiple levels of intersection", () => {
       // Arrange: Create base classes and first-level intersections
       class PersonalData {
         @IsString()
-        firstName: string = '';
+        firstName: string = "";
 
         @IsString()
-        lastName: string = '';
+        lastName: string = "";
       }
 
       class ContactData {
         @IsEmail()
-        email: string = '';
+        email: string = "";
 
         @IsString()
-        phone: string = '';
+        phone: string = "";
       }
 
       class PreferenceData {
-        theme: string = 'light';
-        language: string = 'en';
+        theme: string = "light";
+        language: string = "en";
       }
 
       // First-level intersection
@@ -554,24 +554,24 @@ describe('IntersectionType', () => {
       const instance = new CompleteUserDto();
 
       // From PersonalData (via BasicUserDto)
-      expect(instance).toHaveProperty('firstName');
-      expect(instance).toHaveProperty('lastName');
+      expect(instance).toHaveProperty("firstName");
+      expect(instance).toHaveProperty("lastName");
 
       // From ContactData (via BasicUserDto)
-      expect(instance).toHaveProperty('email');
-      expect(instance).toHaveProperty('phone');
+      expect(instance).toHaveProperty("email");
+      expect(instance).toHaveProperty("phone");
 
       // From PreferenceData (directly)
-      expect(instance).toHaveProperty('theme');
-      expect(instance).toHaveProperty('language');
+      expect(instance).toHaveProperty("theme");
+      expect(instance).toHaveProperty("language");
 
       // Verify all default values are correct
-      expect(instance.firstName).toBe('');
-      expect(instance.lastName).toBe('');
-      expect(instance.email).toBe('');
-      expect(instance.phone).toBe('');
-      expect(instance.theme).toBe('light');
-      expect(instance.language).toBe('en');
+      expect(instance.firstName).toBe("");
+      expect(instance.lastName).toBe("");
+      expect(instance.email).toBe("");
+      expect(instance.phone).toBe("");
+      expect(instance.theme).toBe("light");
+      expect(instance.language).toBe("en");
     });
 
     /**
@@ -579,11 +579,11 @@ describe('IntersectionType', () => {
      *
      * This test validates behavior with generic class definitions.
      */
-    it('should work with generic source classes', () => {
+    it("should work with generic source classes", () => {
       // Arrange: Generic and specialized classes
       class GenericEntity<T> {
         @IsString()
-        id: string = '';
+        id: string = "";
 
         data: T = {} as T;
 
@@ -598,11 +598,11 @@ describe('IntersectionType', () => {
 
       class UserEntity extends GenericEntity<UserData> {
         @IsString()
-        username: string = '';
+        username: string = "";
 
         constructor() {
           super();
-          this.data = { name: '', role: 'user' };
+          this.data = { name: "", role: "user" };
         }
       }
 
@@ -618,55 +618,55 @@ describe('IntersectionType', () => {
       const instance = new TimestampedUserDto();
 
       // From GenericEntity (via UserEntity)
-      expect(instance).toHaveProperty('id');
-      expect(instance).toHaveProperty('data');
-      expect(instance).toHaveProperty('version');
+      expect(instance).toHaveProperty("id");
+      expect(instance).toHaveProperty("data");
+      expect(instance).toHaveProperty("version");
 
       // From UserEntity
-      expect(instance).toHaveProperty('username');
+      expect(instance).toHaveProperty("username");
 
       // From TimestampInfo
-      expect(instance).toHaveProperty('createdAt');
-      expect(instance).toHaveProperty('updatedAt');
+      expect(instance).toHaveProperty("createdAt");
+      expect(instance).toHaveProperty("updatedAt");
 
       // Verify values and types
-      expect(instance.id).toBe('');
-      expect(instance.data).toEqual({ name: '', role: 'user' });
+      expect(instance.id).toBe("");
+      expect(instance.data).toEqual({ name: "", role: "user" });
       expect(instance.version).toBe(1);
-      expect(instance.username).toBe('');
+      expect(instance.username).toBe("");
       expect(instance.createdAt).toBeInstanceOf(Date);
       expect(instance.updatedAt).toBeInstanceOf(Date);
     });
   });
 
-  describe('Edge Cases', () => {
+  describe("Edge Cases", () => {
     /**
      * Test case: IntersectionType should handle empty classes
      *
      * This test validates behavior when intersecting empty classes.
      */
-    it('should handle empty classes', () => {
+    it("should handle empty classes", () => {
       // Arrange: Mix of empty and non-empty classes
       class EmptyClass1 {}
       class EmptyClass2 {}
 
       class NonEmptyClass {
-        prop: string = 'value';
+        prop: string = "value";
       }
 
       // Act: Create intersection with empty classes
       class MixedIntersectionDto extends IntersectionType(
         EmptyClass1,
         NonEmptyClass,
-        EmptyClass2
+        EmptyClass2,
       ) {}
 
       // Assert: Should work correctly, only having properties from non-empty class
       const instance = new MixedIntersectionDto();
 
-      expect(instance).toHaveProperty('prop');
-      expect(instance.prop).toBe('value');
-      expect(Object.keys(instance)).toEqual(['prop']);
+      expect(instance).toHaveProperty("prop");
+      expect(instance.prop).toBe("value");
+      expect(Object.keys(instance)).toEqual(["prop"]);
     });
 
     /**
@@ -674,11 +674,11 @@ describe('IntersectionType', () => {
      *
      * This test validates that methods from source classes are properly handled.
      */
-    it('should handle classes with methods', () => {
+    it("should handle classes with methods", () => {
       // Arrange: Classes with both properties and methods
       class WithMethods1 {
         @IsString()
-        prop1: string = 'value1';
+        prop1: string = "value1";
 
         method1(): string {
           return `Method1: ${this.prop1}`;
@@ -709,35 +709,35 @@ describe('IntersectionType', () => {
       const instance = new CombinedMethodsDto();
 
       // Properties should be present
-      expect(instance).toHaveProperty('prop1');
-      expect(instance).toHaveProperty('prop2');
-      expect(instance.prop1).toBe('value1');
+      expect(instance).toHaveProperty("prop1");
+      expect(instance).toHaveProperty("prop2");
+      expect(instance.prop1).toBe("value1");
       expect(instance.prop2).toBe(42);
 
       // Methods should not be inherited (they are functions)
-      expect(typeof instance.method1).toBe('undefined');
-      expect(typeof instance.method2).toBe('undefined');
-      expect(typeof instance.getValue1).toBe('undefined');
-      expect(typeof instance.getValue2).toBe('undefined');
+      expect(typeof instance.method1).toBe("undefined");
+      expect(typeof instance.method2).toBe("undefined");
+      expect(typeof instance.getValue1).toBe("undefined");
+      expect(typeof instance.getValue2).toBe("undefined");
 
       // Methods should not be inherited (they are functions)
-      expect(typeof instance.method1).toBe('undefined');
-      expect(typeof instance.method2).toBe('undefined');
-      expect(typeof instance.getValue1).toBe('undefined');
-      expect(typeof instance.getValue2).toBe('undefined');
+      expect(typeof instance.method1).toBe("undefined");
+      expect(typeof instance.method2).toBe("undefined");
+      expect(typeof instance.getValue1).toBe("undefined");
+      expect(typeof instance.getValue2).toBe("undefined");
 
       // Verify validation metadata for properties
-      const metadataStorage = require('class-validator').getMetadataStorage();
+      const metadataStorage = require("class-validator").getMetadataStorage();
       const validationMetadatas = metadataStorage.getTargetValidationMetadatas(
         CombinedMethodsDto,
         null,
         false,
-        false
+        false,
       );
       const propertyNames = validationMetadatas.map((m: any) => m.propertyName);
 
-      expect(propertyNames).toContain('prop1');
-      expect(propertyNames).toContain('prop2');
+      expect(propertyNames).toContain("prop1");
+      expect(propertyNames).toContain("prop2");
     });
 
     /**
@@ -745,17 +745,17 @@ describe('IntersectionType', () => {
      *
      * This test validates handling of complex scenarios with property conflicts.
      */
-    it('should handle complex property conflicts', () => {
+    it("should handle complex property conflicts", () => {
       // Arrange: Classes with various types of conflicts
       class ConflictClass1 {
         @IsString()
-        sharedProp: string = 'string-value';
+        sharedProp: string = "string-value";
 
         @IsString()
-        uniqueProp1: string = 'unique1';
+        uniqueProp1: string = "unique1";
 
         methodProp(): string {
-          return 'method1';
+          return "method1";
         }
       }
 
@@ -777,44 +777,44 @@ describe('IntersectionType', () => {
         sharedProp: boolean = false;
 
         @IsString()
-        uniqueProp3: string = 'unique3';
+        uniqueProp3: string = "unique3";
       }
 
       // Act: Create intersection type with conflicts
       const ConflictIntersectionDto = IntersectionType(
         ConflictClass1,
         ConflictClass2,
-        ConflictClass3
+        ConflictClass3,
       );
 
       // Assert: Should resolve conflicts (last class wins for properties)
       const instance = new ConflictIntersectionDto();
 
       // Shared property should use first class value (first initialization wins)
-      expect((instance as any).sharedProp).toBe('string-value'); // From ConflictClass1
-      expect(typeof (instance as any).sharedProp).toBe('string');
+      expect((instance as any).sharedProp).toBe("string-value"); // From ConflictClass1
+      expect(typeof (instance as any).sharedProp).toBe("string");
 
       // Unique properties should all be present
-      expect((instance as any).uniqueProp1).toBe('unique1');
+      expect((instance as any).uniqueProp1).toBe("unique1");
       expect((instance as any).uniqueProp2).toBe(true);
-      expect((instance as any).uniqueProp3).toBe('unique3');
+      expect((instance as any).uniqueProp3).toBe("unique3");
 
       // Method should not be inherited (functions are excluded)
-      expect(typeof (instance as any).methodProp).toBe('undefined');
+      expect(typeof (instance as any).methodProp).toBe("undefined");
 
       // Validation metadata should be present (exact behavior may vary for conflicts)
-      const metadataStorage = require('class-validator').getMetadataStorage();
+      const metadataStorage = require("class-validator").getMetadataStorage();
       const validationMetadatas = metadataStorage.getTargetValidationMetadatas(
         ConflictIntersectionDto,
         null,
         false,
-        false
+        false,
       );
       const propertyNames = validationMetadatas.map((m: any) => m.propertyName);
 
-      expect(propertyNames).toContain('uniqueProp1');
-      expect(propertyNames).toContain('uniqueProp2');
-      expect(propertyNames).toContain('uniqueProp3');
+      expect(propertyNames).toContain("uniqueProp1");
+      expect(propertyNames).toContain("uniqueProp2");
+      expect(propertyNames).toContain("uniqueProp3");
       // sharedProp validation behavior depends on implementation
     });
   });

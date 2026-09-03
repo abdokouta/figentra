@@ -4,11 +4,13 @@
 
 ## 1. Purpose
 
-Hierarchical/dynamic scope context and scope assignment/resolution used by authorization.
+Hierarchical/dynamic scope context and scope assignment/resolution used by
+authorization.
 
 ## 2. Boundary and ownership
 
-Own only the responsibilities defined here. Cross-boundary changes require an ADR. Never write another service database directly.
+Own only the responsibilities defined here. Cross-boundary changes require an
+ADR. Never write another service database directly.
 
 ## 3. Repository/runtime identity
 
@@ -20,7 +22,9 @@ Own only the responsibilities defined here. Cross-boundary changes require an AD
 
 ## 4. Dependencies
 
-Runtime dependencies are production code; dev dependencies are build/test tooling; peer dependencies are public host contracts only. Do not add dependencies without a documented responsibility.
+Runtime dependencies are production code; dev dependencies are build/test
+tooling; peer dependencies are public host contracts only. Do not add
+dependencies without a documented responsibility.
 
 ### Runtime
 
@@ -71,13 +75,16 @@ Runtime dependencies are production code; dev dependencies are build/test toolin
 
 ### Peer / optional peer
 
-
 ## 5. Source organization and documentation
 
-- Use explicit `controllers`, `application`, `domain`, `infrastructure`, `repositories`, `entities`, `dto`, `interfaces`, `types`, `enums`, `constants`, `errors`, `events` and `__tests__` folders only where needed.
-- Public interfaces/types/enums/constants use dedicated appropriately named files.
+- Use explicit `controllers`, `application`, `domain`, `infrastructure`,
+  `repositories`, `entities`, `dto`, `interfaces`, `types`, `enums`,
+  `constants`, `errors`, `events` and `__tests__` folders only where needed.
+- Public interfaces/types/enums/constants use dedicated appropriately named
+  files.
 - No inline exported contracts in controllers/services.
-- Add useful TSDoc/docblocks to every exported symbol, class, public method, adapter, repository method, endpoint and non-obvious configuration block.
+- Add useful TSDoc/docblocks to every exported symbol, class, public method,
+  adapter, repository method, endpoint and non-obvious configuration block.
 - Comments explain invariants and architectural reasons, not syntax.
 
 ## 6. API contract
@@ -85,8 +92,10 @@ Runtime dependencies are production code; dev dependencies are build/test toolin
 - Version routes (`/api/v1/...`).
 - Keep controllers/route handlers thin.
 - Document HTTP endpoints with OpenAPI/Swagger.
-- Use the platform error envelope, pagination, filtering, sorting and idempotency conventions.
-- Internal HTTP is authenticated S2S traffic; never trust arbitrary identity headers.
+- Use the platform error envelope, pagination, filtering, sorting and
+  idempotency conventions.
+- Internal HTTP is authenticated S2S traffic; never trust arbitrary identity
+  headers.
 
 ## 7. NestJS standard
 
@@ -96,17 +105,22 @@ Runtime dependencies are production code; dev dependencies are build/test toolin
 - Pino/nestjs-pino structured logging.
 - Nest Observe for Nest-native telemetry.
 - `nestjs-i18n` for localized/user-facing messages where applicable.
-- NATS/JetStream is the durable async transport; `@nestjs/microservices` is not the default S2S transport.
+- NATS/JetStream is the durable async transport; `@nestjs/microservices` is not
+  the default S2S transport.
 
 ## 8. MikroORM/data standard
 
 - Service owns its PostgreSQL boundary.
-- Prefer `@InjectRepository(Entity)` / `EntityRepository<Entity>` for normal persistence.
-- Use `EntityManager` for explicit transactions, multi-repository units of work, native SQL, and atomic domain+outbox commits.
+- Prefer `@InjectRepository(Entity)` / `EntityRepository<Entity>` for normal
+  persistence.
+- Use `EntityManager` for explicit transactions, multi-repository units of work,
+  native SQL, and atomic domain+outbox commits.
 - Never expose EntityManager to controllers.
-- One coherent migration per schema change; explicit keys, foreign keys, unique constraints and indexes.
+- One coherent migration per schema change; explicit keys, foreign keys, unique
+  constraints and indexes.
 - Deterministic seeders.
-- Cache at service/query/repository boundary for read optimization; Gateway cache only safe representations and never as an authorization source.
+- Cache at service/query/repository boundary for read optimization; Gateway
+  cache only safe representations and never as an authorization source.
 
 ## 9. Messaging/events
 
@@ -114,7 +128,8 @@ Runtime dependencies are production code; dev dependencies are build/test toolin
 - Relay publishes to NATS JetStream.
 - Consumers are idempotent.
 - Commands request work; events state facts; queries read state.
-- Event envelope carries event ID/type/version, producer, time, tenant/actor context and correlation/trace metadata.
+- Event envelope carries event ID/type/version, producer, time, tenant/actor
+  context and correlation/trace metadata.
 - Retry with bounded backoff; terminal failure goes to DLQ.
 
 ## 10. Security
@@ -141,7 +156,8 @@ Runtime dependencies are production code; dev dependencies are build/test toolin
 - Contract tests.
 - Authenticated authorization E2E.
 - Retry/idempotency/failure tests.
-- Tests live under `__tests__/unit`, `__tests__/integration`, `__tests__/contract`, `__tests__/e2e`.
+- Tests live under `__tests__/unit`, `__tests__/integration`,
+  `__tests__/contract`, `__tests__/e2e`.
 
 ## 13. Infrastructure/configuration
 
@@ -149,7 +165,8 @@ Runtime dependencies are production code; dev dependencies are build/test toolin
 - Non-secret deployment configuration belongs in `cloud.yaml`.
 - Secrets are injected at runtime.
 - Dockerfiles are production-oriented where applicable.
-- Terraform owns infrastructure; generated catalogs/manifests are derived, not manually duplicated.
+- Terraform owns infrastructure; generated catalogs/manifests are derived, not
+  manually duplicated.
 
 ## 14. Current repository inventory
 

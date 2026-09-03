@@ -2,11 +2,17 @@
 
 > **Status:** Normative repository-level architecture baseline
 >
-> **Audience:** Engineers, architects, platform operators, security engineers, QA, DevOps, and AI coding agents
+> **Audience:** Engineers, architects, platform operators, security engineers,
+> QA, DevOps, and AI coding agents
 >
-> **Purpose:** One document describing what Figentra is, what every major component owns, how data and identity move through the platform, how services communicate, what each service must contain, and which boundaries must never be crossed.
+> **Purpose:** One document describing what Figentra is, what every major
+> component owns, how data and identity move through the platform, how services
+> communicate, what each service must contain, and which boundaries must never
+> be crossed.
 >
-> **Current authentication decision:** **Supabase Auth is the day-one authentication provider.** Older architecture material that names Clerk is historical/reference material and is superseded by this decision.
+> **Current authentication decision:** **Supabase Auth is the day-one
+> authentication provider.** Older architecture material that names Clerk is
+> historical/reference material and is superseded by this decision.
 >
 > **Environment names:** `development`, `staging`, `production`.
 
@@ -14,9 +20,14 @@
 
 ## 1. What Figentra Is
 
-Figentra is a **multi-tenant, multi-application enterprise SaaS platform and control plane**.
+Figentra is a **multi-tenant, multi-application enterprise SaaS platform and
+control plane**.
 
-It provides a common platform for identity, tenancy, authorization, application discovery, monetization, entitlements, integrations, audit, notifications, files, reporting, search, workflows, observability, and infrastructure orchestration while allowing independent product applications to own their business domains and databases.
+It provides a common platform for identity, tenancy, authorization, application
+discovery, monetization, entitlements, integrations, audit, notifications,
+files, reporting, search, workflows, observability, and infrastructure
+orchestration while allowing independent product applications to own their
+business domains and databases.
 
 The central architectural questions are:
 
@@ -24,13 +35,18 @@ The central architectural questions are:
 2. **Which platform principal is acting?** → Principal model in Identity.
 3. **Which tenant/business context is active?** → Tenant + Scope.
 4. **Can the principal perform this action?** → IAM + Policy + Scope.
-5. **Does the tenant have the commercial capability?** → Monetization / Entitlements.
-6. **Is the application/release enabled?** → Application Registry + Feature Flags.
+5. **Does the tenant have the commercial capability?** → Monetization /
+   Entitlements.
+6. **Is the application/release enabled?** → Application Registry + Feature
+   Flags.
 7. **What does the business operation mean?** → Owning application/service.
 8. **What happened and who caused it?** → Events + Audit.
-9. **How does work survive process/network failure?** → Outbox + durable async transport + workflows.
+9. **How does work survive process/network failure?** → Outbox + durable async
+   transport + workflows.
 
-Figentra is therefore **not** a monolithic backend and is **not** a collection of unrelated microservices. It is a bounded-context platform with explicit ownership and protocol boundaries.
+Figentra is therefore **not** a monolithic backend and is **not** a collection
+of unrelated microservices. It is a bounded-context platform with explicit
+ownership and protocol boundaries.
 
 ---
 
@@ -98,7 +114,8 @@ Figentra is therefore **not** a monolithic backend and is **not** a collection o
 
 Every important business concept has one authoritative owner.
 
-A service may **consume** another service's data, but it does not become the owner merely because it caches or projects it.
+A service may **consume** another service's data, but it does not become the
+owner merely because it caches or projects it.
 
 ## 3.2 Authentication is not authorization
 
@@ -182,11 +199,13 @@ Cross-service information is obtained through:
 
 Do not publish an event for every HTTP request or database operation.
 
-Publish durable events for meaningful state transitions and facts that other bounded contexts need.
+Publish durable events for meaningful state transitions and facts that other
+bounded contexts need.
 
 ## 3.8 Outbox is the reliability boundary
 
-When a database transaction changes durable state and an event must be emitted, the state change and outbox record are committed atomically.
+When a database transaction changes durable state and an event must be emitted,
+the state change and outbox record are committed atomically.
 
 ```text
 DB transaction
@@ -220,7 +239,8 @@ Cloudflare Workers + Hono are appropriate for:
 - webhooks where the workload fits
 - orchestration control endpoints
 
-Heavy stateful workloads belong in NestJS containers or another justified runtime.
+Heavy stateful workloads belong in NestJS containers or another justified
+runtime.
 
 ---
 
@@ -295,7 +315,9 @@ figentra/
 └── .kiro/
 ```
 
-`FIGENTRA-PLATFORM.md` is the repository-level consolidated contract. More detailed documents may specialize individual sections, but an exception must not silently contradict this file; architectural conflicts require an ADR.
+`FIGENTRA-PLATFORM.md` is the repository-level consolidated contract. More
+detailed documents may specialize individual sections, but an exception must not
+silently contradict this file; architectural conflicts require an ADR.
 
 ---
 
@@ -359,7 +381,8 @@ Applications own their business domains.
 
 ## 6.1 Purpose
 
-Identity is the authentication contract and canonical identity normalization boundary.
+Identity is the authentication contract and canonical identity normalization
+boundary.
 
 It answers:
 
@@ -771,7 +794,8 @@ environment
 origin
 ```
 
-Cloudflare SSL for SaaS / custom-hostname capabilities are used rather than implementing a certificate authority.
+Cloudflare SSL for SaaS / custom-hostname capabilities are used rather than
+implementing a certificate authority.
 
 ## 9.6 Tenant provisioning
 
@@ -926,7 +950,8 @@ Tenant / Scope / Application context
 
 ## 11.5 Direct grants
 
-Direct grants are supported only where justified and must remain controlled to prevent permission sprawl.
+Direct grants are supported only where justified and must remain controlled to
+prevent permission sprawl.
 
 ## 11.6 Authorization decision
 
@@ -938,7 +963,8 @@ deny
 require_approval
 ```
 
-A decision may include obligations and explainability for trusted administrative tooling.
+A decision may include obligations and explainability for trusted administrative
+tooling.
 
 ## 11.7 Resource authorization
 
@@ -1026,7 +1052,8 @@ CEL
 Zanzibar-style relationship authorization
 ```
 
-The selected engine must be justified by dynamic scope, conditions, lifecycle, performance and explainability.
+The selected engine must be justified by dynamic scope, conditions, lifecycle,
+performance and explainability.
 
 Policy must not become application business logic.
 
@@ -1290,9 +1317,11 @@ Responsibilities:
 
 Applications must not embed provider-specific notification code.
 
-Security-critical notifications must not be disabled by ordinary marketing preferences.
+Security-critical notifications must not be disabled by ordinary marketing
+preferences.
 
-Email templates use React Email through the shared email package where applicable.
+Email templates use React Email through the shared email package where
+applicable.
 
 ---
 
@@ -1358,7 +1387,8 @@ Production controls include:
 
 Audit is the security/compliance record.
 
-Product activity feeds are application-owned projections and may use audit/event data without becoming the authoritative audit store.
+Product activity feeds are application-owned projections and may use audit/event
+data without becoming the authoritative audit store.
 
 ---
 
@@ -1378,7 +1408,8 @@ FileAccessGrant
 FileRetentionPolicy
 ```
 
-Object bytes are stored in an object store such as Cloudflare R2 or AWS S3 according to deployment policy.
+Object bytes are stored in an object store such as Cloudflare R2 or AWS S3
+according to deployment policy.
 
 Rules:
 
@@ -1644,7 +1675,8 @@ audit
 registry
 ```
 
-Gateway composes these clients but does not redefine their transport implementation.
+Gateway composes these clients but does not redefine their transport
+implementation.
 
 ## 23.5 Client responsibilities
 
@@ -1666,7 +1698,8 @@ SDKs are **not** the event bus.
 
 # 24. Gateway Security
 
-Every protected route must have a defined authentication and authorization policy.
+Every protected route must have a defined authentication and authorization
+policy.
 
 ## 24.1 Authentication
 
@@ -1780,7 +1813,8 @@ DLQ
 observability
 ```
 
-Webhook endpoints must not perform long business workflows synchronously when a durable queue is appropriate.
+Webhook endpoints must not perform long business workflows synchronously when a
+durable queue is appropriate.
 
 ---
 
@@ -1788,7 +1822,8 @@ Webhook endpoints must not perform long business workflows synchronously when a 
 
 Terraform is infrastructure source of truth.
 
-The Infrastructure Orchestrator is a **control-plane API/worker**, not a replacement for Terraform.
+The Infrastructure Orchestrator is a **control-plane API/worker**, not a
+replacement for Terraform.
 
 It may expose authenticated operations such as:
 
@@ -1828,7 +1863,9 @@ operation result
 audit/event
 ```
 
-A Cloudflare Worker must not be treated as a general-purpose arbitrary Terraform execution environment. The worker is the secure control boundary; execution occurs in an appropriate runner/container/workflow environment.
+A Cloudflare Worker must not be treated as a general-purpose arbitrary Terraform
+execution environment. The worker is the secure control boundary; execution
+occurs in an appropriate runner/container/workflow environment.
 
 ---
 
@@ -1862,7 +1899,8 @@ reporting definitions
 
 Applications consume platform capabilities.
 
-They do not implement their own identity authority, global tenant authority or global billing authority.
+They do not implement their own identity authority, global tenant authority or
+global billing authority.
 
 ---
 
@@ -1974,7 +2012,8 @@ Customer
            └── ProductVariant
 ```
 
-Exact application entities belong to the application domain and must not be invented in platform services.
+Exact application entities belong to the application domain and must not be
+invented in platform services.
 
 ---
 
@@ -2002,7 +2041,8 @@ Workflow DB boundary
 Application DB boundaries
 ```
 
-Physical deployments may share a PostgreSQL cluster for operational efficiency, but logical ownership remains separate.
+Physical deployments may share a PostgreSQL cluster for operational efficiency,
+but logical ownership remains separate.
 
 No cross-service repository/entity imports.
 
@@ -2010,7 +2050,8 @@ No cross-service repository/entity imports.
 
 # 32. PostgreSQL / Supabase
 
-Supabase PostgreSQL is the default relational persistence platform where applicable.
+Supabase PostgreSQL is the default relational persistence platform where
+applicable.
 
 PostgreSQL is transactional source of truth.
 
@@ -2080,17 +2121,21 @@ A migration must define, as appropriate:
 - grants/revokes
 - rollback behavior
 
-Do not hide unrelated schema changes in a single migration merely for convenience.
+Do not hide unrelated schema changes in a single migration merely for
+convenience.
 
 ---
 
 # 34. ORM Policy
 
-NestJS relational services use MikroORM where the service needs a rich domain ORM and Unit-of-Work semantics.
+NestJS relational services use MikroORM where the service needs a rich domain
+ORM and Unit-of-Work semantics.
 
 The repository/entity boundary is local to the owning service.
 
-Dependency injection follows the service's chosen ORM integration convention; repository injection is preferred where a repository abstraction is required, while `EntityManager` is appropriate for transaction/unit-of-work orchestration.
+Dependency injection follows the service's chosen ORM integration convention;
+repository injection is preferred where a repository abstraction is required,
+while `EntityManager` is appropriate for transaction/unit-of-work orchestration.
 
 Do not expose ORM entities through public SDKs.
 
@@ -2212,31 +2257,32 @@ packages/contracts
 packages/events
 ```
 
-The SDK may depend on contracts, but it must not import another service's database entity/repository.
+The SDK may depend on contracts, but it must not import another service's
+database entity/repository.
 
 ---
 
 # 38. Synchronous Communication Matrix
 
-| Caller | Target | Mechanism |
-|---|---|---|
-| Browser | Gateway | HTTPS |
-| Gateway | Identity | authenticated HTTPS + SDK |
-| Gateway | IAM | authenticated HTTPS + SDK |
-| Gateway | Tenant | authenticated HTTPS + SDK |
-| Gateway | Scope | authenticated HTTPS + SDK |
-| Gateway | Policy | authenticated HTTPS + SDK |
-| Gateway | Approval | authenticated HTTPS + SDK |
-| Gateway | Entitlements | authenticated HTTPS + SDK |
-| Gateway | Monetization | authenticated HTTPS + SDK |
-| Gateway | Usage | authenticated HTTPS + SDK when synchronous read is required |
-| Gateway | Notifications | authenticated HTTPS + SDK where externally exposed |
-| Gateway | Audit | authenticated HTTPS + SDK for reads |
-| Gateway | Registry | Service Binding where Worker-to-Worker |
-| Application | IAM | authenticated HTTPS + SDK |
-| Application | Tenant | authenticated HTTPS + SDK |
-| Application | Monetization | authenticated HTTPS + SDK |
-| Application | Registry | authenticated HTTPS/Service Binding as appropriate |
+| Caller      | Target        | Mechanism                                                   |
+| ----------- | ------------- | ----------------------------------------------------------- |
+| Browser     | Gateway       | HTTPS                                                       |
+| Gateway     | Identity      | authenticated HTTPS + SDK                                   |
+| Gateway     | IAM           | authenticated HTTPS + SDK                                   |
+| Gateway     | Tenant        | authenticated HTTPS + SDK                                   |
+| Gateway     | Scope         | authenticated HTTPS + SDK                                   |
+| Gateway     | Policy        | authenticated HTTPS + SDK                                   |
+| Gateway     | Approval      | authenticated HTTPS + SDK                                   |
+| Gateway     | Entitlements  | authenticated HTTPS + SDK                                   |
+| Gateway     | Monetization  | authenticated HTTPS + SDK                                   |
+| Gateway     | Usage         | authenticated HTTPS + SDK when synchronous read is required |
+| Gateway     | Notifications | authenticated HTTPS + SDK where externally exposed          |
+| Gateway     | Audit         | authenticated HTTPS + SDK for reads                         |
+| Gateway     | Registry      | Service Binding where Worker-to-Worker                      |
+| Application | IAM           | authenticated HTTPS + SDK                                   |
+| Application | Tenant        | authenticated HTTPS + SDK                                   |
+| Application | Monetization  | authenticated HTTPS + SDK                                   |
+| Application | Registry      | authenticated HTTPS/Service Binding as appropriate          |
 
 ---
 
@@ -2257,11 +2303,15 @@ integration synchronization
 long-running jobs
 ```
 
-Cloudflare-native Worker async workloads use Cloudflare Queues where appropriate.
+Cloudflare-native Worker async workloads use Cloudflare Queues where
+appropriate.
 
-Node services use the repository's durable event/messaging abstraction and the selected production transport.
+Node services use the repository's durable event/messaging abstraction and the
+selected production transport.
 
-Kafka is introduced only when measured requirements justify high-volume durable streaming, CDC, analytics ingestion or multiple independent high-volume consumers.
+Kafka is introduced only when measured requirements justify high-volume durable
+streaming, CDC, analytics ingestion or multiple independent high-volume
+consumers.
 
 Redis is for:
 
@@ -2279,7 +2329,8 @@ Redis Pub/Sub is not the durable event backbone.
 
 # 40. NATS / JetStream Boundary
 
-Where the Node service messaging deployment uses NATS/JetStream, it is a transport implementation behind the shared messaging contracts.
+Where the Node service messaging deployment uses NATS/JetStream, it is a
+transport implementation behind the shared messaging contracts.
 
 Use:
 
@@ -2425,7 +2476,8 @@ Never collapse these concepts into one generic message type.
 
 # 43. Transactional Outbox
 
-Every service that emits durable events from transactional state changes uses an outbox boundary.
+Every service that emits durable events from transactional state changes uses an
+outbox boundary.
 
 ```text
 Application transaction
@@ -2453,7 +2505,8 @@ tracing
 graceful shutdown
 ```
 
-Consumers must be idempotent because the target delivery guarantee is at-least-once.
+Consumers must be idempotent because the target delivery guarantee is
+at-least-once.
 
 ---
 
@@ -2519,7 +2572,8 @@ Use the shared `@figentra/observability` package where appropriate.
 
 Use Pino-based structured logging for NestJS services.
 
-Workers use the Hono-compatible logger integration or direct structured logging through the platform abstraction.
+Workers use the Hono-compatible logger integration or direct structured logging
+through the platform abstraction.
 
 Never log:
 
@@ -2568,7 +2622,8 @@ Prettier
 
 NestJS microservices are **not** the universal S2S protocol.
 
-`@nestjs/microservices` is used selectively for message consumers/producers where the selected transport belongs naturally inside the Nest service.
+`@nestjs/microservices` is used selectively for message consumers/producers
+where the selected transport belongs naturally inside the Nest service.
 
 The standard HTTP boundary remains:
 
@@ -2604,9 +2659,12 @@ src/
 
 Do not keep unused `AppController`/`AppService` scaffolding.
 
-`main.ts` is the canonical HTTP bootstrap unless the service has a real, separately justified worker/consumer process.
+`main.ts` is the canonical HTTP bootstrap unless the service has a real,
+separately justified worker/consumer process.
 
-If separate process entrypoints are required, they must have explicit ownership and deployment contracts rather than arbitrary `main.cli.ts`/`main.worker.ts` files added by convention.
+If separate process entrypoints are required, they must have explicit ownership
+and deployment contracts rather than arbitrary `main.cli.ts`/`main.worker.ts`
+files added by convention.
 
 ---
 
@@ -2654,7 +2712,8 @@ routes/*.route.ts
 
 and explicit route registration.
 
-Worker code must not contain empty placeholder folders or unused `.gitkeep` files.
+Worker code must not contain empty placeholder folders or unused `.gitkeep`
+files.
 
 ---
 
@@ -2674,7 +2733,8 @@ For Worker-to-container communication:
 authenticated HTTPS
 ```
 
-Do not expose internal services publicly just to make service-to-service calls convenient.
+Do not expose internal services publicly just to make service-to-service calls
+convenient.
 
 ---
 
@@ -2755,7 +2815,8 @@ All authorization is server-side.
 
 `apps/landing-page` is the public marketing/site application.
 
-It must not contain privileged platform authorization or business administration logic.
+It must not contain privileged platform authorization or business administration
+logic.
 
 It uses the same frontend standards but remains a public-facing application.
 
@@ -2763,7 +2824,8 @@ It uses the same frontend standards but remains a public-facing application.
 
 # 54. Family Application
 
-`apps/family` is an application-level product surface and follows the same platform boundaries:
+`apps/family` is an application-level product surface and follows the same
+platform boundaries:
 
 ```text
 Supabase authentication
@@ -2841,7 +2903,8 @@ They are not IAM permissions.
 
 A provider may be Cloudflare Flagship behind an abstraction where appropriate.
 
-Core authorization must not fail open because a feature flag provider is unavailable.
+Core authorization must not fail open because a feature flag provider is
+unavailable.
 
 ---
 
@@ -2933,9 +2996,11 @@ Temporal
 other justified durable orchestrator
 ```
 
-Do not create a generic Jobs Service merely because multiple applications have background work.
+Do not create a generic Jobs Service merely because multiple applications have
+background work.
 
-Jobs belong to their owning service until independent lifecycle/scale/ownership justifies extraction.
+Jobs belong to their owning service until independent lifecycle/scale/ownership
+justifies extraction.
 
 ---
 
@@ -2978,7 +3043,8 @@ Must not contain database entities.
 
 ## `@figentra/events`
 
-Canonical event envelopes, event schemas, event names and event contract tooling.
+Canonical event envelopes, event schemas, event names and event contract
+tooling.
 
 ## `@figentra/messaging`
 
@@ -2986,7 +3052,8 @@ Transport-neutral messaging interfaces plus concrete transport adapters.
 
 ## `@figentra/outbox`
 
-Outbox contracts, persistence abstractions, relay primitives and testing helpers.
+Outbox contracts, persistence abstractions, relay primitives and testing
+helpers.
 
 ## `@figentra/identity`
 
@@ -2994,7 +3061,8 @@ Identity/provider abstractions and identity context primitives.
 
 ## `@figentra/iam`
 
-IAM client/contracts and authorization primitives that are intentionally reusable.
+IAM client/contracts and authorization primitives that are intentionally
+reusable.
 
 ## `@figentra/registry`
 
@@ -3002,7 +3070,8 @@ Registry contracts and manifest/control-plane primitives.
 
 ## `@figentra/security`
 
-Shared security primitives such as token verification contracts, request context and security helpers.
+Shared security primitives such as token verification contracts, request context
+and security helpers.
 
 ## `@figentra/observability`
 
@@ -3061,7 +3130,8 @@ Do not expose internal implementation files.
 
 # 64. Testing Architecture
 
-All test files belong under explicit `__tests__` locations for packages, services, workers and applications.
+All test files belong under explicit `__tests__` locations for packages,
+services, workers and applications.
 
 ```text
 __tests__/
@@ -3199,7 +3269,8 @@ versions.tf
 outputs.tf where needed
 ```
 
-Modules should describe infrastructure capabilities rather than embed business domain logic.
+Modules should describe infrastructure capabilities rather than embed business
+domain logic.
 
 Environment names are:
 
@@ -3236,7 +3307,8 @@ Secrets do not belong in `cloud.yaml`.
 
 Terraform and deployment tooling consume the manifest.
 
-Generated catalogs are derived artifacts, not a second manually maintained service inventory.
+Generated catalogs are derived artifacts, not a second manually maintained
+service inventory.
 
 ---
 
@@ -3244,7 +3316,8 @@ Generated catalogs are derived artifacts, not a second manually maintained servi
 
 `infrastructure/docker` contains local/container orchestration artifacts.
 
-Docker Compose may be generated from the canonical deployment manifests and infrastructure metadata.
+Docker Compose may be generated from the canonical deployment manifests and
+infrastructure metadata.
 
 Generated output belongs under:
 
@@ -3252,7 +3325,8 @@ Generated output belongs under:
 infrastructure/.generated/docker-compose.yml
 ```
 
-rather than duplicating service definitions manually in unrelated Terraform directories.
+rather than duplicating service definitions manually in unrelated Terraform
+directories.
 
 Docker generation must be deterministic.
 
@@ -3292,7 +3366,8 @@ staging
 production
 ```
 
-Each environment has explicit configuration, secrets, infrastructure state and deployment policy.
+Each environment has explicit configuration, secrets, infrastructure state and
+deployment policy.
 
 Production requires:
 
@@ -3352,7 +3427,8 @@ Application authorization/business rules
 Database RLS / least-privilege DB role
 ```
 
-Not every operation requires every layer, but no applicable layer may be skipped.
+Not every operation requires every layer, but no applicable layer may be
+skipped.
 
 ---
 
@@ -3375,7 +3451,8 @@ object deletion
 search projection cleanup
 ```
 
-Legal retention can override ordinary deletion only under explicit policy/legal-hold controls.
+Legal retention can override ordinary deletion only under explicit
+policy/legal-hold controls.
 
 ---
 
@@ -3391,9 +3468,11 @@ Gateway said it is authorized
 
 means the operation is automatically safe.
 
-Sensitive services perform their own authorization checks using trusted service identity and delegated/user context.
+Sensitive services perform their own authorization checks using trusted service
+identity and delegated/user context.
 
-The Gateway therefore provides **defense in depth**, not centralized business authorization ownership.
+The Gateway therefore provides **defense in depth**, not centralized business
+authorization ownership.
 
 ---
 
@@ -3443,7 +3522,8 @@ application
 scope
 ```
 
-These values are derived from trusted context and validated at each trust boundary.
+These values are derived from trusted context and validated at each trust
+boundary.
 
 ---
 
@@ -3451,7 +3531,8 @@ These values are derived from trusted context and validated at each trust bounda
 
 Cache only data that is safe to cache.
 
-Authorization cache keys must include every context component that can change the decision.
+Authorization cache keys must include every context component that can change
+the decision.
 
 Example:
 
@@ -3489,7 +3570,8 @@ batch decision: optimized to avoid N+1
 
 Gateway upstream calls require explicit timeouts.
 
-Retries are allowed only for safe/idempotent operations or operations with an explicit idempotency key.
+Retries are allowed only for safe/idempotent operations or operations with an
+explicit idempotency key.
 
 ---
 
@@ -3527,7 +3609,8 @@ Readiness answers:
 
 > Can this workload safely receive traffic?
 
-A dependency outage must not automatically make every service permanently unhealthy.
+A dependency outage must not automatically make every service permanently
+unhealthy.
 
 Dependency-specific readiness rules must be explicit.
 
@@ -3537,7 +3620,8 @@ Registry availability must never prevent an application from starting.
 
 # 83. Application Startup
 
-Applications must be able to start from local source/configuration without requiring the Application Registry to be online.
+Applications must be able to start from local source/configuration without
+requiring the Application Registry to be online.
 
 Manifest publication is:
 
@@ -3680,7 +3764,8 @@ infrastructure.applied.v1
 infrastructure.rollback.completed.v1
 ```
 
-This is a canonical starting catalog; application-specific business events remain application-owned.
+This is a canonical starting catalog; application-specific business events
+remain application-owned.
 
 ---
 
@@ -3774,33 +3859,34 @@ Audit write operations are event-driven, not an ordinary public CRUD endpoint.
 
 # 89. Service Boundary Matrix
 
-| Component | Owns | Must not own |
-|---|---|---|
-| Supabase Auth | authentication protocol/provider state | Figentra authorization/business state |
-| Identity | canonical identity + provider mapping | billing, application data |
-| Principal model | authorization subjects | authentication protocol |
-| IAM | roles, permissions, access, authorization | passwords, billing, application data |
-| Tenant | tenant lifecycle/config/domains | authentication, application data |
-| Scope | contextual hierarchy/membership | authority/permissions |
-| Policy | contextual authorization rules | application business semantics |
-| Approval | human approval workflow | base authentication/permission model |
-| Monetization | billing/subscription/commercial state | identity, application data |
-| Entitlements | commercial capability state | user authentication |
-| Usage | metering/usage state | payment-provider canonical state |
-| Notifications | delivery | authorization decisions |
-| Audit | immutable security/admin record | mutable business state |
-| Files | file metadata/storage lifecycle | application business entities |
-| Integrations | external connections | core application business state |
-| Registry | application metadata/control plane | application business data |
-| Gateway | edge concerns | business logic |
-| Orchestrator | infrastructure change control | arbitrary business workflows |
-| Applications | domain business logic/data | global identity/tenant/billing authority |
+| Component       | Owns                                      | Must not own                             |
+| --------------- | ----------------------------------------- | ---------------------------------------- |
+| Supabase Auth   | authentication protocol/provider state    | Figentra authorization/business state    |
+| Identity        | canonical identity + provider mapping     | billing, application data                |
+| Principal model | authorization subjects                    | authentication protocol                  |
+| IAM             | roles, permissions, access, authorization | passwords, billing, application data     |
+| Tenant          | tenant lifecycle/config/domains           | authentication, application data         |
+| Scope           | contextual hierarchy/membership           | authority/permissions                    |
+| Policy          | contextual authorization rules            | application business semantics           |
+| Approval        | human approval workflow                   | base authentication/permission model     |
+| Monetization    | billing/subscription/commercial state     | identity, application data               |
+| Entitlements    | commercial capability state               | user authentication                      |
+| Usage           | metering/usage state                      | payment-provider canonical state         |
+| Notifications   | delivery                                  | authorization decisions                  |
+| Audit           | immutable security/admin record           | mutable business state                   |
+| Files           | file metadata/storage lifecycle           | application business entities            |
+| Integrations    | external connections                      | core application business state          |
+| Registry        | application metadata/control plane        | application business data                |
+| Gateway         | edge concerns                             | business logic                           |
+| Orchestrator    | infrastructure change control             | arbitrary business workflows             |
+| Applications    | domain business logic/data                | global identity/tenant/billing authority |
 
 ---
 
 # 90. Application Registry vs Service Registry
 
-The Application Registry is not a generic runtime service-discovery mechanism for every network endpoint.
+The Application Registry is not a generic runtime service-discovery mechanism
+for every network endpoint.
 
 It stores application/control-plane metadata.
 
@@ -3862,7 +3948,8 @@ Terraform-derived deployment metadata
 
 Generated artifacts must have a clear source of truth.
 
-Never manually maintain two competing representations of the same deployment/service inventory.
+Never manually maintain two competing representations of the same
+deployment/service inventory.
 
 ---
 
@@ -3891,7 +3978,8 @@ Generators must not hide business logic.
 
 Production code must explain non-obvious architectural intent.
 
-Public classes, methods, interfaces, exported constants and exported types should have TSDoc/docblocks where the repository standards require them.
+Public classes, methods, interfaces, exported constants and exported types
+should have TSDoc/docblocks where the repository standards require them.
 
 Configuration files must contain comments explaining:
 
@@ -4005,7 +4093,8 @@ IAM/Tenant/Entitlement
 application API
 ```
 
-Mobile applications do not receive direct authority over platform security decisions.
+Mobile applications do not receive direct authority over platform security
+decisions.
 
 ---
 
@@ -4077,7 +4166,8 @@ object-storage recovery
 DNS recovery
 ```
 
-A backup is not considered operationally valid until restoration has been tested.
+A backup is not considered operationally valid until restoration has been
+tested.
 
 ---
 
@@ -4186,7 +4276,8 @@ an infrastructure provider
 a database-sharing architecture
 ```
 
-The platform integrates proven providers while retaining authoritative Figentra domain boundaries.
+The platform integrates proven providers while retaining authoritative Figentra
+domain boundaries.
 
 ---
 
@@ -4206,7 +4297,8 @@ When two artifacts describe the same concept, use this hierarchy:
 
 A generated artifact never outranks its source.
 
-Historical `.ref` documents are references and must not silently override current approved decisions.
+Historical `.ref` documents are references and must not silently override
+current approved decisions.
 
 ---
 
@@ -4236,7 +4328,8 @@ IAM
 
 No Clerk dependency is required for the day-one architecture.
 
-The provider abstraction exists so a future provider migration does not require redesigning the Identity, Principal or IAM contracts.
+The provider abstraction exists so a future provider migration does not require
+redesigning the Identity, Principal or IAM contracts.
 
 ---
 
@@ -4437,13 +4530,17 @@ QUALITY
     DR tests
 ```
 
-This is the intended Figentra architecture: **one authentication authority, one authorization model, explicit tenant/context boundaries, independent service ownership, typed synchronous contracts, durable asynchronous processing, application-owned business domains, and infrastructure treated as code.**
+This is the intended Figentra architecture: **one authentication authority, one
+authorization model, explicit tenant/context boundaries, independent service
+ownership, typed synchronous contracts, durable asynchronous processing,
+application-owned business domains, and infrastructure treated as code.**
 
 ---
 
 # 111. Architectural Change Rule
 
-Any change that affects one of these boundaries requires an ADR before implementation:
+Any change that affects one of these boundaries requires an ADR before
+implementation:
 
 ```text
 identity provider
@@ -4474,7 +4571,10 @@ Architectural exceptions do.
 
 # 112. Closing Definition
 
-**Figentra is an enterprise platform that turns authenticated identities into securely authorized, tenant-scoped business capabilities and exposes those capabilities to independently owned applications through a controlled edge, typed APIs, durable events, and explicit service boundaries.**
+**Figentra is an enterprise platform that turns authenticated identities into
+securely authorized, tenant-scoped business capabilities and exposes those
+capabilities to independently owned applications through a controlled edge,
+typed APIs, durable events, and explicit service boundaries.**
 
 Its most important invariant is:
 
@@ -4504,17 +4604,22 @@ HOW IT SURVIVES FAILURE
   → Transactions / Outbox / Durable Transport / Workflows
 ```
 
-Any new component must fit this model rather than creating a parallel version of one of these authorities.
+Any new component must fit this model rather than creating a parallel version of
+one of these authorities.
 
 ---
 
 # 113. Service-by-Service Domain Catalog
 
-> The following is the **platform target model**. Where the repository has not yet implemented a physical table/entity, the entry is a required domain specification rather than a claim that the table already exists. Physical schemas must be finalized by service-specific ADR/migration work.
+> The following is the **platform target model**. Where the repository has not
+> yet implemented a physical table/entity, the entry is a required domain
+> specification rather than a claim that the table already exists. Physical
+> schemas must be finalized by service-specific ADR/migration work.
 
 ## 113.1 Identity Service
 
-**Purpose:** canonical identity normalization and authentication-provider integration.
+**Purpose:** canonical identity normalization and authentication-provider
+integration.
 
 ### Entities
 
@@ -4562,7 +4667,8 @@ Provider-specific session/password storage remains owned by Supabase Auth.
 
 ### Seeds
 
-Only safe system/reference configuration. Never seed real credentials or passwords.
+Only safe system/reference configuration. Never seed real credentials or
+passwords.
 
 ### Events
 
@@ -4663,7 +4769,8 @@ authorization indexes
 
 ## 113.3 Tenant Service
 
-**Purpose:** authoritative customer/business boundary and domain routing context.
+**Purpose:** authoritative customer/business boundary and domain routing
+context.
 
 ### Entities
 
@@ -4956,13 +5063,15 @@ usage.recorded.v1
 
 ### Webhook rules
 
-Provider event ID + idempotency key + internal event ID must be persisted/checked to prevent duplicate processing.
+Provider event ID + idempotency key + internal event ID must be
+persisted/checked to prevent duplicate processing.
 
 ---
 
 ## 113.8 Entitlements Service
 
-**Purpose:** authoritative commercial capability projection/decision boundary where separated from Monetization.
+**Purpose:** authoritative commercial capability projection/decision boundary
+where separated from Monetization.
 
 ### Entities
 
@@ -5139,7 +5248,8 @@ infrastructure.*
 security.*
 ```
 
-The exact subscription filter is explicit per deployment rather than subscribing to every event blindly.
+The exact subscription filter is explicit per deployment rather than subscribing
+to every event blindly.
 
 ---
 
@@ -5256,7 +5366,8 @@ Reporting never becomes the transactional source of truth.
 
 ## 113.15 Search Service
 
-**Purpose:** search projection and query boundary where centralized search is justified.
+**Purpose:** search projection and query boundary where centralized search is
+justified.
 
 ### Logical entities
 
@@ -5281,7 +5392,8 @@ PostgreSQL remains the source of truth.
 
 ## 113.16 Workflow Service / Capability
 
-**Purpose:** durable orchestration where workflows cross multiple steps or require compensation/human waits.
+**Purpose:** durable orchestration where workflows cross multiple steps or
+require compensation/human waits.
 
 ### Logical entities
 
@@ -5295,9 +5407,11 @@ WorkflowCompensation
 WorkflowTimer
 ```
 
-The implementation may live in the owning service or a dedicated runtime depending on operational complexity.
+The implementation may live in the owning service or a dedicated runtime
+depending on operational complexity.
 
-Do not create a generic Workflow Service merely to rename ordinary background jobs.
+Do not create a generic Workflow Service merely to rename ordinary background
+jobs.
 
 ---
 
@@ -5357,26 +5471,26 @@ Audit
 
 # 115. Event-to-Service Responsibility Matrix
 
-| Event family | Producer | Typical consumers |
-|---|---|---|
-| `identity.*` | Identity | IAM, Tenant, Audit, Notifications |
-| `principal.*` | Identity | IAM, Audit |
-| `credential.*` | Identity/Security | Audit, IAM |
-| `tenant.*` | Tenant | IAM, Monetization, Notifications, Audit, Registry |
-| `domain.*` | Tenant | Gateway, Registry, Notifications, Audit |
-| `scope.*` | Scope | IAM, applications, Audit |
-| `iam.*` | IAM | Audit, Gateway cache, applications |
-| `policy.*` | Policy | IAM, Audit |
-| `approval.*` | Approval | owning application, Audit, Notifications |
-| `subscription.*` | Monetization | Entitlements, Usage, Notifications, Audit |
-| `entitlement.*` | Monetization/Entitlements | IAM, applications, Gateway, Audit |
-| `usage.*` | Usage | Monetization, Reporting, Audit where required |
-| `notification.*` | Notifications | Audit, reporting where required |
-| `integration.*` | Integrations | Applications, Audit, Notifications |
-| `file.*` | Files | Applications, Search, Audit where required |
-| `application.*` | Registry/application | Gateway, Portal, Audit |
-| `provisioning.*` | Workflow/Tenant/Orchestrator | Tenant, IAM, Monetization, Registry, Notifications, Audit |
-| `infrastructure.*` | Orchestrator | Audit, Registry, operations |
+| Event family       | Producer                     | Typical consumers                                         |
+| ------------------ | ---------------------------- | --------------------------------------------------------- |
+| `identity.*`       | Identity                     | IAM, Tenant, Audit, Notifications                         |
+| `principal.*`      | Identity                     | IAM, Audit                                                |
+| `credential.*`     | Identity/Security            | Audit, IAM                                                |
+| `tenant.*`         | Tenant                       | IAM, Monetization, Notifications, Audit, Registry         |
+| `domain.*`         | Tenant                       | Gateway, Registry, Notifications, Audit                   |
+| `scope.*`          | Scope                        | IAM, applications, Audit                                  |
+| `iam.*`            | IAM                          | Audit, Gateway cache, applications                        |
+| `policy.*`         | Policy                       | IAM, Audit                                                |
+| `approval.*`       | Approval                     | owning application, Audit, Notifications                  |
+| `subscription.*`   | Monetization                 | Entitlements, Usage, Notifications, Audit                 |
+| `entitlement.*`    | Monetization/Entitlements    | IAM, applications, Gateway, Audit                         |
+| `usage.*`          | Usage                        | Monetization, Reporting, Audit where required             |
+| `notification.*`   | Notifications                | Audit, reporting where required                           |
+| `integration.*`    | Integrations                 | Applications, Audit, Notifications                        |
+| `file.*`           | Files                        | Applications, Search, Audit where required                |
+| `application.*`    | Registry/application         | Gateway, Portal, Audit                                    |
+| `provisioning.*`   | Workflow/Tenant/Orchestrator | Tenant, IAM, Monetization, Registry, Notifications, Audit |
+| `infrastructure.*` | Orchestrator                 | Audit, Registry, operations                               |
 
 ---
 
@@ -5792,7 +5906,9 @@ Cloudflare Service Bindings where applicable.
 
 ### How does durable async work?
 
-The selected durable queue/event transport; NATS/JetStream where that is the deployed Node transport, Cloudflare Queues for Cloudflare-native async workloads, and Kafka only for justified high-volume streaming.
+The selected durable queue/event transport; NATS/JetStream where that is the
+deployed Node transport, Cloudflare Queues for Cloudflare-native async
+workloads, and Kafka only for justified high-volume streaming.
 
 ### Where is infrastructure defined?
 
@@ -5858,7 +5974,8 @@ The following are non-negotiable platform invariants:
 
 # 127. Architecture Completion Definition
 
-Figentra is architecturally complete when every implemented component can answer all of the following without ambiguity:
+Figentra is architecturally complete when every implemented component can answer
+all of the following without ambiguity:
 
 ```text
 Who owns this data?
@@ -5888,7 +6005,8 @@ How is it rolled back?
 How is it recovered after disaster?
 ```
 
-If any of these questions has no explicit owner or contract, the component is not considered enterprise-complete.
+If any of these questions has no explicit owner or contract, the component is
+not considered enterprise-complete.
 
 ---
 
@@ -5948,16 +6066,17 @@ If any of these questions has no explicit owner or contract, the component is no
           Terraform → Cloudflare / Supabase / Docker
 ```
 
-**This document is the single consolidated explanation of what Figentra is intended to be, how its components fit together, where each boundary lives, and what production-grade implementation must preserve.**
-
+**This document is the single consolidated explanation of what Figentra is
+intended to be, how its components fit together, where each boundary lives, and
+what production-grade implementation must preserve.**
 
 ## Canonical Gateway and deployment enrollment amendment
 
-The canonical API Gateway is `services/gateway` using NestJS + Fastify. The former
-Hono Gateway Worker is removed. Cloudflare remains the external edge/WAF/DDoS
-layer.
+The canonical API Gateway is `services/gateway` using NestJS + Fastify. The
+former Hono Gateway Worker is removed. Cloudflare remains the external
+edge/WAF/DDoS layer.
 
-Deployment catalog enrollment is explicit: the root `cloud.yaml` `paths` list
-is the only local-source enrollment mechanism. The collector does not implicitly
+Deployment catalog enrollment is explicit: the root `cloud.yaml` `paths` list is
+the only local-source enrollment mechanism. The collector does not implicitly
 discover apps, services, or workers outside those paths. See ADR-0082 and
 ADR-0083.

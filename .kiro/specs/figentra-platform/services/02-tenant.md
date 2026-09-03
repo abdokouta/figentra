@@ -3,13 +3,16 @@
 **Spec:** `figentra-platform/services/tenant.md`  
 **Package:** `@figentra/tenant`  
 **Status:** Baseline target / implementation specification  
-**Runtime:** Node.js 22 + NestJS in Cloudflare Containers  
+**Runtime:** Node.js 22 + NestJS in Cloudflare Containers
 
 ## 1. Mission and boundary
 
-**Purpose:** Tenant lifecycle, organization mapping, domains, branding and configuration.
+**Purpose:** Tenant lifecycle, organization mapping, domains, branding and
+configuration.
 
-This service is the sole authoritative owner of its bounded context. It may expose read APIs and publish events, but it MUST NOT write another service's database or reuse another service's ORM entities.
+This service is the sole authoritative owner of its bounded context. It may
+expose read APIs and publish events, but it MUST NOT write another service's
+database or reuse another service's ORM entities.
 
 ### Owns
 
@@ -23,12 +26,17 @@ This service is the sole authoritative owner of its bounded context. It may expo
 
 ### May call / consume
 
-- `@figentra/identity-client` or the corresponding typed SDK contract for **identity**.
-- `@figentra/scope-client` or the corresponding typed SDK contract for **scope**.
+- `@figentra/identity-client` or the corresponding typed SDK contract for
+  **identity**.
+- `@figentra/scope-client` or the corresponding typed SDK contract for
+  **scope**.
 - `@figentra/iam-client` or the corresponding typed SDK contract for **iam**.
-- `@figentra/monetization-client` or the corresponding typed SDK contract for **monetization**.
-- `@figentra/notifications-client` or the corresponding typed SDK contract for **notifications**.
-- `@figentra/registry-client` or the corresponding typed SDK contract for **registry**.
+- `@figentra/monetization-client` or the corresponding typed SDK contract for
+  **monetization**.
+- `@figentra/notifications-client` or the corresponding typed SDK contract for
+  **notifications**.
+- `@figentra/registry-client` or the corresponding typed SDK contract for
+  **registry**.
 
 ### Must not own
 
@@ -52,21 +60,24 @@ This service is the sole authoritative owner of its bounded context. It may expo
 - NATS JetStream for durable service-to-service asynchronous messaging
 - Cloudflare Queues for Cloudflare-native worker/background workloads
 
-
 ### Dependency policy
 
 - Runtime dependencies contain only packages required at runtime.
-- Test/build/lint/format packages remain dev dependencies unless imported by runtime code.
+- Test/build/lint/format packages remain dev dependencies unless imported by
+  runtime code.
 - Peer dependencies are used only where consumers supply the framework/runtime.
-- Optional dependencies are reserved for provider adapters; core startup MUST NOT fail because an optional provider is absent.
+- Optional dependencies are reserved for provider adapters; core startup MUST
+  NOT fail because an optional provider is absent.
 - No dependency may create a circular bounded-context dependency.
-
 
 ## Package manifest (repository baseline)
 
-> This section is generated from the current repository `package.json`. The Kiro spec is the target contract; if implementation changes dependencies, update the spec and package manifest together.
+> This section is generated from the current repository `package.json`. The Kiro
+> spec is the target contract; if implementation changes dependencies, update
+> the spec and package manifest together.
 
 ### Runtime dependencies
+
 - `@figentra/contracts`
 - `@figentra/events`
 - `@figentra/messaging`
@@ -90,6 +101,7 @@ This service is the sole authoritative owner of its bounded context. It may expo
 - `rxjs`
 
 ### Development dependencies
+
 - `@nestjs/cli`
 - `@nestjs/schematics`
 - `@nestjs/testing`
@@ -112,9 +124,11 @@ This service is the sole authoritative owner of its bounded context. It may expo
 - `vitest`
 
 ### Peer dependencies
+
 - _None currently._
 
 ### Optional dependencies
+
 - _None currently._
 
 ## 3. Source layout
@@ -141,34 +155,52 @@ src/
 
 ### Core entities
 
-- **`tenant`** — aggregate/domain record. Define lifecycle, invariants, state transitions, actor attribution, tenant ownership and soft-delete policy before implementation.
-- **`tenant_member`** — aggregate/domain record. Define lifecycle, invariants, state transitions, actor attribution, tenant ownership and soft-delete policy before implementation.
-- **`tenant_application`** — aggregate/domain record. Define lifecycle, invariants, state transitions, actor attribution, tenant ownership and soft-delete policy before implementation.
-- **`domain`** — aggregate/domain record. Define lifecycle, invariants, state transitions, actor attribution, tenant ownership and soft-delete policy before implementation.
-- **`domain_verification`** — aggregate/domain record. Define lifecycle, invariants, state transitions, actor attribution, tenant ownership and soft-delete policy before implementation.
-- **`tenant_setting`** — aggregate/domain record. Define lifecycle, invariants, state transitions, actor attribution, tenant ownership and soft-delete policy before implementation.
-- **`tenant_branding`** — aggregate/domain record. Define lifecycle, invariants, state transitions, actor attribution, tenant ownership and soft-delete policy before implementation.
+- **`tenant`** — aggregate/domain record. Define lifecycle, invariants, state
+  transitions, actor attribution, tenant ownership and soft-delete policy before
+  implementation.
+- **`tenant_member`** — aggregate/domain record. Define lifecycle, invariants,
+  state transitions, actor attribution, tenant ownership and soft-delete policy
+  before implementation.
+- **`tenant_application`** — aggregate/domain record. Define lifecycle,
+  invariants, state transitions, actor attribution, tenant ownership and
+  soft-delete policy before implementation.
+- **`domain`** — aggregate/domain record. Define lifecycle, invariants, state
+  transitions, actor attribution, tenant ownership and soft-delete policy before
+  implementation.
+- **`domain_verification`** — aggregate/domain record. Define lifecycle,
+  invariants, state transitions, actor attribution, tenant ownership and
+  soft-delete policy before implementation.
+- **`tenant_setting`** — aggregate/domain record. Define lifecycle, invariants,
+  state transitions, actor attribution, tenant ownership and soft-delete policy
+  before implementation.
+- **`tenant_branding`** — aggregate/domain record. Define lifecycle, invariants,
+  state transitions, actor attribution, tenant ownership and soft-delete policy
+  before implementation.
 
 ### Relationships
 
 - Every tenant-owned entity carries `tenant_id` unless explicitly proven global.
-- Foreign keys are internal to this service database. Cross-service references are opaque IDs and are validated through contracts, never foreign keys into another service.
+- Foreign keys are internal to this service database. Cross-service references
+  are opaque IDs and are validated through contracts, never foreign keys into
+  another service.
 - Actor attribution uses `principal_id`; do not duplicate user/profile records.
 - Scope-aware records carry `scope_id` when access is subordinate to a scope.
 
 ## 5. Target database schema
 
-The following is the **target implementation schema**, not a claim that every table already exists. Exact columns are finalized in the service migration plan and entity definitions.
+The following is the **target implementation schema**, not a claim that every
+table already exists. Exact columns are finalized in the service migration plan
+and entity definitions.
 
-| Table | Primary key | Tenant | Required metadata | Notes |
-|---|---|---|---|---|
-| `tenant` | `tenant_id` (ULID/domain prefix) | tenant_id where tenant-owned | created_at, updated_at | owning aggregate fields; unique/indexes as required |
-| `tenant_member` | `tenant_member_id` (ULID/domain prefix) | tenant_id where tenant-owned | created_at, updated_at | owning aggregate fields; unique/indexes as required |
-| `tenant_application` | `tenant_application_id` (ULID/domain prefix) | tenant_id where tenant-owned | created_at, updated_at | owning aggregate fields; unique/indexes as required |
-| `domain` | `domain_id` (ULID/domain prefix) | tenant_id where tenant-owned | created_at, updated_at | owning aggregate fields; unique/indexes as required |
+| Table                 | Primary key                                   | Tenant                       | Required metadata      | Notes                                               |
+| --------------------- | --------------------------------------------- | ---------------------------- | ---------------------- | --------------------------------------------------- |
+| `tenant`              | `tenant_id` (ULID/domain prefix)              | tenant_id where tenant-owned | created_at, updated_at | owning aggregate fields; unique/indexes as required |
+| `tenant_member`       | `tenant_member_id` (ULID/domain prefix)       | tenant_id where tenant-owned | created_at, updated_at | owning aggregate fields; unique/indexes as required |
+| `tenant_application`  | `tenant_application_id` (ULID/domain prefix)  | tenant_id where tenant-owned | created_at, updated_at | owning aggregate fields; unique/indexes as required |
+| `domain`              | `domain_id` (ULID/domain prefix)              | tenant_id where tenant-owned | created_at, updated_at | owning aggregate fields; unique/indexes as required |
 | `domain_verification` | `domain_verification_id` (ULID/domain prefix) | tenant_id where tenant-owned | created_at, updated_at | owning aggregate fields; unique/indexes as required |
-| `tenant_setting` | `tenant_setting_id` (ULID/domain prefix) | tenant_id where tenant-owned | created_at, updated_at | owning aggregate fields; unique/indexes as required |
-| `tenant_branding` | `tenant_branding_id` (ULID/domain prefix) | tenant_id where tenant-owned | created_at, updated_at | owning aggregate fields; unique/indexes as required |
+| `tenant_setting`      | `tenant_setting_id` (ULID/domain prefix)      | tenant_id where tenant-owned | created_at, updated_at | owning aggregate fields; unique/indexes as required |
+| `tenant_branding`     | `tenant_branding_id` (ULID/domain prefix)     | tenant_id where tenant-owned | created_at, updated_at | owning aggregate fields; unique/indexes as required |
 
 ### Universal columns
 
@@ -189,8 +221,10 @@ metadata (JSONB only for bounded extensibility, not core relational data)
 ### Constraints
 
 - Primary keys use the repository ID strategy.
-- Unique constraints include tenant scope when the business identifier is tenant-local.
-- State transitions use check constraints/enums where stable; domain code remains authoritative for transition rules.
+- Unique constraints include tenant scope when the business identifier is
+  tenant-local.
+- State transitions use check constraints/enums where stable; domain code
+  remains authoritative for transition rules.
 - Foreign keys are indexed.
 - Query patterns determine composite indexes.
 - Never add an index without a query/use-case reason or migration comment.
@@ -205,18 +239,22 @@ Use injected repositories for normal CRUD and aggregate persistence:
 constructor(private readonly repository: EntityRepository<Entity>) {}
 ```
 
-Repositories own query construction for the aggregate. Keep query methods intention-revealing (`findByTenant`, `findActive`, `findByExternalId`) instead of leaking controllers into persistence.
+Repositories own query construction for the aggregate. Keep query methods
+intention-revealing (`findByTenant`, `findActive`, `findByExternalId`) instead
+of leaking controllers into persistence.
 
 ### EntityManager
 
 Use `EntityManager` when:
 
-- a use case must atomically persist multiple aggregates/entities in this service;
+- a use case must atomically persist multiple aggregates/entities in this
+  service;
 - an explicit transaction boundary is required;
 - bulk persistence or flush coordination is required;
 - infrastructure code must coordinate Unit of Work behavior.
 
-Do **not** inject `EntityManager` into every service just because MikroORM provides it. Do not use it to bypass repository/domain boundaries.
+Do **not** inject `EntityManager` into every service just because MikroORM
+provides it. Do not use it to bypass repository/domain boundaries.
 
 ### Transactions
 
@@ -243,7 +281,8 @@ No event is published directly from a controller after `flush()`.
 
 ### Service handles
 
-The service MUST remain secure when called directly by an authenticated internal client:
+The service MUST remain secure when called directly by an authenticated internal
+client:
 
 - JWT/service credential verification.
 - Principal/service identity extraction.
@@ -279,7 +318,8 @@ Every controller MUST provide:
 - correlation/request headers;
 - examples for important workflows.
 
-Generate/serve OpenAPI from the NestJS controllers and keep contract definitions synchronized with `@figentra/contracts`.
+Generate/serve OpenAPI from the NestJS controllers and keep contract definitions
+synchronized with `@figentra/contracts`.
 
 ## 9. Commands, queries and application services
 
@@ -293,49 +333,64 @@ Controller
         → Repository
 ```
 
-CRUD is allowed only when the domain operation is truly CRUD. Business actions must have named commands (`ApproveRequest`, `PauseIntegration`, `VerifyDomain`, etc.).
+CRUD is allowed only when the domain operation is truly CRUD. Business actions
+must have named commands (`ApproveRequest`, `PauseIntegration`, `VerifyDomain`,
+etc.).
 
 ## 10. Events and messaging
 
 ### Owned events
 
-- `tenant.created.v1` — emitted only after the owning transaction commits through the outbox.
-- `tenant.updated.v1` — emitted only after the owning transaction commits through the outbox.
-- `tenant.suspended.v1` — emitted only after the owning transaction commits through the outbox.
-- `tenant.deleted.v1` — emitted only after the owning transaction commits through the outbox.
-- `tenant.domain.added.v1` — emitted only after the owning transaction commits through the outbox.
-- `tenant.domain.verified.v1` — emitted only after the owning transaction commits through the outbox.
-- `tenant.domain.activated.v1` — emitted only after the owning transaction commits through the outbox.
+- `tenant.created.v1` — emitted only after the owning transaction commits
+  through the outbox.
+- `tenant.updated.v1` — emitted only after the owning transaction commits
+  through the outbox.
+- `tenant.suspended.v1` — emitted only after the owning transaction commits
+  through the outbox.
+- `tenant.deleted.v1` — emitted only after the owning transaction commits
+  through the outbox.
+- `tenant.domain.added.v1` — emitted only after the owning transaction commits
+  through the outbox.
+- `tenant.domain.verified.v1` — emitted only after the owning transaction
+  commits through the outbox.
+- `tenant.domain.activated.v1` — emitted only after the owning transaction
+  commits through the outbox.
 
 ### Event rules
 
 - Event names are versioned and immutable.
-- Envelope contains event ID, type, version, occurred-at, producer, tenant, principal, correlation ID and causation ID.
+- Envelope contains event ID, type, version, occurred-at, producer, tenant,
+  principal, correlation ID and causation ID.
 - Payload contains domain facts, not secrets or mutable implementation details.
 - Consumers are idempotent.
 - Publishing is via transactional outbox.
 - NATS JetStream is the initial durable service-to-service event transport.
-- Cloudflare Queues is used for worker-native asynchronous work and edge buffering.
+- Cloudflare Queues is used for worker-native asynchronous work and edge
+  buffering.
 - Kafka is a future scale-driven option only after an ADR.
 - Redis Pub/Sub is never the authoritative durable event bus.
-- gRPC is not a default transport; introduce it only for a measured low-latency RPC requirement with an ADR.
+- gRPC is not a default transport; introduce it only for a measured low-latency
+  RPC requirement with an ADR.
 
 ### Commands
 
-Commands may be synchronous HTTP operations or internal asynchronous messages. A command names an intention and is not treated as an event.
+Commands may be synchronous HTTP operations or internal asynchronous messages. A
+command names an intention and is not treated as an event.
 
 ## 11. Service-to-service communication
 
-| Need | Mechanism | Rule |
-|---|---|---|
-| Immediate read/decision | HTTPS + OpenAPI + typed SDK | timeout + bounded retry |
-| Worker-to-worker | Cloudflare Service Binding | no public endpoint required |
-| Service-to-service async | NATS JetStream | durable stream + consumer + DLQ |
-| Worker-native async | Cloudflare Queue | idempotent consumer + DLQ |
-| Durable multi-step process | Cloudflare Workflow | explicit compensation/retry |
-| Cache/lock | Redis | never authoritative |
+| Need                       | Mechanism                   | Rule                            |
+| -------------------------- | --------------------------- | ------------------------------- |
+| Immediate read/decision    | HTTPS + OpenAPI + typed SDK | timeout + bounded retry         |
+| Worker-to-worker           | Cloudflare Service Binding  | no public endpoint required     |
+| Service-to-service async   | NATS JetStream              | durable stream + consumer + DLQ |
+| Worker-native async        | Cloudflare Queue            | idempotent consumer + DLQ       |
+| Durable multi-step process | Cloudflare Workflow         | explicit compensation/retry     |
+| Cache/lock                 | Redis                       | never authoritative             |
 
-Each service-to-service call authenticates the **calling service identity**, with delegated end-user context carried separately when required. Never reuse a browser token as a service credential.
+Each service-to-service call authenticates the **calling service identity**,
+with delegated end-user context carried separately when required. Never reuse a
+browser token as a service credential.
 
 ## 12. Authorization
 
@@ -367,7 +422,8 @@ The service MUST enforce authorization server-side on every protected operation.
 
 All list APIs support the common contract where applicable:
 
-- tenant context is implicit/trusted, not accepted as an arbitrary browser filter;
+- tenant context is implicit/trusted, not accepted as an arbitrary browser
+  filter;
 - scope filters are authorization-aware;
 - validated field allowlists for filtering/sorting;
 - cursor pagination for high-volume collections;
@@ -390,18 +446,22 @@ Browser/Stackra Query → Gateway cache (only safe public/runtime data)
 Rules:
 
 - Cache stable/read-heavy metadata close to the service.
-- Do not cache authorization decisions longer than their invalidation model allows.
+- Do not cache authorization decisions longer than their invalidation model
+  allows.
 - Do not cache secrets or sensitive identity material in shared caches.
 - Keys include tenant/application/scope and relevant version.
 - Writes invalidate or version affected keys.
 - Cache misses must remain correct.
-- Gateway must not cache tenant-specific mutable business responses unless explicitly designed and safely keyed.
+- Gateway must not cache tenant-specific mutable business responses unless
+  explicitly designed and safely keyed.
 
 ## 15. Idempotency and concurrency
 
-Mutating external/API operations that can be retried MUST support idempotency keys.
+Mutating external/API operations that can be retried MUST support idempotency
+keys.
 
-Use optimistic concurrency/version columns for update races where required. State-changing commands MUST reject illegal state transitions.
+Use optimistic concurrency/version columns for update races where required.
+State-changing commands MUST reject illegal state transitions.
 
 ## 16. i18n/localization
 
@@ -415,7 +475,8 @@ src/i18n/ar/
 - Validation and business error messages are translated by stable keys.
 - Domain entities do not embed localized text.
 - API error codes remain language-neutral.
-- Locale comes from trusted request/user/tenant preference, with a deterministic fallback.
+- Locale comes from trusted request/user/tenant preference, with a deterministic
+  fallback.
 
 ## 17. Security
 
@@ -467,7 +528,8 @@ For each migration document:
 5. rollback strategy where technically possible;
 6. data compatibility with previous application version.
 
-Seeders are separate from migrations. Never hide required production data creation inside a migration unless it is immutable reference data.
+Seeders are separate from migrations. Never hide required production data
+creation inside a migration unless it is immutable reference data.
 
 ## 20. Seed strategy
 
@@ -477,7 +539,8 @@ Provide deterministic seed layers:
 reference seed → development seed → test fixtures
 ```
 
-Production seeds are explicit, reviewed and idempotent. No random values for identifiers that tests or integrations must depend on.
+Production seeds are explicit, reviewed and idempotent. No random values for
+identifiers that tests or integrations must depend on.
 
 ## 21. Testing matrix
 
@@ -527,9 +590,12 @@ Production seeds are explicit, reviewed and idempotent. No random values for ide
 
 ## 22. Documentation and code comments
 
-Public classes, controllers, DTOs, repository methods, events and configuration must have useful JSDoc/comments. Comments explain **why**, invariants and security implications—not obvious syntax.
+Public classes, controllers, DTOs, repository methods, events and configuration
+must have useful JSDoc/comments. Comments explain **why**, invariants and
+security implications—not obvious syntax.
 
-Every non-obvious query, cache invalidation rule, transaction boundary and event emission must be documented close to the code.
+Every non-obvious query, cache invalidation rule, transaction boundary and event
+emission must be documented close to the code.
 
 ## 23. Operational runbook
 
@@ -571,4 +637,5 @@ The service is complete only when:
 
 ## 26. Open questions
 
-Any unresolved provider, scale, residency or product decision MUST be recorded as an ADR and linked from this spec.
+Any unresolved provider, scale, residency or product decision MUST be recorded
+as an ADR and linked from this spec.

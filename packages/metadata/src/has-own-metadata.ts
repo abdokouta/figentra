@@ -1,4 +1,4 @@
-import 'reflect-metadata';
+import "reflect-metadata";
 
 /**
  * Checks if metadata exists for a given key directly on the target object, excluding the prototype chain.
@@ -110,7 +110,7 @@ import 'reflect-metadata';
 export function hasOwnMetadata(
   metadataKey: any,
   target: object,
-  propertyKey?: string | symbol
+  propertyKey?: string | symbol,
 ): boolean {
   // Use Reflect.hasOwnMetadata to check for metadata existence only on the target itself
   // This method does NOT search through the prototype chain - only direct metadata is considered

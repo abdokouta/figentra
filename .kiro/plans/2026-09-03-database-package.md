@@ -8,13 +8,14 @@ reviewed_at: null
 
 # @stackra/database — architecture plan
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
+**Status:** Planned **Anchor ADRs:**
+[ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
 [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
 [ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md),
 [ADR-0011](../../.docs/adr/ADR-0011-no-shared-database.md) (one DB per service)
-**Reference:** `.ref/packages/orm/` (`@stackra/nestjs-orm`), `.ref/packages/orm/src/orm.module.ts`
-**Depends on:** `.kiro/plans/2026-09-03-container-package.md`
+**Reference:** `.ref/packages/orm/` (`@stackra/nestjs-orm`),
+`.ref/packages/orm/src/orm.module.ts` **Depends on:**
+`.kiro/plans/2026-09-03-container-package.md`
 
 ## Purpose
 
@@ -25,18 +26,18 @@ reviewed_at: null
   (SQLite) for workers**, **SQLite for tests**, one consistent API.
 - Auto-generated CRUD (service + resolver + controller + repository) via
   `OrmModule.forFeature([{ entity, dto }])`.
-- A Laravel-shaped fluent migration builder (`Schema.createTable(name, (t) => {...})`)
-  wrapping MikroORM's `addSql()`.
+- A Laravel-shaped fluent migration builder
+  (`Schema.createTable(name, (t) => {...})`) wrapping MikroORM's `addSql()`.
 - Entity decorators for common traits: `@Timestamps`, `@Userstamps`,
   `@SoftDeletes`, `@Versionable`, `@Auditable`, `@Sluggable`, `@Publishable`,
   `@Sortable`, `@Encrypted`.
 - Multi-connection support — one Postgres primary + N read replicas OR one D1
   per Worker environment.
 
-**Origins.** The reference package (`@stackra/nestjs-orm`) was Nest-only + coupled
-tightly to PostgreSQL. This plan generalises it to Cloudflare D1 (Worker
-runtime) and formalises the Manager pattern for driver swapping (Postgres vs
-D1 vs SQLite-for-tests).
+**Origins.** The reference package (`@stackra/nestjs-orm`) was Nest-only +
+coupled tightly to PostgreSQL. This plan generalises it to Cloudflare D1 (Worker
+runtime) and formalises the Manager pattern for driver swapping (Postgres vs D1
+vs SQLite-for-tests).
 
 ## Non-goals
 
@@ -235,9 +236,9 @@ DatabaseModule.forFeature([
       sort: UserSortDto,
     },
     // Optional — omit to auto-generate all four
-    service: UserService,        // custom service class
-    resolver: UserResolver,      // custom GraphQL resolver
-    controller: true,            // auto-generate REST controller at /users
+    service: UserService, // custom service class
+    resolver: UserResolver, // custom GraphQL resolver
+    controller: true, // auto-generate REST controller at /users
   },
 ]);
 ```
@@ -248,7 +249,8 @@ For each registered entity:
   `@Timestamps`, `@SoftDeletes`, ...) and generates a MikroORM `EntitySchema`.
 - **Repository** — MikroORM's `EntityManager.getRepository()` auto-provides.
 - **Service** — either the custom class OR an auto-generated CRUD service via
-  `defineService(entity)`. Injected repo. Handles find/findOne/create/update/delete/paginate.
+  `defineService(entity)`. Injected repo. Handles
+  find/findOne/create/update/delete/paginate.
 - **Resolver** — optional. Auto-generated via `defineResolver()` when `dto` is
   provided; exposes queries/mutations with the DTO shape.
 - **Controller** — optional. Auto-generated via `defineController()` when
@@ -283,22 +285,23 @@ export class CreateApprovals extends Migration {
 }
 ```
 
-`Schema.createTable`, `Schema.alterTable`, `Schema.dropTable`, `Schema.renameTable`,
-`Schema.createIndex`, `Schema.dropIndex` — the six primitives. All emit SQL via
-MikroORM's SQL escape/quote functions so the DDL is dialect-appropriate.
+`Schema.createTable`, `Schema.alterTable`, `Schema.dropTable`,
+`Schema.renameTable`, `Schema.createIndex`, `Schema.dropIndex` — the six
+primitives. All emit SQL via MikroORM's SQL escape/quote functions so the DDL is
+dialect-appropriate.
 
 `t.raw(...)` is the escape hatch for anything the builder doesn't cover.
 
 **D1 caveat.** Cloudflare D1 rejects some Postgres-specific column types
 (`jsonb`, `uuid`, `enum`). The builder falls back to safe defaults:
 
-| Postgres           | D1 (SQLite)                        |
-| ------------------ | ---------------------------------- |
-| `uuid`             | `text CHECK(length(value)=36)`     |
-| `jsonb`            | `text` + JSON.stringify at ORM layer |
-| `enum('a','b')`    | `text CHECK(value IN ('a','b'))`  |
-| `timestamp`        | `text` (ISO-8601)                  |
-| `bytea`            | `blob`                             |
+| Postgres        | D1 (SQLite)                          |
+| --------------- | ------------------------------------ |
+| `uuid`          | `text CHECK(length(value)=36)`       |
+| `jsonb`         | `text` + JSON.stringify at ORM layer |
+| `enum('a','b')` | `text CHECK(value IN ('a','b'))`     |
+| `timestamp`     | `text` (ISO-8601)                    |
+| `bytea`         | `blob`                               |
 
 Documented in `docs/database/d1-compatibility.md`.
 
@@ -313,7 +316,7 @@ import { createPGliteDatabase } from "@stackra/testing/database";
 
 const db = await createPGliteDatabase({
   schema: [User, Post],
-  migrations: [ /* migration classes */ ],
+  migrations: [/* migration classes */],
 });
 ```
 
@@ -327,7 +330,7 @@ import { createSqliteDatabase } from "@stackra/testing/database";
 
 const db = await createSqliteDatabase({
   schema: [User, Post],
-  migrations: [ /* migration classes */ ],
+  migrations: [/* migration classes */],
 });
 ```
 
@@ -339,11 +342,13 @@ Uses `better-sqlite3` in-process. Matches D1's dialect. Ships as
 ```typescript
 import { withTransaction } from "@stackra/testing/database";
 
-beforeEach(() => withTransaction(db, (tx) => {
-  // arrange: seed data
-  // act + assert per test
-  // afterEach: automatic rollback
-}));
+beforeEach(() =>
+  withTransaction(db, (tx) => {
+    // arrange: seed data
+    // act + assert per test
+    // afterEach: automatic rollback
+  }),
+);
 ```
 
 Savepoint-nested-safe so nested `withTransaction` calls stack correctly.
@@ -351,8 +356,8 @@ Savepoint-nested-safe so nested `withTransaction` calls stack correctly.
 ## Auto-registration (per ADR-0092)
 
 Optional — services with database access add `DatabaseModule.forRoot(...)` to
-their app module. `StackraServiceModule` does NOT include it by default
-(some services are pure request-router shells with no DB).
+their app module. `StackraServiceModule` does NOT include it by default (some
+services are pure request-router shells with no DB).
 
 Pattern per service:
 
@@ -395,7 +400,7 @@ register its entities + auto-CRUD.
     "graphql": "^16.0.0",
     "class-transformer": "^0.5.0",
     "class-validator": "^0.14.0",
-    "zod": "catalog:"
+    "zod": "catalog:",
   },
   "peerDependenciesMeta": {
     "@mikro-orm/postgresql": { "optional": true },
@@ -403,8 +408,8 @@ register its entities + auto-CRUD.
     "@nestjs/graphql": { "optional": true },
     "graphql": { "optional": true },
     "class-transformer": { "optional": true },
-    "class-validator": { "optional": true }
-  }
+    "class-validator": { "optional": true },
+  },
 }
 ```
 
@@ -427,7 +432,8 @@ register its entities + auto-CRUD.
 - [ ] Copy decorators (`@Entity`, `@Property`, `@Timestamps`, `@SoftDeletes`,
       etc.) verbatim from `.ref/packages/orm/src/decorators/`.
 - [ ] Copy `BaseEntity` from `.ref/packages/orm/src/entity/`.
-- [ ] Copy `defineSchema` + `collectSchemas` from `.ref/packages/orm/src/schema/`.
+- [ ] Copy `defineSchema` + `collectSchemas` from
+      `.ref/packages/orm/src/schema/`.
 - [ ] Copy filter builders (`buildFilterQuery`, `buildSortQuery`) — these are
       platform-agnostic per the reference index.ts.
 - [ ] Copy `defineService` + `defineResolver` factories.
@@ -480,8 +486,8 @@ register its entities + auto-CRUD.
 
 ### Phase 9 — Testing helpers (3 days)
 
-- [ ] `@stackra/testing/database` — currently ships PGlite (Task 8 of the
-      main plan). Add `createSqliteDatabase()` for D1 mimicry.
+- [ ] `@stackra/testing/database` — currently ships PGlite (Task 8 of the main
+      plan). Add `createSqliteDatabase()` for D1 mimicry.
 - [ ] `withTransaction` — already ships (savepoint-nested-safe).
 - [ ] `defineEntityFactory` — Faker-backed seed factories.
 - [ ] Nest-integrated `TestingDatabaseModule` overrides for test doubles.
@@ -502,14 +508,14 @@ register its entities + auto-CRUD.
 
 ## Migration risks
 
-| Risk                                                              | Mitigation                                                                        |
-| ----------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| `@mikro-orm/cloudflare-d1` bundle too large for Workers           | Phase 6 decision spike. Raw `env.DB` fallback ready.                              |
-| D1's SQLite dialect differs from Postgres — silent data corruption | Dialect switch in Schema builder + `d1-compatibility.md` doc. Every migration author writes against BOTH dialects in CI. |
-| MikroORM subscribers (`LifecycleHooksSubscriber`) not thread-safe under Worker isolate lifetimes | Per-request `EntityManager` fork. Documented + tested.                            |
-| Nest DataLoader auto-registration when `@nestjs/graphql` isn't installed | Optional peer + `@nestjs/graphql` guard in the OrmModule provider factory.        |
-| Auto-generated controllers collide with hand-written ones         | Registration order + explicit `path` in the `controller: { path: ... }` config option. |
-| PGlite test performance for very large test suites                | Use `withTransaction` + rollback (documented). PGlite handles 1000s of tests/sec on modern hardware. |
+| Risk                                                                                             | Mitigation                                                                                                               |
+| ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| `@mikro-orm/cloudflare-d1` bundle too large for Workers                                          | Phase 6 decision spike. Raw `env.DB` fallback ready.                                                                     |
+| D1's SQLite dialect differs from Postgres — silent data corruption                               | Dialect switch in Schema builder + `d1-compatibility.md` doc. Every migration author writes against BOTH dialects in CI. |
+| MikroORM subscribers (`LifecycleHooksSubscriber`) not thread-safe under Worker isolate lifetimes | Per-request `EntityManager` fork. Documented + tested.                                                                   |
+| Nest DataLoader auto-registration when `@nestjs/graphql` isn't installed                         | Optional peer + `@nestjs/graphql` guard in the OrmModule provider factory.                                               |
+| Auto-generated controllers collide with hand-written ones                                        | Registration order + explicit `path` in the `controller: { path: ... }` config option.                                   |
+| PGlite test performance for very large test suites                                               | Use `withTransaction` + rollback (documented). PGlite handles 1000s of tests/sec on modern hardware.                     |
 
 ## Success criteria
 
@@ -521,8 +527,8 @@ register its entities + auto-CRUD.
       cleanly to BOTH Postgres (via `mikro-orm migration:up`) AND SQLite (via
       `wrangler d1 migrations apply --local` OR direct sqlite3).
 - [ ] `withTransaction` rollback isolates every test.
-- [ ] Auto-generated CRUD service handles find/paginate/create/update/soft-delete
-      end-to-end on approval entity.
+- [ ] Auto-generated CRUD service handles
+      find/paginate/create/update/soft-delete end-to-end on approval entity.
 - [ ] D1 bundle stays under 1MB (Wrangler limit) — verified in Phase 6 spike.
 
 ## Cross-references

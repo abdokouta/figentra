@@ -352,8 +352,8 @@
           <span class="tag">real values</span>
         </h1>
         <p class="sub">
-          Live from HeroUI Pro MCP · 2026-08-14 · every oklch() below verbatim
-          from mouve/variables.css
+          Live from HeroUI Pro MCP · 2026-08-14 · every oklch() below verbatim from
+          mouve/variables.css
         </p>
       </header>
 
@@ -363,10 +363,9 @@
       <section>
         <h2>Question — is HeroUI Pro's "mouve" theme right for Figentra?</h2>
         <p class="lede">
-          The MCP returned the full "mouve" theme. It's a comprehensive design
-          system, not just an accent color — with its own shadows, radii,
-          gradient overlays, and hue system centered on oklch hue 300
-          (warm-purple). Here's what mouve actually gives you:
+          The MCP returned the full "mouve" theme. It's a comprehensive design system, not just an
+          accent color — with its own shadows, radii, gradient overlays, and hue system centered on
+          oklch hue 300 (warm-purple). Here's what mouve actually gives you:
         </p>
 
         <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap">
@@ -403,11 +402,9 @@
       <section>
         <h2>The F-Signal mark rendered on real mouve surfaces</h2>
         <p class="lede">
-          Below: your mark literally dropped onto mouve theme surfaces
-          (background + accent + radii + shadows verbatim). Left = mouve
-          light, right = mouve dark. The mark inherits the mouve accent color
-          via the CSS var — so the dot IS the mouve accent, not the Signal
-          mint.
+          Below: your mark literally dropped onto mouve theme surfaces (background + accent + radii
+          + shadows verbatim). Left = mouve light, right = mouve dark. The mark inherits the mouve
+          accent color via the CSS var — so the dot IS the mouve accent, not the Signal mint.
         </p>
 
         <div class="surface-row">
@@ -537,8 +534,7 @@
         <p class="lede">
           Every row below is a specific spec value from HeroUI Pro's
           <code>mouve/variables.css</code> compared against
-          <code>docs/brand/04-visual-identity.md</code>. Green rows agree.
-          Red rows conflict.
+          <code>docs/brand/04-visual-identity.md</code>. Green rows agree. Red rows conflict.
         </p>
 
         <table>
@@ -560,54 +556,76 @@
             <tr>
               <td>Gradients on interactive elements</td>
               <td>
-                Buttons carry <code>linear-gradient</code> overlay + inset
-                specular highlight ("gradient button overlays")
+                Buttons carry <code>linear-gradient</code> overlay + inset specular highlight
+                ("gradient button overlays")
               </td>
               <td>
-                "<strong>No gradients. Ever.</strong> Solid colours only."
-                (§1 &sect; colour usage rules)
+                "<strong>No gradients. Ever.</strong> Solid colours only." (§1 &sect; colour usage
+                rules)
               </td>
               <td><span class="cross">✗ direct contradiction</span></td>
             </tr>
             <tr>
               <td>Corner radius on fields/buttons</td>
               <td>
-                <code>--field-radius: 1.5rem</code> = <strong>24px</strong>,
-                "rounded interactive affordances"
+                <code>--field-radius: 1.5rem</code> = <strong>24px</strong>, "rounded interactive
+                affordances"
               </td>
-              <td>"4px utility, 8px content, 12px hero, <strong>16px MAX</strong>. Never 24px+ — reads too consumer-playful." (§4)</td>
+              <td>
+                "4px utility, 8px content, 12px hero, <strong>16px MAX</strong>. Never 24px+ — reads
+                too consumer-playful." (§4)
+              </td>
               <td><span class="cross">✗ direct contradiction</span></td>
             </tr>
             <tr>
               <td>Shadow system</td>
               <td>
-                Multi-layer inset+drop shadows on every raised surface — 6+
-                layered stops per shadow token
+                Multi-layer inset+drop shadows on every raised surface — 6+ layered stops per shadow
+                token
               </td>
-              <td>"<strong>No shadows deeper than <code>0 1px 2px rgb(0 0 0 / 8%)</code></strong>. Every elevation is a border, not a shadow." (§1)</td>
+              <td>
+                "<strong>No shadows deeper than <code>0 1px 2px rgb(0 0 0 / 8%)</code></strong
+                >. Every elevation is a border, not a shadow." (§1)
+              </td>
               <td><span class="cross">✗ direct contradiction</span></td>
             </tr>
             <tr>
               <td>Overall vibe</td>
               <td>"Soft layered shadows, refined, contemporary, backdrop-blurred overlays"</td>
-              <td>"Engineering laboratory. Serious. Precise. Data-forward. Zero ornament." (§direction)</td>
+              <td>
+                "Engineering laboratory. Serious. Precise. Data-forward. Zero ornament."
+                (§direction)
+              </td>
               <td><span class="cross">✗ opposite direction</span></td>
             </tr>
             <tr>
               <td>Background tint</td>
               <td>Every neutral tinted at hue 300 (purple undertone even in "white")</td>
-              <td>Paper is <strong>warm off-white</strong> <code>#FAFAF7</code> (yellow undertone, no chroma)</td>
+              <td>
+                Paper is <strong>warm off-white</strong> <code>#FAFAF7</code> (yellow undertone, no
+                chroma)
+              </td>
               <td><span class="cross">✗ conflicts</span></td>
             </tr>
             <tr>
               <td>Semantic status colors</td>
-              <td>Success <code>oklch(0.73 0.19 150)</code>, Warning <code>oklch(0.78 0.16 72)</code>, Danger <code>oklch(0.65 0.23 26)</code></td>
-              <td>OK <code>#4CC38A</code>, Warn <code>#F5A623</code>, Fail <code>#E5484D</code> (§1 semantic accents)</td>
-              <td><span class="check">≈ similar</span> — different hex but same roles + close hues</td>
+              <td>
+                Success <code>oklch(0.73 0.19 150)</code>, Warning <code>oklch(0.78 0.16 72)</code>,
+                Danger <code>oklch(0.65 0.23 26)</code>
+              </td>
+              <td>
+                OK <code>#4CC38A</code>, Warn <code>#F5A623</code>, Fail <code>#E5484D</code> (§1
+                semantic accents)
+              </td>
+              <td>
+                <span class="check">≈ similar</span> — different hex but same roles + close hues
+              </td>
             </tr>
             <tr>
               <td>Radius baseline</td>
-              <td><code>--radius: 0.54rem</code> = 8.64px (light) / <code>0.75rem</code> = 12px (dark)</td>
+              <td>
+                <code>--radius: 0.54rem</code> = 8.64px (light) / <code>0.75rem</code> = 12px (dark)
+              </td>
               <td>4px utility, 8px content, 12px hero (§4)</td>
               <td><span class="check">≈ compatible</span></td>
             </tr>
@@ -621,10 +639,9 @@
       <section>
         <h2>Which HeroUI Pro theme actually fits Figentra?</h2>
         <p class="lede">
-          HeroUI Pro ships four themes: <code>default</code>,
-          <code>brutalism</code>, <code>glass</code>, <code>mouve</code>. Only
-          <code>default</code> aligns with Figentra's brand doc — and even
-          then, you override its accent.
+          HeroUI Pro ships four themes: <code>default</code>, <code>brutalism</code>,
+          <code>glass</code>, <code>mouve</code>. Only <code>default</code> aligns with Figentra's
+          brand doc — and even then, you override its accent.
         </p>
 
         <table>
@@ -641,7 +658,10 @@
               <td><strong>default</strong></td>
               <td>Neutral, restrained, single-layer shadows, 8px radius</td>
               <td><code>oklch(0.62 0.20 254)</code> — mid-blue</td>
-              <td><span class="check">✓ closest fit</span> — override accent to Signal mint <code>#00E5A0</code></td>
+              <td>
+                <span class="check">✓ closest fit</span> — override accent to Signal mint
+                <code>#00E5A0</code>
+              </td>
             </tr>
             <tr>
               <td>brutalism</td>
@@ -653,7 +673,9 @@
               <td>glass</td>
               <td>Frosted surfaces, translucency, backdrop-blur</td>
               <td>Muted</td>
-              <td><span class="cross">✗ contra brand doc</span> — no backdrop-blurred overlays per §1</td>
+              <td>
+                <span class="cross">✗ contra brand doc</span> — no backdrop-blurred overlays per §1
+              </td>
             </tr>
             <tr>
               <td>mouve</td>
@@ -671,18 +693,14 @@
       <section>
         <h2>Verdict</h2>
         <p class="lede">
-          "mouve" is a beautiful, cohesive design system — but it's designed
-          for a <strong>different tone</strong> than Figentra's. It's built
-          for refined, contemporary, soft-luxury consumer or design-forward
-          B2B (think: Notion, Framer, Superhuman). Every one of its
-          signature moves — gradient buttons, 24px pill corners, layered
-          shadows, purple hue — is exactly the kind of ornament your brand
-          doc §direction explicitly forbids.
+          "mouve" is a beautiful, cohesive design system — but it's designed for a
+          <strong>different tone</strong> than Figentra's. It's built for refined, contemporary,
+          soft-luxury consumer or design-forward B2B (think: Notion, Framer, Superhuman). Every one
+          of its signature moves — gradient buttons, 24px pill corners, layered shadows, purple hue
+          — is exactly the kind of ornament your brand doc §direction explicitly forbids.
         </p>
 
-        <p class="lede">
-          Where this leaves you:
-        </p>
+        <p class="lede">Where this leaves you:</p>
 
         <table>
           <thead>
@@ -695,17 +713,15 @@
             <tr>
               <td>Stay on-brand per your written strategy</td>
               <td>
-                Use HeroUI Pro <code>default</code> theme with the accent
-                overridden to Signal mint <code>#00E5A0</code>. Ship
-                Concept B in mint. Delete "mouve" from the theme options.
+                Use HeroUI Pro <code>default</code> theme with the accent overridden to Signal mint
+                <code>#00E5A0</code>. Ship Concept B in mint. Delete "mouve" from the theme options.
               </td>
             </tr>
             <tr>
               <td>Adopt the mouve aesthetic wholesale</td>
               <td>
-                Update <code>docs/brand/04-visual-identity.md</code> to
-                match: allow gradients, 24px radius, layered shadows,
-                purple palette. That's a brand-strategy pivot, not a color
+                Update <code>docs/brand/04-visual-identity.md</code> to match: allow gradients, 24px
+                radius, layered shadows, purple palette. That's a brand-strategy pivot, not a color
                 swap. Founding Partners' call.
               </td>
             </tr>
@@ -713,22 +729,19 @@
               <td>Cherry-pick just the mauve accent, keep the rest</td>
               <td>
                 Ship Concept B with the dot in <code>oklch(0.55 0.18 300)</code>
-                instead of mint. Keep flat surfaces, 4-8px radii,
-                single-layer shadows. You get 1 conflict resolved and 5
-                still in place — not recommended.
+                instead of mint. Keep flat surfaces, 4-8px radii, single-layer shadows. You get 1
+                conflict resolved and 5 still in place — not recommended.
               </td>
             </tr>
           </tbody>
         </table>
 
         <p style="margin-top: 24px; font-size: 15px; color: #3a4256; max-width: 72ch">
-          <strong>My read:</strong> The mouve theme's visual language and
-          Figentra's positioning are aiming at different customers.
-          Figentra's ICP is a Fortune 500 CTO who wants to see
-          "engineering discipline, governance, receipts." Mouve's visual
-          language says "refined product, considered aesthetic, premium
-          consumer." Both are valid design targets — but you can't be both
-          at once, and you already wrote your answer in
+          <strong>My read:</strong> The mouve theme's visual language and Figentra's positioning are
+          aiming at different customers. Figentra's ICP is a Fortune 500 CTO who wants to see
+          "engineering discipline, governance, receipts." Mouve's visual language says "refined
+          product, considered aesthetic, premium consumer." Both are valid design targets — but you
+          can't be both at once, and you already wrote your answer in
           <code>docs/brand/00-foundation.md §1</code>.
         </p>
 
@@ -743,7 +756,7 @@
           margin-top: 48px;
           padding-top: 32px;
           border-top: 1px solid #dde0e8;
-          font-family: 'JetBrains Mono', monospace;
+          font-family: &quot;JetBrains Mono&quot;, monospace;
           font-size: 11px;
           color: #5a6478;
         "

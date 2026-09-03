@@ -37,8 +37,8 @@ npm install class-validator class-transformer reflect-metadata
 Creates a new type by picking a set of properties from an existing class.
 
 ```typescript
-import { PickType } from '@pixielity/mapped-types';
-import { IsString, IsEmail } from 'class-validator';
+import { PickType } from "@pixielity/mapped-types";
+import { IsString, IsEmail } from "class-validator";
 
 class UserDto {
   @IsString()
@@ -53,7 +53,7 @@ class UserDto {
 
 // CreateUserDto will have name, email, and password properties
 // with the same validation rules as UserDto
-class CreateUserDto extends PickType(UserDto, ['name', 'email', 'password']) {}
+class CreateUserDto extends PickType(UserDto, ["name", "email", "password"]) {}
 ```
 
 ### OmitType
@@ -61,8 +61,8 @@ class CreateUserDto extends PickType(UserDto, ['name', 'email', 'password']) {}
 Creates a new type by omitting a set of properties from an existing class.
 
 ```typescript
-import { OmitType } from '@pixielity/mapped-types';
-import { IsString, IsEmail } from 'class-validator';
+import { OmitType } from "@pixielity/mapped-types";
+import { IsString, IsEmail } from "class-validator";
 
 class UserDto {
   @IsString()
@@ -77,7 +77,7 @@ class UserDto {
 
 // UserResponseDto will have name and email properties, but not password
 // with the same validation rules as UserDto
-class UserResponseDto extends OmitType(UserDto, ['password']) {}
+class UserResponseDto extends OmitType(UserDto, ["password"]) {}
 ```
 
 ### PartialType
@@ -85,8 +85,8 @@ class UserResponseDto extends OmitType(UserDto, ['password']) {}
 Creates a new type by making all properties of an existing class optional.
 
 ```typescript
-import { PartialType } from '@pixielity/mapped-types';
-import { IsString, IsEmail } from 'class-validator';
+import { PartialType } from "@pixielity/mapped-types";
+import { IsString, IsEmail } from "class-validator";
 
 class UserDto {
   @IsString()
@@ -107,8 +107,8 @@ class UpdateUserDto extends PartialType(UserDto) {}
 Creates a new type by intersecting multiple existing classes.
 
 ```typescript
-import { IntersectionType } from '@pixielity/mapped-types';
-import { IsString } from 'class-validator';
+import { IntersectionType } from "@pixielity/mapped-types";
+import { IsString } from "class-validator";
 
 class UserDto {
   @IsString()
@@ -135,7 +135,7 @@ For detailed API documentation, please visit our
 ```typescript
 function PickType<T, K extends keyof T>(
   classRef: Type<T>,
-  keys: readonly K[]
+  keys: readonly K[],
 ): MappedType<RemoveFieldsWithType<Pick<T, K>, Function>>;
 ```
 
@@ -144,7 +144,7 @@ function PickType<T, K extends keyof T>(
 ```typescript
 function OmitType<T, K extends keyof T>(
   classRef: Type<T>,
-  keys: readonly K[]
+  keys: readonly K[],
 ): MappedType<RemoveFieldsWithType<Omit<T, K>, Function>>;
 ```
 
@@ -155,7 +155,7 @@ function PartialType<T>(
   classRef: Type<T>,
   options: {
     skipNullProperties?: boolean;
-  } = {}
+  } = {},
 ): MappedType<RemoveFieldsWithType<Partial<T>, Function>>;
 ```
 

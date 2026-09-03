@@ -33,10 +33,8 @@ exception.
 
 ## Environment names
 
-Canonical:
-`development`, `staging`, `production`
+Canonical: `development`, `staging`, `production`
 
-CLI aliases:
-`dev`, `stg`, `prd`
+CLI aliases: `dev`, `stg`, `prd`
 
 - [Platform Package Boundaries](./20-platform-package-boundaries.md)

@@ -1,8 +1,9 @@
 # 09 — Service Communication
 
-**Status:** Baseline
-**Owner:** Platform architecture
-**Related:** [08 API Gateway](08-api-gateway.md), [11 Events & workflows](11-events-and-workflows.md), [17 Security](17-security-and-compliance.md)
+**Status:** Baseline **Owner:** Platform architecture **Related:**
+[08 API Gateway](08-api-gateway.md),
+[11 Events & workflows](11-events-and-workflows.md),
+[17 Security](17-security-and-compliance.md)
 
 ---
 
@@ -41,8 +42,8 @@ if it is announcing that something **happened**, emit an event.
 
 ## 3. Data boundary (mandatory)
 
-A service communicates with another service's **API or event stream**, never
-its database.
+A service communicates with another service's **API or event stream**, never its
+database.
 
 ```text
 BAD                                 GOOD
@@ -58,8 +59,8 @@ read optimization, never a second source of truth ([04 §9]).
 
 ## 4. Service identity (never the user's token)
 
-A user's Supabase Auth session token is **never** a machine-to-machine credential.
-Separate user context from service context:
+A user's Supabase Auth session token is **never** a machine-to-machine
+credential. Separate user context from service context:
 
 ```text
 USER CONTEXT                       SERVICE CONTEXT
@@ -75,8 +76,12 @@ layers:
 
 ```json
 {
-  "subject": { "userId": "user_123", "tenantId": "ten_123", "application": "commerce" },
-  "caller":  { "service": "portal" }
+  "subject": {
+    "userId": "user_123",
+    "tenantId": "ten_123",
+    "application": "commerce"
+  },
+  "caller": { "service": "portal" }
 }
 ```
 
@@ -105,7 +110,8 @@ billing  → tenant.read, audit.write, usage.read
 No service receives `*` / `admin` / `root` unless it is a tightly controlled
 infrastructure/system actor. Trusted headers (`X-Figentra-Service`,
 `X-Figentra-Request-Id`) are honored only over an authenticated service channel;
-`X-Tenant-Id` / `X-User-Id` / `X-Role` are trusted only from a verified upstream.
+`X-Tenant-Id` / `X-User-Id` / `X-Role` are trusted only from a verified
+upstream.
 
 ---
 
@@ -161,8 +167,8 @@ backward-compatible where possible.
 
 ## 7. The platform SDK
 
-Services and frontends do not re-implement Supabase Auth parsing + tenant resolution +
-IAM logic. Shared client packages provide it:
+Services and frontends do not re-implement Supabase Auth parsing + tenant
+resolution + IAM logic. Shared client packages provide it:
 
 ```text
 @figentra/auth                 authenticated user / active org / resolve tenant
@@ -175,13 +181,13 @@ IAM logic. Shared client packages provide it:
 SDK surface:
 
 ```typescript
-getAuthenticatedUser()
-getActiveOrganization()
-resolveTenant()
-checkPermission()
-requirePermission()
-getEntitlement()
-requireEntitlement()
+getAuthenticatedUser();
+getActiveOrganization();
+resolveTenant();
+checkPermission();
+requirePermission();
+getEntitlement();
+requireEntitlement();
 ```
 
 The SDK is a **client/contract layer only** — it never embeds a second
@@ -203,15 +209,15 @@ authorization database. Contracts (types) come from `@figentra/contracts`
 
 ## 9. Non-goals / anti-patterns
 
-| Anti-pattern                                                   | Correct                                                      |
-| -------------------------------------------------------------- | ------------------------------------------------------------ |
-| Using the user's Supabase Auth token for service→service calls         | Service identity (bindings / short-lived creds).             |
-| A service reading another service's DB                         | API call or event-fed projection.                            |
-| `X-Service-Secret: admin` as the only auth                     | Scoped service identity over an authenticated channel.       |
-| Wildcard service scopes                                        | Least-privilege explicit scopes.                             |
-| Request/reply built on two events + correlation id             | Use synchronous HTTP for request/reply.                      |
-| Sharing DB entities between services                           | Share contracts (`@figentra/contracts`).                    |
-| Coupling every service via bindings                            | Bindings within domain boundaries only.                      |
+| Anti-pattern                                                   | Correct                                                |
+| -------------------------------------------------------------- | ------------------------------------------------------ |
+| Using the user's Supabase Auth token for service→service calls | Service identity (bindings / short-lived creds).       |
+| A service reading another service's DB                         | API call or event-fed projection.                      |
+| `X-Service-Secret: admin` as the only auth                     | Scoped service identity over an authenticated channel. |
+| Wildcard service scopes                                        | Least-privilege explicit scopes.                       |
+| Request/reply built on two events + correlation id             | Use synchronous HTTP for request/reply.                |
+| Sharing DB entities between services                           | Share contracts (`@figentra/contracts`).               |
+| Coupling every service via bindings                            | Bindings within domain boundaries only.                |
 
 ---
 

@@ -52,8 +52,8 @@ Always orient before judging. Read, in this order:
     vs access split.
 11. `docs/adr/0009-permissions-roles-via-provider-arrays.md` — permissions +
     roles wired as enum values via provider arrays.
-12. `docs/domain-hierarchy.md` §5 + §7 — access control model + audience-namespaced
-    roles.
+12. `docs/domain-hierarchy.md` §5 + §7 — access control model +
+    audience-namespaced roles.
 13. `docs/doppler.md` — every secret comes from Doppler.
 14. `.kiro/steering/service-boundary.md` (via `#service-boundary`).
 15. `.kiro/steering/doppler.md`
@@ -128,8 +128,8 @@ The verifier MUST enforce every step in `docs/contracts/service-jwt.schema.json`
 - Server-side enforcement everywhere. Client-only checks (`isAdmin` computed on
   the frontend) are P1 findings.
 - Every handler's authorization guard
-  (`@RequirePermission(TenancyPermission.Manage)` etc.) fires BEFORE the resource
-  is resolved/loaded so a 403 doesn't leak the existence of a resource.
+  (`@RequirePermission(TenancyPermission.Manage)` etc.) fires BEFORE the
+  resource is resolved/loaded so a 403 doesn't leak the existence of a resource.
 
 ### 4. Tenant isolation as a security property
 
@@ -257,7 +257,8 @@ job) = P0.
 
 ## Explicitly out of scope (defer to sibling reviewers)
 
-- DI / container / framework architecture → **container-di-architecture-reviewer**.
+- DI / container / framework architecture →
+  **container-di-architecture-reviewer**.
 - Cloudflare Workers runtime / Turborepo / CI / Doppler mechanics → the backend
   service owners.
 - Test coverage on the auth surface → **vitest-test-engineer** (but you flag the

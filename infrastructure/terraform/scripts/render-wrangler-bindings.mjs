@@ -36,7 +36,8 @@ const worker = args.get("worker");
 const rawEnv = args.get("env") ?? "development";
 const env = rawEnv;
 if (!worker) throw new Error("--worker registry|infrastructure-orchestrator is required");
-if (!new Set(["development", "staging", "production"]).has(env)) throw new Error("--env must be development|staging|production");
+if (!new Set(["development", "staging", "production"]).has(env))
+  throw new Error("--env must be development|staging|production");
 
 const target = {
   registry: "workers/registry/wrangler.jsonc",
@@ -75,18 +76,39 @@ if (worker === "registry") {
   const d1 = output("d1_database_ids")["application-registry"];
   const kv = output("kv_namespace_ids")["application-registry"];
   if (!d1 || !kv) throw new Error("Registry Terraform outputs are incomplete");
-  text = text.replace(/"database_id": "GENERATED_BY_TERRAFORM"/, `"database_id": ${JSON.stringify(d1)}`);
+  text = text.replace(
+    /"database_id": "GENERATED_BY_TERRAFORM"/,
+    `"database_id": ${JSON.stringify(d1)}`,
+  );
   text = text.replace(/"id": "GENERATED_BY_TERRAFORM"/, `"id": ${JSON.stringify(kv)}`);
-  text = text.replaceAll('"database_id": "GENERATED_BY_TERRAFORM"', `"database_id": ${JSON.stringify(d1)}`);
+  text = text.replaceAll(
+    '"database_id": "GENERATED_BY_TERRAFORM"',
+    `"database_id": ${JSON.stringify(d1)}`,
+  );
   text = text.replaceAll('"id": "GENERATED_BY_TERRAFORM"', `"id": ${JSON.stringify(kv)}`);
-  text = text.replaceAll('"IDENTITY_JWKS_URL": "GENERATED_BY_TERRAFORM"', `"IDENTITY_JWKS_URL": ${JSON.stringify(identityBase + "/.well-known/jwks.json")}`);
-  text = text.replaceAll('"IDENTITY_ISSUER": "GENERATED_BY_TERRAFORM"', `"IDENTITY_ISSUER": ${JSON.stringify(identityBase)}`);
+  text = text.replaceAll(
+    '"IDENTITY_JWKS_URL": "GENERATED_BY_TERRAFORM"',
+    `"IDENTITY_JWKS_URL": ${JSON.stringify(identityBase + "/.well-known/jwks.json")}`,
+  );
+  text = text.replaceAll(
+    '"IDENTITY_ISSUER": "GENERATED_BY_TERRAFORM"',
+    `"IDENTITY_ISSUER": ${JSON.stringify(identityBase)}`,
+  );
 } else {
   const databaseId = output("orchestrator_database_id");
   if (!databaseId) throw new Error("Infrastructure Orchestrator Terraform outputs are incomplete");
-  text = text.replaceAll('"database_id": "GENERATED_BY_TERRAFORM"', `"database_id": ${JSON.stringify(databaseId)}`);
-  text = text.replaceAll('"IDENTITY_JWKS_URL": "GENERATED_BY_TERRAFORM"', `"IDENTITY_JWKS_URL": ${JSON.stringify(identityBase + "/.well-known/jwks.json")}`);
-  text = text.replaceAll('"IDENTITY_ISSUER": "GENERATED_BY_TERRAFORM"', `"IDENTITY_ISSUER": ${JSON.stringify(identityBase)}`);
+  text = text.replaceAll(
+    '"database_id": "GENERATED_BY_TERRAFORM"',
+    `"database_id": ${JSON.stringify(databaseId)}`,
+  );
+  text = text.replaceAll(
+    '"IDENTITY_JWKS_URL": "GENERATED_BY_TERRAFORM"',
+    `"IDENTITY_JWKS_URL": ${JSON.stringify(identityBase + "/.well-known/jwks.json")}`,
+  );
+  text = text.replaceAll(
+    '"IDENTITY_ISSUER": "GENERATED_BY_TERRAFORM"',
+    `"IDENTITY_ISSUER": ${JSON.stringify(identityBase)}`,
+  );
 }
 
 const destination = resolve(root, target.replace("wrangler.jsonc", `wrangler.${env}.jsonc`));

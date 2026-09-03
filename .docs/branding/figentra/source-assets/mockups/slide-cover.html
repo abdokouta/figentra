@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Figentra — pitch deck cover mockup</title>
-<!--
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Figentra — pitch deck cover mockup</title>
+    <!--
   Mockup — slide-cover.html
   16:9 pitch-deck cover. Ink field, circuit-trace backdrop, big Geist
   wordmark, Signal underline, tagline + kicker. Two variants: cover
@@ -12,220 +12,255 @@
   Google Slides via browser print-to-PDF at 1920×1080.
   See docs/brand/13-patterns-and-assets.md §Slide cover.
 -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --ink: #141414;
-    --paper: #fafafa;
-    --signal: #00E5A0;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    padding: 48px 24px 96px;
-    background: #ececec;
-    font-family: "Geist", "Inter", system-ui, sans-serif;
-    color: var(--ink);
-  }
-  main { max-width: 1440px; margin: 0 auto; }
-  h1 {
-    font-size: 24px;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    margin: 0 0 8px;
-  }
-  .subhead {
-    color: rgba(26, 26, 30, 0.6);
-    font-size: 14px;
-    margin: 0 0 40px;
-  }
-  section { margin-bottom: 56px; }
-  h2 {
-    font-family: "Geist Mono", ui-monospace, monospace;
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    color: rgba(26, 26, 30, 0.55);
-    margin: 0 0 12px;
-    text-transform: uppercase;
-  }
-  .slide {
-    aspect-ratio: 16 / 9;
-    background: var(--ink);
-    color: var(--paper);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.16);
-    position: relative;
-    padding: clamp(48px, 6vw, 96px);
-    display: flex;
-    align-items: flex-end;
-  }
-  .backdrop-dots {
-    position: absolute; inset: 0;
-    background-image: url("../patterns/p-dot-matrix.svg");
-    background-size: 24px 24px;
-    opacity: 0.35;
-    pointer-events: none;
-  }
-  .backdrop-circuit {
-    position: absolute; inset: 0;
-    background-image: url("../patterns/p-circuit-trace.svg");
-    background-size: 160px 160px;
-    opacity: 0.55;
-    pointer-events: none;
-    mask-image: linear-gradient(135deg, transparent 30%, black 60%);
-  }
-  .glow {
-    position: absolute;
-    top: -10%; right: -10%;
-    width: 60%; height: 80%;
-    background: radial-gradient(circle, rgba(0, 229, 160, 0.22), rgba(0, 229, 160, 0) 60%);
-    pointer-events: none;
-  }
-  .content {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    max-width: 780px;
-  }
-  .kicker {
-    font-family: "Geist Mono", ui-monospace, monospace;
-    font-size: clamp(14px, 1.1vw, 18px);
-    letter-spacing: 0.16em;
-    color: var(--signal);
-    margin: 0;
-    text-transform: uppercase;
-  }
-  .wordmark {
-    font-size: clamp(96px, 12vw, 200px);
-    font-weight: 500;
-    letter-spacing: -0.04em;
-    line-height: 0.95;
-    margin: 0;
-  }
-  .wordmark::after {
-    content: "";
-    display: inline-block;
-    width: clamp(24px, 3vw, 44px);
-    height: clamp(10px, 1.2vw, 16px);
-    margin-left: 10px;
-    background: var(--signal);
-    vertical-align: middle;
-    animation: blink 1s steps(1) infinite;
-  }
-  .tagline {
-    font-size: clamp(20px, 2vw, 32px);
-    font-weight: 400;
-    color: rgba(250, 250, 250, 0.72);
-    margin: 0;
-    letter-spacing: -0.01em;
-  }
-  .signature {
-    position: absolute;
-    top: clamp(48px, 6vw, 96px);
-    right: clamp(48px, 6vw, 96px);
-    font-family: "Geist Mono", ui-monospace, monospace;
-    font-size: clamp(10px, 0.9vw, 14px);
-    letter-spacing: 0.16em;
-    color: rgba(250, 250, 250, 0.55);
-    text-transform: uppercase;
-  }
-  .footer-line {
-    position: absolute;
-    left: 0; right: 0;
-    bottom: 0;
-    height: 6px;
-    background: var(--signal);
-  }
-  .divider-inner {
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-  .divider-inner .content { align-items: center; text-align: center; }
-  .divider-mark {
-    width: clamp(96px, 10vw, 160px);
-    height: clamp(96px, 10vw, 160px);
-  }
-  .divider-chapter {
-    font-family: "Geist Mono", ui-monospace, monospace;
-    font-size: clamp(16px, 1.4vw, 22px);
-    letter-spacing: 0.16em;
-    color: var(--signal);
-    margin: 0;
-    text-transform: uppercase;
-  }
-  .divider-title {
-    font-size: clamp(48px, 5.5vw, 88px);
-    font-weight: 500;
-    letter-spacing: -0.03em;
-    margin: 0;
-  }
-  .caption {
-    font-family: "Geist Mono", ui-monospace, monospace;
-    font-size: 11px;
-    color: rgba(26, 26, 30, 0.5);
-    letter-spacing: 0.06em;
-    margin-top: 8px;
-  }
-  @keyframes blink {
-    0%, 49% { opacity: 1; }
-    50%, 100% { opacity: 0; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .wordmark::after { animation: none; }
-  }
-</style>
-</head>
-<body>
-<main>
-  <h1>Pitch deck — cover + section divider mockups</h1>
-  <p class="subhead">16:9 canvas · 1920 × 1080 export. Ink base, Signal-mint accents, Geist type. Two slides representative of every deck we ship.</p>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #141414;
+        --paper: #fafafa;
+        --signal: #00e5a0;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 48px 24px 96px;
+        background: #ececec;
+        font-family: "Geist", "Inter", system-ui, sans-serif;
+        color: var(--ink);
+      }
+      main {
+        max-width: 1440px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 24px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        margin: 0 0 8px;
+      }
+      .subhead {
+        color: rgba(26, 26, 30, 0.6);
+        font-size: 14px;
+        margin: 0 0 40px;
+      }
+      section {
+        margin-bottom: 56px;
+      }
+      h2 {
+        font-family: "Geist Mono", ui-monospace, monospace;
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        color: rgba(26, 26, 30, 0.55);
+        margin: 0 0 12px;
+        text-transform: uppercase;
+      }
+      .slide {
+        aspect-ratio: 16 / 9;
+        background: var(--ink);
+        color: var(--paper);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.16);
+        position: relative;
+        padding: clamp(48px, 6vw, 96px);
+        display: flex;
+        align-items: flex-end;
+      }
+      .backdrop-dots {
+        position: absolute;
+        inset: 0;
+        background-image: url("../patterns/p-dot-matrix.svg");
+        background-size: 24px 24px;
+        opacity: 0.35;
+        pointer-events: none;
+      }
+      .backdrop-circuit {
+        position: absolute;
+        inset: 0;
+        background-image: url("../patterns/p-circuit-trace.svg");
+        background-size: 160px 160px;
+        opacity: 0.55;
+        pointer-events: none;
+        mask-image: linear-gradient(135deg, transparent 30%, black 60%);
+      }
+      .glow {
+        position: absolute;
+        top: -10%;
+        right: -10%;
+        width: 60%;
+        height: 80%;
+        background: radial-gradient(circle, rgba(0, 229, 160, 0.22), rgba(0, 229, 160, 0) 60%);
+        pointer-events: none;
+      }
+      .content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        max-width: 780px;
+      }
+      .kicker {
+        font-family: "Geist Mono", ui-monospace, monospace;
+        font-size: clamp(14px, 1.1vw, 18px);
+        letter-spacing: 0.16em;
+        color: var(--signal);
+        margin: 0;
+        text-transform: uppercase;
+      }
+      .wordmark {
+        font-size: clamp(96px, 12vw, 200px);
+        font-weight: 500;
+        letter-spacing: -0.04em;
+        line-height: 0.95;
+        margin: 0;
+      }
+      .wordmark::after {
+        content: "";
+        display: inline-block;
+        width: clamp(24px, 3vw, 44px);
+        height: clamp(10px, 1.2vw, 16px);
+        margin-left: 10px;
+        background: var(--signal);
+        vertical-align: middle;
+        animation: blink 1s steps(1) infinite;
+      }
+      .tagline {
+        font-size: clamp(20px, 2vw, 32px);
+        font-weight: 400;
+        color: rgba(250, 250, 250, 0.72);
+        margin: 0;
+        letter-spacing: -0.01em;
+      }
+      .signature {
+        position: absolute;
+        top: clamp(48px, 6vw, 96px);
+        right: clamp(48px, 6vw, 96px);
+        font-family: "Geist Mono", ui-monospace, monospace;
+        font-size: clamp(10px, 0.9vw, 14px);
+        letter-spacing: 0.16em;
+        color: rgba(250, 250, 250, 0.55);
+        text-transform: uppercase;
+      }
+      .footer-line {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 6px;
+        background: var(--signal);
+      }
+      .divider-inner {
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .divider-inner .content {
+        align-items: center;
+        text-align: center;
+      }
+      .divider-mark {
+        width: clamp(96px, 10vw, 160px);
+        height: clamp(96px, 10vw, 160px);
+      }
+      .divider-chapter {
+        font-family: "Geist Mono", ui-monospace, monospace;
+        font-size: clamp(16px, 1.4vw, 22px);
+        letter-spacing: 0.16em;
+        color: var(--signal);
+        margin: 0;
+        text-transform: uppercase;
+      }
+      .divider-title {
+        font-size: clamp(48px, 5.5vw, 88px);
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        margin: 0;
+      }
+      .caption {
+        font-family: "Geist Mono", ui-monospace, monospace;
+        font-size: 11px;
+        color: rgba(26, 26, 30, 0.5);
+        letter-spacing: 0.06em;
+        margin-top: 8px;
+      }
+      @keyframes blink {
+        0%,
+        49% {
+          opacity: 1;
+        }
+        50%,
+        100% {
+          opacity: 0;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .wordmark::after {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Pitch deck — cover + section divider mockups</h1>
+      <p class="subhead">
+        16:9 canvas · 1920 × 1080 export. Ink base, Signal-mint accents, Geist type. Two slides
+        representative of every deck we ship.
+      </p>
 
-  <section>
-    <h2>Slide 01 · Cover</h2>
-    <div class="slide">
-      <div class="backdrop-dots"></div>
-      <div class="backdrop-circuit"></div>
-      <div class="glow"></div>
-      <p class="signature">v3.0 · Aug 2026</p>
-      <div class="content">
-        <p class="kicker">$_ figentra</p>
-        <div class="wordmark">figentra</div>
-        <p class="tagline">AI-agent-first infrastructure for the next decade of teams.</p>
-      </div>
-      <div class="footer-line"></div>
-    </div>
-    <p class="caption">Big wordmark bottom-left. Kicker + tagline anchor the reading order. Signal footer line closes the composition.</p>
-  </section>
+      <section>
+        <h2>Slide 01 · Cover</h2>
+        <div class="slide">
+          <div class="backdrop-dots"></div>
+          <div class="backdrop-circuit"></div>
+          <div class="glow"></div>
+          <p class="signature">v3.0 · Aug 2026</p>
+          <div class="content">
+            <p class="kicker">$_ figentra</p>
+            <div class="wordmark">figentra</div>
+            <p class="tagline">AI-agent-first infrastructure for the next decade of teams.</p>
+          </div>
+          <div class="footer-line"></div>
+        </div>
+        <p class="caption">
+          Big wordmark bottom-left. Kicker + tagline anchor the reading order. Signal footer line
+          closes the composition.
+        </p>
+      </section>
 
-  <section>
-    <h2>Slide 02 · Section divider</h2>
-    <div class="slide divider-inner">
-      <div class="backdrop-dots"></div>
-      <div class="backdrop-circuit"></div>
-      <div class="glow"></div>
-      <p class="signature">Chapter 03</p>
-      <div class="content">
-        <svg class="divider-mark" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-          <g fill="#fafafa">
-            <rect x="30" y="24" width="10" height="72"/>
-            <rect x="30" y="24" width="52" height="10"/>
-            <rect x="30" y="56" width="34" height="10"/>
-          </g>
-          <rect x="88" y="26" width="14" height="6" fill="#00E5A0"/>
-        </svg>
-        <p class="divider-chapter">$_ what we ship</p>
-        <p class="divider-title">The platform, in one page.</p>
-      </div>
-      <div class="footer-line"></div>
-    </div>
-    <p class="caption">Center-anchored divider slide. Same footer line closes the visual language across every slide type.</p>
-  </section>
-</main>
-</body>
+      <section>
+        <h2>Slide 02 · Section divider</h2>
+        <div class="slide divider-inner">
+          <div class="backdrop-dots"></div>
+          <div class="backdrop-circuit"></div>
+          <div class="glow"></div>
+          <p class="signature">Chapter 03</p>
+          <div class="content">
+            <svg class="divider-mark" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <g fill="#fafafa">
+                <rect x="30" y="24" width="10" height="72" />
+                <rect x="30" y="24" width="52" height="10" />
+                <rect x="30" y="56" width="34" height="10" />
+              </g>
+              <rect x="88" y="26" width="14" height="6" fill="#00E5A0" />
+            </svg>
+            <p class="divider-chapter">$_ what we ship</p>
+            <p class="divider-title">The platform, in one page.</p>
+          </div>
+          <div class="footer-line"></div>
+        </div>
+        <p class="caption">
+          Center-anchored divider slide. Same footer line closes the visual language across every
+          slide type.
+        </p>
+      </section>
+    </main>
+  </body>
 </html>

@@ -2,14 +2,17 @@
 
 **Package:** `@figentra/messaging`  
 **Path:** `packages/messaging`  
-**Purpose:** Transport-neutral commands/events, publishers, consumers and NATS/Queue adapters.
-
+**Purpose:** Transport-neutral commands/events, publishers, consumers and
+NATS/Queue adapters.
 
 ## Package manifest (repository baseline)
 
-> This section is generated from the current repository `package.json`. The Kiro spec is the target contract; if implementation changes dependencies, update the spec and package manifest together.
+> This section is generated from the current repository `package.json`. The Kiro
+> spec is the target contract; if implementation changes dependencies, update
+> the spec and package manifest together.
 
 ### Runtime dependencies
+
 - `@figentra/events`
 - `@nats-io/nats-core`
 - `@nats-io/transport-node`
@@ -17,6 +20,7 @@
 - `zod`
 
 ### Development dependencies
+
 - `@stackra/oxlint-config`
 - `@stackra/prettier-config`
 - `@stackra/testing`
@@ -31,14 +35,18 @@
 - `vitest`
 
 ### Peer dependencies
+
 - _None currently._
 
 ### Optional dependencies
+
 - _None currently._
 
 ## 1. Boundary
 
-This package is a reusable library/contract boundary, not a deployable service. It owns only the concern stated above and must not accumulate unrelated platform behavior.
+This package is a reusable library/contract boundary, not a deployable service.
+It owns only the concern stated above and must not accumulate unrelated platform
+behavior.
 
 **Hard rule:** must not contain domain decisions.
 
@@ -47,7 +55,8 @@ This package is a reusable library/contract boundary, not a deployable service. 
 - Prefer small explicit exports.
 - Keep internal modules private.
 - Use stable types/interfaces for public contracts.
-- Avoid leaking framework-specific internals unless the package is explicitly framework-bound.
+- Avoid leaking framework-specific internals unless the package is explicitly
+  framework-bound.
 - Document every public export with JSDoc.
 - Preserve backwards compatibility according to package semver.
 
@@ -68,11 +77,13 @@ This package is a reusable library/contract boundary, not a deployable service. 
 
 ### Peer
 
-Use peer dependencies for consumer-provided frameworks (for example NestJS/React) only when the package truly integrates with that framework.
+Use peer dependencies for consumer-provided frameworks (for example
+NestJS/React) only when the package truly integrates with that framework.
 
 ### Optional
 
-Provider-specific integrations may be optional; core exports must remain usable without them.
+Provider-specific integrations may be optional; core exports must remain usable
+without them.
 
 ## 4. Source layout
 
@@ -104,7 +115,9 @@ src/
 
 ## 7. Documentation
 
-README MUST include installation, imports, API examples, compatibility, configuration and failure behavior. Public source code MUST explain non-obvious invariants.
+README MUST include installation, imports, API examples, compatibility,
+configuration and failure behavior. Public source code MUST explain non-obvious
+invariants.
 
 ## 8. Security
 
@@ -115,8 +128,10 @@ README MUST include installation, imports, API examples, compatibility, configur
 
 ## 9. Versioning and release
 
-Changes use Changesets. Breaking API changes require a major version and migration notes. Contract/event packages require explicit compatibility review.
+Changes use Changesets. Breaking API changes require a major version and
+migration notes. Contract/event packages require explicit compatibility review.
 
 ## 10. Acceptance
 
-`lint` + `typecheck` + `test` + `build` + package export validation must pass before release.
+`lint` + `typecheck` + `test` + `build` + package export validation must pass
+before release.

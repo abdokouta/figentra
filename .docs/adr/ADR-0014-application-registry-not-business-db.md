@@ -4,7 +4,8 @@
 
 ## Decision
 
-Application Registry describes capabilities and resources but never becomes the source of truth for application business entities.
+Application Registry describes capabilities and resources but never becomes the
+source of truth for application business entities.
 
 ## Consequence
 

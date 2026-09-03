@@ -2,7 +2,8 @@
 
 > **Category:** cloudflare · **Maturity:** beta · **Version:** 1.0.0
 
-Cloudflare Durable Objects binding. Provisions a DO namespace for stateful, globally-unique singleton actors inside the Workers runtime.
+Cloudflare Durable Objects binding. Provisions a DO namespace for stateful,
+globally-unique singleton actors inside the Workers runtime.
 
 ## Provides
 
@@ -16,8 +17,8 @@ Cloudflare Durable Objects binding. Provisions a DO namespace for stateful, glob
 
 ## Environment variables
 
-| Variable | Description | Source |
-| -------- | ----------- | ------ |
+| Variable          | Description                  | Source                             |
+| ----------------- | ---------------------------- | ---------------------------------- |
 | `DO_NAMESPACE_ID` | Durable Object namespace ID. | `terraform_output.do_namespace_id` |
 
 ## Usage in `cloud.yaml`
@@ -32,6 +33,8 @@ modules:
 
 ## Cross-references
 
-- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) — module manifest schema.
+- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) —
+  module manifest schema.
 - [`infrastructure/modules/README.md`](../README.md) — registry catalog.
-- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md) — authorising plan.
+- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md)
+  — authorising plan.

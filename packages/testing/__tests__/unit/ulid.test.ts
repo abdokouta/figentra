@@ -66,13 +66,10 @@ describe("createUlidGenerator", () => {
       }
     });
 
-    it.each([1, 2, 42, 999, 123_456])(
-      "produces valid ULIDs for seed=%i",
-      (seed) => {
-        const gen = createUlidGenerator(seed);
-        expect(gen()).toMatch(ULID_PATTERN);
-      },
-    );
+    it.each([1, 2, 42, 999, 123_456])("produces valid ULIDs for seed=%i", (seed) => {
+      const gen = createUlidGenerator(seed);
+      expect(gen()).toMatch(ULID_PATTERN);
+    });
   });
 
   // ── Monotonic mode ────────────────────────────────────────────

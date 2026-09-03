@@ -16,6 +16,7 @@
 ## No silent architecture drift
 
 Code must not silently introduce:
+
 - new identity abstractions
 - new authorization systems
 - alternate query frameworks

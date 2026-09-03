@@ -33,65 +33,65 @@ npm install reflect-metadata
 ### Basic Operations
 
 ```typescript
-import { defineMetadata, getMetadata, hasMetadata } from '@vivel/metadata';
-import 'reflect-metadata';
+import { defineMetadata, getMetadata, hasMetadata } from "@vivel/metadata";
+import "reflect-metadata";
 
 class Example {
   property: string;
 }
 
 // Define metadata
-defineMetadata('custom:key', 'value', Example, 'property');
+defineMetadata("custom:key", "value", Example, "property");
 
 // Get metadata
-const value = getMetadata('custom:key', Example, 'property');
+const value = getMetadata("custom:key", Example, "property");
 console.log(value); // 'value'
 
 // Check if metadata exists
-if (hasMetadata('custom:key', Example, 'property')) {
-  console.log('Metadata exists!');
+if (hasMetadata("custom:key", Example, "property")) {
+  console.log("Metadata exists!");
 }
 ```
 
 ### Getting All Metadata
 
 ```typescript
-import { getAllMetadata } from '@vivel/metadata';
+import { getAllMetadata } from "@vivel/metadata";
 
 class Parent {
-  @Reflect.metadata('parent:key', 'parent-value')
+  @Reflect.metadata("parent:key", "parent-value")
   property: string;
 }
 
 class Child extends Parent {
-  @Reflect.metadata('child:key', 'child-value')
+  @Reflect.metadata("child:key", "child-value")
   property: string;
 }
 
 // Get all metadata from prototype chain
-const allMetadata = getAllMetadata('property', Child);
+const allMetadata = getAllMetadata("property", Child);
 console.log(allMetadata); // Contains metadata from both Parent and Child
 ```
 
 ### Updating Metadata
 
 ```typescript
-import { updateMetadata } from '@vivel/metadata';
+import { updateMetadata } from "@vivel/metadata";
 
 // Update existing metadata or create new
-updateMetadata('config', { timeout: 5000 }, Example, 'property');
+updateMetadata("config", { timeout: 5000 }, Example, "property");
 ```
 
 ### Clearing Metadata
 
 ```typescript
-import { clearMetadata } from '@vivel/metadata';
+import { clearMetadata } from "@vivel/metadata";
 
 // Clear specific metadata
-clearMetadata('custom:key', Example, 'property');
+clearMetadata("custom:key", Example, "property");
 
 // Clear all metadata for a property
-clearMetadata(undefined, Example, 'property');
+clearMetadata(undefined, Example, "property");
 ```
 
 ## API Reference
@@ -102,7 +102,7 @@ clearMetadata(undefined, Example, 'property');
 function getMetadata<T = any>(
   metadataKey: any,
   target: any,
-  propertyKey?: string | symbol
+  propertyKey?: string | symbol,
 ): T | undefined;
 ```
 
@@ -113,7 +113,7 @@ Gets metadata value for the specified key from target or target's property.
 ```typescript
 function getAllMetadata<T = any>(
   propertyKey: string | symbol,
-  target: any
+  target: any,
 ): Map<any, T>;
 ```
 
@@ -126,7 +126,7 @@ function defineMetadata(
   metadataKey: any,
   metadataValue: any,
   target: any,
-  propertyKey?: string | symbol
+  propertyKey?: string | symbol,
 ): void;
 ```
 
@@ -139,7 +139,7 @@ function updateMetadata<T = any>(
   metadataKey: any,
   metadataValue: T,
   target: any,
-  propertyKey?: string | symbol
+  propertyKey?: string | symbol,
 ): void;
 ```
 
@@ -151,7 +151,7 @@ Updates existing metadata or creates new metadata for the specified key.
 function clearMetadata(
   metadataKey?: any,
   target?: any,
-  propertyKey?: string | symbol
+  propertyKey?: string | symbol,
 ): void;
 ```
 
@@ -163,7 +163,7 @@ Clears metadata. If no parameters provided, clears all metadata.
 function hasMetadata(
   metadataKey: any,
   target: any,
-  propertyKey?: string | symbol
+  propertyKey?: string | symbol,
 ): boolean;
 ```
 
@@ -175,7 +175,7 @@ Checks if metadata exists for the specified key on target or target's property.
 function hasOwnMetadata(
   metadataKey: any,
   target: any,
-  propertyKey?: string | symbol
+  propertyKey?: string | symbol,
 ): boolean;
 ```
 

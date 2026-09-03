@@ -54,5 +54,5 @@ No `dev`, `stg`, or `prd` aliases are accepted by repository tooling.
 ## Rationale
 
 The goal is to minimize configuration variants, avoid a legacy CSS processing
-layer when the Vite plugin already owns Tailwind processing, and make local,
-CI, release, and deployment behavior deterministic.
+layer when the Vite plugin already owns Tailwind processing, and make local, CI,
+release, and deployment behavior deterministic.

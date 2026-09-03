@@ -2,7 +2,9 @@
 
 > **Category:** cloudflare · **Maturity:** beta · **Version:** 1.0.0
 
-Cloudflare Hyperdrive connection-pool binding. Provisions a Hyperdrive configuration that accelerates TCP connections from Workers to external databases (Postgres, MySQL).
+Cloudflare Hyperdrive connection-pool binding. Provisions a Hyperdrive
+configuration that accelerates TCP connections from Workers to external
+databases (Postgres, MySQL).
 
 ## Provides
 
@@ -16,8 +18,8 @@ Cloudflare Hyperdrive connection-pool binding. Provisions a Hyperdrive configura
 
 ## Environment variables
 
-| Variable | Description | Source |
-| -------- | ----------- | ------ |
+| Variable        | Description                  | Source                           |
+| --------------- | ---------------------------- | -------------------------------- |
 | `HYPERDRIVE_ID` | Hyperdrive configuration ID. | `terraform_output.hyperdrive_id` |
 
 ## Usage in `cloud.yaml`
@@ -32,6 +34,8 @@ modules:
 
 ## Cross-references
 
-- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) — module manifest schema.
+- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) —
+  module manifest schema.
 - [`infrastructure/modules/README.md`](../README.md) — registry catalog.
-- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md) — authorising plan.
+- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md)
+  — authorising plan.

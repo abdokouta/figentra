@@ -43,12 +43,7 @@ const defaultProps: Required<SessionReminderEmailProps> = {
   endTime: "19:15",
   venueName: "Sahara Padel · Ain Diab branch",
   courtNumber: "3",
-  kitItems: [
-    "Padel racket",
-    "Court shoes (non-marking)",
-    "1.5 L water bottle",
-    "Extra t-shirt",
-  ],
+  kitItems: ["Padel racket", "Court shoes (non-marking)", "1.5 L water bottle", "Extra t-shirt"],
   focusOfSession: "Backhand · defensive lobs · match-play (15 min at close)",
   confirmUrl: "https://academorix.com/sessions/preview/confirm",
   cancelUrl: "https://academorix.com/sessions/preview/cancel",
@@ -56,9 +51,7 @@ const defaultProps: Required<SessionReminderEmailProps> = {
     "Meet at the front gate. Coach opens the courts at 17:45. Late arrivals join after warm-up.",
 };
 
-export function SessionReminderEmail(
-  props: SessionReminderEmailProps,
-): React.ReactElement {
+export function SessionReminderEmail(props: SessionReminderEmailProps): React.ReactElement {
   const p = { ...defaultProps, ...props };
 
   return (
@@ -67,13 +60,14 @@ export function SessionReminderEmail(
     >
       <Kicker>Tomorrow · T-24h</Kicker>
       <H1>
-        {p.athleteName} — {p.sport}<br />
+        {p.athleteName} — {p.sport}
+        <br />
         tomorrow at {p.startTime}.
       </H1>
 
       <P>
-        One session on {p.sessionDate}. This is the reminder your academy
-        sends every night so nothing goes sideways at the gate.
+        One session on {p.sessionDate}. This is the reminder your academy sends every night so
+        nothing goes sideways at the gate.
       </P>
 
       {/* ── scoreboard-style session card ── */}
@@ -263,7 +257,12 @@ export function SessionReminderEmail(
           <CTA href={p.confirmUrl} label="Confirm attendance →" />
         </Column>
         <Column style={{ paddingLeft: 12 }}>
-          <table role="presentation" cellPadding={0} cellSpacing={0} style={{ margin: "8px 0 24px" }}>
+          <table
+            role="presentation"
+            cellPadding={0}
+            cellSpacing={0}
+            style={{ margin: "8px 0 24px" }}
+          >
             <tbody>
               <tr>
                 <td
@@ -303,7 +302,10 @@ export function SessionReminderEmail(
           margin: "16px 0 0",
         }}
       >
-        Session · <MonoChip>ses_01H8R…{'{{'}sessionId{'}}'}</MonoChip>
+        Session ·{" "}
+        <MonoChip>
+          ses_01H8R…{"{{"}sessionId{"}}"}
+        </MonoChip>
       </Text>
     </EmailShell>
   );

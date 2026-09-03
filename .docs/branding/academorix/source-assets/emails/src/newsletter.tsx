@@ -149,9 +149,7 @@ const defaultProps: Required<NewsletterEmailProps> = {
   archiveUrl: "https://academorix.com/the-track/archive",
 };
 
-export function NewsletterEmail(
-  props: NewsletterEmailProps,
-): React.ReactElement {
+export function NewsletterEmail(props: NewsletterEmailProps): React.ReactElement {
   const p = { ...defaultProps, ...props };
 
   return (
@@ -341,10 +339,7 @@ export function NewsletterEmail(
                   letterSpacing: "-0.01em",
                 }}
               >
-                <a
-                  href={n.url}
-                  style={{ color: theme.ink, textDecoration: "none" }}
-                >
+                <a href={n.url} style={{ color: theme.ink, textDecoration: "none" }}>
                   {n.title} →
                 </a>
               </Text>
@@ -367,8 +362,7 @@ export function NewsletterEmail(
       {/* ── podium ── */}
       <H2>Podium · {p.monthYear}</H2>
       <P>
-        Three athletes we watched cross the line this month. Full board on
-        the network dashboard.
+        Three athletes we watched cross the line this month. Full board on the network dashboard.
       </P>
 
       <Section style={{ margin: "12px 0 24px" }}>
@@ -453,10 +447,7 @@ export function NewsletterEmail(
                 letterSpacing: "-0.01em",
               }}
             >
-              <a
-                href={r.url}
-                style={{ color: theme.ink, textDecoration: "none" }}
-              >
+              <a href={r.url} style={{ color: theme.ink, textDecoration: "none" }}>
                 {r.title} →
               </a>
             </Text>
@@ -486,11 +477,8 @@ export function NewsletterEmail(
           margin: "16px 0 0",
         }}
       >
-        Forwarded? {" "}
-        <a
-          href="https://academorix.com/the-track/subscribe"
-          style={{ color: theme.signal }}
-        >
+        Forwarded?{" "}
+        <a href="https://academorix.com/the-track/subscribe" style={{ color: theme.signal }}>
           Subscribe direct
         </a>{" "}
         · one email per month · never a sales pitch.

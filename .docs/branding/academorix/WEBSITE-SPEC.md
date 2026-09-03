@@ -16,6 +16,7 @@ Pricing
 ```
 
 Platform:
+
 - Overview
 - Registration & Enrollment
 - Scheduling
@@ -28,18 +29,21 @@ Platform:
 - Reporting
 
 Solutions:
+
 - Sports Academies
 - Sports Clubs
 - Schools
 - Multi-branch Organizations
 
 Resources:
+
 - Academy guides
 - Case studies
 - Help center
 - Blog
 
 Company:
+
 - About
 - Team
 - Careers
@@ -52,15 +56,19 @@ Company:
 **Eyebrow:** `SPORTS OPERATIONS · ONE PLATFORM`
 
 **Headline:**
+
 > **Run your academy like a pro.**
 
 **Subhead:**
-> Academorix brings athletes, coaches, schedules, attendance, registrations, payments and communication into one platform built for modern sports organizations.
 
-CTA: `Book a demo`
-Secondary: `Explore the platform`
+> Academorix brings athletes, coaches, schedules, attendance, registrations,
+> payments and communication into one platform built for modern sports
+> organizations.
+
+CTA: `Book a demo` Secondary: `Explore the platform`
 
 Hero visual:
+
 - real sports facility or high-quality editorial sports image;
 - overlay product UI showing schedule/roster;
 - Track Orange accent;
@@ -68,17 +76,20 @@ Hero visual:
 
 ### Problem
 
-> Sports organizations shouldn't have to run the season across spreadsheets, messaging apps and disconnected systems.
+> Sports organizations shouldn't have to run the season across spreadsheets,
+> messaging apps and disconnected systems.
 
 Show fragmented workflow → unified Academorix.
 
 ### Platform modules
 
-Use a sport-field-inspired navigation visual. Each module gets a dedicated visual.
+Use a sport-field-inspired navigation visual. Each module gets a dedicated
+visual.
 
 ### For academy owners
 
 Focus on:
+
 - operational visibility;
 - revenue;
 - enrollment;
@@ -88,6 +99,7 @@ Focus on:
 ### For coaches
 
 Focus on:
+
 - schedules;
 - rosters;
 - attendance;
@@ -97,6 +109,7 @@ Focus on:
 ### For parents/athletes
 
 Focus on:
+
 - registration;
 - schedule;
 - attendance;
@@ -109,7 +122,8 @@ Show one organization controlling multiple branches, programs and teams.
 
 ### Trust
 
-Security, role-based access, auditability, backups, support and data protection. Only publish concrete certifications/claims after verification.
+Security, role-based access, auditability, backups, support and data protection.
+Only publish concrete certifications/claims after verification.
 
 ### CTA
 
@@ -135,6 +149,7 @@ Products, Solutions, Resources, Company, Trust, Contact, legal and social links.
 ## SEO
 
 Create dedicated pages for:
+
 - sports academy management software;
 - sports club management software;
 - academy scheduling software;

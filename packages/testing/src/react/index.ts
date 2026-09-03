@@ -31,12 +31,7 @@ export { customRender, render, type ICustomRenderOptions } from "./render";
 // tests. Grouped by purpose.
 
 // Queries + waiting
-export {
-  screen,
-  within,
-  waitFor,
-  waitForElementToBeRemoved,
-} from "@testing-library/react";
+export { screen, within, waitFor, waitForElementToBeRemoved } from "@testing-library/react";
 
 // Event dispatch (imperative — prefer `userEvent` for user flows)
 export { fireEvent, act } from "@testing-library/react";

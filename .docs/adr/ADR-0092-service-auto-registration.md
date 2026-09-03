@@ -8,10 +8,7 @@ reviewed_at: null
 
 # ADR-0092 — Service auto-registration
 
-**Status:** Accepted
-**Date:** 2026-09-03
-**Supersedes:** —
-**Superseded by:** —
+**Status:** Accepted **Date:** 2026-09-03 **Supersedes:** — **Superseded by:** —
 
 ## Context
 
@@ -219,8 +216,8 @@ StackraServiceModule.forRoot({
   disable flag is more branching.
 - Every module IS an infrastructure concern. Disabling `HealthModule` means the
   service can't announce itself dead. There's no benign disable.
-- Services that genuinely can't ship a Nest server (Python `services/ai`)
-  aren't `@stackra/nest-service` consumers at all.
+- Services that genuinely can't ship a Nest server (Python `services/ai`) aren't
+  `@stackra/nest-service` consumers at all.
 
 Consequence: **`StackraServiceModule.forRoot()` is monolithic — you get every
 infrastructure module or you don't use it.** A service that needs a subset
@@ -239,8 +236,8 @@ convenience; the modules under it remain independently importable.
     ConfigModule.forRoot({ isGlobal: true, load: [config] }),
     ContainerModule.forRoot(),
     RequestContextModule.forRoot(),
-    LoggerModule.forRootAsync({ /* custom shape */ }),
-    RegistryModule.forRoot({ /* custom shape */ }),
+    LoggerModule.forRootAsync({/* custom shape */}),
+    RegistryModule.forRoot({/* custom shape */}),
     // No HealthModule, no ErrorFilterModule
     MyDomainModule,
   ],
@@ -260,27 +257,28 @@ ADR).
 
 ### What ships in the composite (planned Q4 2026)
 
-| Module                     | Status                | Source                          |
-| -------------------------- | --------------------- | ------------------------------- |
-| `@stackra/config`          | Planned Q4 2026       | `@nestjs/config` wrapper        |
-| `@stackra/container`       | Planned Q4 2026       | Per `.kiro/plans/2026-09-03-container-package.md` |
-| `@stackra/logger`          | Planned Q4 2026       | Per `.kiro/plans/2026-09-03-logger-package.md`    |
-| `@stackra/registry`        | Planned Q4 2026       | Per ADR-0021 gateway-registry-security-kernel |
-| `@stackra/health`          | Planned Q4 2026       | Wraps `@nestjs/terminus`        |
-| `@stackra/request-context` | Planned Q4 2026       | AsyncLocalStorage wrapper       |
-| `@stackra/error-filter`    | Planned Q4 2026       | Uncaught rejection + Nest exception filter |
-| `@stackra/nest-service`    | Composite shipped LAST | Ships this ADR's `StackraServiceModule` |
+| Module                     | Status                 | Source                                            |
+| -------------------------- | ---------------------- | ------------------------------------------------- |
+| `@stackra/config`          | Planned Q4 2026        | `@nestjs/config` wrapper                          |
+| `@stackra/container`       | Planned Q4 2026        | Per `.kiro/plans/2026-09-03-container-package.md` |
+| `@stackra/logger`          | Planned Q4 2026        | Per `.kiro/plans/2026-09-03-logger-package.md`    |
+| `@stackra/registry`        | Planned Q4 2026        | Per ADR-0021 gateway-registry-security-kernel     |
+| `@stackra/health`          | Planned Q4 2026        | Wraps `@nestjs/terminus`                          |
+| `@stackra/request-context` | Planned Q4 2026        | AsyncLocalStorage wrapper                         |
+| `@stackra/error-filter`    | Planned Q4 2026        | Uncaught rejection + Nest exception filter        |
+| `@stackra/nest-service`    | Composite shipped LAST | Ships this ADR's `StackraServiceModule`           |
 
 ## Rationale
 
-- **Zero-friction service authoring.** New service = one import + one import.
-  No wiring order, no forgotten modules.
-- **Config → Container → RequestContext → Logger → Registry → Health → ErrorFilter
-  is the canonical order.** Codifying it means every service boots identically.
+- **Zero-friction service authoring.** New service = one import + one import. No
+  wiring order, no forgotten modules.
+- **Config → Container → RequestContext → Logger → Registry → Health →
+  ErrorFilter is the canonical order.** Codifying it means every service boots
+  identically.
 - **The composite doesn't hide the modules.** They're all still individually
   imported for the rare consumer that needs a custom subset.
-- **Discoverable via TypeScript.** `IServiceOptions` is the whole surface;
-  IDE autocomplete tells the author what's configurable.
+- **Discoverable via TypeScript.** `IServiceOptions` is the whole surface; IDE
+  autocomplete tells the author what's configurable.
 - **Reviewable in one file.** Every wire-up decision lives in
   `@stackra/nest-service/src/nest-service.module.ts`. Change the order once,
   every service picks it up.
@@ -346,18 +344,18 @@ imports:
 
 - One import composes 7 infrastructure modules with the correct order + shared
   config.
-- New services drop `StackraServiceModule.forRoot(...)` into `app.module.ts`
-  and immediately have config + logger + container + request context +
-  registry + health + error filter working.
+- New services drop `StackraServiceModule.forRoot(...)` into `app.module.ts` and
+  immediately have config + logger + container + request context + registry +
+  health + error filter working.
 - Bumping the composite version updates every service's infrastructure at once
   (dep bump only).
-- The composite is the enforcement surface — reviewers reject services that
-  wire infrastructure by hand.
+- The composite is the enforcement surface — reviewers reject services that wire
+  infrastructure by hand.
 
 ### Negative
 
-- Circular-import risk if `StackraServiceModule` and any of its constituents
-  end up co-dependent. Enforced by review: constituents MUST NOT import
+- Circular-import risk if `StackraServiceModule` and any of its constituents end
+  up co-dependent. Enforced by review: constituents MUST NOT import
   `@stackra/nest-service`.
 - New infrastructure modules land in the composite's next release; a service
   that needs it early must manually add the import until the composite catches
@@ -377,8 +375,8 @@ Reviewers verify per-service:
 
 1. `app.module.ts` imports `StackraServiceModule.forRoot(...)` — not the
    individual constituent modules — unless a documented deviation applies.
-2. Deviating services carry an inline comment naming the reason (e.g.
-   "custom logger sinks required for compliance") + link to a spec / ADR.
+2. Deviating services carry an inline comment naming the reason (e.g. "custom
+   logger sinks required for compliance") + link to a spec / ADR.
 3. `services/*/package.json` declares `@stackra/nest-service` as a `dependency`.
 4. `services/*/src/main.ts` bootstraps `AppModule` via `NestFactory.create()`
    with the Fastify adapter (per ADR-0082) + does NOT re-wire infrastructure.

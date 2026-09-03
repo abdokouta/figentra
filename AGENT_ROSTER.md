@@ -30,13 +30,13 @@ Advisory only; do NOT invoke for implementation.
 Invoke for feature work + refactors. Every builder respects the sibling
 steward + reviewer in its lane.
 
-| Agent                           | Writes                                                                                          | Stack                                 |
-| ------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------- |
-| `framework-core-builder`        | Non-UI framework packages (container, http, queue, cache, network, ...)                         | TypeScript                            |
+| Agent                           | Writes                                                                                                     | Stack                                 |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| `framework-core-builder`        | Non-UI framework packages (container, http, queue, cache, network, ...)                                    | TypeScript                            |
 | `go-terraform-provider-builder` | Terraform HCL modules + env-root compositions + custom providers for the Cloudflare/Supabase/Doppler stack | Go + Terraform Plugin Framework + HCL |
-| `heroui-ui-builder`             | HeroUI + HeroUI Pro React components in `@stackra/ui` + vite-example                            | React 19                              |
-| `heroui-native-builder`         | HeroUI Native + Native Pro mobile screens/nav                                                   | React Native + Expo                   |
-| `python-service-builder`        | FastAPI endpoints + LangGraph flows + sensitivity-tagged tools                                  | Python + uv                           |
+| `heroui-ui-builder`             | HeroUI + HeroUI Pro React components in `@stackra/ui` + vite-example                                       | React 19                              |
+| `heroui-native-builder`         | HeroUI Native + Native Pro mobile screens/nav                                                              | React Native + Expo                   |
+| `python-service-builder`        | FastAPI endpoints + LangGraph flows + sensitivity-tagged tools                                             | Python + uv                           |
 
 ## Reviewers (read-only audits — produce reports) — 9
 
@@ -102,17 +102,17 @@ Author markdown / text artefacts. Do not modify feature code.
 
 Cross-cutting authority; produce documents + reports.
 
-| Agent                        | Owns                                                                                |
-| ---------------------------- | ----------------------------------------------------------------------------------- |
-| `accessibility-audit-lead`   | WCAG 2.2 AA audit — axe-core, screen-reader passes, keyboard-only drills            |
-| `api-contract-designer`      | Cross-service JSON Schema contracts + OpenAPI fragments                             |
-| `data-modeler`               | ERDs, column contracts, migration order, three-axis attribution enforcement         |
-| `incident-commander`         | SEV-1/SEV-2 response — war room, post-mortem, corrective actions                    |
-| `legal-compliance-officer`   | Phase 7 regime evidence — GDPR, FERPA, COPPA, CCPA, PCI-DSS, WCAG, SOC 2, ISO 27001 |
-| `release-manager`            | Version bumps + changelog roll-ups + release notes (Phase 6)                        |
-| `solution-architect`         | Pre-code ADRs + cross-cutting design decisions + sequencing plans                   |
-| `support-liaison`            | Human-in-the-loop between support surface + engineering pipeline                    |
-| `threat-modeler`             | STRIDE + attack-tree passes at Phase 3                                              |
+| Agent                      | Owns                                                                                |
+| -------------------------- | ----------------------------------------------------------------------------------- |
+| `accessibility-audit-lead` | WCAG 2.2 AA audit — axe-core, screen-reader passes, keyboard-only drills            |
+| `api-contract-designer`    | Cross-service JSON Schema contracts + OpenAPI fragments                             |
+| `data-modeler`             | ERDs, column contracts, migration order, three-axis attribution enforcement         |
+| `incident-commander`       | SEV-1/SEV-2 response — war room, post-mortem, corrective actions                    |
+| `legal-compliance-officer` | Phase 7 regime evidence — GDPR, FERPA, COPPA, CCPA, PCI-DSS, WCAG, SOC 2, ISO 27001 |
+| `release-manager`          | Version bumps + changelog roll-ups + release notes (Phase 6)                        |
+| `solution-architect`       | Pre-code ADRs + cross-cutting design decisions + sequencing plans                   |
+| `support-liaison`          | Human-in-the-loop between support surface + engineering pipeline                    |
+| `threat-modeler`           | STRIDE + attack-tree passes at Phase 3                                              |
 
 ## Meta (built-in agents — about the workspace itself) — 5
 

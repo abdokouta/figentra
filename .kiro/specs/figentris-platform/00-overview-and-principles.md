@@ -1,8 +1,8 @@
 # 00 — Overview & Principles
 
-**Status:** Baseline
-**Owner:** Platform architecture
-**Related:** [01 Platform architecture](01-platform-architecture.md), [21 Glossary & golden rules](21-glossary-and-golden-rules.md)
+**Status:** Baseline **Owner:** Platform architecture **Related:**
+[01 Platform architecture](01-platform-architecture.md),
+[21 Glossary & golden rules](21-glossary-and-golden-rules.md)
 
 ---
 
@@ -26,15 +26,15 @@ This document states the mental model and the principles every other spec obeys.
 The platform is built by keeping seven concerns strictly separate. Conflating
 any two of them is the most common design failure.
 
-| # | Concern              | Question it answers                                        | Owner                    |
-| - | -------------------- | ---------------------------------------------------------- | ------------------------ |
-| 1 | **Identity**         | Who is the user?                                           | Supabase Auth                    |
-| 2 | **IAM**              | What is this actor allowed to do?                          | IAM service              |
-| 3 | **Tenant**           | Which business/customer owns the resources?                | Tenant service           |
-| 4 | **Application Registry** | Which applications exist and where do they live?       | Registry                 |
-| 5 | **Monetization**     | What has the tenant purchased / what capabilities exist?   | Monetization service     |
-| 6 | **Domain / Routing** | Which hostname maps to which tenant + application?         | Tenant service (domains) |
-| 7 | **Application logic**| What does the actual product do?                           | Each application         |
+| #   | Concern                  | Question it answers                                      | Owner                    |
+| --- | ------------------------ | -------------------------------------------------------- | ------------------------ |
+| 1   | **Identity**             | Who is the user?                                         | Supabase Auth            |
+| 2   | **IAM**                  | What is this actor allowed to do?                        | IAM service              |
+| 3   | **Tenant**               | Which business/customer owns the resources?              | Tenant service           |
+| 4   | **Application Registry** | Which applications exist and where do they live?         | Registry                 |
+| 5   | **Monetization**         | What has the tenant purchased / what capabilities exist? | Monetization service     |
+| 6   | **Domain / Routing**     | Which hostname maps to which tenant + application?       | Tenant service (domains) |
+| 7   | **Application logic**    | What does the actual product do?                         | Each application         |
 
 ---
 
@@ -89,15 +89,15 @@ checks are independent and both may be required.
   orchestration. New product deployments are managed through **Terraform**
   (optionally fronted by an Infrastructure Orchestrator API — see
   [15](15-infrastructure-and-iac.md)). This is the R-2 scope correction.
-- **Not a replacement for Supabase Auth.** It never re-implements authentication,
-  sessions, passwords, MFA, or org membership.
+- **Not a replacement for Supabase Auth.** It never re-implements
+  authentication, sessions, passwords, MFA, or org membership.
 - **Not a monolith and not a microservice explosion.** It starts with four
   platform domains (IAM, Tenant, Monetization, Registry) and extracts more only
   for a measurable reason.
 - **Not a builder of infrastructure primitives.** It does not build a custom
-  container scheduler, identity system, ORM, message
-  broker, object store, CDN, DNS, or payment processor. It composes existing
-  primitives (Cloudflare, Supabase, Supabase Auth, Stripe/Paddle).
+  container scheduler, identity system, ORM, message broker, object store, CDN,
+  DNS, or payment processor. It composes existing primitives (Cloudflare,
+  Supabase, Supabase Auth, Stripe/Paddle).
 
 ---
 
@@ -107,8 +107,9 @@ checks are independent and both may be required.
    three owners, three checks. Never merge them.
 2. **The application is never the tenant.** Tenancy is a platform concept.
 3. **Never trust client-supplied identity context.** `tenantId`, `userId`,
-   `role`, `organizationId` must be derived server-side from a validated Supabase Auth
-   token + trusted mappings — never read from a request body or query string.
+   `role`, `organizationId` must be derived server-side from a validated
+   Supabase Auth token + trusted mappings — never read from a request body or
+   query string.
 4. **Own your data; talk over contracts.** No service reads or writes another
    service's database. Cross-context communication is API (sync) or event
    (async) only.
@@ -126,8 +127,8 @@ checks are independent and both may be required.
 10. **Extract later, not now.** A bounded context starts as a module. Promote to
     a separate deployment only for independent scaling, ownership, security
     boundary, or volume.
-11. **Small tokens.** Supabase Auth JWT claims stay minimal; dynamic platform state is
-    fetched from services, not baked into the token.
+11. **Small tokens.** Supabase Auth JWT claims stay minimal; dynamic platform
+    state is fetched from services, not baked into the token.
 12. **Defense in depth for tenant isolation.** Server-side authorization +
     Supabase RLS + tenant-scoped queries — never frontend filtering alone.
 
@@ -138,26 +139,29 @@ checks are independent and both may be required.
 Every authenticated caller is one of four actor types, all flowing through the
 same IAM authorization model (detail in [02](02-identity-and-actors.md)):
 
-| Actor              | Example                                             | Credential                          |
-| ------------------ | --------------------------------------------------- | ----------------------------------- |
-| **User**           | A human using the portal or an app                  | Supabase Auth session / JWT                 |
-| **Service Account**| A tenant's automation calling the platform API      | PAT / OAuth client credentials      |
-| **System**         | A platform service acting on its own behalf         | Service identity token / binding    |
-| **Integration Actor** | An installed third-party integration acting for a tenant | Scoped integration credentials |
+| Actor                 | Example                                                  | Credential                       |
+| --------------------- | -------------------------------------------------------- | -------------------------------- |
+| **User**              | A human using the portal or an app                       | Supabase Auth session / JWT      |
+| **Service Account**   | A tenant's automation calling the platform API           | PAT / OAuth client credentials   |
+| **System**            | A platform service acting on its own behalf              | Service identity token / binding |
+| **Integration Actor** | An installed third-party integration acting for a tenant | Scoped integration credentials   |
 
 ---
 
 ## 8. Reading order
 
-New engineers/agents read: this doc → [01 architecture](01-platform-architecture.md)
-→ [02 identity](02-identity-and-actors.md) → [03 tenancy](03-tenancy-and-domains.md)
-→ [04 IAM](04-iam-and-authorization.md) → [05 monetization](05-monetization-and-billing.md).
-Then branch by task. The [golden rules](21-glossary-and-golden-rules.md) are the
-one-page contract every change must respect.
+New engineers/agents read: this doc →
+[01 architecture](01-platform-architecture.md) →
+[02 identity](02-identity-and-actors.md) →
+[03 tenancy](03-tenancy-and-domains.md) → [04 IAM](04-iam-and-authorization.md)
+→ [05 monetization](05-monetization-and-billing.md). Then branch by task. The
+[golden rules](21-glossary-and-golden-rules.md) are the one-page contract every
+change must respect.
 
 ---
 
 ## 9. Open questions
 
 - **O-1** — Design-system/query package naming (`@stackra/*` vs `@figentra/*`).
-- **O-7** — Which application is built end-to-end first (validates the whole model).
+- **O-7** — Which application is built end-to-end first (validates the whole
+  model).

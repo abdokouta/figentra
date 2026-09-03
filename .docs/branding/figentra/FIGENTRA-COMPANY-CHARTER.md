@@ -3,9 +3,13 @@
 > **Document Status:** Normative organizational document  
 > **Document Type:** Company Charter & Operating System  
 > **Canonical Location:** `docs/FIGENTRA-COMPANY-CHARTER.md`  
-> **Scope:** Company identity, organization, people, divisions, products, governance, AI agents, documentation, engineering and operating model  
+> **Scope:** Company identity, organization, people, divisions, products,
+> governance, AI agents, documentation, engineering and operating model
 >
-> **Information rule:** This document records only company/team information currently established in the available context. Where an individual name, exact title, division assignment, or biography is not established, it is explicitly marked as **not yet established** rather than invented.
+> **Information rule:** This document records only company/team information
+> currently established in the available context. Where an individual name,
+> exact title, division assignment, or biography is not established, it is
+> explicitly marked as **not yet established** rather than invented.
 
 ---
 
@@ -58,7 +62,8 @@
 
 # 1. Document Purpose
 
-This document defines the organizational identity and operating model of **Figentra Technologies LLC**.
+This document defines the organizational identity and operating model of
+**Figentra Technologies LLC**.
 
 The technical architecture answers:
 
@@ -66,7 +71,9 @@ The technical architecture answers:
 
 This document answers:
 
-> Who is Figentra, what does Figentra do, who works here, how are teams organized, how are decisions made, how do humans and AI agents work together, and where does organizational authority live?
+> Who is Figentra, what does Figentra do, who works here, how are teams
+> organized, how are decisions made, how do humans and AI agents work together,
+> and where does organizational authority live?
 
 It is the organizational authority for:
 
@@ -85,7 +92,8 @@ It is the organizational authority for:
 - documentation governance;
 - company terminology.
 
-Technical implementation details remain governed by the dedicated platform architecture and engineering specifications.
+Technical implementation details remain governed by the dedicated platform
+architecture and engineering specifications.
 
 ---
 
@@ -99,7 +107,8 @@ Technical implementation details remain governed by the dedicated platform archi
 
 **Organization Type:** Technology company
 
-**Operating Model:** AI-native, engineering-driven, product-oriented technology company.
+**Operating Model:** AI-native, engineering-driven, product-oriented technology
+company.
 
 ## 2.2 Company Character
 
@@ -117,7 +126,9 @@ Figentra is intended to operate as a technology company in which:
 
 # 3. Who Figentra Is
 
-Figentra Technologies LLC is an AI-native technology company focused on building intelligent enterprise software, AI systems, agentic automation, and technology platforms for complex business and operational environments.
+Figentra Technologies LLC is an AI-native technology company focused on building
+intelligent enterprise software, AI systems, agentic automation, and technology
+platforms for complex business and operational environments.
 
 The company combines:
 
@@ -134,34 +145,42 @@ The company combines:
 - automation;
 - data and analytics.
 
-Figentra's objective is not simply to deliver isolated software projects. The organization is structured to create reusable technology capabilities and products that can operate across customers, industries and deployment models.
+Figentra's objective is not simply to deliver isolated software projects. The
+organization is structured to create reusable technology capabilities and
+products that can operate across customers, industries and deployment models.
 
 ---
 
 # 4. Mission
 
-Figentra exists to transform complex business and operational processes into intelligent, automated, measurable and continuously improving systems.
+Figentra exists to transform complex business and operational processes into
+intelligent, automated, measurable and continuously improving systems.
 
 The mission is executed through:
 
 1. building enterprise-grade technology;
 2. applying AI to real operational problems;
 3. converting repetitive processes into intelligent workflows;
-4. creating reusable platforms rather than repeatedly rebuilding the same capabilities;
-5. enabling organizations to operate with greater intelligence, automation and visibility.
+4. creating reusable platforms rather than repeatedly rebuilding the same
+   capabilities;
+5. enabling organizations to operate with greater intelligence, automation and
+   visibility.
 
 ---
 
 # 5. Vision
 
-Figentra's long-term vision is to become a leading AI-native technology company originating from the MENA region and serving enterprise and institutional markets globally.
+Figentra's long-term vision is to become a leading AI-native technology company
+originating from the MENA region and serving enterprise and institutional
+markets globally.
 
 The strategic ambition is to build a technology organization in which:
 
 - AI is a first-class product capability;
 - AI agents are first-class operational participants;
 - software platforms become reusable organizational infrastructure;
-- complex physical and digital operations can be observed, understood and automated;
+- complex physical and digital operations can be observed, understood and
+  automated;
 - enterprise systems become increasingly intelligent and autonomous.
 
 ---
@@ -170,11 +189,15 @@ The strategic ambition is to build a technology organization in which:
 
 ## Truth Over Assumption
 
-Distinguish verified facts, decisions, assumptions, proposals, estimates and unverified claims. Neither humans nor agents may present assumptions as verified facts.
+Distinguish verified facts, decisions, assumptions, proposals, estimates and
+unverified claims. Neither humans nor agents may present assumptions as verified
+facts.
 
 ## Production Over Prototype
 
-A prototype is not a production system. Production readiness requires appropriate security, testing, observability, resilience, deployment controls, documentation, ownership and operational procedures.
+A prototype is not a production system. Production readiness requires
+appropriate security, testing, observability, resilience, deployment controls,
+documentation, ownership and operational procedures.
 
 ## Security by Default
 
@@ -182,11 +205,13 @@ Security is an architectural and organizational property, not a final checklist.
 
 ## Automation Over Repetition
 
-Repeated manual work should be considered for automation, workflow orchestration, reusable tooling, AI assistance or agentic execution.
+Repeated manual work should be considered for automation, workflow
+orchestration, reusable tooling, AI assistance or agentic execution.
 
 ## Explicit Contracts
 
-Systems and teams should communicate through explicit contracts, APIs, events, specifications, ownership boundaries and decision records.
+Systems and teams should communicate through explicit contracts, APIs, events,
+specifications, ownership boundaries and decision records.
 
 ## Ownership Over Handoff
 
@@ -194,11 +219,13 @@ Every meaningful capability should have a clear owner.
 
 ## Evidence Over Opinion
 
-Important technical and commercial decisions should be supported by evidence where reasonably available.
+Important technical and commercial decisions should be supported by evidence
+where reasonably available.
 
 ## Human Accountability
 
-AI can execute delegated work, but organizational accountability remains assigned to humans and formal governance structures.
+AI can execute delegated work, but organizational accountability remains
+assigned to humans and formal governance structures.
 
 ---
 
@@ -206,56 +233,65 @@ AI can execute delegated work, but organizational accountability remains assigne
 
 ## 7.1 Intelligent Enterprise Platforms
 
-Reusable capabilities for identity, authorization, tenancy, workflows, notifications, files, reporting, search, usage, monetization, integrations, policy and approvals.
+Reusable capabilities for identity, authorization, tenancy, workflows,
+notifications, files, reporting, search, usage, monetization, integrations,
+policy and approvals.
 
 ## 7.2 AI and Agentic Systems
 
-AI agents, intelligent workflows, RAG, computer vision, machine learning, AI-assisted analytics and intelligent automation.
+AI agents, intelligent workflows, RAG, computer vision, machine learning,
+AI-assisted analytics and intelligent automation.
 
 ## 7.3 Computer Vision
 
-Video analytics, object detection, OCR, image analysis, spatial analysis, camera management and event detection.
+Video analytics, object detection, OCR, image analysis, spatial analysis, camera
+management and event detection.
 
 ## 7.4 Geospatial Intelligence
 
-GIS, location intelligence, geographic visualization, 2D/3D spatial systems, facility mapping and spatial analytics.
+GIS, location intelligence, geographic visualization, 2D/3D spatial systems,
+facility mapping and spatial analytics.
 
 ## 7.5 IoT and Robotics
 
-Sensor systems, camera systems, connected devices, robotics, operational telemetry and intelligent physical-world automation.
+Sensor systems, camera systems, connected devices, robotics, operational
+telemetry and intelligent physical-world automation.
 
 ## 7.6 Enterprise Software Engineering
 
-SaaS, enterprise applications, APIs, mobile applications, operational platforms, integration systems and cloud-native infrastructure.
+SaaS, enterprise applications, APIs, mobile applications, operational platforms,
+integration systems and cloud-native infrastructure.
 
 ---
 
 # 8. Technology Domains
 
-| Domain | Role |
-|---|---|
-| Artificial Intelligence | Core strategic technology |
-| Agentic AI | Core operating and product capability |
-| Machine Learning | Intelligent product capability |
-| Computer Vision | Core applied-AI capability |
-| Robotics | Strategic physical automation capability |
-| IoT | Connected operational systems |
-| GIS / Geospatial | Spatial intelligence and visualization |
-| Enterprise Software | Core delivery capability |
-| SaaS | Product delivery model where applicable |
-| Cloud Infrastructure | Platform and deployment foundation |
-| Data & Analytics | Decision and intelligence layer |
-| Automation | Cross-company operating principle |
+| Domain                  | Role                                     |
+| ----------------------- | ---------------------------------------- |
+| Artificial Intelligence | Core strategic technology                |
+| Agentic AI              | Core operating and product capability    |
+| Machine Learning        | Intelligent product capability           |
+| Computer Vision         | Core applied-AI capability               |
+| Robotics                | Strategic physical automation capability |
+| IoT                     | Connected operational systems            |
+| GIS / Geospatial        | Spatial intelligence and visualization   |
+| Enterprise Software     | Core delivery capability                 |
+| SaaS                    | Product delivery model where applicable  |
+| Cloud Infrastructure    | Platform and deployment foundation       |
+| Data & Analytics        | Decision and intelligence layer          |
+| Automation              | Cross-company operating principle        |
 
 ---
 
 # 9. Product and Solution Portfolio
 
-Figentra's product portfolio is intentionally focused on AI-native SaaS products built for operationally complex markets.
+Figentra's product portfolio is intentionally focused on AI-native SaaS products
+built for operationally complex markets.
 
 ## 9.1 Academorix — Sports Operations SaaS
 
-Academorix is the go-to SaaS platform for sports clubs, academies, schools and sports organizations.
+Academorix is the go-to SaaS platform for sports clubs, academies, schools and
+sports organizations.
 
 It is designed to help organizations operate:
 
@@ -270,11 +306,14 @@ It is designed to help organizations operate:
 - competitions and events;
 - performance and operational reporting.
 
-**Positioning:** A purpose-built operating platform for modern sports organizations.
+**Positioning:** A purpose-built operating platform for modern sports
+organizations.
 
 ## 9.2 Beautilon — Health, Care & Beauty Operations SaaS
 
-Beautilon is a vertical SaaS platform for health, care and beauty organizations, including beauty centers, salons, wellness businesses and related service providers.
+Beautilon is a vertical SaaS platform for health, care and beauty organizations,
+including beauty centers, salons, wellness businesses and related service
+providers.
 
 It is designed to help organizations manage:
 
@@ -290,13 +329,17 @@ It is designed to help organizations manage:
 - operational reporting;
 - retention and customer experience.
 
-**Positioning:** A modern operating system for customer-facing health, care and beauty businesses.
+**Positioning:** A modern operating system for customer-facing health, care and
+beauty businesses.
 
 ## 9.3 Figentra Platform
 
-Figentra Platform is the shared technology foundation powering the company's products and internal systems.
+Figentra Platform is the shared technology foundation powering the company's
+products and internal systems.
 
-It provides reusable capabilities for identity, tenancy, authorization, policy, approvals, monetization, entitlements, workflows, notifications, reporting, search, files, usage and integrations.
+It provides reusable capabilities for identity, tenancy, authorization, policy,
+approvals, monetization, entitlements, workflows, notifications, reporting,
+search, files, usage and integrations.
 
 Technical authority:
 
@@ -304,7 +347,8 @@ Technical authority:
 
 ### Portfolio Principle
 
-Academorix and Beautilon are products of Figentra. They are not unrelated standalone brands.
+Academorix and Beautilon are products of Figentra. They are not unrelated
+standalone brands.
 
 ```text
 Figentra Technologies LLC
@@ -316,7 +360,8 @@ Figentra Technologies LLC
         └── Beautilon
 ```
 
-The shared platform creates technical leverage while each product maintains its own:
+The shared platform creates technical leverage while each product maintains its
+own:
 
 - customer segment;
 - value proposition;
@@ -359,13 +404,15 @@ Figentra may operate through:
 
 Each product must have a separately governed commercial model.
 
-Commercial state belongs to the monetization domain and must not be confused with authorization or entitlement state.
+Commercial state belongs to the monetization domain and must not be confused
+with authorization or entitlement state.
 
 ---
 
 # 12. Organizational Model
 
-Figentra is organized around **capabilities and ownership**, not merely job titles.
+Figentra is organized around **capabilities and ownership**, not merely job
+titles.
 
 The organization distinguishes:
 
@@ -382,7 +429,8 @@ Company
 └── Corporate Functions
 ```
 
-Exact division assignment of each employee is authoritative only when recorded in the Team Registry.
+Exact division assignment of each employee is authoritative only when recorded
+in the Team Registry.
 
 ---
 
@@ -390,19 +438,23 @@ Exact division assignment of each employee is authoritative only when recorded i
 
 ## Executive / Corporate
 
-Company strategy, governance, financial direction, strategic partnerships and organizational accountability.
+Company strategy, governance, financial direction, strategic partnerships and
+organizational accountability.
 
 ## Product
 
-Product strategy, product requirements, roadmap, customer requirements and product lifecycle.
+Product strategy, product requirements, roadmap, customer requirements and
+product lifecycle.
 
 ## Software Engineering
 
-Application engineering, backend, frontend, mobile, platform engineering and quality engineering.
+Application engineering, backend, frontend, mobile, platform engineering and
+quality engineering.
 
 ## AI / Data
 
-AI, ML, computer vision, data science, AI model lifecycle and intelligent systems.
+AI, ML, computer vision, data science, AI model lifecycle and intelligent
+systems.
 
 ## Platform / Infrastructure
 
@@ -410,17 +462,20 @@ Cloud, infrastructure, DevOps, MLOps, deployment, observability and reliability.
 
 ## Sales / Commercial
 
-Sales, business development, customer relationships, commercial pipeline and partnerships.
+Sales, business development, customer relationships, commercial pipeline and
+partnerships.
 
 ## Projects / Delivery
 
-Project delivery, project management, coordination, delivery planning and customer implementation.
+Project delivery, project management, coordination, delivery planning and
+customer implementation.
 
 ---
 
 # 14. Software Development Divisions — SD1 and SD2
 
-The company uses software-development division identifiers such as **SD1** and **SD2** to separate engineering capacity and ownership.
+The company uses software-development division identifiers such as **SD1** and
+**SD2** to separate engineering capacity and ownership.
 
 These identifiers are organizational units, not job titles.
 
@@ -455,7 +510,9 @@ SD assignment must not be inferred from job title.
 
 This is the canonical organizational registry.
 
-The currently available company context establishes the following staffing composition, but does not establish the complete individual-name roster. Names must not be fabricated.
+The currently available company context establishes the following staffing
+composition, but does not establish the complete individual-name roster. Names
+must not be fabricated.
 
 ## 15.1 Executive
 
@@ -471,13 +528,15 @@ A formal approved public biography is not established in the available source.
 
 **Known composition:** 2 Backend Developers.
 
-Individual names, exact titles, SD assignments and biographies are not established in the available source.
+Individual names, exact titles, SD assignments and biographies are not
+established in the available source.
 
 ## 15.3 Frontend Engineering
 
 **Known composition:** 2 Frontend Developers.
 
-Individual names, exact titles, SD assignments and biographies are not established in the available source.
+Individual names, exact titles, SD assignments and biographies are not
+established in the available source.
 
 ## 15.4 iOS Engineering
 
@@ -486,7 +545,8 @@ Individual names, exact titles, SD assignments and biographies are not establish
 - 1 Senior iOS Developer;
 - 1 Mid-Level iOS Developer.
 
-Individual names, SD assignments and biographies are not established in the available source.
+Individual names, SD assignments and biographies are not established in the
+available source.
 
 ## 15.5 AI / Data Science
 
@@ -514,17 +574,21 @@ Known hiring/onboarding context includes:
 - Projects Manager;
 - Backend Engineer.
 
-Names, exact start dates and final assignments are not established in the available source.
+Names, exact start dates and final assignments are not established in the
+available source.
 
 ## 15.8 Sales
 
-Sales staffing has been part of the commercial hiring plan. Exact current names and headcount are not established in the available source.
+Sales staffing has been part of the commercial hiring plan. Exact current names
+and headcount are not established in the available source.
 
 ---
 
 # 16. Executive Leadership
 
-The CEO is accountable for company strategy, organizational direction, executive decisions, corporate governance, strategic partnerships and final company accountability.
+The CEO is accountable for company strategy, organizational direction, executive
+decisions, corporate governance, strategic partnerships and final company
+accountability.
 
 Executive authority must be delegated explicitly rather than inferred.
 
@@ -572,7 +636,9 @@ AI and data capabilities cover:
 - analytics;
 - AI agents.
 
-AI work must be governed by model ownership, data ownership, security, evaluation, observability, responsible-AI principles and production-readiness controls.
+AI work must be governed by model ownership, data ownership, security,
+evaluation, observability, responsible-AI principles and production-readiness
+controls.
 
 ---
 
@@ -601,11 +667,13 @@ Product and project roles are distinct.
 
 ### Product
 
-Owns what should be built, why it should be built, customer value, roadmap and product requirements.
+Owns what should be built, why it should be built, customer value, roadmap and
+product requirements.
 
 ### Project / Delivery
 
-Owns delivery coordination, schedule, dependencies, delivery risks and customer execution.
+Owns delivery coordination, schedule, dependencies, delivery risks and customer
+execution.
 
 ### Engineering
 
@@ -751,18 +819,18 @@ Every important agent should have:
 
 ## Conceptual agent roles
 
-| Agent Role | Purpose | Authority |
-|---|---|---|
-| Executive Intelligence Agent | Executive analysis and decision support | Advisory |
-| Technology Agent | Technology strategy support | Advisory / delegated |
-| Architecture Agent | Architecture analysis and governance support | Defined technical scope |
-| Product Agent | Product planning and requirements | Delegated |
-| Engineering Agent | Implementation orchestration | Repository-scoped |
-| QA Agent | Quality verification | Test/review scope |
-| Security Agent | Security analysis and review | Security scope |
-| DevOps Agent | Infrastructure and operational assistance | Environment-scoped |
-| Documentation Agent | Documentation consistency and generation | Documentation scope |
-| Research Agent | Technology and market research | Advisory |
+| Agent Role                   | Purpose                                      | Authority               |
+| ---------------------------- | -------------------------------------------- | ----------------------- |
+| Executive Intelligence Agent | Executive analysis and decision support      | Advisory                |
+| Technology Agent             | Technology strategy support                  | Advisory / delegated    |
+| Architecture Agent           | Architecture analysis and governance support | Defined technical scope |
+| Product Agent                | Product planning and requirements            | Delegated               |
+| Engineering Agent            | Implementation orchestration                 | Repository-scoped       |
+| QA Agent                     | Quality verification                         | Test/review scope       |
+| Security Agent               | Security analysis and review                 | Security scope          |
+| DevOps Agent                 | Infrastructure and operational assistance    | Environment-scoped      |
+| Documentation Agent          | Documentation consistency and generation     | Documentation scope     |
+| Research Agent               | Technology and market research               | Advisory                |
 
 These are role definitions, not claims that all agents are currently deployed.
 
@@ -770,19 +838,19 @@ These are role definitions, not claims that all agents are currently deployed.
 
 # 26. Human and Agent Authority
 
-| Activity | Human | Agent | Approval |
-|---|---:|---:|---:|
-| Company strategy | Yes | Advisory | Human |
-| Financial decisions | Yes | Advisory | Human |
-| Product strategy | Yes | Advisory / delegated | Required where material |
-| Architecture analysis | Yes | Yes | Per governance |
-| Code implementation | Yes | Yes | Repository controls |
-| Testing | Yes | Yes | Engineering controls |
-| Documentation | Yes | Yes | Owner controls |
-| Production deployment | Yes | Delegated | Environment policy |
-| Security policy | Yes | Advisory | Human governance |
-| Customer contractual commitment | Yes | No independent authority | Human |
-| Governance changes | Yes | No independent authority | Human |
+| Activity                        | Human |                    Agent |                Approval |
+| ------------------------------- | ----: | -----------------------: | ----------------------: |
+| Company strategy                |   Yes |                 Advisory |                   Human |
+| Financial decisions             |   Yes |                 Advisory |                   Human |
+| Product strategy                |   Yes |     Advisory / delegated | Required where material |
+| Architecture analysis           |   Yes |                      Yes |          Per governance |
+| Code implementation             |   Yes |                      Yes |     Repository controls |
+| Testing                         |   Yes |                      Yes |    Engineering controls |
+| Documentation                   |   Yes |                      Yes |          Owner controls |
+| Production deployment           |   Yes |                Delegated |      Environment policy |
+| Security policy                 |   Yes |                 Advisory |        Human governance |
+| Customer contractual commitment |   Yes | No independent authority |                   Human |
+| Governance changes              |   Yes | No independent authority |                   Human |
 
 An agent may never grant itself additional authority.
 
@@ -792,29 +860,36 @@ An agent may never grant itself additional authority.
 
 ## Executive Steering
 
-Company strategy, major investments, organizational priorities and major commercial decisions.
+Company strategy, major investments, organizational priorities and major
+commercial decisions.
 
 ## Product Steering
 
-Product priorities, portfolio decisions, roadmap conflicts and customer/product trade-offs.
+Product priorities, portfolio decisions, roadmap conflicts and customer/product
+trade-offs.
 
 ## Architecture Steering
 
-Architectural direction, major architecture decisions, platform standards and cross-service architecture.
+Architectural direction, major architecture decisions, platform standards and
+cross-service architecture.
 
 ## Engineering Steering
 
-Engineering standards, delivery quality, technical execution and engineering capacity.
+Engineering standards, delivery quality, technical execution and engineering
+capacity.
 
 ## Security and Risk Steering
 
-Security governance, risk decisions, major incidents and compliance-related technical decisions.
+Security governance, risk decisions, major incidents and compliance-related
+technical decisions.
 
 ## AI / Agent Steering
 
-Agent governance, agent authority, AI safety, model/agent lifecycle and AI operational standards.
+Agent governance, agent authority, AI safety, model/agent lifecycle and AI
+operational standards.
 
-Every steering body must have an explicit purpose, membership, chair, authority, decision types and decision-record mechanism.
+Every steering body must have an explicit purpose, membership, chair, authority,
+decision types and decision-record mechanism.
 
 ---
 
@@ -830,7 +905,8 @@ A material decision must have:
 - impact;
 - reversal/review mechanism where appropriate.
 
-No organizational decision should depend solely on undocumented verbal assumptions.
+No organizational decision should depend solely on undocumented verbal
+assumptions.
 
 ---
 
@@ -838,21 +914,22 @@ No organizational decision should depend solely on undocumented verbal assumptio
 
 Canonical document classes:
 
-| Document | Purpose |
-|---|---|
+| Document        | Purpose                              |
+| --------------- | ------------------------------------ |
 | Company Charter | Company identity and operating model |
-| Strategy | Strategic direction |
-| PRD | Product requirements |
-| Specification | Technical implementation contract |
-| ADR | Architecture decision |
-| ATR | Controlled technical/action record |
-| Policy | Mandatory governance rule |
-| Standard | Required implementation convention |
-| RFC | Proposed change |
-| Runbook | Operational procedure |
-| Report | Recorded result |
+| Strategy        | Strategic direction                  |
+| PRD             | Product requirements                 |
+| Specification   | Technical implementation contract    |
+| ADR             | Architecture decision                |
+| ATR             | Controlled technical/action record   |
+| Policy          | Mandatory governance rule            |
+| Standard        | Required implementation convention   |
+| RFC             | Proposed change                      |
+| Runbook         | Operational procedure                |
+| Report          | Recorded result                      |
 
-Each document class should have defined creation, review, approval, ownership and retirement rules.
+Each document class should have defined creation, review, approval, ownership
+and retirement rules.
 
 ---
 
@@ -900,7 +977,8 @@ Architecture decisions belong in:
 docs/adr/
 ```
 
-The Company Charter defines organizational authority; the technical documents define implementation details.
+The Company Charter defines organizational authority; the technical documents
+define implementation details.
 
 ---
 
@@ -938,7 +1016,8 @@ No stage should be skipped merely to create the appearance of progress.
 
 # 33. Engineering Quality Model
 
-A production capability is complete only when appropriate controls exist, including as applicable:
+A production capability is complete only when appropriate controls exist,
+including as applicable:
 
 - implementation;
 - automated tests;
@@ -987,7 +1066,8 @@ Figentra must distinguish:
 - third-party intellectual property;
 - AI-generated artifacts.
 
-Agent-generated code and content are governed by the same ownership and review policies as human-generated artifacts.
+Agent-generated code and content are governed by the same ownership and review
+policies as human-generated artifacts.
 
 ---
 
@@ -1019,18 +1099,23 @@ Every important object should have an identifiable owner and canonical location.
 Strategic planning distinguishes:
 
 ### Now
+
 Current company priorities.
 
 ### Next
+
 Near-term initiatives.
 
 ### Strategic
+
 Major investments and product/platform directions.
 
 ### Research
+
 Technologies being evaluated.
 
 ### Long-Term
+
 Future opportunities without current execution commitment.
 
 Research ideas must not automatically be represented as committed products.
@@ -1194,7 +1279,8 @@ The charter must never invent these values.
 # 42. Final Organizational Invariants
 
 1. **Figentra Technologies LLC is the canonical company identity.**
-2. **The Company Charter governs organizational identity and operating principles.**
+2. **The Company Charter governs organizational identity and operating
+   principles.**
 3. **The Platform Architecture governs technical architecture.**
 4. **Products own product definitions and roadmaps.**
 5. **Services own their business capabilities and data.**
@@ -1245,7 +1331,9 @@ employee:
   visibility:
 ```
 
-This is the proposed data contract for the future authoritative team registry. Missing values must be obtained from the authoritative company source rather than invented.
+This is the proposed data contract for the future authoritative team registry.
+Missing values must be obtained from the authoritative company source rather
+than invented.
 
 ---
 
@@ -1270,24 +1358,24 @@ Sensitive HR information must never be exposed through the public team page.
 
 ## Appendix C — Organizational Vocabulary
 
-| Term | Canonical Meaning |
-|---|---|
-| Figentra | Short name for Figentra Technologies LLC |
-| Company | Figentra Technologies LLC |
-| Platform | Figentra Platform |
-| Division | Organizational grouping |
-| SD1 | Software Development Division 1 |
-| SD2 | Software Development Division 2 |
-| Team | Operational group within a division |
-| Product | Customer-facing or strategic product |
-| Service | Deployable backend/platform capability |
-| Agent | AI-enabled operational participant with defined authority |
-| Steering | Governance body with defined decision rights |
-| ADR | Architecture Decision Record |
-| ATR | Controlled technical/action record |
-| Specification | Detailed implementation contract |
-| Policy | Mandatory organizational or technical rule |
-| Runbook | Operational execution procedure |
+| Term          | Canonical Meaning                                         |
+| ------------- | --------------------------------------------------------- |
+| Figentra      | Short name for Figentra Technologies LLC                  |
+| Company       | Figentra Technologies LLC                                 |
+| Platform      | Figentra Platform                                         |
+| Division      | Organizational grouping                                   |
+| SD1           | Software Development Division 1                           |
+| SD2           | Software Development Division 2                           |
+| Team          | Operational group within a division                       |
+| Product       | Customer-facing or strategic product                      |
+| Service       | Deployable backend/platform capability                    |
+| Agent         | AI-enabled operational participant with defined authority |
+| Steering      | Governance body with defined decision rights              |
+| ADR           | Architecture Decision Record                              |
+| ATR           | Controlled technical/action record                        |
+| Specification | Detailed implementation contract                          |
+| Policy        | Mandatory organizational or technical rule                |
+| Runbook       | Operational execution procedure                           |
 
 ---
 
@@ -1303,7 +1391,8 @@ Sensitive HR information must never be exposed through the public team page.
 
 **Agent Registry Owner:** AI / Agent Governance
 
-**Change Authority:** Appropriate company governance authority according to change scope
+**Change Authority:** Appropriate company governance authority according to
+change scope
 
 ---
 
@@ -1329,4 +1418,7 @@ Governance
 Execution
 ```
 
-This document exists so that a new employee, engineer, executive, AI agent or future Figentra system can understand **what Figentra is, what it is trying to accomplish, who is responsible for what, how decisions are made, and where authoritative information lives.**
+This document exists so that a new employee, engineer, executive, AI agent or
+future Figentra system can understand **what Figentra is, what it is trying to
+accomplish, who is responsible for what, how decisions are made, and where
+authoritative information lives.**

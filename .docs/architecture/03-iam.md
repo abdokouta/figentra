@@ -4,7 +4,8 @@
 
 ## Purpose
 
-IAM determines whether a Principal can perform an action against a resource in a context.
+IAM determines whether a Principal can perform an action against a resource in a
+context.
 
 ```text
 authorize(
@@ -218,4 +219,5 @@ Evaluate:
 
 Do not choose based on popularity alone.
 
-The decision must account for dynamic Scope, resource conditions, performance, policy lifecycle and explainability.
+The decision must account for dynamic Scope, resource conditions, performance,
+policy lifecycle and explainability.

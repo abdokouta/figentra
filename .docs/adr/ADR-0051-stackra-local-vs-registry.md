@@ -15,11 +15,11 @@ Only these four Stackra packages are maintained as local npm workspaces:
 
 All other `@stackra/*` dependencies are consumed from the npm registry.
 
-The four local packages keep their package names and versions and are
-referenced by their exact published/local version in consuming manifests.
-Because they are npm workspaces, npm resolves them from the local workspace
-rather than downloading a duplicate registry copy when the workspace version
-satisfies the declaration.
+The four local packages keep their package names and versions and are referenced
+by their exact published/local version in consuming manifests. Because they are
+npm workspaces, npm resolves them from the local workspace rather than
+downloading a duplicate registry copy when the workspace version satisfies the
+declaration.
 
 ## Rules
 

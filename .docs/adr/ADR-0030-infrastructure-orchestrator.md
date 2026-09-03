@@ -1,9 +1,11 @@
 # ADR-0030 — Infrastructure Orchestrator
 
 ## Status
+
 Accepted.
 
 ## Decision
+
 The Infrastructure Orchestrator is a Cloudflare Worker control-plane API. It
 does not execute Terraform directly in the Worker runtime.
 
@@ -15,4 +17,5 @@ egress policy, scoped credentials, audit records and concurrency controls.
 Terraform remains the infrastructure source of truth.
 
 ## Consequences
+
 HTTP control-plane concerns and privileged Terraform execution remain separate.

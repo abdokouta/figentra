@@ -39,7 +39,9 @@
         flex-direction: column;
         gap: 8px;
       }
-      .err-code .kicker { margin: 0; }
+      .err-code .kicker {
+        margin: 0;
+      }
       .err-code .code {
         font-family: var(--font-mono);
         font-weight: 600;
@@ -79,7 +81,10 @@
         border-radius: var(--radius-4);
         padding: 32px;
       }
-      .err-illo img { width: 100%; height: auto; }
+      .err-illo img {
+        width: 100%;
+        height: auto;
+      }
       .err-nav {
         margin-top: 40px;
         padding-top: 24px;
@@ -91,11 +96,21 @@
         gap: 20px;
         flex-wrap: wrap;
       }
-      .err-nav a { color: var(--text-muted); }
-      .err-nav a:hover { color: var(--signal); }
+      .err-nav a {
+        color: var(--text-muted);
+      }
+      .err-nav a:hover {
+        color: var(--signal);
+      }
       @media (max-width: 720px) {
-        .err { grid-template-columns: 1fr; }
-        .err-illo { order: -1; max-width: 320px; margin: 0 auto; }
+        .err {
+          grid-template-columns: 1fr;
+        }
+        .err-illo {
+          order: -1;
+          max-width: 320px;
+          margin: 0 auto;
+        }
       }
     </style>
   </head>
@@ -106,14 +121,11 @@
           <p class="kicker">Off target · route not found</p>
           <div class="code" aria-hidden="true"><em>4</em>0<em>4</em></div>
         </div>
-        <h1 class="err-title">
-          That page isn&#39;t on this roster.
-        </h1>
+        <h1 class="err-title">That page isn&#39;t on this roster.</h1>
         <p class="err-body">
-          The link you followed points at a page we don&#39;t serve, or a
-          record that was archived. Nothing broke — the URL just missed the
-          rim. Check the address, or bounce back to somewhere with a
-          scoreboard.
+          The link you followed points at a page we don&#39;t serve, or a record that was archived.
+          Nothing broke — the URL just missed the rim. Check the address, or bounce back to
+          somewhere with a scoreboard.
         </p>
         <div class="err-cta">
           <a class="btn btn-primary" href="/">Back to dashboard</a>

@@ -1,8 +1,10 @@
 # 10 — Domain & Application Patterns
 
-**Status:** Baseline
-**Owner:** Platform architecture (applies to every NestJS service + application backend)
-**Related:** [11 Events & workflows](11-events-and-workflows.md), [09 Service communication](09-service-communication.md), [14 Data & persistence](14-data-and-persistence.md)
+**Status:** Baseline **Owner:** Platform architecture (applies to every NestJS
+service + application backend) **Related:**
+[11 Events & workflows](11-events-and-workflows.md),
+[09 Service communication](09-service-communication.md),
+[14 Data & persistence](14-data-and-persistence.md)
 
 ---
 
@@ -81,14 +83,14 @@ Events              (published after commit — see [11])
 
 Responsibilities per layer:
 
-| Layer       | Owns                                                                 | Does NOT                          |
-| ----------- | -------------------------------------------------------------------- | --------------------------------- |
-| Controller  | HTTP concerns, input validation, mapping to Command/Query, context   | Business logic, persistence       |
-| Command/Query | An intent (write) or a read request; a serializable, validated object | Execute logic                    |
-| Use Case    | Orchestrate one business operation; transaction boundary             | HTTP, direct SQL                  |
-| Domain      | Entities, value objects, invariants, domain events                   | Persistence, transport            |
-| Repository  | Load/save aggregates via MikroORM                                    | Business rules                    |
-| Outbox      | Persist domain events atomically with the aggregate                  | Deliver events (that's the relay) |
+| Layer         | Owns                                                                  | Does NOT                          |
+| ------------- | --------------------------------------------------------------------- | --------------------------------- |
+| Controller    | HTTP concerns, input validation, mapping to Command/Query, context    | Business logic, persistence       |
+| Command/Query | An intent (write) or a read request; a serializable, validated object | Execute logic                     |
+| Use Case      | Orchestrate one business operation; transaction boundary              | HTTP, direct SQL                  |
+| Domain        | Entities, value objects, invariants, domain events                    | Persistence, transport            |
+| Repository    | Load/save aggregates via MikroORM                                     | Business rules                    |
+| Outbox        | Persist domain events atomically with the aggregate                   | Deliver events (that's the relay) |
 
 **CQRS-lite:** commands and queries are separated at the application layer, but
 this is **not** full event-sourcing — the aggregate is persisted normally; the
@@ -139,20 +141,20 @@ no phantom events. Detail (outbox schema, relay, idempotency) is in
 ```typescript
 // Illustrative — defineEntity + class default
 export const Product = defineEntity({
-  name: 'Product',
+  name: "Product",
   properties: (p) => ({
-    id: p.type('uuid').primary(),
-    tenantId: p.type('uuid'),
+    id: p.type("uuid").primary(),
+    tenantId: p.type("uuid"),
     name: p.string(),
-    status: p.enum(['draft', 'published']),
+    status: p.enum(["draft", "published"]),
     createdAt: p.datetime().onCreate(() => new Date()),
   }),
 });
 ```
 
 Repositories wrap the EntityManager; use cases own the transaction boundary
-(`em.transactional(...)`), inside which both the aggregate and the outbox row are
-written.
+(`em.transactional(...)`), inside which both the aggregate and the outbox row
+are written.
 
 ---
 
@@ -224,16 +226,16 @@ never re-implements identity/tenant/billing/IAM.
 
 ## 9. Non-goals / anti-patterns
 
-| Anti-pattern                                              | Correct                                                     |
-| --------------------------------------------------------- | ----------------------------------------------------------- |
-| One controller per action                                 | Resource / bounded-context controllers.                     |
-| One giant controller per application                      | Split by bounded context.                                   |
-| Business logic in the controller                          | Controller is thin; logic in use case + domain.             |
-| Publishing events directly from the use case (no outbox)  | Append to outbox in the same transaction; relay publishes.  |
-| TypeORM / a second ORM                                    | MikroORM (`defineEntity` + class).                          |
-| Event-sourcing the aggregate as the system of record      | CQRS-lite; aggregate persisted normally; outbox for delivery.|
-| Application re-implementing identity/tenant/billing        | Consume platform SDK + contracts.                           |
-| Sharing MikroORM entities across services                 | Share contracts, not entities ([09 §8]).                    |
+| Anti-pattern                                             | Correct                                                       |
+| -------------------------------------------------------- | ------------------------------------------------------------- |
+| One controller per action                                | Resource / bounded-context controllers.                       |
+| One giant controller per application                     | Split by bounded context.                                     |
+| Business logic in the controller                         | Controller is thin; logic in use case + domain.               |
+| Publishing events directly from the use case (no outbox) | Append to outbox in the same transaction; relay publishes.    |
+| TypeORM / a second ORM                                   | MikroORM (`defineEntity` + class).                            |
+| Event-sourcing the aggregate as the system of record     | CQRS-lite; aggregate persisted normally; outbox for delivery. |
+| Application re-implementing identity/tenant/billing      | Consume platform SDK + contracts.                             |
+| Sharing MikroORM entities across services                | Share contracts, not entities ([09 §8]).                      |
 
 ---
 

@@ -23,9 +23,12 @@ Rules:
 
 1. `index.ts` contains no business logic.
 2. Every exported interface/type/enum/constant/schema gets its own file.
-3. File names use the matching suffix: `.interface.ts`, `.type.ts`, `.enum.ts`, `.constant.ts`, `.schema.ts`.
+3. File names use the matching suffix: `.interface.ts`, `.type.ts`, `.enum.ts`,
+   `.constant.ts`, `.schema.ts`.
 4. Public exported symbols have TSDoc.
 5. Comments explain security, ownership, invariants, or why—not obvious syntax.
-6. Cloudflare bindings are generated with `wrangler types`; do not hand-copy provider types into application code.
-7. D1 migrations are canonical; generated schema snapshots are never executable migration sources.
+6. Cloudflare bindings are generated with `wrangler types`; do not hand-copy
+   provider types into application code.
+7. D1 migrations are canonical; generated schema snapshots are never executable
+   migration sources.
 8. Workers do not execute arbitrary shell commands.

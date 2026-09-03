@@ -25,11 +25,11 @@ codifies the mechanical npm NAMING rules.
 
 Three npm scopes, three ownership layers:
 
-| npm scope       | Layer     | Owning brand                      | Home                                                                  |
-| --------------- | --------- | --------------------------------- | --------------------------------------------------------------------- |
-| `@stackra/*`    | Framework | Stackra (portable code)           | `packages/**`, `packages/config/**`, `templates/{vite,react-native}/` |
+| npm scope       | Layer     | Owning brand                      | Home                                                                         |
+| --------------- | --------- | --------------------------------- | ---------------------------------------------------------------------------- |
+| `@stackra/*`    | Framework | Stackra (portable code)           | `packages/**`, `packages/config/**`, `templates/{vite,react-native}/`        |
 | `@figentra/*`   | Operator  | Figentra (corporate SaaS runtime) | `services/{identity,commerce,notifications,observability,platform}-service/` |
-| `@academorix/*` | Product   | Academorix                        | `services/{api,ai}/`, `apps/academorix-*/`                            |
+| `@academorix/*` | Product   | Academorix                        | `services/{api,ai}/`, `apps/academorix-*/`                                   |
 
 **FORBIDDEN scopes** — every one fails audit:
 
@@ -89,11 +89,11 @@ module inside stackra finance." Alphabetical listing groups every category's
 packages together in a `pnpm list` sweep.
 
 **Naming precedence when the "category" could go either way**: pick the category
-that names the BOUNDED CONTEXT the package belongs to — the answer to "if I moved
-this package to a new codebase, which sibling packages would travel with it?"
-Finance packages travel together; observability packages travel together; an
-rbac package doesn't have obvious siblings so it stays `@stackra/rbac` without a
-category.
+that names the BOUNDED CONTEXT the package belongs to — the answer to "if I
+moved this package to a new codebase, which sibling packages would travel with
+it?" Finance packages travel together; observability packages travel together;
+an rbac package doesn't have obvious siblings so it stays `@stackra/rbac`
+without a category.
 
 ## Rule 4 — Package slug is kebab-case
 
@@ -164,8 +164,8 @@ Copy-paste checklist for authoring a new package:
 
 - [ ] Decide the scope by asking three questions in order: 1. Is this a portable
       framework primitive any operator could deploy? → `@stackra/*`. 2. Is this
-      Figentra's specific cross-application SaaS runtime service? → `@figentra/*`
-      (permitted ONLY for the five SHARED services). 3. Otherwise
+      Figentra's specific cross-application SaaS runtime service? →
+      `@figentra/*` (permitted ONLY for the five SHARED services). 3. Otherwise
       (product-specific code): `@<product>/*` — `@academorix/*` for Academorix
       code today.
 - [ ] Decide the slug shape: `@stackra/<slug>` (standalone) or

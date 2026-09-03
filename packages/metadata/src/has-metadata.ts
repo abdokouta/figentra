@@ -1,4 +1,4 @@
-import 'reflect-metadata';
+import "reflect-metadata";
 
 /**
  * Checks if metadata exists for a given key on the target object or anywhere in its prototype chain.
@@ -83,7 +83,7 @@ import 'reflect-metadata';
 export function hasMetadata(
   metadataKey: any,
   target: object,
-  propertyKey?: string | symbol
+  propertyKey?: string | symbol,
 ): boolean {
   // Use Reflect.hasMetadata to check for metadata existence
   // This method searches through the entire prototype chain, including inherited metadata

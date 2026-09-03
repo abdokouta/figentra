@@ -8,11 +8,11 @@ reviewed_at: null
 
 # @stackra/logger — architecture plan
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
+**Status:** Planned **Anchor ADRs:**
+[ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
 [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
-[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md)
-**Reference plan:** `.ref/packages/logger/stackra-logger-architecture-plan.md` (4232 lines)
+[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md) **Reference
+plan:** `.ref/packages/logger/stackra-logger-architecture-plan.md` (4232 lines)
 **Depends on:** `.kiro/plans/2026-09-03-container-package.md`
 
 ## Purpose
@@ -36,11 +36,11 @@ package's own runtime-specific discovery scaffolding.
 
 ## Non-goals
 
-- OpenTelemetry integration (deferred to a future `@stackra/logger/otel`
-  subpath if genuinely needed).
+- OpenTelemetry integration (deferred to a future `@stackra/logger/otel` subpath
+  if genuinely needed).
 - File rotation, syslog, CloudWatch — every one is a specialised transport that
-  belongs behind Winston (via `winston-daily-rotate-file`,
-  `winston-cloudwatch`, etc.) or in a future optional subpath.
+  belongs behind Winston (via `winston-daily-rotate-file`, `winston-cloudwatch`,
+  etc.) or in a future optional subpath.
 - Metrics — belongs in `@stackra/telemetry`; the logger emits a `LogWritten`
   event that a metrics consumer can subscribe to.
 - Log analytics dashboards — belongs in a separate concern (observability
@@ -145,26 +145,26 @@ packages/logger/
 
 Symbols in `@stackra/contracts`:
 
-| Symbol                    | Kind      |
-| ------------------------- | --------- |
-| `ILogger`                 | interface |
-| `ILoggerFactory`          | interface |
-| `ILogChannel`             | interface |
-| `ILogSink`                | interface |
-| `ILogEntry`               | interface |
-| `ILogError`               | interface |
-| `ILogEnricher`            | interface |
-| `ILogFormatter`           | interface |
-| `ILogContext`             | interface |
-| `ILogContextRepository`   | interface |
-| `LogLevel` enum           | enum      |
-| `LOGGER`                  | token     |
-| `LOGGER_FACTORY`          | token     |
-| `LOGGER_MANAGER`          | token     |
-| `LOGGER_CONFIG`           | token     |
-| `LOG_CONTEXT`             | token     |
-| `LoggerConfigError`       | class     |
-| `LoggerRedactionError`    | class     |
+| Symbol                  | Kind      |
+| ----------------------- | --------- |
+| `ILogger`               | interface |
+| `ILoggerFactory`        | interface |
+| `ILogChannel`           | interface |
+| `ILogSink`              | interface |
+| `ILogEntry`             | interface |
+| `ILogError`             | interface |
+| `ILogEnricher`          | interface |
+| `ILogFormatter`         | interface |
+| `ILogContext`           | interface |
+| `ILogContextRepository` | interface |
+| `LogLevel` enum         | enum      |
+| `LOGGER`                | token     |
+| `LOGGER_FACTORY`        | token     |
+| `LOGGER_MANAGER`        | token     |
+| `LOGGER_CONFIG`         | token     |
+| `LOG_CONTEXT`           | token     |
+| `LoggerConfigError`     | class     |
+| `LoggerRedactionError`  | class     |
 
 `@stackra/logger` `.` exports concrete `Logger`, `LoggerFactory`,
 `LoggerManager`, sinks (Console + InMemory + Silent), enrichers, formatters,
@@ -182,7 +182,9 @@ export class LoggerManager extends Manager<ILogChannel> {
   public constructor(
     @Inject(LOGGER_CONFIG) private readonly config: ILoggerConfig,
     @Inject(LOG_CONTEXT_REPOSITORY) private readonly ctx: ILogContextRepository,
-    @Optional() @Inject(DISCOVERY_SERVICE) private readonly discovery?: IDiscoveryService,
+    @Optional()
+    @Inject(DISCOVERY_SERVICE)
+    private readonly discovery?: IDiscoveryService,
   ) {
     super();
   }
@@ -214,7 +216,9 @@ export class LoggerManager extends Manager<ILogChannel> {
   public async onModuleInit(): Promise<void> {
     // Discover @LogSink-decorated classes via IDiscoveryService and .extend() them
     if (this.discovery) {
-      const sinks = this.discovery.getProvidersByMetadata(LOG_SINK_METADATA_KEY);
+      const sinks = this.discovery.getProvidersByMetadata(
+        LOG_SINK_METADATA_KEY,
+      );
       for (const sink of sinks) {
         const name = sink.metadata.name as string;
         this.extend(name, () => sink.instance as ILogChannel);
@@ -234,7 +238,12 @@ LoggerModule.forRoot({
   channels: {
     console: { driver: "console", level: "debug", format: "pretty" },
     json: { driver: "console", level: "info", format: "json" },
-    file: { driver: "pino", level: "info", target: "pino/file", destination: "./logs/app.log" },
+    file: {
+      driver: "pino",
+      level: "info",
+      target: "pino/file",
+      destination: "./logs/app.log",
+    },
     stack: {
       driver: "stack",
       channels: ["console", "file"], // fan-out
@@ -249,18 +258,18 @@ LoggerModule.forRoot({
 
 ## Cross-runtime sinks
 
-| Sink              | Home                              | Runtime         |
-| ----------------- | --------------------------------- | --------------- |
-| `ConsoleSink`     | `core/sinks/console.sink.ts`      | Every runtime   |
-| `InMemorySink`    | `core/sinks/in-memory.sink.ts`    | Every runtime (mostly tests) |
-| `SilentSink`      | `core/sinks/silent.sink.ts`       | Every runtime   |
-| `EmergencySink`   | `core/sinks/emergency.sink.ts`    | Fallback when other sinks throw |
-| `HttpSink`        | `react/sinks/http.sink.ts`        | Browser         |
-| `NativeConsoleSink`| `native/sinks/native-console.sink.ts` | React Native |
-| `WorkerConsoleSink`| `worker/sinks/worker-console.sink.ts` | Cloudflare Worker |
-| `QueueSink`       | `worker/sinks/queue.sink.ts`      | Cloudflare Worker (flush to CF Queue) |
-| `PinoSink`        | `pino/pino.sink.ts`               | Node / NestJS (production default) |
-| `WinstonSink`     | `winston/winston.sink.ts`         | Node / NestJS (legacy + special transports) |
+| Sink                | Home                                  | Runtime                                     |
+| ------------------- | ------------------------------------- | ------------------------------------------- |
+| `ConsoleSink`       | `core/sinks/console.sink.ts`          | Every runtime                               |
+| `InMemorySink`      | `core/sinks/in-memory.sink.ts`        | Every runtime (mostly tests)                |
+| `SilentSink`        | `core/sinks/silent.sink.ts`           | Every runtime                               |
+| `EmergencySink`     | `core/sinks/emergency.sink.ts`        | Fallback when other sinks throw             |
+| `HttpSink`          | `react/sinks/http.sink.ts`            | Browser                                     |
+| `NativeConsoleSink` | `native/sinks/native-console.sink.ts` | React Native                                |
+| `WorkerConsoleSink` | `worker/sinks/worker-console.sink.ts` | Cloudflare Worker                           |
+| `QueueSink`         | `worker/sinks/queue.sink.ts`          | Cloudflare Worker (flush to CF Queue)       |
+| `PinoSink`          | `pino/pino.sink.ts`                   | Node / NestJS (production default)          |
+| `WinstonSink`       | `winston/winston.sink.ts`             | Node / NestJS (legacy + special transports) |
 
 Consumers importing `@stackra/logger` core get Console + InMemory + Silent +
 Emergency by default. `/pino` or `/winston` subpaths REGISTER additional sinks
@@ -310,7 +319,8 @@ captures the OUTPUT of the pipeline, giving high-fidelity assertions.
 - `LoggerFactory` singleton
 - `LOGGER_FACTORY` alias
 - `LOGGER` convenience token (resolves to `manager.driver()`)
-- `LogContextRepository` (backed by `AsyncLocalStorage` on Node; per-request on Worker)
+- `LogContextRepository` (backed by `AsyncLocalStorage` on Node; per-request on
+  Worker)
 - `NestLoggerServiceAdapter` (so NestJS's built-in `Logger` uses our logger)
 - `RequestLoggingMiddleware`
 - `RequestLoggingInterceptor`
@@ -338,7 +348,10 @@ expect(logger.info).toHaveBeenCalledWith("thing.done", { count: 1 });
 import { TestLogger } from "@stackra/logger/testing";
 
 const { logger, sink } = TestLogger.create({
-  config: { default: "test", channels: { test: { driver: "in-memory", level: "debug" } } },
+  config: {
+    default: "test",
+    channels: { test: { driver: "in-memory", level: "debug" } },
+  },
 });
 
 service.doThing();
@@ -347,7 +360,10 @@ expect(sink.entries).toContainEqual(
   expect.objectContaining({
     level: "info",
     message: "thing.done",
-    meta: expect.objectContaining({ count: 1, requestId: expect.stringMatching(/^req_/) }),
+    meta: expect.objectContaining({
+      count: 1,
+      requestId: expect.stringMatching(/^req_/),
+    }),
   }),
 );
 ```
@@ -371,7 +387,7 @@ Runtime peers (all optional except contracts + support):
     "react-native": "catalog:react-native",
     "pino": "^9.0.0",
     "pino-pretty": "^11.0.0",
-    "winston": "^3.13.0"
+    "winston": "^3.13.0",
   },
   "peerDependenciesMeta": {
     "@nestjs/common": { "optional": true },
@@ -380,8 +396,8 @@ Runtime peers (all optional except contracts + support):
     "react-native": { "optional": true },
     "pino": { "optional": true },
     "pino-pretty": { "optional": true },
-    "winston": { "optional": true }
-  }
+    "winston": { "optional": true },
+  },
 }
 ```
 
@@ -428,16 +444,17 @@ Runtime peers (all optional except contracts + support):
 
 - [ ] `WinstonSink implements ILogSink`.
 - [ ] `WinstonModule.forRoot()`.
-- [ ] Pass-through for arbitrary transports (`winston-cloudwatch`, `winston-daily-rotate-file`).
+- [ ] Pass-through for arbitrary transports (`winston-cloudwatch`,
+      `winston-daily-rotate-file`).
 
 ### Phase 6 — NestJS subpath (4 days)
 
-- [ ] `LoggerModule.forRoot()` + `forRootAsync()` — registers everything
-      listed under §Auto-registration.
+- [ ] `LoggerModule.forRoot()` + `forRootAsync()` — registers everything listed
+      under §Auto-registration.
 - [ ] `NestLoggerServiceAdapter` — implements Nest's `LoggerService` interface.
 - [ ] `AsyncContextRepository` — request-scoped context.
-- [ ] `RequestLoggingMiddleware` — attaches `requestId` to context; logs
-      request start + response.
+- [ ] `RequestLoggingMiddleware` — attaches `requestId` to context; logs request
+      start + response.
 - [ ] `RequestLoggingInterceptor` — logs handler-level metadata.
 - [ ] `LoggingExceptionFilter` — logs uncaught + Nest exceptions.
 - [ ] `LoggerHealthIndicator` — reports sink health.
@@ -492,21 +509,22 @@ parallelism between subpaths).
 
 ## Migration risks
 
-| Risk                                                                    | Mitigation                                                                       |
-| ----------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| Pino not Worker-safe by default                                         | `/pino` subpath is Node-only; `/worker` uses console sink. Documented + tested.  |
-| Redaction ordering wrong → sensitive data leaks pre-redaction to sink   | Pipeline stages are ordered explicitly (§108); test covers a `password: "hunter2"` payload survives to `[REDACTED]` before reaching the sink. |
-| `AsyncLocalStorage` not available in older Node / RN                    | Node 20+ ships it natively; RN uses a shim under `native/context/`. Documented.  |
-| `LoggerManager.onModuleInit` fires before `IDiscoveryService` is populated  | Use `OnApplicationBootstrap` instead — after every module init.                  |
-| Sink write failure → log storm on retry                                 | `EmergencySink` never recurses through the pipeline; direct write to `console.error`. |
+| Risk                                                                       | Mitigation                                                                                                                                    |
+| -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Pino not Worker-safe by default                                            | `/pino` subpath is Node-only; `/worker` uses console sink. Documented + tested.                                                               |
+| Redaction ordering wrong → sensitive data leaks pre-redaction to sink      | Pipeline stages are ordered explicitly (§108); test covers a `password: "hunter2"` payload survives to `[REDACTED]` before reaching the sink. |
+| `AsyncLocalStorage` not available in older Node / RN                       | Node 20+ ships it natively; RN uses a shim under `native/context/`. Documented.                                                               |
+| `LoggerManager.onModuleInit` fires before `IDiscoveryService` is populated | Use `OnApplicationBootstrap` instead — after every module init.                                                                               |
+| Sink write failure → log storm on retry                                    | `EmergencySink` never recurses through the pipeline; direct write to `console.error`.                                                         |
 
 ## Success criteria
 
 - [ ] 8 subpath exports build cleanly (`.`, `/nestjs`, `/react`, `/native`,
       `/worker`, `/pino`, `/winston`, `/testing`).
-- [ ] `services/approval` logs identically before/after the migration —
-      verified by baseline log-line diff on a canned request.
-- [ ] `apps/portal` browser bundle DOES NOT include Pino or Winston (tree-shaken).
+- [ ] `services/approval` logs identically before/after the migration — verified
+      by baseline log-line diff on a canned request.
+- [ ] `apps/portal` browser bundle DOES NOT include Pino or Winston
+      (tree-shaken).
 - [ ] `TestLogger` + `InMemorySink` catches every enricher's contribution in the
       output.
 - [ ] Redaction test suite passes on every branch.
@@ -520,5 +538,5 @@ parallelism between subpaths).
 - `.kiro/plans/2026-09-03-container-package.md` — dependency.
 - `.kiro/plans/2026-09-03-database-package.md` — sibling.
 - `.kiro/steering/logging-standards.md` — will land alongside this package.
-- `.ref/packages/logger/stackra-logger-architecture-plan.md` §1-153 —
-  reference architecture (full text).
+- `.ref/packages/logger/stackra-logger-architecture-plan.md` §1-153 — reference
+  architecture (full text).

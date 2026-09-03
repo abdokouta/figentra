@@ -36,16 +36,16 @@ scripts/            — bootstrap + migration helpers (Node ESM `*.mjs`)
 
 ## Standard tools
 
-| Concern            | Tool                                  |
-| ------------------ | ------------------------------------- |
-| Formatting         | Prettier                              |
-| Static analysis    | ESLint + `tsc --noEmit` (strict)      |
-| Testing            | Vitest                                |
-| Secrets            | Doppler                               |
-| Task orchestration | Turborepo + pnpm                      |
-| Backend runtime    | Cloudflare Workers (TypeScript)       |
-| Data + auth        | Supabase (Postgres, Auth, Storage)    |
-| Provisioning       | Terraform (Cloudflare + Supabase)     |
-| Deploy             | Wrangler                              |
-| Error tracking     | Sentry                                |
-| Git hooks          | Husky + commitlint + lint-staged      |
+| Concern            | Tool                               |
+| ------------------ | ---------------------------------- |
+| Formatting         | Prettier                           |
+| Static analysis    | ESLint + `tsc --noEmit` (strict)   |
+| Testing            | Vitest                             |
+| Secrets            | Doppler                            |
+| Task orchestration | Turborepo + pnpm                   |
+| Backend runtime    | Cloudflare Workers (TypeScript)    |
+| Data + auth        | Supabase (Postgres, Auth, Storage) |
+| Provisioning       | Terraform (Cloudflare + Supabase)  |
+| Deploy             | Wrangler                           |
+| Error tracking     | Sentry                             |
+| Git hooks          | Husky + commitlint + lint-staged   |

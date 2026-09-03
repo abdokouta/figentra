@@ -16,7 +16,8 @@ It is replaced by the Supabase Auth decision.
 
 ## Architectural invariant
 
-The authentication provider remains an implementation dependency, not the canonical Figentra identity model.
+The authentication provider remains an implementation dependency, not the
+canonical Figentra identity model.
 
 ```text
 Supabase Auth
@@ -42,4 +43,5 @@ Supabase Auth claims and Supabase RLS are not substitutes for Figentra IAM.
 
 ## Consequence
 
-The repository must not introduce Clerk-specific dependencies, schemas, terminology, or contracts.
+The repository must not introduce Clerk-specific dependencies, schemas,
+terminology, or contracts.

@@ -2,13 +2,17 @@
 
 ## Positioning
 
-**Academorix is the go-to SaaS platform for sports clubs, academies, schools and sports organizations.**
+**Academorix is the go-to SaaS platform for sports clubs, academies, schools and
+sports organizations.**
 
-It helps organizations run the business and daily operations behind training, programs, athletes, coaches, schedules, attendance, registration, communication, competitions and commercial activity.
+It helps organizations run the business and daily operations behind training,
+programs, athletes, coaches, schedules, attendance, registration, communication,
+competitions and commercial activity.
 
 ## Audience
 
 Primary:
+
 - academy owners;
 - club operators;
 - school sports administrators;
@@ -16,6 +20,7 @@ Primary:
 - coaches and program managers.
 
 Secondary:
+
 - parents;
 - athletes;
 - finance/admin teams.
@@ -25,13 +30,16 @@ Secondary:
 > **Run the academy. Grow the game.**
 
 Supporting:
-> Everything your sports organization needs to run programs, people and performance in one place.
+
+> Everything your sports organization needs to run programs, people and
+> performance in one place.
 
 ## Personality
 
 Energetic, organized, competitive, welcoming and modern.
 
 Never:
+
 - childish;
 - noisy;
 - overly “extreme sports”;
@@ -40,13 +48,15 @@ Never:
 
 ## Visual direction
 
-Use the established Track Orange `#FF6B35`, Geist + Geist Mono, chevron-lane pattern and sports-native asset system from the supplied Academorix package.
+Use the established Track Orange `#FF6B35`, Geist + Geist Mono, chevron-lane
+pattern and sports-native asset system from the supplied Academorix package.
 
 The wordmark remains clean and distinct from Figentra.
 
 ## Imagery
 
 Prioritize:
+
 - real athletes;
 - real coaches;
 - real facilities;
@@ -59,6 +69,7 @@ Avoid generic stock “fitness influencer” photography.
 ## Illustration
 
 Sports-native but operational:
+
 - roster boards;
 - calendars;
 - fields/courts;
@@ -69,16 +80,16 @@ Sports-native but operational:
 
 ## Favicon
 
-The canonical Academorix wordmark/mark source must generate all favicon sizes. Do not reuse Figentra's F-Cursor as the product favicon.
+The canonical Academorix wordmark/mark source must generate all favicon sizes.
+Do not reuse Figentra's F-Cursor as the product favicon.
 
 ## Conversion
 
-Primary CTA:
-`Book a demo`
+Primary CTA: `Book a demo`
 
-Secondary:
-`See how it works`
+Secondary: `See how it works`
 
 ## Proof
 
-Use verified customer logos, academy counts, testimonials and metrics only after evidence is approved.
+Use verified customer logos, academy counts, testimonials and metrics only after
+evidence is approved.

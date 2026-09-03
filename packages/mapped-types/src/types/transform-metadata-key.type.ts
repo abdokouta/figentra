@@ -4,7 +4,4 @@
  * These keys correspond to different types of metadata used by class-transformer
  */
 export type TransformMetadataKey =
-  | '_typeMetadatas'
-  | '_exposeMetadatas'
-  | '_excludeMetadatas'
-  | '_transformMetadatas';
+  "_typeMetadatas" | "_exposeMetadatas" | "_excludeMetadatas" | "_transformMetadatas";

@@ -26,8 +26,8 @@ Three distinct brands with **three npm scopes** — `@stackra/*`, `@figentra/*`,
 - **Stackra** — framework brand. Portable code library, reusable by any
   operator. Ships as `@stackra/*` (npm).
 - **Figentra** — corporate entity + platform operator. Wears two hats:
-  - **Legal entity** — copyright, `author` fields, LICENSE, GitHub org. Never
-    in a package identifier for this role.
+  - **Legal entity** — copyright, `author` fields, LICENSE, GitHub org. Never in
+    a package identifier for this role.
   - **Corporate operator** — Figentra's SaaS platform runtime that hosts every
     application. Cross-application SHARED services (identity, commerce,
     notifications, observability, platform) ship as `@figentra/*` (npm).
@@ -107,9 +107,9 @@ companies that heavily use or maintain them:
 
 37signals contributes to Rails and uses Rails heavily, but Rails isn't
 `@37signals/rails` — it's `rails/rails`. Same shape here: Figentra maintains and
-uses Stackra, but Stackra keeps its own scope so a future open-source,
-spin-off, or third-party consumer inherits a legible framework brand rather than
-a corporate-parent name.
+uses Stackra, but Stackra keeps its own scope so a future open-source, spin-off,
+or third-party consumer inherits a legible framework brand rather than a
+corporate-parent name.
 
 The Meta / Google / Vercel precedent (React inside Meta, Angular inside Google)
 is a DIFFERENT pattern — those frameworks are internally-first, owned by their
@@ -123,12 +123,12 @@ well-established — industry precedent. When a company builds SaaS on top of a
 portable framework, the company publishes its OPERATOR-specific runtime services
 under the company's own brand, while consuming the framework's brand unchanged:
 
-| Framework (portable code)     | Corporate operator (SaaS runtime)             | Product (specific app)          |
-| ----------------------------- | --------------------------------------------- | ------------------------------- |
-| **PostgreSQL** (`postgres`)   | Supabase (hosted runtime)                     | apps built on Supabase          |
-| **Django** (`django/*`)       | Instagram's shared infra (private)            | Instagram, Threads              |
-| **Ruby on Rails** (`rails/*`) | Basecamp's shared infra (private)             | Basecamp, Hey                   |
-| **Stackra** (`@stackra/*`)    | **Figentra's SHARED services (`@figentra/*`)**| **Academorix (`@academorix/*`)**|
+| Framework (portable code)     | Corporate operator (SaaS runtime)              | Product (specific app)           |
+| ----------------------------- | ---------------------------------------------- | -------------------------------- |
+| **PostgreSQL** (`postgres`)   | Supabase (hosted runtime)                      | apps built on Supabase           |
+| **Django** (`django/*`)       | Instagram's shared infra (private)             | Instagram, Threads               |
+| **Ruby on Rails** (`rails/*`) | Basecamp's shared infra (private)              | Basecamp, Hey                    |
+| **Stackra** (`@stackra/*`)    | **Figentra's SHARED services (`@figentra/*`)** | **Academorix (`@academorix/*`)** |
 
 Every row: framework brand stays clean and portable; the OPERATOR's runtime
 services carry the OPERATOR's identity; the PRODUCT lives at its own scope.
@@ -273,12 +273,12 @@ never let the two hosts drift into different names.
 GitHub organizations are flat — subgroups don't exist. Every repo lives at
 `github.com/figentra/<name>`:
 
-| Repo                            | Owns                                                                          |
-| ------------------------------- | ----------------------------------------------------------------------------- |
+| Repo                            | Owns                                                                                                      |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------- |
 | `figentra/stackra-backend`      | Backend framework (`@stackra/*` packages) + services + backend product-scoped packages (`@academorix/*`). |
-| `figentra/academorix-clients`   | This repo. Frontend framework (`@stackra/*` npm) + client apps.               |
-| `figentra/academorix-marketing` | Marketing site (future).                                                      |
-| `figentra/figentra-brand`       | Design assets + brand guidelines (future).                                    |
+| `figentra/academorix-clients`   | This repo. Frontend framework (`@stackra/*` npm) + client apps.                                           |
+| `figentra/academorix-marketing` | Marketing site (future).                                                                                  |
+| `figentra/figentra-brand`       | Design assets + brand guidelines (future).                                                                |
 
 Never nest brand names in a repo path (`figentra/stackra/academorix` is wrong —
 that's a tree, not a repo). Each repo name reflects the artifact's SCOPE, not
@@ -417,8 +417,8 @@ mirroring.
 > [ADR-0069](../../docs/adr/0069-corporate-operator-vendor-scope.md), which
 > introduced the `@figentra/*` corporate-operator scope by superseding
 > [ADR-0058](../../docs/adr/0058-per-application-service-vendor-split.md)
-> §Alternatives §C. ADR-0058's per-Application-services decision (`@<product>/*`)
-> still holds.
+> §Alternatives §C. ADR-0058's per-Application-services decision
+> (`@<product>/*`) still holds.
 
 Every service under `services/*/` in this repo carries a package name that
 reflects **which brand owns the runtime**, not which corporation legally-owns it
@@ -564,15 +564,15 @@ library" — the framework brand is what consumers install.
   naming rules (framework layer + scopes).
 - [`docs/monorepo-structure.md`](../../docs/monorepo-structure.md) — the
   frontend/backend split decision + repo layout.
-- [`.ref/steering/frontend-packages.md`](../../.ref/steering/frontend-packages.md) — package
-  architecture (ADR-0023).
+- [`.ref/steering/frontend-packages.md`](../../.ref/steering/frontend-packages.md)
+  — package architecture (ADR-0023).
 - [`README.md`](../../README.md) — root onboarding walkthrough.
 
 ## When you're tempted
 
 - **"Everything Figentra ships should be `@figentra/*`."** No. Three axes, three
-  scopes. Framework code → `@stackra/*` regardless of who deploys. Product code →
-  `@<product>/*` regardless of who runs it. Operator's SHARED runtime →
+  scopes. Framework code → `@stackra/*` regardless of who deploys. Product code
+  → `@<product>/*` regardless of who runs it. Operator's SHARED runtime →
   `@figentra/*`. When ambiguous, ask three questions in order: (1) "is this a
   reusable primitive any operator could deploy?" → framework. (2) "is this
   application-specific code?" → product. (3) "is this Figentra's specific

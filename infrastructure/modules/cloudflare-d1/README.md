@@ -2,7 +2,8 @@
 
 > **Category:** cloudflare · **Maturity:** stable · **Version:** 1.0.0
 
-Cloudflare D1 SQLite database binding. Provisions a D1 database per deployable and injects the binding name + database ID into the Worker runtime.
+Cloudflare D1 SQLite database binding. Provisions a D1 database per deployable
+and injects the binding name + database ID into the Worker runtime.
 
 ## Provides
 
@@ -16,10 +17,10 @@ Cloudflare D1 SQLite database binding. Provisions a D1 database per deployable a
 
 ## Environment variables
 
-| Variable | Description | Source |
-| -------- | ----------- | ------ |
-| `D1_DATABASE_ID` | Cloudflare D1 database UUID. | `terraform_output.d1_database_id` |
-| `D1_DATABASE_NAME` | D1 database name. | `module.config.database_name` |
+| Variable           | Description                  | Source                            |
+| ------------------ | ---------------------------- | --------------------------------- |
+| `D1_DATABASE_ID`   | Cloudflare D1 database UUID. | `terraform_output.d1_database_id` |
+| `D1_DATABASE_NAME` | D1 database name.            | `module.config.database_name`     |
 
 ## Usage in `cloud.yaml`
 
@@ -33,6 +34,8 @@ modules:
 
 ## Cross-references
 
-- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) — module manifest schema.
+- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) —
+  module manifest schema.
 - [`infrastructure/modules/README.md`](../README.md) — registry catalog.
-- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md) — authorising plan.
+- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md)
+  — authorising plan.

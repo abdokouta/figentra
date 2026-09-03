@@ -4,7 +4,8 @@
 
 ## Decision
 
-Do not hard-code Organization, Team, Branch, Warehouse, Venue or similar hierarchy into the platform security model.
+Do not hard-code Organization, Team, Branch, Warehouse, Venue or similar
+hierarchy into the platform security model.
 
 ## Rationale
 

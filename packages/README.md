@@ -5,17 +5,17 @@ follows the canonical shape from `.kiro/steering/package-conventions.md`.
 
 ## Package catalog
 
-| Package | npm name | Kind | Shape |
-| ------- | -------- | ---- | ----- |
-| `contracts` | `@stackra/contracts` | Framework vocabulary | **TS library** — `src/` → tsup → `dist/` |
-| `testing` | `@stackra/testing` | Test toolkit + presets | **TS library** — `src/` → tsup → `dist/` |
-| `pipeline` | `@stackra/pipeline` | Middleware pipeline | **TS library** — `src/` → tsup → `dist/` |
-| `tsup-config` | `@stackra/tsup-config` | Build preset | **TS library** — exports `defineBaseConfig()` function |
-| `typescript-config` | `@stackra/typescript-config` | TS preset | **JSON preset** — ships `.json` files as-is |
-| `prettier-config` | `@stackra/prettier-config` | Formatter preset | **JSON preset** — ships `.json` files as-is |
-| `oxlint-config` | `@stackra/oxlint-config` | Lint preset | **JSON preset** — ships `.json` files as-is |
-| `mapped-types` | `@pixielity/mapped-types` | Type utilities | **TS library** — vendored |
-| `metadata` | `@vivel/metadata` | Reflection metadata | **TS library** — vendored |
+| Package             | npm name                     | Kind                   | Shape                                                  |
+| ------------------- | ---------------------------- | ---------------------- | ------------------------------------------------------ |
+| `contracts`         | `@stackra/contracts`         | Framework vocabulary   | **TS library** — `src/` → tsup → `dist/`               |
+| `testing`           | `@stackra/testing`           | Test toolkit + presets | **TS library** — `src/` → tsup → `dist/`               |
+| `pipeline`          | `@stackra/pipeline`          | Middleware pipeline    | **TS library** — `src/` → tsup → `dist/`               |
+| `tsup-config`       | `@stackra/tsup-config`       | Build preset           | **TS library** — exports `defineBaseConfig()` function |
+| `typescript-config` | `@stackra/typescript-config` | TS preset              | **JSON preset** — ships `.json` files as-is            |
+| `prettier-config`   | `@stackra/prettier-config`   | Formatter preset       | **JSON preset** — ships `.json` files as-is            |
+| `oxlint-config`     | `@stackra/oxlint-config`     | Lint preset            | **JSON preset** — ships `.json` files as-is            |
+| `mapped-types`      | `@pixielity/mapped-types`    | Type utilities         | **TS library** — vendored                              |
+| `metadata`          | `@vivel/metadata`            | Reflection metadata    | **TS library** — vendored                              |
 
 ## Two shapes of config packages
 
@@ -29,14 +29,15 @@ files (or `.mjs` presets) directly. No build step, no `dist/`, no
 
 ### TS library (compiled)
 
-`tsup-config` — exports a TypeScript function (`defineBaseConfig`). Its
-output must be compiled to CJS + ESM. Has a `tsconfig.json`, runs `tsup`,
-ships `dist/`.
+`tsup-config` — exports a TypeScript function (`defineBaseConfig`). Its output
+must be compiled to CJS + ESM. Has a `tsconfig.json`, runs `tsup`, ships
+`dist/`.
 
 ### How to tell which
 
 - Does the package export a `.ts` function or class? → **TS library**.
-- Does the package export `.json` files that consumers `extends`? → **JSON preset**.
+- Does the package export `.json` files that consumers `extends`? → **JSON
+  preset**.
 
 ## Adding a new package
 

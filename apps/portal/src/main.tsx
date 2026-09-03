@@ -28,6 +28,7 @@ async function bootstrap(): Promise<void> {
 bootstrap().catch((error: unknown) => {
   console.error("Application bootstrap failed:", error);
   const root = document.getElementById("root");
-  if (root) root.innerHTML =
-    '<main role="alert"><h1>Application failed to start</h1><p>See the console for details.</p></main>';
+  if (root)
+    root.innerHTML =
+      '<main role="alert"><h1>Application failed to start</h1><p>See the console for details.</p></main>';
 });

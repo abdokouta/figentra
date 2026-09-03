@@ -1,8 +1,8 @@
 # 19 — Environments & CI/CD
 
-**Status:** Baseline
-**Owner:** Platform infrastructure
-**Related:** [15 Infrastructure & IaC](15-infrastructure-and-iac.md), [12 Versioning](12-versioning.md), [16 Observability](16-observability.md)
+**Status:** Baseline **Owner:** Platform infrastructure **Related:**
+[15 Infrastructure & IaC](15-infrastructure-and-iac.md),
+[12 Versioning](12-versioning.md), [16 Observability](16-observability.md)
 
 ---
 
@@ -23,12 +23,16 @@ Development → Staging → Production
 ```
 
 - Each environment has its **own** Terraform state ([15 §6]), config, secrets,
-  Cloudflare resources, Supabase project/branch, and Supabase Auth instance/config as
-  appropriate.
+  Cloudflare resources, Supabase project/branch, and Supabase Auth
+  instance/config as appropriate.
 - Applications carry **environment-aware registry records** ([06 §4]):
 
 ```json
-{ "application": "crm", "environment": "production", "url": "https://crm.figentra.com" }
+{
+  "application": "crm",
+  "environment": "production",
+  "url": "https://crm.figentra.com"
+}
 ```
 
 Preview environments per PR are **out of scope** as a platform service (R-2). If
@@ -148,21 +152,21 @@ typecheck · lint · unit tests · integration tests · security checks
 ```
 
 Then build → staging (smoke) → production. Add tests for business rules; do not
-add tests speculatively where they add no value (matches the platform's
-"test business rules" guidance, [10 §8]).
+add tests speculatively where they add no value (matches the platform's "test
+business rules" guidance, [10 §8]).
 
 ---
 
 ## 9. Non-goals / anti-patterns
 
-| Anti-pattern                                                    | Correct                                                     |
-| --------------------------------------------------------------- | ----------------------------------------------------------- |
-| A Figentra-owned CI/CD / preview-env platform                  | Terraform + Wrangler + standard CI (R-2).                   |
-| One pipeline mixing infra apply + app deploy                    | Two separate flows.                                         |
-| Auto-`terraform apply` without review                           | Plan → review → apply.                                      |
-| Auto prod deploy on every merge                                 | Reviewed promotion; staging smoke first.                    |
-| Committing secrets / per-env values into git                    | Env/CI secret stores ([15 §9]).                             |
-| Breaking a public contract without a new version                | Version + deprecation path ([12]).                          |
+| Anti-pattern                                     | Correct                                   |
+| ------------------------------------------------ | ----------------------------------------- |
+| A Figentra-owned CI/CD / preview-env platform    | Terraform + Wrangler + standard CI (R-2). |
+| One pipeline mixing infra apply + app deploy     | Two separate flows.                       |
+| Auto-`terraform apply` without review            | Plan → review → apply.                    |
+| Auto prod deploy on every merge                  | Reviewed promotion; staging smoke first.  |
+| Committing secrets / per-env values into git     | Env/CI secret stores ([15 §9]).           |
+| Breaking a public contract without a new version | Version + deprecation path ([12]).        |
 
 ---
 

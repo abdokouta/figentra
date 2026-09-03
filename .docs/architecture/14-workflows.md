@@ -2,14 +2,15 @@
 
 **Status: ACCEPTED**
 
-**Definition/API: `@figentra/workflows` · Providers: Cloudflare Workflows, Temporal, Vercel Workflow SDK, custom**
+**Definition/API: `@figentra/workflows` · Providers: Cloudflare Workflows,
+Temporal, Vercel Workflow SDK, custom**
 
 ## Decision
 
-`@figentra/workflows` is the single provider-neutral durable workflow API. It owns
-workflow definitions, composition, Nest discovery and provider adapters. The
-selected workflow provider owns durable execution, persistence, retry/resume and
-instance lifecycle.
+`@figentra/workflows` is the single provider-neutral durable workflow API. It
+owns workflow definitions, composition, Nest discovery and provider adapters.
+The selected workflow provider owns durable execution, persistence, retry/resume
+and instance lifecycle.
 
 Supported providers:
 
@@ -25,12 +26,12 @@ vendor-specific runtime client.
 
 A durable side effect must have an explicit step boundary. The provider persists
 successful step results and resumes from that boundary according to its own
-semantics. Compensation is explicit and associated with the step that created the
-side effect.
+semantics. Compensation is explicit and associated with the step that created
+the side effect.
 
 `createHook()` is composition metadata only. It is not a hidden global lifecycle
-engine. If a before/after operation has independent side effects or retry/recovery
-requirements, represent it as its own explicit step.
+engine. If a before/after operation has independent side effects or
+retry/recovery requirements, represent it as its own explicit step.
 
 ## NestJS role
 
@@ -42,8 +43,8 @@ provider-neutral client.
 
 Ordinary domain state transitions are separate from durable orchestration. Use
 `@figentra/state-machines` for rules such as `draft -> submitted -> approved`.
-Use `@figentra/workflows` when execution must survive failures, wait for events or
-approvals, retry external effects, or run for a long time.
+Use `@figentra/workflows` when execution must survive failures, wait for events
+or approvals, retry external effects, or run for a long time.
 
 ## Infrastructure orchestrator
 
@@ -51,5 +52,5 @@ approvals, retry external effects, or run for a long time.
 is a concrete provider implementation. It defines the Terraform workflow with
 `@figentra/workflows` steps and executes the definition through the native
 Cloudflare adapter. This keeps the worker-specific Cloudflare entrypoint while
-ensuring the workflow definition follows the same package contract as every other
-application workflow.
+ensuring the workflow definition follows the same package contract as every
+other application workflow.

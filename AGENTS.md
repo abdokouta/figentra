@@ -109,14 +109,14 @@ contains live tokens).
 
 **MCP servers configured** (as of this repo's `.mcp.json`):
 
-| Server              | Purpose                                | Env var(s) required                  |
-| ------------------- | -------------------------------------- | ------------------------------------ |
-| `doppler`           | Doppler API access                     | `DOPPLER_TOKEN`                      |
-| `heroui-react`      | HeroUI OSS + Pro React component docs  | (none — public)                      |
-| `heroui-native`     | HeroUI Native component docs           | (none — public)                      |
-| `heroui-pro`        | HeroUI Pro React (private tokens API)  | `HEROUI_PRO_TOKEN`                   |
-| `heroui-native-pro` | HeroUI Native Pro (private tokens API) | `HEROUI_PRO_TOKEN`                   |
-| `sentry`            | Sentry issue + event query             | `SENTRY_MCP_TOKEN`                   |
+| Server              | Purpose                                | Env var(s) required |
+| ------------------- | -------------------------------------- | ------------------- |
+| `doppler`           | Doppler API access                     | `DOPPLER_TOKEN`     |
+| `heroui-react`      | HeroUI OSS + Pro React component docs  | (none — public)     |
+| `heroui-native`     | HeroUI Native component docs           | (none — public)     |
+| `heroui-pro`        | HeroUI Pro React (private tokens API)  | `HEROUI_PRO_TOKEN`  |
+| `heroui-native-pro` | HeroUI Native Pro (private tokens API) | `HEROUI_PRO_TOKEN`  |
+| `sentry`            | Sentry issue + event query             | `SENTRY_MCP_TOKEN`  |
 
 **Populating the env vars** — two paths, pick per workstation:
 
@@ -205,7 +205,6 @@ Before your first tool call, confirm you can answer:
   2026-08-09 per ADR-0085 §Rule 6.
 - Do NOT invoke a sub-agent for a task another sub-agent already owns — work
   stays in one lane per session unless the ROUTING.md says otherwise.
-
 
 ## Deployment manifests and infrastructure generation
 

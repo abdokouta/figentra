@@ -10,18 +10,12 @@
  *   clear "Cannot find module '@nestjs/testing'" error.
  */
 
-export {
-  buildFastifyTestApp,
-  type IFastifyTestAppOptions,
-} from "./build-fastify-test-app";
+export { buildFastifyTestApp, type IFastifyTestAppOptions } from "./build-fastify-test-app";
 export {
   createNestTestContext,
   type ICreateNestTestContextOptions,
 } from "./create-nest-test-context";
-export {
-  createTestingModule,
-  type INestTestingModuleOptions,
-} from "./create-testing-module";
+export { createTestingModule, type INestTestingModuleOptions } from "./create-testing-module";
 export {
   createOutboxHarness,
   type IOutboxHarness,

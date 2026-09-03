@@ -1,16 +1,17 @@
 # 08 — API Gateway
 
-**Status:** Baseline
-**Owner:** Platform edge
-**Runtime:** Cloudflare Worker + Hono · **Domain:** `api.figentra.com`
-**Related:** [09 Service communication](09-service-communication.md), [02 Identity & actors](02-identity-and-actors.md), [18 Error model & API conventions](18-error-model-and-api-conventions.md)
+**Status:** Baseline **Owner:** Platform edge **Runtime:** Cloudflare Worker +
+Hono · **Domain:** `api.figentra.com` **Related:**
+[09 Service communication](09-service-communication.md),
+[02 Identity & actors](02-identity-and-actors.md),
+[18 Error model & API conventions](18-error-model-and-api-conventions.md)
 
 ---
 
 ## 1. Purpose
 
-The API Gateway is the **public entry point** to the platform API. It is a
-thin edge layer — routing, edge authentication, rate limiting, correlation,
+The API Gateway is the **public entry point** to the platform API. It is a thin
+edge layer — routing, edge authentication, rate limiting, correlation,
 versioning, security policy. It contains **no business logic** and touches
 **no** service database.
 
@@ -22,8 +23,8 @@ versioning, security policy. It contains **no business logic** and touches
 
 - Public API entry (`api.figentra.com`)
 - Request routing to internal services
-- Authentication **prevalidation** (validate Supabase Auth token / PAT / service token
-  shape + signature at the edge; full authorization stays in IAM)
+- Authentication **prevalidation** (validate Supabase Auth token / PAT / service
+  token shape + signature at the edge; full authorization stays in IAM)
 - Rate limiting (edge, per the quota/rate-limit distinction in [05 §6])
 - Correlation: assign/propagate `request_id` + `trace_id`
 - API versioning routing (`/v1/...`)
@@ -83,12 +84,12 @@ service authorizes definitively.
 
 ## 5. Edge authentication vs. authorization
 
-| Concern            | Where            | What                                                        |
-| ------------------ | ---------------- | ---------------------------------------------------------- |
-| **Prevalidation**  | Gateway (edge)   | Token present? Signature valid? Not expired? Shape correct?|
-| **Authentication** | Supabase Auth / IAM      | Establish the actor.                                       |
-| **Authorization**  | IAM              | Can this actor do this action? ([04])                      |
-| **Entitlement**    | Monetization     | Did the tenant buy it? ([05])                              |
+| Concern            | Where               | What                                                        |
+| ------------------ | ------------------- | ----------------------------------------------------------- |
+| **Prevalidation**  | Gateway (edge)      | Token present? Signature valid? Not expired? Shape correct? |
+| **Authentication** | Supabase Auth / IAM | Establish the actor.                                        |
+| **Authorization**  | IAM                 | Can this actor do this action? ([04])                       |
+| **Entitlement**    | Monetization        | Did the tenant buy it? ([05])                               |
 
 The gateway's edge check is a fast-fail optimization, never the security
 boundary.
@@ -128,14 +129,14 @@ boundary.
 
 ## 9. Non-goals / anti-patterns
 
-| Anti-pattern                                             | Correct                                                   |
-| -------------------------------------------------------- | --------------------------------------------------------- |
-| Business logic in the gateway                            | Edge concerns only; forward to the owning service.        |
-| Gateway reading a service DB                             | Route to the service; the service owns its DB.            |
-| Final authorization at the edge                          | Prevalidate only; IAM authorizes.                         |
-| Exposing every internal service publicly                 | Behind the gateway unless externally needed.              |
-| Trusting client-supplied identity headers                | Derive/attach trusted context; strip inbound spoofed ones.|
-| A monolithic gateway that imports every domain           | Thin routing + policy layer.                              |
+| Anti-pattern                                   | Correct                                                    |
+| ---------------------------------------------- | ---------------------------------------------------------- |
+| Business logic in the gateway                  | Edge concerns only; forward to the owning service.         |
+| Gateway reading a service DB                   | Route to the service; the service owns its DB.             |
+| Final authorization at the edge                | Prevalidate only; IAM authorizes.                          |
+| Exposing every internal service publicly       | Behind the gateway unless externally needed.               |
+| Trusting client-supplied identity headers      | Derive/attach trusted context; strip inbound spoofed ones. |
+| A monolithic gateway that imports every domain | Thin routing + policy layer.                               |
 
 ---
 

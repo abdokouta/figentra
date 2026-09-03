@@ -1,9 +1,11 @@
 # 07 — Integration Platform
 
-**Status:** Baseline (core), Draft (marketplace)
-**Owner:** Integration Platform
-**Runtime:** Cloudflare Container + NestJS (core) · Worker + Hono (edge ingress/webhooks)
-**Related:** [06 Application Registry](06-application-registry.md), [02 Identity & actors](02-identity-and-actors.md), [11 Events & workflows](11-events-and-workflows.md)
+**Status:** Baseline (core), Draft (marketplace) **Owner:** Integration Platform
+**Runtime:** Cloudflare Container + NestJS (core) · Worker + Hono (edge
+ingress/webhooks) **Related:**
+[06 Application Registry](06-application-registry.md),
+[02 Identity & actors](02-identity-and-actors.md),
+[11 Events & workflows](11-events-and-workflows.md)
 
 ---
 
@@ -19,13 +21,13 @@ integrations, with credentials isolated from the registry and the frontend.
 
 This distinction is fundamental.
 
-| | Application | Integration |
-| --- | ----------- | ----------- |
-| What | A Figentra product (CRM, Commerce, …) | A connection to a third-party system (Slack, Stripe, HubSpot, a webhook target) |
-| Owns | Business logic + data + UI | Connection config + credentials + sync rules |
-| Registry | Application Registry ([06]) | Integration catalog (this doc) |
-| Actor | Users/service accounts | **Integration Actor** ([02] §3) |
-| Availability | IAM access + entitlement | Entitlement + **installation** + **connection state** |
+|              | Application                           | Integration                                                                     |
+| ------------ | ------------------------------------- | ------------------------------------------------------------------------------- |
+| What         | A Figentra product (CRM, Commerce, …) | A connection to a third-party system (Slack, Stripe, HubSpot, a webhook target) |
+| Owns         | Business logic + data + UI            | Connection config + credentials + sync rules                                    |
+| Registry     | Application Registry ([06])           | Integration catalog (this doc)                                                  |
+| Actor        | Users/service accounts                | **Integration Actor** ([02] §3)                                                 |
+| Availability | IAM access + entitlement              | Entitlement + **installation** + **connection state**                           |
 
 An application is something Figentra **runs**; an integration is something a
 tenant **connects to**.
@@ -92,8 +94,9 @@ Active  ⇄  Pause   → temporarily suspend without losing config/credentials
 Disconnect         → revoke credentials, retain or purge config per policy
 ```
 
-Each transition emits an event (`integration.installed`, `integration.connected`,
-`integration.configured`, `integration.paused`, `integration.disconnected`).
+Each transition emits an event (`integration.installed`,
+`integration.connected`, `integration.configured`, `integration.paused`,
+`integration.disconnected`).
 
 ---
 
@@ -143,8 +146,8 @@ updated_at
 
 ## 7. Credential isolation (mandatory)
 
-OAuth tokens / API credentials are **isolated** from the Application Registry and
-the frontend runtime.
+OAuth tokens / API credentials are **isolated** from the Application Registry
+and the frontend runtime.
 
 - Credentials never enter: the Application Registry, the frontend runtime, an
   application manifest, git, logs, or events.
@@ -152,7 +155,8 @@ the frontend runtime.
   the secret store ([15](15-infrastructure-and-iac.md) §Secrets); the secret
   material lives only there.
 - Integration Actors receive **least-privilege** IAM grants derived from the
-  integration manifest + tenant configuration ([04](04-iam-and-authorization.md)).
+  integration manifest + tenant configuration
+  ([04](04-iam-and-authorization.md)).
 
 ---
 
@@ -162,8 +166,8 @@ the frontend runtime.
   edge, signature-verified and deduplicated, then translated to platform
   events/commands. Shares the webhook platform patterns
   ([11](11-events-and-workflows.md) §Webhooks).
-- **Outbound** (Figentra → third-party): event-driven; a domain event the
-  tenant subscribed an integration to is delivered via Queues with retry + DLQ.
+- **Outbound** (Figentra → third-party): event-driven; a domain event the tenant
+  subscribed an integration to is delivered via Queues with retry + DLQ.
 
 ---
 
@@ -181,7 +185,8 @@ DELETE /v1/integrations/:installationId            -- disconnect
 ```
 
 `reconnect` is an explicit business command (matches the reference's
-`POST /integrations/:id/reconnect` example, [10](10-domain-and-application-patterns.md)).
+`POST /integrations/:id/reconnect` example,
+[10](10-domain-and-application-patterns.md)).
 
 ---
 
@@ -198,19 +203,19 @@ DELETE /v1/integrations/:installationId            -- disconnect
 
 ## 11. Non-goals / anti-patterns
 
-| Anti-pattern                                                       | Correct                                                       |
-| ------------------------------------------------------------------ | ------------------------------------------------------------- |
-| Treating an integration like an application                        | Distinct model, actor, and availability rules (R-9).         |
-| Storing OAuth tokens in the registry / frontend / manifest / logs  | Store a `credential_ref`; secret lives in the secret store.   |
-| Feature flag as the availability gate                              | Availability = entitlement ∩ installation ∩ connection.       |
-| Granting an integration broad IAM access                          | Least-privilege grants from the manifest.                     |
-| Building Extensions/Connectors marketplace now                     | Baseline = Integrations; others deferred.                     |
-| Unverified inbound webhooks                                        | Signature-verify + dedupe at the edge.                        |
+| Anti-pattern                                                      | Correct                                                     |
+| ----------------------------------------------------------------- | ----------------------------------------------------------- |
+| Treating an integration like an application                       | Distinct model, actor, and availability rules (R-9).        |
+| Storing OAuth tokens in the registry / frontend / manifest / logs | Store a `credential_ref`; secret lives in the secret store. |
+| Feature flag as the availability gate                             | Availability = entitlement ∩ installation ∩ connection.     |
+| Granting an integration broad IAM access                          | Least-privilege grants from the manifest.                   |
+| Building Extensions/Connectors marketplace now                    | Baseline = Integrations; others deferred.                   |
+| Unverified inbound webhooks                                       | Signature-verify + dedupe at the edge.                      |
 
 ---
 
 ## 12. Open questions
 
 - Confirm the initial integration set for launch (which third parties).
-- Confirm whether the marketplace UI ships with v1 integrations or later
-  (core install/connect APIs are baseline regardless).
+- Confirm whether the marketplace UI ships with v1 integrations or later (core
+  install/connect APIs are baseline regardless).

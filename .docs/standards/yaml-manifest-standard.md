@@ -20,13 +20,13 @@ Section-level comments explain non-obvious fields and operational invariants.
 - `cloud.yaml` — deployable runtime/infrastructure contract.
 - `catalog.json` — reusable package metadata for Stackra packages.
 - Terraform HCL — infrastructure source of truth.
-- Generated YAML — generated artifact; its header must say what generated it
-  and must not be edited manually.
+- Generated YAML — generated artifact; its header must say what generated it and
+  must not be edited manually.
 
 ## Security
 
-Never put secrets, private keys, tokens, passwords, or credentials in YAML.
-Use Doppler/runtime secret injection or platform secret stores.
+Never put secrets, private keys, tokens, passwords, or credentials in YAML. Use
+Doppler/runtime secret injection or platform secret stores.
 
 ## Environments
 

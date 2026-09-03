@@ -1,18 +1,18 @@
-import type { Type, RemoveFieldsWithType, TransformMetadataKey } from '@/types';
-import type { MappedType } from '@/interfaces';
+import type { Type, RemoveFieldsWithType, TransformMetadataKey } from "@/types";
+import type { MappedType } from "@/interfaces";
 
-describe('Type Definitions', () => {
-  describe('Type<T> interface', () => {
+describe("Type Definitions", () => {
+  describe("Type<T> interface", () => {
     /**
      * Test case: Type interface should work with class constructors
      *
      * This test validates that the Type interface correctly represents
      * class constructors that can be instantiated.
      */
-    it('should work with class constructors', () => {
+    it("should work with class constructors", () => {
       // Arrange: Define test classes
       class TestClass {
-        prop: string = 'test';
+        prop: string = "test";
 
         constructor(value?: string) {
           if (value) this.prop = value;
@@ -28,11 +28,11 @@ describe('Type Definitions', () => {
       const AnotherClassType: Type<AnotherTestClass> = AnotherTestClass;
 
       // Assert: Should be able to instantiate
-      const instance = new ClassType('custom');
+      const instance = new ClassType("custom");
       const anotherInstance = new AnotherClassType();
 
       expect(instance).toBeInstanceOf(TestClass);
-      expect(instance.prop).toBe('custom');
+      expect(instance.prop).toBe("custom");
       expect(anotherInstance).toBeInstanceOf(AnotherTestClass);
       expect(anotherInstance.value).toBe(42);
     });
@@ -43,7 +43,7 @@ describe('Type Definitions', () => {
      * This test validates that the Type interface works with generic
      * class definitions.
      */
-    it('should work with generic classes', () => {
+    it("should work with generic classes", () => {
       // Arrange: Define generic class
       class GenericClass<T> {
         data: T;
@@ -62,13 +62,13 @@ describe('Type Definitions', () => {
       >;
 
       // Assert: Should work with different generic parameters
-      const stringInstance = new StringClassType('test');
+      const stringInstance = new StringClassType("test");
       const numberInstance = new NumberClassType(42);
 
-      expect(stringInstance.data).toBe('test');
-      expect(typeof stringInstance.data).toBe('string');
+      expect(stringInstance.data).toBe("test");
+      expect(typeof stringInstance.data).toBe("string");
       expect(numberInstance.data).toBe(42);
-      expect(typeof numberInstance.data).toBe('number');
+      expect(typeof numberInstance.data).toBe("number");
     });
 
     /**
@@ -77,7 +77,7 @@ describe('Type Definitions', () => {
      * This test validates that the Type interface works with classes
      * that have constructor parameters.
      */
-    it('should accept constructor parameters', () => {
+    it("should accept constructor parameters", () => {
       // Arrange: Define class with required constructor parameters
       class ParameterizedClass {
         name: string;
@@ -93,22 +93,22 @@ describe('Type Definitions', () => {
       const ClassType: Type<ParameterizedClass> = ParameterizedClass;
 
       // Assert: Should be able to instantiate with parameters
-      const instance = new ClassType('John', 30);
+      const instance = new ClassType("John", 30);
 
-      expect(instance.name).toBe('John');
+      expect(instance.name).toBe("John");
       expect(instance.age).toBe(30);
       expect(instance).toBeInstanceOf(ParameterizedClass);
     });
   });
 
-  describe('RemoveFieldsWithType utility type', () => {
+  describe("RemoveFieldsWithType utility type", () => {
     /**
      * Test case: RemoveFieldsWithType should remove Function fields
      *
      * This test validates that the RemoveFieldsWithType utility type
      * correctly removes fields with specific types.
      */
-    it('should remove Function fields from object types', () => {
+    it("should remove Function fields from object types", () => {
       // Arrange: Define interface with mixed field types
       interface TestInterface {
         name: string;
@@ -125,19 +125,19 @@ describe('Type Definitions', () => {
       // Assert: Type should only have non-function properties
       // This test validates at compile time - if it compiles, the type is correct
       const obj: WithoutFunctions = {
-        name: 'test',
+        name: "test",
         age: 30,
         isActive: true,
-        data: { key: 'value' },
+        data: { key: "value" },
       } as WithoutFunctions;
 
       // Functions should not be assignable to the type
       // Note: This validation happens at compile time
 
-      expect(obj.name).toBe('test');
+      expect(obj.name).toBe("test");
       expect(obj.age).toBe(30);
       expect(obj.isActive).toBe(true);
-      expect(obj.data.key).toBe('value');
+      expect(obj.data.key).toBe("value");
     });
 
     /**
@@ -146,7 +146,7 @@ describe('Type Definitions', () => {
      * This test validates that the utility type can remove other
      * specific types besides Function.
      */
-    it('should remove specific types from object types', () => {
+    it("should remove specific types from object types", () => {
       // Arrange: Define interface with mixed types
       interface MixedInterface {
         stringProp: string;
@@ -165,18 +165,18 @@ describe('Type Definitions', () => {
         numberProp: 42,
         booleanProp: true,
         dateProp: new Date(),
-        arrayProp: ['test'],
+        arrayProp: ["test"],
       } as WithoutStrings;
 
       const withoutDates: WithoutDates = {
-        stringProp: 'test',
+        stringProp: "test",
         numberProp: 42,
         booleanProp: true,
-        arrayProp: ['test'],
+        arrayProp: ["test"],
       } as WithoutDates;
 
       expect(withoutStrings.numberProp).toBe(42);
-      expect(withoutDates.stringProp).toBe('test');
+      expect(withoutDates.stringProp).toBe("test");
     });
 
     /**
@@ -184,7 +184,7 @@ describe('Type Definitions', () => {
      *
      * This test validates behavior when all fields are removed.
      */
-    it('should handle cases where all fields are removed', () => {
+    it("should handle cases where all fields are removed", () => {
       // Arrange: Interface with only the target type
       interface OnlyStrings {
         prop1: string;
@@ -202,17 +202,17 @@ describe('Type Definitions', () => {
     });
   });
 
-  describe('MappedType interface', () => {
+  describe("MappedType interface", () => {
     /**
      * Test case: MappedType should extend Type with parameterless constructor
      *
      * This test validates that MappedType properly extends Type and
      * requires a parameterless constructor.
      */
-    it('should extend Type interface with parameterless constructor', () => {
+    it("should extend Type interface with parameterless constructor", () => {
       // Arrange: Define class that can be used as MappedType
       class MappableClass {
-        prop1: string = '';
+        prop1: string = "";
         prop2: number = 0;
 
         // Parameterless constructor required for MappedType
@@ -226,7 +226,7 @@ describe('Type Definitions', () => {
       const instance = new mappedType();
 
       expect(instance).toBeInstanceOf(MappableClass);
-      expect(instance.prop1).toBe('');
+      expect(instance.prop1).toBe("");
       expect(instance.prop2).toBe(0);
     });
 
@@ -236,7 +236,7 @@ describe('Type Definitions', () => {
      * This test validates that MappedType works with complex
      * object structures.
      */
-    it('should work with complex mapped types', () => {
+    it("should work with complex mapped types", () => {
       // Arrange: Define complex interface
       interface ComplexData {
         id: string;
@@ -252,7 +252,7 @@ describe('Type Definitions', () => {
 
       // Define class implementing the interface
       class ComplexMappedClass implements ComplexData {
-        id: string = '';
+        id: string = "";
         metadata: { created: Date; tags: string[] } = {
           created: new Date(),
           tags: [],
@@ -269,11 +269,11 @@ describe('Type Definitions', () => {
       // Assert: Should work with complex nested structures
       const instance = new mappedComplexType();
 
-      expect(instance.id).toBe('');
+      expect(instance.id).toBe("");
       expect(instance.metadata.created).toBeInstanceOf(Date);
       expect(Array.isArray(instance.metadata.tags)).toBe(true);
-      expect(typeof instance.config.enabled).toBe('boolean');
-      expect(typeof instance.config.settings).toBe('object');
+      expect(typeof instance.config.enabled).toBe("boolean");
+      expect(typeof instance.config.settings).toBe("object");
     });
 
     /**
@@ -282,7 +282,7 @@ describe('Type Definitions', () => {
      * This test validates that MappedType works correctly with
      * generic type parameters.
      */
-    it('should work with generic constraints', () => {
+    it("should work with generic constraints", () => {
       // Arrange: Define generic interface
       interface GenericData<T> {
         value: T;
@@ -304,7 +304,7 @@ describe('Type Definitions', () => {
 
       // Specialized version for MappedType
       class StringMappedClass implements GenericData<string> {
-        value: string = '';
+        value: string = "";
 
         process(input: string): string {
           return input.toUpperCase();
@@ -317,41 +317,41 @@ describe('Type Definitions', () => {
       // Assert: Should work with specialized generic types
       const instance = new stringMappedType();
 
-      expect(instance.value).toBe('');
-      expect(instance.process('test')).toBe('TEST');
+      expect(instance.value).toBe("");
+      expect(instance.process("test")).toBe("TEST");
     });
   });
 
-  describe('TransformMetadataKey type', () => {
+  describe("TransformMetadataKey type", () => {
     /**
      * Test case: TransformMetadataKey should include all required metadata keys
      *
      * This test validates that the TransformMetadataKey type union
      * includes all necessary class-transformer metadata keys.
      */
-    it('should include all class-transformer metadata keys', () => {
+    it("should include all class-transformer metadata keys", () => {
       // Arrange: Define function that accepts TransformMetadataKey
       function processMetadataKey(key: TransformMetadataKey): string {
         switch (key) {
-          case '_typeMetadatas':
-            return 'type';
-          case '_exposeMetadatas':
-            return 'expose';
-          case '_excludeMetadatas':
-            return 'exclude';
-          case '_transformMetadatas':
-            return 'transform';
+          case "_typeMetadatas":
+            return "type";
+          case "_exposeMetadatas":
+            return "expose";
+          case "_excludeMetadatas":
+            return "exclude";
+          case "_transformMetadatas":
+            return "transform";
           default:
             // This should never be reached if all keys are handled
-            return 'unknown';
+            return "unknown";
         }
       }
 
       // Act & Assert: All metadata keys should be valid
-      expect(processMetadataKey('_typeMetadatas')).toBe('type');
-      expect(processMetadataKey('_exposeMetadatas')).toBe('expose');
-      expect(processMetadataKey('_excludeMetadatas')).toBe('exclude');
-      expect(processMetadataKey('_transformMetadatas')).toBe('transform');
+      expect(processMetadataKey("_typeMetadatas")).toBe("type");
+      expect(processMetadataKey("_exposeMetadatas")).toBe("expose");
+      expect(processMetadataKey("_excludeMetadatas")).toBe("exclude");
+      expect(processMetadataKey("_transformMetadatas")).toBe("transform");
     });
 
     /**
@@ -360,13 +360,13 @@ describe('Type Definitions', () => {
      * This test validates that the type can be used in practical
      * scenarios like array iteration.
      */
-    it('should be usable in array iteration', () => {
+    it("should be usable in array iteration", () => {
       // Arrange: Create array of metadata keys
       const metadataKeys: TransformMetadataKey[] = [
-        '_typeMetadatas',
-        '_exposeMetadatas',
-        '_excludeMetadatas',
-        '_transformMetadatas',
+        "_typeMetadatas",
+        "_exposeMetadatas",
+        "_excludeMetadatas",
+        "_transformMetadatas",
       ];
 
       // Act: Process each key
@@ -377,21 +377,21 @@ describe('Type Definitions', () => {
 
       // Assert: Should process all keys
       expect(results).toHaveLength(4);
-      expect(results).toContain('Processing _typeMetadatas');
-      expect(results).toContain('Processing _exposeMetadatas');
-      expect(results).toContain('Processing _excludeMetadatas');
-      expect(results).toContain('Processing _transformMetadatas');
+      expect(results).toContain("Processing _typeMetadatas");
+      expect(results).toContain("Processing _exposeMetadatas");
+      expect(results).toContain("Processing _excludeMetadatas");
+      expect(results).toContain("Processing _transformMetadatas");
     });
   });
 
-  describe('Type Composition and Inference', () => {
+  describe("Type Composition and Inference", () => {
     /**
      * Test case: Types should compose correctly in complex scenarios
      *
      * This test validates that types work together properly in
      * complex composition scenarios.
      */
-    it('should compose correctly in complex scenarios', () => {
+    it("should compose correctly in complex scenarios", () => {
       // Arrange: Define complex type composition
       interface BaseData {
         id: string;
@@ -403,8 +403,8 @@ describe('Type Definitions', () => {
       type CleanData = RemoveFieldsWithType<BaseData, Function>;
 
       class CleanDataClass {
-        id: string = '';
-        name: string = '';
+        id: string = "";
+        name: string = "";
       }
 
       // Act: Create MappedType from cleaned interface
@@ -413,10 +413,10 @@ describe('Type Definitions', () => {
       // Assert: Should work with type composition
       const instance = new cleanMappedType();
 
-      expect(instance.id).toBe('');
-      expect(instance.name).toBe('');
-      expect(instance).not.toHaveProperty('getValue');
-      expect(instance).not.toHaveProperty('calculate');
+      expect(instance.id).toBe("");
+      expect(instance.name).toBe("");
+      expect(instance).not.toHaveProperty("getValue");
+      expect(instance).not.toHaveProperty("calculate");
     });
 
     /**
@@ -425,17 +425,17 @@ describe('Type Definitions', () => {
      * This test validates that TypeScript's type inference works
      * correctly with the defined utility types.
      */
-    it('should work with type inference', () => {
+    it("should work with type inference", () => {
       // Arrange: Define function that uses generic constraints
       function createMappedClass<T>(
-        classRef: Type<T>
+        classRef: Type<T>,
       ): MappedType<RemoveFieldsWithType<T, Function>> {
         // This simulates what the helper functions do
         return classRef as any;
       }
 
       class TestClass {
-        prop: string = 'test';
+        prop: string = "test";
         method(): string {
           return this.prop;
         }
@@ -447,10 +447,10 @@ describe('Type Definitions', () => {
       // Assert: Should infer correct types
       const instance = new MappedClass();
 
-      expect(instance.prop).toBe('test');
+      expect(instance.prop).toBe("test");
       // Note: RemoveFieldsWithType is a TypeScript type-level operation only
       // At runtime, methods are still present on the instance
-      expect(instance).toHaveProperty('method');
+      expect(instance).toHaveProperty("method");
     });
 
     /**
@@ -459,7 +459,7 @@ describe('Type Definitions', () => {
      * This test validates that the type system maintains type safety
      * and prevents invalid operations.
      */
-    it('should maintain type safety', () => {
+    it("should maintain type safety", () => {
       // Arrange: Define strictly typed interfaces
       interface StrictInterface {
         stringProp: string;
@@ -467,7 +467,7 @@ describe('Type Definitions', () => {
       }
 
       class StrictClass implements StrictInterface {
-        stringProp: string = '';
+        stringProp: string = "";
         numberProp: number = 0;
       }
 
@@ -476,25 +476,25 @@ describe('Type Definitions', () => {
       const instance = new strictType();
 
       // Assert: Should enforce type constraints
-      instance.stringProp = 'valid string';
+      instance.stringProp = "valid string";
       instance.numberProp = 42;
 
       // These should cause TypeScript errors if uncommented:
       // instance.stringProp = 123; // Error: Type 'number' is not assignable to type 'string'
       // instance.numberProp = 'string'; // Error: Type 'string' is not assignable to type 'number'
 
-      expect(typeof instance.stringProp).toBe('string');
-      expect(typeof instance.numberProp).toBe('number');
+      expect(typeof instance.stringProp).toBe("string");
+      expect(typeof instance.numberProp).toBe("number");
     });
   });
 
-  describe('Edge Cases and Error Conditions', () => {
+  describe("Edge Cases and Error Conditions", () => {
     /**
      * Test case: Types should handle empty interfaces
      *
      * This test validates behavior with empty interfaces.
      */
-    it('should handle empty interfaces', () => {
+    it("should handle empty interfaces", () => {
       // Arrange: Define empty interface
       interface EmptyInterface {}
 
@@ -515,7 +515,7 @@ describe('Type Definitions', () => {
      *
      * This test validates behavior when no fields match the removal criteria.
      */
-    it('should handle interfaces with no matching fields for removal', () => {
+    it("should handle interfaces with no matching fields for removal", () => {
       // Arrange: Interface with no functions
       interface NoFunctions {
         stringProp: string;
@@ -528,12 +528,12 @@ describe('Type Definitions', () => {
 
       // Assert: Should be identical to original interface
       const obj: StillNoFunctions = {
-        stringProp: 'test',
+        stringProp: "test",
         numberProp: 42,
         booleanProp: true,
       };
 
-      expect(obj.stringProp).toBe('test');
+      expect(obj.stringProp).toBe("test");
       expect(obj.numberProp).toBe(42);
       expect(obj.booleanProp).toBe(true);
     });
@@ -543,7 +543,7 @@ describe('Type Definitions', () => {
      *
      * This test validates that types work correctly with class inheritance.
      */
-    it('should work with inheritance hierarchies', () => {
+    it("should work with inheritance hierarchies", () => {
       // Arrange: Define inheritance hierarchy
       interface BaseInterface {
         baseProperty: string;
@@ -554,7 +554,7 @@ describe('Type Definitions', () => {
       }
 
       class BaseClass implements BaseInterface {
-        baseProperty: string = '';
+        baseProperty: string = "";
       }
 
       class ExtendedClass extends BaseClass implements ExtendedInterface {
@@ -569,8 +569,8 @@ describe('Type Definitions', () => {
       const baseInstance = new baseType();
       const extendedInstance = new extendedType();
 
-      expect(baseInstance.baseProperty).toBe('');
-      expect(extendedInstance.baseProperty).toBe('');
+      expect(baseInstance.baseProperty).toBe("");
+      expect(extendedInstance.baseProperty).toBe("");
       expect(extendedInstance.extendedProperty).toBe(0);
       expect(extendedInstance).toBeInstanceOf(BaseClass);
       expect(extendedInstance).toBeInstanceOf(ExtendedClass);

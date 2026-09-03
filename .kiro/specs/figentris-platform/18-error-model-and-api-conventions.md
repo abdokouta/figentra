@@ -1,8 +1,9 @@
 # 18 — Error Model & API Conventions
 
-**Status:** Baseline
-**Owner:** Platform architecture (`@figentra/contracts`)
-**Related:** [08 API Gateway](08-api-gateway.md), [12 Versioning](12-versioning.md), [09 Service communication](09-service-communication.md)
+**Status:** Baseline **Owner:** Platform architecture (`@figentra/contracts`)
+**Related:** [08 API Gateway](08-api-gateway.md),
+[12 Versioning](12-versioning.md),
+[09 Service communication](09-service-communication.md)
 
 ---
 
@@ -62,21 +63,21 @@ Note the deliberate split (matches the platform's separation of concerns):
 
 ## 4. HTTP status mapping
 
-| Status | Codes                                                                        |
-| ------ | ---------------------------------------------------------------------------- |
-| 400    | `VALIDATION_ERROR`                                                           |
-| 401    | `AUTHENTICATION_REQUIRED`, `AUTHENTICATION_INVALID`                          |
-| 402    | `SUBSCRIPTION_INACTIVE` (payment required, where used)                       |
+| Status | Codes                                                                                                                                       |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| 400    | `VALIDATION_ERROR`                                                                                                                          |
+| 401    | `AUTHENTICATION_REQUIRED`, `AUTHENTICATION_INVALID`                                                                                         |
+| 402    | `SUBSCRIPTION_INACTIVE` (payment required, where used)                                                                                      |
 | 403    | `PERMISSION_DENIED`, `ENTITLEMENT_REQUIRED`, `APPLICATION_ACCESS_DENIED`, `TENANT_SUSPENDED`, `APPLICATION_DISABLED`, `DOMAIN_NOT_VERIFIED` |
-| 404    | `TENANT_NOT_FOUND`, `APPLICATION_NOT_FOUND`, `RESOURCE_NOT_FOUND`            |
-| 409    | `CONFLICT`                                                                  |
-| 410    | version removed ([12 §5])                                                    |
-| 429    | `RATE_LIMITED`                                                              |
-| 500    | `INTERNAL_ERROR`                                                            |
+| 404    | `TENANT_NOT_FOUND`, `APPLICATION_NOT_FOUND`, `RESOURCE_NOT_FOUND`                                                                           |
+| 409    | `CONFLICT`                                                                                                                                  |
+| 410    | version removed ([12 §5])                                                                                                                   |
+| 429    | `RATE_LIMITED`                                                                                                                              |
+| 500    | `INTERNAL_ERROR`                                                                                                                            |
 
-The `X-Application-Id` resolution errors from the reference map here:
-missing → 400 `VALIDATION_ERROR`; unknown → 404 `APPLICATION_NOT_FOUND`;
-disabled → 403 `APPLICATION_DISABLED`.
+The `X-Application-Id` resolution errors from the reference map here: missing →
+400 `VALIDATION_ERROR`; unknown → 404 `APPLICATION_NOT_FOUND`; disabled → 403
+`APPLICATION_DISABLED`.
 
 ---
 
@@ -103,8 +104,8 @@ Rules:
 
 - Prefix names the domain; body is a collision-resistant unique id (e.g. UUID/
   ULID-style).
-- **Supabase Auth IDs are never renamed** (`user_...`, `org_...`); a Figentra tenant
-  maps a Supabase Auth `org_...` to a `ten_...` ([03 §2]).
+- **Supabase Auth IDs are never renamed** (`user_...`, `org_...`); a Figentra
+  tenant maps a Supabase Auth `org_...` to a `ten_...` ([03 §2]).
 - IDs are opaque to clients — never parse structure out of the body.
 - **Service-plane prefixes** (Notifications, Workflows, Approval, Reporting,
   Search, Webhook) are registered above alongside the control-plane set; each
@@ -140,7 +141,7 @@ GET /v1/customers?limit=50&cursor=<opaque>&sort=-createdAt&filter[status]=active
 Illustrative list response:
 
 ```json
-{ "data": [ /* ... */ ], "page": { "nextCursor": "...", "limit": 50 } }
+{ "data": [/* ... */], "page": { "nextCursor": "...", "limit": 50 } }
 ```
 
 ---
@@ -156,13 +157,13 @@ Illustrative list response:
 
 ## 9. Request context headers
 
-| Header                      | Meaning                                                        | Trust                                  |
-| --------------------------- | -------------------------------------------------------------- | -------------------------------------- |
-| `Authorization: Bearer ...` | Supabase Auth token / PAT / service token                              | Validated at edge + service            |
-| `Idempotency-Key`           | Client-supplied dedupe key for mutations                       | Client-supplied, server-enforced       |
-| `X-Figentra-Request-Id`    | Correlation id (`req_...`)                                     | Assigned/propagated by gateway         |
-| `X-Figentra-Service`       | Calling service identity                                       | Only over authenticated service channel |
-| `Deprecation` / `Sunset`    | Version lifecycle (response)                                   | Server-set ([12])                      |
+| Header                      | Meaning                                   | Trust                                   |
+| --------------------------- | ----------------------------------------- | --------------------------------------- |
+| `Authorization: Bearer ...` | Supabase Auth token / PAT / service token | Validated at edge + service             |
+| `Idempotency-Key`           | Client-supplied dedupe key for mutations  | Client-supplied, server-enforced        |
+| `X-Figentra-Request-Id`     | Correlation id (`req_...`)                | Assigned/propagated by gateway          |
+| `X-Figentra-Service`        | Calling service identity                  | Only over authenticated service channel |
+| `Deprecation` / `Sunset`    | Version lifecycle (response)              | Server-set ([12])                       |
 
 Never trust `X-Tenant-Id` / `X-User-Id` / `X-Role` from an unauthenticated
 source ([17 §3]).
@@ -182,16 +183,16 @@ source ([17 §3]).
 
 ## 11. Non-goals / anti-patterns
 
-| Anti-pattern                                              | Correct                                                     |
-| --------------------------------------------------------- | ----------------------------------------------------------- |
-| Ad-hoc error shapes per service                           | One error envelope + shared codes.                          |
-| Leaking secrets/PII in error messages                     | Safe messages; details redacted.                            |
-| Parsing structure out of an ID body                       | IDs are opaque; prefix indicates domain only.               |
-| Renaming Supabase Auth IDs                                        | Keep Supabase Auth IDs; map to `ten_` on the tenant record.         |
-| Offset pagination for large collections                   | Cursor-based pagination.                                    |
-| Arbitrary client-driven filter/sort (SQL surface)         | Allow-listed filters/sorts per resource.                    |
-| Non-idempotent create/payment endpoints                   | `Idempotency-Key` + server dedupe.                          |
-| Trusting identity headers from the client                 | Server-derived context; service headers only over auth channel. |
+| Anti-pattern                                      | Correct                                                         |
+| ------------------------------------------------- | --------------------------------------------------------------- |
+| Ad-hoc error shapes per service                   | One error envelope + shared codes.                              |
+| Leaking secrets/PII in error messages             | Safe messages; details redacted.                                |
+| Parsing structure out of an ID body               | IDs are opaque; prefix indicates domain only.                   |
+| Renaming Supabase Auth IDs                        | Keep Supabase Auth IDs; map to `ten_` on the tenant record.     |
+| Offset pagination for large collections           | Cursor-based pagination.                                        |
+| Arbitrary client-driven filter/sort (SQL surface) | Allow-listed filters/sorts per resource.                        |
+| Non-idempotent create/payment endpoints           | `Idempotency-Key` + server dedupe.                              |
+| Trusting identity headers from the client         | Server-derived context; service headers only over auth channel. |
 
 ---
 

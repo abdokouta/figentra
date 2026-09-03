@@ -6,9 +6,10 @@
 
 Figentra frontend applications use HeroUI V3.
 
-The current HeroUI package is 3.2.4 and the official documentation describes
-V3 as React 19 + Tailwind CSS v4, with no `HeroUIProvider`, standalone
-`@heroui/styles`, compound components, and CSS-based animation. citeturn1search1turn0search1turn0search13
+The current HeroUI package is 3.2.4 and the official documentation describes V3
+as React 19 + Tailwind CSS v4, with no `HeroUIProvider`, standalone
+`@heroui/styles`, compound components, and CSS-based animation.
+citeturn1search1turn0search1turn0search13
 
 ## Consequences
 

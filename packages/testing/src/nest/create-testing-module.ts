@@ -54,9 +54,7 @@ export interface INestTestingModuleOptions extends ModuleMetadata {
  * const svc = module.get(FooService);
  * ```
  */
-export function createTestingModule(
-  options: INestTestingModuleOptions,
-): TestingModuleBuilder {
+export function createTestingModule(options: INestTestingModuleOptions): TestingModuleBuilder {
   const { overrides = [], ...metadata } = options;
   let builder = Test.createTestingModule(metadata);
   for (const [token, value] of overrides) {

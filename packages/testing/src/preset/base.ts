@@ -98,10 +98,7 @@ const base = defineConfig({
     // Include pattern — every workspace package puts tests either
     // under `__tests__/**` (top-level suite folder) or beside the
     // source (`src/**/*.test.ts`). Both are supported.
-    include: [
-      "__tests__/**/*.{test,spec}.{ts,tsx}",
-      "src/**/*.{test,spec}.{ts,tsx}",
-    ],
+    include: ["__tests__/**/*.{test,spec}.{ts,tsx}", "src/**/*.{test,spec}.{ts,tsx}"],
     // Never scan build artefacts.
     exclude: [
       "**/node_modules/**",

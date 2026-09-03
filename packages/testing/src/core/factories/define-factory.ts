@@ -138,12 +138,6 @@ class Factory<T extends object> implements IFactory<T> {
  * const many = AthleteFactory.makeMany(5);
  * ```
  */
-export function defineFactory<T extends object>(
-  config: IFactoryConfig<T>,
-): IFactory<T> {
-  return new Factory<T>(
-    config.attributes,
-    config.states ?? {},
-    config.afterMake,
-  );
+export function defineFactory<T extends object>(config: IFactoryConfig<T>): IFactory<T> {
+  return new Factory<T>(config.attributes, config.states ?? {}, config.afterMake);
 }

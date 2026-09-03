@@ -33,9 +33,7 @@ const templates = {
 
 const key = process.argv[2] as keyof typeof templates | undefined;
 if (!key || !(key in templates)) {
-  console.error(
-    `Unknown template. Pick one of: ${Object.keys(templates).join(", ")}`,
-  );
+  console.error(`Unknown template. Pick one of: ${Object.keys(templates).join(", ")}`);
   process.exit(1);
 }
 

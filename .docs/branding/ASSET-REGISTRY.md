@@ -2,9 +2,11 @@
 
 ## Figentra
 
-Use the supplied brand package as the source for the existing Figentra visual assets.
+Use the supplied brand package as the source for the existing Figentra visual
+assets.
 
 Canonical categories:
+
 - logos;
 - favicons;
 - icons;
@@ -15,11 +17,13 @@ Canonical categories:
 - print;
 - documentation chrome.
 
-Before production release, consolidate duplicate icon variants so the canonical F-Cursor is the single source for browser/app identity.
+Before production release, consolidate duplicate icon variants so the canonical
+F-Cursor is the single source for browser/app identity.
 
 ## Academorix
 
 The supplied `academorix.zip` already contains:
+
 - logos;
 - favicons;
 - product icons;
@@ -34,7 +38,8 @@ The supplied `academorix.zip` already contains:
 - pitch decks;
 - mockups.
 
-The existing Academorix brand package should be preserved as the product-specific visual source.
+The existing Academorix brand package should be preserved as the
+product-specific visual source.
 
 ## Beautilon
 
@@ -69,6 +74,8 @@ beautilon/
 
 ## Icon/favicons rule
 
-The browser favicon, PWA icon, social avatar and product app icon must all derive from the same approved master mark.
+The browser favicon, PWA icon, social avatar and product app icon must all
+derive from the same approved master mark.
 
-Do not create a different “small icon” by hand unless it is explicitly approved as a responsive logo variant.
+Do not create a different “small icon” by hand unless it is explicitly approved
+as a responsive logo variant.

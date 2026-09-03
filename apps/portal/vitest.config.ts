@@ -24,10 +24,7 @@ export default mergeConfig(
       },
     },
     test: {
-      include: [
-        "__tests__/unit/**/*.test.{ts,tsx}",
-        "__tests__/integration/**/*.test.{ts,tsx}",
-      ],
+      include: ["__tests__/unit/**/*.test.{ts,tsx}", "__tests__/integration/**/*.test.{ts,tsx}"],
       setupFiles: ["./__tests__/vitest.setup.ts"],
     },
   }),

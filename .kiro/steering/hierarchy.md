@@ -78,13 +78,13 @@ by using different nouns so the collision never propagates into a symbol name.
 **"Membership" — do NOT confuse.** Two aggregates share the English word; they
 never share a class.
 
-| `Finance.Membership`                         | `Tenancy.TenantMember`                            |
-| -------------------------------------------- | ------------------------------------------------- |
-| A subscription **contract**                  | A **person** with access                          |
-| Renews every period, has passes              | Static — a role assignment                        |
-| references Athlete, Branch, Region, Tenant   | references User, Tenant                           |
-| Owns `Pass` records                          | Carries `role`, `is_staff_only`, `last_active_at` |
-| Lives in Finance module                      | Lives in Tenancy module                           |
+| `Finance.Membership`                       | `Tenancy.TenantMember`                            |
+| ------------------------------------------ | ------------------------------------------------- |
+| A subscription **contract**                | A **person** with access                          |
+| Renews every period, has passes            | Static — a role assignment                        |
+| references Athlete, Branch, Region, Tenant | references User, Tenant                           |
+| Owns `Pass` records                        | Carries `role`, `is_staff_only`, `last_active_at` |
+| Lives in Finance module                    | Lives in Tenancy module                           |
 
 Rule: never write `Membership` for a user-to-tenant link. Never write
 `TenantMember` for a paid contract.
@@ -431,9 +431,10 @@ framework, different operator, different runtime scope.
 
 The two per-Application services (`api`, `ai`) carry the `@academorix/*` scope
 because they belong to the Academorix product. Their composition —
-`src/sports/**`, `src/safeguarding/`, `src/growth/leads/` — is Academorix-native.
-A future Figentra product built on Stackra deploys its own `@<product>/*`
-per-Application services alongside the same five Figentra shared services.
+`src/sports/**`, `src/safeguarding/`, `src/growth/leads/` — is
+Academorix-native. A future Figentra product built on Stackra deploys its own
+`@<product>/*` per-Application services alongside the same five Figentra shared
+services.
 
 Framework code stays under `@stackra/*` regardless of who deploys it — reusable
 primitives are portable by definition.
@@ -487,9 +488,9 @@ ai (@academorix/ai)           ONE DEPLOYMENT PER APPLICATION — Academorix
 
 Note: the five SHARED `@figentra/*` services list `@stackra/*`-scope modules
 only — they COMPOSE framework packages under the service's own glue code plus
-every composed `@stackra/*` framework package. api + ai compose BOTH `@stackra/*`
-framework packages AND `@academorix/*` product code — the package name of each
-SERVICE reflects which brand OWNS THE RUNTIME (Figentra for SHARED
+every composed `@stackra/*` framework package. api + ai compose BOTH
+`@stackra/*` framework packages AND `@academorix/*` product code — the package
+name of each SERVICE reflects which brand OWNS THE RUNTIME (Figentra for SHARED
 cross-application runtime; Academorix for product-specific per-Application
 runtime), not which brand owns each of its packages. ADR-0057 codifies the
 workspace-package vs service-local module placement rule that surfaces the
@@ -611,8 +612,8 @@ step decides your scoping helpers, your module, and your access-control story.
 - A physical venue → tenant-scoped, `withBranch()`.
 - A group inside a Branch → tenant-scoped, `withBranch()`, plus any parent
   (Team, Facility, Season).
-- A person → tenant-scoped, plus the appropriate identity helper
-  (`withUser()`, `withStaff()`, `withAthlete()`).
+- A person → tenant-scoped, plus the appropriate identity helper (`withUser()`,
+  `withStaff()`, `withAthlete()`).
 - A financial contract on a person → tenant-scoped, plus `withAthlete()` +
   `withBranch()` + `withRegion()`.
 
@@ -630,9 +631,10 @@ The composition order is significant. Compose from `@stackra/contracts` +
 - `withAthlete()` — if it's an athlete-centric aggregate.
 - `withStaff()` — if it's a staff-centric aggregate.
 
-Every row also gets the standard columns: a prefixed-ULID `id`, `created_by /
-updated_by / deleted_by`, `deleted_at` (soft delete), `created_at / updated_at`,
-and audit coverage (writes land in the first-party audit log automatically).
+Every row also gets the standard columns: a prefixed-ULID `id`,
+`created_by / updated_by / deleted_by`, `deleted_at` (soft delete),
+`created_at / updated_at`, and audit coverage (writes land in the first-party
+audit log automatically).
 
 **Step 3 — Which module?**
 

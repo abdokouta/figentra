@@ -1,8 +1,10 @@
 # 16 — Observability
 
-**Status:** Baseline (core), Deferred (FinOps, status page, incident tooling depth)
-**Owner:** Operations plane
-**Related:** [09 Service communication](09-service-communication.md), [17 Security](17-security-and-compliance.md), [11 Events & workflows](11-events-and-workflows.md)
+**Status:** Baseline (core), Deferred (FinOps, status page, incident tooling
+depth) **Owner:** Operations plane **Related:**
+[09 Service communication](09-service-communication.md),
+[17 Security](17-security-and-compliance.md),
+[11 Events & workflows](11-events-and-workflows.md)
 
 ---
 
@@ -19,13 +21,13 @@ between the observability signals. This is the Operations plane's core.
 Five first-class signals — **logs, metrics, traces, events, audit** — not just
 "logging". They are conceptually distinct:
 
-| Signal   | Answers                                          | Owner / store               |
-| -------- | ------------------------------------------------ | --------------------------- |
-| Logs     | What happened, in detail?                        | Better Stack (via OTel)     |
-| Metrics  | How much / how fast / how healthy?               | Metrics backend / Analytics |
-| Traces   | Where did this request go across services?       | OTel + Better Stack/Sentry  |
-| Events   | What business facts occurred? ([11])             | Event stream / archive (R2) |
-| Audit    | Who did what, when? (compliance) ([17])          | Audit store                 |
+| Signal  | Answers                                    | Owner / store               |
+| ------- | ------------------------------------------ | --------------------------- |
+| Logs    | What happened, in detail?                  | Better Stack (via OTel)     |
+| Metrics | How much / how fast / how healthy?         | Metrics backend / Analytics |
+| Traces  | Where did this request go across services? | OTel + Better Stack/Sentry  |
+| Events  | What business facts occurred? ([11])       | Event stream / archive (R2) |
+| Audit   | Who did what, when? (compliance) ([17])    | Audit store                 |
 
 Events and audit are **separate** from operational logs — different retention,
 consumers, and query patterns.
@@ -38,8 +40,8 @@ consumers, and query patterns.
   metrics, and log correlation.
 - **Better Stack** is the initial centralized observability platform (logs,
   uptime, tracing/monitoring, incidents, on-call, status page). It ingests from
-  JS/Node, Cloudflare, Docker, and other sources, and is Terraform-managed
-  ([15 §5]).
+  JS/Node, Cloudflare, Docker, and other sources, and is Terraform-managed ([15
+  §5]).
 - **Sentry** where useful (error tracking).
 - **Cloudflare observability** for Workers-native signals.
 
@@ -60,8 +62,8 @@ operation        status          duration
 correlation_id   actor_id / actor_type
 ```
 
-- `request_id` / `trace_id` are assigned/propagated by the gateway
-  ([08 §8]) and flow through every downstream hop.
+- `request_id` / `trace_id` are assigned/propagated by the gateway ([08 §8]) and
+  flow through every downstream hop.
 - One `trace_id` follows an operation across gateway → IAM → application →
   Postgres → notification.
 
@@ -96,11 +98,11 @@ One `trace_id` lets an operator follow the entire operation end to end.
 
 Keep two metric families conceptually distinct:
 
-| Platform metrics                                  | Business metrics                     |
-| ------------------------------------------------- | ------------------------------------ |
-| requests, latency, errors, CPU, memory            | orders, revenue, active users        |
-| queue depth, workflow duration, DB latency        | subscriptions, conversions           |
-| cache hit rate, billing-usage counts              |                                      |
+| Platform metrics                           | Business metrics              |
+| ------------------------------------------ | ----------------------------- |
+| requests, latency, errors, CPU, memory     | orders, revenue, active users |
+| queue depth, workflow duration, DB latency | subscriptions, conversions    |
+| cache hit rate, billing-usage counts       |                               |
 
 Business metrics derive from **events/usage** ([11], [05 §8]); do not compute
 them by hammering production Postgres — feed an analytics path.
@@ -130,8 +132,8 @@ not merely "Commerce is unhealthy". Dependency-aware health composition is a
 
 ## 8. Incidents & status page
 
-**Status: Deferred depth.** Recognized as needed; full incident tooling is
-P1/P2 ([20]).
+**Status: Deferred depth.** Recognized as needed; full incident tooling is P1/P2
+([20]).
 
 - **Status page** (e.g. `status.figentra.com`) — Better Stack status page,
   Terraform-managed.
@@ -152,14 +154,14 @@ capability, distinct from the tenant-facing Monetization service.
 
 ## 10. Non-goals / anti-patterns
 
-| Anti-pattern                                              | Correct                                                     |
-| --------------------------------------------------------- | ----------------------------------------------------------- |
-| "Just logging" instead of five distinct signals           | Logs / metrics / traces / events / audit are distinct.      |
-| Logging secrets / tokens / payment data                   | Redact; never log sensitive material.                       |
-| Computing business metrics off production Postgres         | Derive from events/usage; feed analytics.                   |
-| Conflating platform metrics with business metrics          | Two distinct families.                                      |
-| Merging tenant billing with Figentra FinOps               | Separate concerns ([05 §11], §9).                           |
-| Health that only says "unhealthy" with no dependency cause | Dependency-aware health composition (P1/P2).                |
+| Anti-pattern                                               | Correct                                                |
+| ---------------------------------------------------------- | ------------------------------------------------------ |
+| "Just logging" instead of five distinct signals            | Logs / metrics / traces / events / audit are distinct. |
+| Logging secrets / tokens / payment data                    | Redact; never log sensitive material.                  |
+| Computing business metrics off production Postgres         | Derive from events/usage; feed analytics.              |
+| Conflating platform metrics with business metrics          | Two distinct families.                                 |
+| Merging tenant billing with Figentra FinOps                | Separate concerns ([05 §11], §9).                      |
+| Health that only says "unhealthy" with no dependency cause | Dependency-aware health composition (P1/P2).           |
 
 ---
 

@@ -2,9 +2,7 @@
   "$schema": "../../.ref/schemas/catalog.v1.json",
   "name": "@stackra/prettier-config",
   "tier": "foundation",
-  "surfaces": [
-    "core"
-  ],
+  "surfaces": ["core"],
   "kind": "tooling",
   "purpose": "Workspace Prettier config — shared formatting rules across every @stackra/* package.",
   "capabilities": [
@@ -14,15 +12,10 @@
   ],
   "when_to_use": "Every workspace package + every client app consumes this preset for uniform behaviour.",
   "when_not_to_use": "Applications with intentionally-different rules can extend + override.",
-  "peer_deps": [
-    "prettier",
-    "prettier-plugin-tailwindcss"
-  ],
+  "peer_deps": ["prettier", "prettier-plugin-tailwindcss"],
   "backend_pair": null,
   "size_gzip_kb": {},
   "maturity": "beta",
   "owning_agent": "workspace-standardization-steward",
-  "docs": [
-    "README.md"
-  ]
+  "docs": ["README.md"]
 }

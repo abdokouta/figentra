@@ -5,11 +5,14 @@
 
 ## Runtime and stack
 
-React + Vite + React Router v7 + HeroUI Pro + Stackra UI/Query + Clerk/Supabase client only as specified by final identity integration
+React + Vite + React Router v7 + HeroUI Pro + Stackra UI/Query + Clerk/Supabase
+client only as specified by final identity integration
 
 ## Boundary
 
-The application owns UI composition, routes, pages, forms, local interaction state and application-specific API consumption. It does not own platform authorization, tenant authority, billing, or service databases.
+The application owns UI composition, routes, pages, forms, local interaction
+state and application-specific API consumption. It does not own platform
+authorization, tenant authority, billing, or service databases.
 
 ## Runtime bootstrap
 
@@ -33,7 +36,8 @@ Hostname
 - No Refine.
 - No SDUI.
 - Normal React components own page rendering.
-- Application manifest describes resources/routes/permissions but does not serialize JSX/components.
+- Application manifest describes resources/routes/permissions but does not
+  serialize JSX/components.
 
 ## Resource pattern
 
@@ -58,11 +62,15 @@ Module
 
 ## Caching
 
-Use Stackra Query for server-state caching. Do not introduce a second global server-state cache. Respect API cache headers and invalidation events where defined.
+Use Stackra Query for server-state caching. Do not introduce a second global
+server-state cache. Respect API cache headers and invalidation events where
+defined.
 
 ## i18n
 
-Maintain locale resources per application. User-facing strings must use stable translation keys. Support Arabic/English baseline and RTL behavior where applicable.
+Maintain locale resources per application. User-facing strings must use stable
+translation keys. Support Arabic/English baseline and RTL behavior where
+applicable.
 
 ## Testing
 
@@ -77,17 +85,24 @@ Maintain locale resources per application. User-facing strings must use stable t
 
 ## Documentation
 
-Every application module/resource must document its business purpose, API dependencies, permissions, routes, events consumed/emitted, configuration, and operational assumptions.
+Every application module/resource must document its business purpose, API
+dependencies, permissions, routes, events consumed/emitted, configuration, and
+operational assumptions.
 
 ## Acceptance
 
-Builds independently, boots without Registry availability, resolves runtime context safely, uses typed API contracts, passes accessibility/security/E2E checks, and contains no business database credentials.
+Builds independently, boots without Registry availability, resolves runtime
+context safely, uses typed API contracts, passes accessibility/security/E2E
+checks, and contains no business database credentials.
 
 ## Package manifest (repository baseline)
 
-> This section is generated from the current repository `package.json`. The Kiro spec is the target contract; if implementation changes dependencies, update the spec and package manifest together.
+> This section is generated from the current repository `package.json`. The Kiro
+> spec is the target contract; if implementation changes dependencies, update
+> the spec and package manifest together.
 
 ### Runtime dependencies
+
 - `@heroui/react`
 - `@heroui/styles`
 - `@stackra/container`
@@ -100,6 +115,7 @@ Builds independently, boots without Registry availability, resolves runtime cont
 - `react-router-dom`
 
 ### Development dependencies
+
 - `@playwright/test`
 - `@stackra/oxlint-config`
 - `@stackra/prettier-config`
@@ -121,7 +137,9 @@ Builds independently, boots without Registry availability, resolves runtime cont
 - `vitest`
 
 ### Peer dependencies
+
 - _None currently._
 
 ### Optional dependencies
+
 - _None currently._

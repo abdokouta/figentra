@@ -1,21 +1,21 @@
-import { hasOwnMetadata } from '@/has-own-metadata';
-import { hasMetadata } from '@/has-metadata';
-import { defineMetadata } from '@/define-metadata';
-import { clearMetadata } from '@/clear-metadata';
+import { hasOwnMetadata } from "@/has-own-metadata";
+import { hasMetadata } from "@/has-metadata";
+import { defineMetadata } from "@/define-metadata";
+import { clearMetadata } from "@/clear-metadata";
 
-describe('hasOwnMetadata', () => {
-  describe('Basic Direct Metadata Detection', () => {
+describe("hasOwnMetadata", () => {
+  describe("Basic Direct Metadata Detection", () => {
     /**
      * Test case: hasOwnMetadata should return true when metadata is defined directly on target
      *
      * This test validates the core functionality of detecting direct metadata presence.
      */
-    it('should return true when metadata is defined directly on target object', () => {
+    it("should return true when metadata is defined directly on target object", () => {
       // Arrange: Create a class with direct metadata
-      const metadataKey = Symbol('direct-key');
+      const metadataKey = Symbol("direct-key");
       const target = class DirectClass {};
 
-      Reflect.defineMetadata(metadataKey, 'direct-value', target);
+      Reflect.defineMetadata(metadataKey, "direct-value", target);
 
       // Act & Assert: Should detect direct metadata
       expect(hasOwnMetadata(metadataKey, target)).toBe(true);
@@ -26,9 +26,9 @@ describe('hasOwnMetadata', () => {
      *
      * This test validates that the function correctly identifies when no direct metadata exists.
      */
-    it('should return false when no metadata is defined on target object', () => {
+    it("should return false when no metadata is defined on target object", () => {
       // Arrange: Create a clean class with no metadata
-      const metadataKey = Symbol('nonexistent-key');
+      const metadataKey = Symbol("nonexistent-key");
       const target = class CleanClass {};
 
       // Act & Assert: Should not detect any direct metadata
@@ -40,20 +40,20 @@ describe('hasOwnMetadata', () => {
      *
      * This test validates that different types of metadata keys work with direct detection.
      */
-    it('should work with various metadata key types for direct metadata', () => {
+    it("should work with various metadata key types for direct metadata", () => {
       // Arrange: Create a class and test with different key types
       class TestClass {}
 
-      const stringKey = 'string-key';
-      const symbolKey = Symbol('symbol-key');
+      const stringKey = "string-key";
+      const symbolKey = Symbol("symbol-key");
       const numberKey = 42;
-      const objectKey = { type: 'object-key' };
+      const objectKey = { type: "object-key" };
 
       // Define direct metadata with different key types
-      defineMetadata(stringKey, 'string-value', TestClass);
-      defineMetadata(symbolKey, 'symbol-value', TestClass);
-      defineMetadata(numberKey, 'number-value', TestClass);
-      defineMetadata(objectKey, 'object-value', TestClass);
+      defineMetadata(stringKey, "string-value", TestClass);
+      defineMetadata(symbolKey, "symbol-value", TestClass);
+      defineMetadata(numberKey, "number-value", TestClass);
+      defineMetadata(objectKey, "object-value", TestClass);
 
       // Act & Assert: Should detect all direct key types
       expect(hasOwnMetadata(stringKey, TestClass)).toBe(true);
@@ -62,25 +62,25 @@ describe('hasOwnMetadata', () => {
       expect(hasOwnMetadata(objectKey, TestClass)).toBe(true);
 
       // Should not detect non-existent keys
-      expect(hasOwnMetadata('non-existent', TestClass)).toBe(false);
-      expect(hasOwnMetadata(Symbol('non-existent'), TestClass)).toBe(false);
+      expect(hasOwnMetadata("non-existent", TestClass)).toBe(false);
+      expect(hasOwnMetadata(Symbol("non-existent"), TestClass)).toBe(false);
     });
   });
 
-  describe('Inheritance and Prototype Chain Exclusion', () => {
+  describe("Inheritance and Prototype Chain Exclusion", () => {
     /**
      * Test case: hasOwnMetadata should return false for inherited metadata
      *
      * This test validates that metadata defined on parent classes is NOT detected
      * when checking child classes with hasOwnMetadata.
      */
-    it('should return false when metadata is defined on parent class', () => {
+    it("should return false when metadata is defined on parent class", () => {
       // Arrange: Create inheritance hierarchy with parent metadata
-      const metadataKey = Symbol('inheritance-key');
+      const metadataKey = Symbol("inheritance-key");
       class ParentClass {}
       class ChildClass extends ParentClass {}
 
-      Reflect.defineMetadata(metadataKey, 'parent-value', ParentClass);
+      Reflect.defineMetadata(metadataKey, "parent-value", ParentClass);
 
       // Act & Assert: Child should NOT detect parent's metadata with hasOwnMetadata
       expect(hasOwnMetadata(metadataKey, ChildClass)).toBe(false);
@@ -95,20 +95,20 @@ describe('hasOwnMetadata', () => {
      *
      * This test validates the key difference between hasOwnMetadata and hasMetadata.
      */
-    it('should distinguish between direct and inherited metadata', () => {
+    it("should distinguish between direct and inherited metadata", () => {
       // Arrange: Create inheritance with different metadata at each level
-      const sharedKey = 'shared-metadata';
-      const parentKey = 'parent-only';
-      const childKey = 'child-only';
+      const sharedKey = "shared-metadata";
+      const parentKey = "parent-only";
+      const childKey = "child-only";
 
       class BaseClass {}
       class DerivedClass extends BaseClass {}
 
       // Define metadata at different levels
-      defineMetadata(sharedKey, 'base-value', BaseClass);
-      defineMetadata(parentKey, 'parent-value', BaseClass);
-      defineMetadata(sharedKey, 'derived-value', DerivedClass); // Override
-      defineMetadata(childKey, 'child-value', DerivedClass);
+      defineMetadata(sharedKey, "base-value", BaseClass);
+      defineMetadata(parentKey, "parent-value", BaseClass);
+      defineMetadata(sharedKey, "derived-value", DerivedClass); // Override
+      defineMetadata(childKey, "child-value", DerivedClass);
 
       // Act & Assert: hasOwnMetadata should only detect direct metadata
 
@@ -131,9 +131,9 @@ describe('hasOwnMetadata', () => {
      *
      * This test validates that hasOwnMetadata ignores metadata from any level of the prototype chain.
      */
-    it('should ignore metadata from deep inheritance hierarchies', () => {
+    it("should ignore metadata from deep inheritance hierarchies", () => {
       // Arrange: Create deep inheritance hierarchy
-      const metadataKey = 'deep-inheritance';
+      const metadataKey = "deep-inheritance";
 
       class GreatGrandParent {}
       class GrandParent extends GreatGrandParent {}
@@ -141,7 +141,7 @@ describe('hasOwnMetadata', () => {
       class Child extends Parent {}
 
       // Define metadata only at the top level
-      defineMetadata(metadataKey, 'great-grandparent-value', GreatGrandParent);
+      defineMetadata(metadataKey, "great-grandparent-value", GreatGrandParent);
 
       // Act & Assert: Only the original definer should detect with hasOwnMetadata
       expect(hasOwnMetadata(metadataKey, GreatGrandParent)).toBe(true);
@@ -154,40 +154,40 @@ describe('hasOwnMetadata', () => {
     });
   });
 
-  describe('Property-specific Direct Metadata', () => {
+  describe("Property-specific Direct Metadata", () => {
     /**
      * Test case: hasOwnMetadata should detect direct metadata on specific properties
      *
      * This test validates detection of property-level metadata that is defined directly.
      */
-    it('should detect direct metadata on class properties', () => {
+    it("should detect direct metadata on class properties", () => {
       // Arrange: Create a class with property metadata
       class TestClass {
-        directProperty: string = 'test';
-        inheritedProperty: string = 'test';
+        directProperty: string = "test";
+        inheritedProperty: string = "test";
       }
 
       class ChildClass extends TestClass {
-        ownProperty: string = 'child';
+        ownProperty: string = "child";
       }
 
-      const metadataKey = 'property-metadata';
+      const metadataKey = "property-metadata";
 
       // Define metadata on different properties
-      defineMetadata(metadataKey, 'direct-value', TestClass.prototype, 'directProperty');
-      defineMetadata(metadataKey, 'inherited-value', TestClass.prototype, 'inheritedProperty');
-      defineMetadata(metadataKey, 'own-value', ChildClass.prototype, 'ownProperty');
+      defineMetadata(metadataKey, "direct-value", TestClass.prototype, "directProperty");
+      defineMetadata(metadataKey, "inherited-value", TestClass.prototype, "inheritedProperty");
+      defineMetadata(metadataKey, "own-value", ChildClass.prototype, "ownProperty");
 
       // Act & Assert: Should detect direct property metadata only
-      expect(hasOwnMetadata(metadataKey, TestClass.prototype, 'directProperty')).toBe(true);
-      expect(hasOwnMetadata(metadataKey, TestClass.prototype, 'inheritedProperty')).toBe(true);
+      expect(hasOwnMetadata(metadataKey, TestClass.prototype, "directProperty")).toBe(true);
+      expect(hasOwnMetadata(metadataKey, TestClass.prototype, "inheritedProperty")).toBe(true);
 
       // Child class should only detect its own property metadata
-      expect(hasOwnMetadata(metadataKey, ChildClass.prototype, 'ownProperty')).toBe(true);
-      expect(hasOwnMetadata(metadataKey, ChildClass.prototype, 'inheritedProperty')).toBe(false); // Inherited
+      expect(hasOwnMetadata(metadataKey, ChildClass.prototype, "ownProperty")).toBe(true);
+      expect(hasOwnMetadata(metadataKey, ChildClass.prototype, "inheritedProperty")).toBe(false); // Inherited
 
       // But hasMetadata would detect inherited property metadata
-      expect(hasMetadata(metadataKey, ChildClass.prototype, 'inheritedProperty')).toBe(true);
+      expect(hasMetadata(metadataKey, ChildClass.prototype, "inheritedProperty")).toBe(true);
     });
 
     /**
@@ -195,55 +195,55 @@ describe('hasOwnMetadata', () => {
      *
      * This test ensures that class-level and property-level metadata ownership is distinct.
      */
-    it('should distinguish between class and property metadata ownership', () => {
+    it("should distinguish between class and property metadata ownership", () => {
       // Arrange: Create inheritance with metadata at various levels
       class BaseClass {
-        baseProperty: string = 'base';
+        baseProperty: string = "base";
       }
       class DerivedClass extends BaseClass {
-        derivedProperty: string = 'derived';
+        derivedProperty: string = "derived";
       }
 
-      const metadataKey = 'ownership-test';
+      const metadataKey = "ownership-test";
 
       // Define metadata at different levels
-      defineMetadata(metadataKey, 'base-class', BaseClass);
-      defineMetadata(metadataKey, 'base-property', BaseClass.prototype, 'baseProperty');
-      defineMetadata(metadataKey, 'derived-class', DerivedClass);
-      defineMetadata(metadataKey, 'derived-property', DerivedClass.prototype, 'derivedProperty');
+      defineMetadata(metadataKey, "base-class", BaseClass);
+      defineMetadata(metadataKey, "base-property", BaseClass.prototype, "baseProperty");
+      defineMetadata(metadataKey, "derived-class", DerivedClass);
+      defineMetadata(metadataKey, "derived-property", DerivedClass.prototype, "derivedProperty");
 
       // Act & Assert: Each should only detect its own metadata
 
       // Base class ownership
       expect(hasOwnMetadata(metadataKey, BaseClass)).toBe(true);
-      expect(hasOwnMetadata(metadataKey, BaseClass.prototype, 'baseProperty')).toBe(true);
+      expect(hasOwnMetadata(metadataKey, BaseClass.prototype, "baseProperty")).toBe(true);
 
       // Derived class ownership
       expect(hasOwnMetadata(metadataKey, DerivedClass)).toBe(true);
-      expect(hasOwnMetadata(metadataKey, DerivedClass.prototype, 'derivedProperty')).toBe(true);
+      expect(hasOwnMetadata(metadataKey, DerivedClass.prototype, "derivedProperty")).toBe(true);
 
       // Cross-level non-ownership
-      expect(hasOwnMetadata(metadataKey, DerivedClass.prototype, 'baseProperty')).toBe(false);
+      expect(hasOwnMetadata(metadataKey, DerivedClass.prototype, "baseProperty")).toBe(false);
     });
   });
 
-  describe('Metadata Overriding and Shadowing', () => {
+  describe("Metadata Overriding and Shadowing", () => {
     /**
      * Test case: hasOwnMetadata should detect when child classes override parent metadata
      *
      * This test validates detection of metadata overrides in inheritance hierarchies.
      */
-    it('should detect metadata overrides in child classes', () => {
+    it("should detect metadata overrides in child classes", () => {
       // Arrange: Create inheritance with metadata overrides
-      const metadataKey = 'override-test';
+      const metadataKey = "override-test";
 
       class ParentClass {}
       class ChildClass extends ParentClass {}
       class GrandChildClass extends ChildClass {}
 
       // Define metadata at multiple levels
-      defineMetadata(metadataKey, 'parent-value', ParentClass);
-      defineMetadata(metadataKey, 'child-value', ChildClass); // Override
+      defineMetadata(metadataKey, "parent-value", ParentClass);
+      defineMetadata(metadataKey, "child-value", ChildClass); // Override
       // GrandChildClass has no direct metadata, inherits from ChildClass
 
       // Act & Assert: Each should only detect its own direct metadata
@@ -260,7 +260,7 @@ describe('hasOwnMetadata', () => {
      *
      * This test validates property-level metadata overrides between parent and child classes.
      */
-    it('should handle property metadata overrides', () => {
+    it("should handle property metadata overrides", () => {
       // Arrange: Create inheritance with property metadata overrides
       class BaseController {
         handleRequest(): void {}
@@ -270,48 +270,48 @@ describe('hasOwnMetadata', () => {
         handleRequest(): void {}
       }
 
-      const routeKey = 'route';
-      const authKey = 'auth';
+      const routeKey = "route";
+      const authKey = "auth";
 
       // Define base metadata
-      defineMetadata(routeKey, '/base', BaseController.prototype, 'handleRequest');
-      defineMetadata(authKey, false, BaseController.prototype, 'handleRequest');
+      defineMetadata(routeKey, "/base", BaseController.prototype, "handleRequest");
+      defineMetadata(authKey, false, BaseController.prototype, "handleRequest");
 
       // Override some metadata in child
-      defineMetadata(routeKey, '/users', UserController.prototype, 'handleRequest');
+      defineMetadata(routeKey, "/users", UserController.prototype, "handleRequest");
       // authKey is not overridden, so it's inherited
 
       // Act & Assert: Check ownership vs inheritance
 
       // Base class owns both
-      expect(hasOwnMetadata(routeKey, BaseController.prototype, 'handleRequest')).toBe(true);
-      expect(hasOwnMetadata(authKey, BaseController.prototype, 'handleRequest')).toBe(true);
+      expect(hasOwnMetadata(routeKey, BaseController.prototype, "handleRequest")).toBe(true);
+      expect(hasOwnMetadata(authKey, BaseController.prototype, "handleRequest")).toBe(true);
 
       // Child class only owns the overridden one
-      expect(hasOwnMetadata(routeKey, UserController.prototype, 'handleRequest')).toBe(true); // Overridden
-      expect(hasOwnMetadata(authKey, UserController.prototype, 'handleRequest')).toBe(false); // Inherited
+      expect(hasOwnMetadata(routeKey, UserController.prototype, "handleRequest")).toBe(true); // Overridden
+      expect(hasOwnMetadata(authKey, UserController.prototype, "handleRequest")).toBe(false); // Inherited
 
       // But hasMetadata finds both
-      expect(hasMetadata(authKey, UserController.prototype, 'handleRequest')).toBe(true);
+      expect(hasMetadata(authKey, UserController.prototype, "handleRequest")).toBe(true);
     });
   });
 
-  describe('Dynamic Metadata Operations', () => {
+  describe("Dynamic Metadata Operations", () => {
     /**
      * Test case: hasOwnMetadata should reflect direct metadata state changes
      *
      * This test validates that hasOwnMetadata correctly tracks direct metadata changes.
      */
-    it('should reflect changes when direct metadata is added or removed', () => {
+    it("should reflect changes when direct metadata is added or removed", () => {
       // Arrange: Create a class for dynamic testing
       class DynamicClass {}
-      const metadataKey = 'dynamic-key';
+      const metadataKey = "dynamic-key";
 
       // Initially no metadata
       expect(hasOwnMetadata(metadataKey, DynamicClass)).toBe(false);
 
       // Add direct metadata
-      defineMetadata(metadataKey, 'dynamic-value', DynamicClass);
+      defineMetadata(metadataKey, "dynamic-value", DynamicClass);
       expect(hasOwnMetadata(metadataKey, DynamicClass)).toBe(true);
 
       // Remove direct metadata
@@ -324,18 +324,18 @@ describe('hasOwnMetadata', () => {
      *
      * This test validates that changes to inherited metadata don't affect hasOwnMetadata results.
      */
-    it('should not be affected by inherited metadata changes', () => {
+    it("should not be affected by inherited metadata changes", () => {
       // Arrange: Create inheritance hierarchy
       class ParentClass {}
       class ChildClass extends ParentClass {}
 
-      const metadataKey = 'inheritance-change-test';
+      const metadataKey = "inheritance-change-test";
 
       // Child should not detect parent metadata
       expect(hasOwnMetadata(metadataKey, ChildClass)).toBe(false);
 
       // Add metadata to parent
-      defineMetadata(metadataKey, 'parent-value', ParentClass);
+      defineMetadata(metadataKey, "parent-value", ParentClass);
       expect(hasOwnMetadata(metadataKey, ChildClass)).toBe(false); // Still no direct metadata
       expect(hasMetadata(metadataKey, ChildClass)).toBe(true); // But hasMetadata finds it
 
@@ -346,13 +346,13 @@ describe('hasOwnMetadata', () => {
     });
   });
 
-  describe('Edge Cases and Error Handling', () => {
+  describe("Edge Cases and Error Handling", () => {
     /**
      * Test case: hasOwnMetadata should handle null and undefined keys gracefully
      *
      * This test ensures the function behaves correctly with edge case keys.
      */
-    it('should handle null and undefined keys gracefully', () => {
+    it("should handle null and undefined keys gracefully", () => {
       // Arrange: Create a test class
       class TestClass {}
 
@@ -370,10 +370,10 @@ describe('hasOwnMetadata', () => {
      *
      * This test ensures the function works with class instances, not just constructors.
      */
-    it('should work with class instances', () => {
+    it("should work with class instances", () => {
       // Arrange: Create class and instances
       class TestClass {
-        instanceProperty: string = 'test';
+        instanceProperty: string = "test";
       }
 
       class ChildClass extends TestClass {}
@@ -382,11 +382,11 @@ describe('hasOwnMetadata', () => {
       const instance2 = new TestClass();
       const childInstance = new ChildClass();
 
-      const metadataKey = 'instance-metadata';
+      const metadataKey = "instance-metadata";
 
       // Define metadata on instances
-      defineMetadata(metadataKey, 'instance1-value', instance1);
-      defineMetadata(metadataKey, 'class-value', TestClass); // Different target
+      defineMetadata(metadataKey, "instance1-value", instance1);
+      defineMetadata(metadataKey, "class-value", TestClass); // Different target
 
       // Act & Assert: Should work with instances for direct metadata only
       expect(hasOwnMetadata(metadataKey, instance1)).toBe(true); // Direct on instance
@@ -406,21 +406,21 @@ describe('hasOwnMetadata', () => {
      *
      * This test validates behavior with complex object keys for direct metadata.
      */
-    it('should work with complex object keys for direct metadata', () => {
+    it("should work with complex object keys for direct metadata", () => {
       // Arrange: Create complex keys
       class ParentClass {}
       class ChildClass extends ParentClass {}
 
-      const arrayKey = ['array', 'key'];
-      const objectKey = { type: 'object', id: 123 };
+      const arrayKey = ["array", "key"];
+      const objectKey = { type: "object", id: 123 };
       const functionKey = function namedFunction() {};
 
       // Define metadata with complex keys on parent
-      defineMetadata(arrayKey, 'parent-array-value', ParentClass);
-      defineMetadata(objectKey, 'parent-object-value', ParentClass);
+      defineMetadata(arrayKey, "parent-array-value", ParentClass);
+      defineMetadata(objectKey, "parent-object-value", ParentClass);
 
       // Define same keys on child
-      defineMetadata(arrayKey, 'child-array-value', ChildClass);
+      defineMetadata(arrayKey, "child-array-value", ChildClass);
 
       // Act & Assert: Should detect direct complex key types only
       expect(hasOwnMetadata(arrayKey, ParentClass)).toBe(true);
@@ -435,13 +435,13 @@ describe('hasOwnMetadata', () => {
     });
   });
 
-  describe('Comparison with hasMetadata', () => {
+  describe("Comparison with hasMetadata", () => {
     /**
      * Test case: hasOwnMetadata vs hasMetadata behavior comparison
      *
      * This test provides a comprehensive comparison between the two functions.
      */
-    it('should demonstrate clear differences from hasMetadata', () => {
+    it("should demonstrate clear differences from hasMetadata", () => {
       // Arrange: Create comprehensive test scenario
       class GreatGrandParent {
         method1(): void {}
@@ -458,18 +458,18 @@ describe('hasOwnMetadata', () => {
         method4(): void {}
       }
 
-      const metadataKey = 'comparison-test';
+      const metadataKey = "comparison-test";
 
       // Define metadata at each level
-      defineMetadata(metadataKey, 'great-grand', GreatGrandParent);
-      defineMetadata(metadataKey, 'grand', GrandParent);
-      defineMetadata(metadataKey, 'parent', Parent);
+      defineMetadata(metadataKey, "great-grand", GreatGrandParent);
+      defineMetadata(metadataKey, "grand", GrandParent);
+      defineMetadata(metadataKey, "parent", Parent);
       // Child has no direct metadata
 
       // Property metadata
-      defineMetadata('prop-meta', 'ggp-method1', GreatGrandParent.prototype, 'method1');
-      defineMetadata('prop-meta', 'gp-method2', GrandParent.prototype, 'method2');
-      defineMetadata('prop-meta', 'p-method3', Parent.prototype, 'method3');
+      defineMetadata("prop-meta", "ggp-method1", GreatGrandParent.prototype, "method1");
+      defineMetadata("prop-meta", "gp-method2", GrandParent.prototype, "method2");
+      defineMetadata("prop-meta", "p-method3", Parent.prototype, "method3");
 
       // Act & Assert: Compare hasOwnMetadata vs hasMetadata
 
@@ -488,15 +488,15 @@ describe('hasOwnMetadata', () => {
 
       // Property-level metadata
       const propertyComparisons = [
-        { target: Child.prototype, prop: 'method1', hasOwn: false, hasAny: true }, // Inherits from GreatGrandParent
-        { target: Child.prototype, prop: 'method2', hasOwn: false, hasAny: true }, // Inherits from GrandParent
-        { target: Child.prototype, prop: 'method3', hasOwn: false, hasAny: true }, // Inherits from Parent
-        { target: Child.prototype, prop: 'method4', hasOwn: false, hasAny: false }, // No metadata
+        { target: Child.prototype, prop: "method1", hasOwn: false, hasAny: true }, // Inherits from GreatGrandParent
+        { target: Child.prototype, prop: "method2", hasOwn: false, hasAny: true }, // Inherits from GrandParent
+        { target: Child.prototype, prop: "method3", hasOwn: false, hasAny: true }, // Inherits from Parent
+        { target: Child.prototype, prop: "method4", hasOwn: false, hasAny: false }, // No metadata
       ];
 
       propertyComparisons.forEach(({ target, prop, hasOwn, hasAny }) => {
-        expect(hasOwnMetadata('prop-meta', target, prop)).toBe(hasOwn);
-        expect(hasMetadata('prop-meta', target, prop)).toBe(hasAny);
+        expect(hasOwnMetadata("prop-meta", target, prop)).toBe(hasOwn);
+        expect(hasMetadata("prop-meta", target, prop)).toBe(hasAny);
       });
     });
   });

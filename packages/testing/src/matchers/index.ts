@@ -49,9 +49,9 @@ interface IStackraMatchers<R = unknown> {
    * @param schema - Any object with a `.safeParse(value)`
    *   returning `{ success: boolean; error?: unknown }`.
    */
-  toMatchZodSchema(
-    schema: { safeParse: (value: unknown) => { success: boolean; error?: unknown } },
-  ): R;
+  toMatchZodSchema(schema: {
+    safeParse: (value: unknown) => { success: boolean; error?: unknown };
+  }): R;
 
   /**
    * Assert an assertable proxy's `method` was called within the
@@ -132,11 +132,7 @@ export function toMatchZodSchema(
       this.isNot
         ? `expected ${JSON.stringify(received)} NOT to satisfy the schema`
         : `expected ${JSON.stringify(received)} to satisfy the schema. ` +
-          `Errors: ${
-            result.error === undefined
-              ? "(none)"
-              : JSON.stringify(result.error)
-          }`,
+          `Errors: ${result.error === undefined ? "(none)" : JSON.stringify(result.error)}`,
   };
 }
 
@@ -170,12 +166,13 @@ export function toHaveBeenCalledWithinLast(
   const calls = api.history().filter((call: IRecordedCall) => call.method === method);
   const latest = calls[calls.length - 1];
   const now = Date.now();
-  const withinWindow =
-    latest !== undefined && now - latest.timestamp <= ms;
+  const withinWindow = latest !== undefined && now - latest.timestamp <= ms;
 
   return {
     pass: withinWindow,
-    actual: latest ? { timestamp: latest.timestamp, deltaMs: now - latest.timestamp } : "(no call recorded)",
+    actual: latest
+      ? { timestamp: latest.timestamp, deltaMs: now - latest.timestamp }
+      : "(no call recorded)",
     expected: `a call to '${method}' within the last ${ms} ms`,
     message: () =>
       this.isNot

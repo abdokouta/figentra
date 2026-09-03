@@ -4,11 +4,13 @@
 
 ## Decision
 
-Identity and Principal are implemented initially as one Identity Platform bounded context.
+Identity and Principal are implemented initially as one Identity Platform
+bounded context.
 
 ## Rationale
 
-They have strong lifecycle and lookup coupling and do not need separate deployment boundaries initially.
+They have strong lifecycle and lookup coupling and do not need separate
+deployment boundaries initially.
 
 ## Consequence
 

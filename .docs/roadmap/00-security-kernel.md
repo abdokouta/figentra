@@ -19,4 +19,5 @@
 15. Tenant
 16. Dynamic Scope
 
-Do not start commercial/platform services until this foundation is sufficiently stable.
+Do not start commercial/platform services until this foundation is sufficiently
+stable.

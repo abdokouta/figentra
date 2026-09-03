@@ -20,8 +20,7 @@ NATS as the default internal transport.
 - Business/application code depends on ports/adapters rather than `ClientProxy`
   directly.
 
-NestJS 12's NATS transport uses the NATS v3 driver
-`@nats-io/transport-node`.
+NestJS 12's NATS transport uses the NATS v3 driver `@nats-io/transport-node`.
 
 ## Security
 

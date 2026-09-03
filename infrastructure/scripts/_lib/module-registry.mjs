@@ -203,7 +203,7 @@ export function resolveModules(modulesArray, registry, deployableSlug) {
     if (!satisfiesSemver(manifest.version, entry.version)) {
       errors.push(
         `${deployableSlug}: module "${entry.use}" version ${manifest.version} ` +
-          `does not satisfy range "${entry.version}"`
+          `does not satisfy range "${entry.version}"`,
       );
       continue;
     }
@@ -230,7 +230,7 @@ export function resolveModules(modulesArray, registry, deployableSlug) {
       if (!allProvides.has(token)) {
         errors.push(
           `${deployableSlug}: module "${r.use}" consumes "${token}" but no ` +
-            `other module in this deployable provides it`
+            `other module in this deployable provides it`,
         );
       }
     }
@@ -282,7 +282,7 @@ export function capabilitiesToModules(capabilities, deployableSlug) {
     if (capabilities[flag] === true) {
       console.warn(
         `⚠ ${deployableSlug}: capabilities.${flag} is deprecated — ` +
-          `migrate to modules: [{ use: "${moduleName}", version: "^1.0.0" }]`
+          `migrate to modules: [{ use: "${moduleName}", version: "^1.0.0" }]`,
       );
       modules.push({
         use: moduleName,

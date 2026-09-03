@@ -106,8 +106,8 @@ one-liner roster.
 
 ### IaC / Terraform build lane (1)
 
-| Slug                            | Role                                                           | Charter present |
-| ------------------------------- | -------------------------------------------------------------- | --------------- |
+| Slug                            | Role                                                                       | Charter present |
+| ------------------------------- | -------------------------------------------------------------------------- | --------------- |
 | `go-terraform-provider-builder` | Custom Terraform providers + HCL modules + env roots (Cloudflare/Supabase) | yes             |
 
 ### Backend service build lane (TypeScript / Python / Go)
@@ -218,20 +218,20 @@ sub-agent invocation; every column is a phase.
 
 ### Building a feature (Phase 4)
 
-| Concern                                        | Sub-agent(s)                                    |
-| ---------------------------------------------- | ----------------------------------------------- |
-| Backend service feature (TypeScript Worker)    | `framework-core-builder`                        |
-| Backend tests                                  | `vitest-test-engineer`                          |
-| Frontend feature (web)                         | `heroui-ui-builder` + `code-standards-steward`  |
-| Frontend feature (native)                      | `heroui-native-builder`                         |
-| Framework-level primitive                      | `framework-core-builder`                        |
-| Docblocks + JSDoc on new exports               | `code-documentation-writer`                     |
-| Native-utility migration to `@stackra/support` | `support-utilities-steward`                     |
-| i18n catalog scaffolding                       | `translator`                                    |
-| AI-service endpoint                            | `python-service-builder`                        |
-| Package-manifest normalisation                 | `workspace-standardization-steward`             |
-| ADR authoring for design decisions             | `docs-adr-steward`                              |
-| Changesets + CHANGELOG entries                 | `docs-changesets-steward`                       |
+| Concern                                        | Sub-agent(s)                                   |
+| ---------------------------------------------- | ---------------------------------------------- |
+| Backend service feature (TypeScript Worker)    | `framework-core-builder`                       |
+| Backend tests                                  | `vitest-test-engineer`                         |
+| Frontend feature (web)                         | `heroui-ui-builder` + `code-standards-steward` |
+| Frontend feature (native)                      | `heroui-native-builder`                        |
+| Framework-level primitive                      | `framework-core-builder`                       |
+| Docblocks + JSDoc on new exports               | `code-documentation-writer`                    |
+| Native-utility migration to `@stackra/support` | `support-utilities-steward`                    |
+| i18n catalog scaffolding                       | `translator`                                   |
+| AI-service endpoint                            | `python-service-builder`                       |
+| Package-manifest normalisation                 | `workspace-standardization-steward`            |
+| ADR authoring for design decisions             | `docs-adr-steward`                             |
+| Changesets + CHANGELOG entries                 | `docs-changesets-steward`                      |
 
 ### Verifying a build (Phase 5)
 
@@ -316,20 +316,20 @@ Twelve concerns; every concern has exactly one owner. Non-overlap is a
 governance rule (`AGENT_ROSTER.md §VI.1`). If two reviewers file findings on the
 same concern, `chief-orchestrator` routes to the owner and drops the duplicate.
 
-| #   | Concern                                                            | Owner                                 |
-| --- | ------------------------------------------------------------------ | ------------------------------------- |
-| 1   | Docs (ADRs, steering, contracts)                                   | `docs-adr-steward`                    |
-| 2   | Docs (READMEs, changesets, CHANGELOGs)                             | `docs-changesets-steward`             |
-| 3   | Vitest test suite strength                                         | `vitest-test-engineer`                |
-| 4   | Native Jest + Detox suite strength                                 | `native-test-engineer`                |
-| 5   | Performance budgets (Lighthouse, k6, bundle)                       | `performance-engineer`                |
-| 6   | App-level WCAG 2.2 AA                                              | `accessibility-audit-lead`            |
-| 7   | Component-level UI design + a11y                                   | `ui-design-a11y-reviewer`             |
-| 8   | Release engineering + deploy runbook                               | `release-manager` + `deploy-engineer` |
-| 9   | DI / container / framework architecture                            | `container-di-architecture-reviewer`  |
-| 10  | Package API surface + tsup + tree-shaking                          | `package-api-release-reviewer`        |
-| 11  | Security + privacy + minor consent (PAT / JWT / RBAC / tenancy)    | `security-compliance-reviewer`        |
-| 12  | Env-var + secret naming across repos                               | `env-naming-steward`                  |
+| #   | Concern                                                         | Owner                                 |
+| --- | --------------------------------------------------------------- | ------------------------------------- |
+| 1   | Docs (ADRs, steering, contracts)                                | `docs-adr-steward`                    |
+| 2   | Docs (READMEs, changesets, CHANGELOGs)                          | `docs-changesets-steward`             |
+| 3   | Vitest test suite strength                                      | `vitest-test-engineer`                |
+| 4   | Native Jest + Detox suite strength                              | `native-test-engineer`                |
+| 5   | Performance budgets (Lighthouse, k6, bundle)                    | `performance-engineer`                |
+| 6   | App-level WCAG 2.2 AA                                           | `accessibility-audit-lead`            |
+| 7   | Component-level UI design + a11y                                | `ui-design-a11y-reviewer`             |
+| 8   | Release engineering + deploy runbook                            | `release-manager` + `deploy-engineer` |
+| 9   | DI / container / framework architecture                         | `container-di-architecture-reviewer`  |
+| 10  | Package API surface + tsup + tree-shaking                       | `package-api-release-reviewer`        |
+| 11  | Security + privacy + minor consent (PAT / JWT / RBAC / tenancy) | `security-compliance-reviewer`        |
+| 12  | Env-var + secret naming across repos                            | `env-naming-steward`                  |
 
 Plus two AI-service-specific concerns:
 

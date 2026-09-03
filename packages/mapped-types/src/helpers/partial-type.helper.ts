@@ -4,9 +4,9 @@ import {
   inheritPropertyInitializers,
   inheritTransformationMetadata,
   applyValidateIfDefinedDecorator,
-} from '@/utils';
-import type { MappedType } from '@/interfaces';
-import type { Type, RemoveFieldsWithType } from '@/types';
+} from "@/utils";
+import type { MappedType } from "@/interfaces";
+import type { Type, RemoveFieldsWithType } from "@/types";
 
 /**
  * @function PartialType
@@ -51,7 +51,7 @@ export function PartialType<T>(
      * @default true
      */
     skipNullProperties?: boolean;
-  } = {}
+  } = {},
 ) {
   /**
    * Abstract class that will be returned as the partial type
@@ -80,7 +80,7 @@ export function PartialType<T>(
   }
 
   // Set the name of the class to reflect that it's a partial version of the source class
-  Object.defineProperty(PartialClassType, 'name', {
+  Object.defineProperty(PartialClassType, "name", {
     value: `Partial${classRef.name}`,
   });
 

@@ -5,6 +5,7 @@
 ### Credential theft
 
 Mitigation:
+
 - short-lived tokens
 - rotation
 - revocation
@@ -14,6 +15,7 @@ Mitigation:
 ### Token replay
 
 Mitigation:
+
 - short expiry
 - audience
 - jti where required
@@ -22,6 +24,7 @@ Mitigation:
 ### Privilege escalation
 
 Mitigation:
+
 - least privilege
 - explicit IAM
 - policy tests
@@ -31,6 +34,7 @@ Mitigation:
 ### Tenant escape
 
 Mitigation:
+
 - server-derived tenant context
 - Scope validation
 - IAM
@@ -40,6 +44,7 @@ Mitigation:
 ### Webhook forgery
 
 Mitigation:
+
 - provider signature verification
 - timestamp/replay checks where supported
 - idempotency
@@ -47,6 +52,7 @@ Mitigation:
 ### Service impersonation
 
 Mitigation:
+
 - service principals
 - audience-bound tokens
 - workload identity
@@ -55,6 +61,7 @@ Mitigation:
 ### Authorization cache staleness
 
 Mitigation:
+
 - short TTL
 - invalidation
 - policy version
@@ -63,6 +70,7 @@ Mitigation:
 ### Supply chain
 
 Mitigation:
+
 - lockfiles
 - dependency scanning
 - SBOM

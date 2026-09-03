@@ -1,8 +1,8 @@
 # 20 — Implementation Roadmap
 
-**Status:** Baseline
-**Owner:** Platform architecture
-**Related:** [01 Architecture](01-platform-architecture.md), [15 Infrastructure & IaC](15-infrastructure-and-iac.md), all service specs
+**Status:** Baseline **Owner:** Platform architecture **Related:**
+[01 Architecture](01-platform-architecture.md),
+[15 Infrastructure & IaC](15-infrastructure-and-iac.md), all service specs
 
 ---
 
@@ -52,8 +52,8 @@ Phase 7 — First application (end-to-end)
     launch · audit · usage
 ```
 
-Only after Phase 7 is correct should additional applications be added
-(**O-7:** which application first).
+Only after Phase 7 is correct should additional applications be added (**O-7:**
+which application first).
 
 ---
 
@@ -83,7 +83,7 @@ Notifications service · Workflows (@figentra/workflows over CF Workflows)
 Policy engine (contextual authorization) · Approval capability
 Webhook platform (subscriptions/delivery/retry/replay/DLQ)
 Usage extraction (usage-service behind a queue) · Event replay / DLQ management
-Dependency-aware health · Incident/status (Better Stack) 
+Dependency-aware health · Incident/status (Better Stack)
 Data lifecycle enforcement · Data export/import · Access reviews · SCIM/SSO
 Tenant-custom roles · Billing responsibility (payer ≠ owner) depth
 ```
@@ -119,8 +119,8 @@ Deliberately out of scope — compose existing primitives instead:
 ```
 
 Cloudflare (Workers, Containers, Queues, Workflows, R2, KV, Durable Objects,
-Hyperdrive) + Supabase + Supabase Auth + Stripe/Paddle provide the substrate. Terraform
-provisions it; Wrangler deploys artifacts.
+Hyperdrive) + Supabase + Supabase Auth + Stripe/Paddle provide the substrate.
+Terraform provisions it; Wrangler deploys artifacts.
 
 ---
 
@@ -131,8 +131,7 @@ provisions it; Wrangler deploys artifacts.
 - **Contracts before consumers.** Publish `@figentra/contracts` for a domain
   before another service consumes it ([09 §8]).
 - **Events designed in from P0.** Even if consumers are few, emit domain events
-  via the outbox so services can be extracted later without redesign
-  ([11 §9]).
+  via the outbox so services can be extracted later without redesign ([11 §9]).
 - **Extract only on a measurable reason** ([00 §6.10]) — independent scaling,
   ownership, security boundary, volume.
 - **Deferred ≠ undesigned.** P1/P2 capabilities have their data shapes stubbed
@@ -164,7 +163,8 @@ If any step is faked or bypassed, Phase 7 is not done.
 
 ## 7. Open questions
 
-- **O-7** — Which application is built first in Phase 7 (CRM / Commerce / other)?
+- **O-7** — Which application is built first in Phase 7 (CRM / Commerce /
+  other)?
 - **O-5** — Whether the Infrastructure Orchestrator API (P2) is pulled earlier.
 - Confirm P0 audit depth (full audit service vs. minimal audit-event stream at
   launch).

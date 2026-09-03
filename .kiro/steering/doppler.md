@@ -177,11 +177,11 @@ must be authed to the account that owns each project. Two ways:
   prompt selects account) — then run `pnpm doppler:setup` twice, once per
   account. Doppler CLI keeps per-scope token overrides, so bindings from a
   previous session persist across account swaps.
-- **Recommended for CI**: use per-project **service tokens**
-  (issued from each Doppler dashboard's Access → Service Tokens page). Service
-  tokens are workplace-scoped, non-interactive, and don't require
-  `doppler login`. Each service's deploy pipeline gets its own service token
-  scoped to `<project>/<config>` (never a personal token in CI).
+- **Recommended for CI**: use per-project **service tokens** (issued from each
+  Doppler dashboard's Access → Service Tokens page). Service tokens are
+  workplace-scoped, non-interactive, and don't require `doppler login`. Each
+  service's deploy pipeline gets its own service token scoped to
+  `<project>/<config>` (never a personal token in CI).
 
 After `pnpm doppler:setup` runs, every `doppler run --` from any subdirectory
 resolves to the right project.
@@ -199,9 +199,9 @@ six-service split (ADR-0032) + the three-vendor-scope model (ADR-0069):
 - **SHARED runtime services** (cross-application per ADR-0032; corporate-
   operator scope per ADR-0069) → `figentra-<service-slug>`. Slug matches the
   service name minus the `-service` suffix: `identity-service` →
-  `figentra-identity`; `observability-service` →
-  `figentra-observability`. Applies to the five SHARED services (identity,
-  commerce, notifications, observability, platform).
+  `figentra-identity`; `observability-service` → `figentra-observability`.
+  Applies to the five SHARED services (identity, commerce, notifications,
+  observability, platform).
 - **Per-Application services** (per ADR-0032 + ADR-0058) → `<product>-<slug>`.
   For Academorix: `academorix-api` (TypeScript tenant API Worker) +
   `academorix-ai` (Python FastAPI AI runtime).
@@ -240,9 +240,9 @@ parents + athletes; coach = coaches + admins + academy staff).
 ## Config naming
 
 > **ADR anchor.** The `dev` / `stg` / `prd` config names below are Doppler-side
-> aliases for the workspace's canonical environment identifiers
-> (`development` / `staging` / `production`). The three-name canonical set + the
-> full external alias mapping are codified by
+> aliases for the workspace's canonical environment identifiers (`development` /
+> `staging` / `production`). The three-name canonical set + the full external
+> alias mapping are codified by
 > [ADR-0088](../../.docs/adr/ADR-0088-environment-canonical-identifiers.md).
 
 Every project uses exactly three canonical configs (Doppler auto-creates them at
@@ -266,8 +266,8 @@ ADR-0056.
   `.env*`, `.editorconfig`, `.gitignore`). Never `doppler.yaml` (no dot) — the
   workspace convention is uniform.
 - **No sub-file inside a deployable dir.** A deployable's directory contains ONE
-  `.doppler.yaml` at its root, next to its `package.json`.
-  Never `apps/academorix-dashboard/config/.doppler.yaml`.
+  `.doppler.yaml` at its root, next to its `package.json`. Never
+  `apps/academorix-dashboard/config/.doppler.yaml`.
 - **No template `.doppler.yaml` files.** When `pnpm bootstrap:*` scaffolds a new
   deployable, the script writes a fresh `.doppler.yaml` into the copied
   directory pointing at the new deployable's Doppler project.
@@ -361,9 +361,9 @@ When adding a new deployable app or service:
   `doppler run -- pnpm turbo run <task>`.
 - **Cross-service URLs + backend runtime secrets** (per-service Supabase
   connection, JWT signing key, R2/S3 bucket credentials, third-party API keys) →
-  each service's own Doppler project. Cross-service URLs (`IDENTITY_SERVICE_URL`, `COMMERCE_SERVICE_URL`,
-  ...) are duplicated per service that needs them — not shared via a common
-  config.
+  each service's own Doppler project. Cross-service URLs
+  (`IDENTITY_SERVICE_URL`, `COMMERCE_SERVICE_URL`, ...) are duplicated per
+  service that needs them — not shared via a common config.
 - **Client-side public config** (`VITE_*`, `NEXT_PUBLIC_*`, `EXPO_PUBLIC_*`) →
   each client app's own Doppler project. These are build-time constants inlined
   into the bundle; they're "secrets" in the Doppler sense (rotated via Doppler)

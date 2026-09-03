@@ -1,4 +1,4 @@
-import 'reflect-metadata';
+import "reflect-metadata";
 
 /**
  * Retrieves all metadata values for multiple keys from a target object, creating a comprehensive metadata map.
@@ -62,7 +62,7 @@ import 'reflect-metadata';
 export function getAllMetadata<T extends Record<string | symbol, any>>(
   metadataKeys: (string | symbol)[],
   target: object,
-  propertyKey?: string | symbol
+  propertyKey?: string | symbol,
 ): T {
   // Use reduce to build up an object containing all requested metadata
   // This approach is more efficient than multiple separate calls
@@ -77,6 +77,6 @@ export function getAllMetadata<T extends Record<string | symbol, any>>(
       }
       return accumulator;
     },
-    {} as Record<string | symbol, unknown>
+    {} as Record<string | symbol, unknown>,
   ) as T;
 }

@@ -19,8 +19,8 @@
 
 - Handlers are thin — one invokable handler per use case. Business logic lives
   in service/use-case modules, never inside the HTTP handler.
-- Domain models expose no side-effecting methods (no `send()`, `notify()`).
-  Side effects belong in use-case services.
+- Domain models expose no side-effecting methods (no `send()`, `notify()`). Side
+  effects belong in use-case services.
 - Validate + type request/response payloads at the boundary with a schema
   library (Zod for TypeScript). One schema per boundary shape; input and output
   are distinct schemas.

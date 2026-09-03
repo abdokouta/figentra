@@ -33,8 +33,8 @@ other metapackage repo after the pilot validates.
      `package.json` shape (this doc's Rule 3 anchors the required scripts).
    - [`package-conventions.md`](package-conventions.md) — sub-package
      conventions each `src/*/package.json` follows.
-   - [`frontend-packages.md`](../../.ref/steering/frontend-packages.md) — the package doctrine every
-     `@stackra/*` publishable satisfies.
+   - [`frontend-packages.md`](../../.ref/steering/frontend-packages.md) — the
+     package doctrine every `@stackra/*` publishable satisfies.
 
 ## The three artefacts every publishable metapackage repo ships
 
@@ -331,6 +331,7 @@ done
 - [`package-json-conventions.md`](package-json-conventions.md) — root
   `package.json` shape.
 - [`package-conventions.md`](package-conventions.md) — sub-package shape.
-- [`frontend-packages.md`](../../.ref/steering/frontend-packages.md) — the package doctrine.
+- [`frontend-packages.md`](../../.ref/steering/frontend-packages.md) — the
+  package doctrine.
 - Doppler — `figentra-workspace/dev` `STACKRA_NPM_TOKEN` — the workspace storage
   substrate for the publish token.

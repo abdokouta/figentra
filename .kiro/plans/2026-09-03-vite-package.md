@@ -8,12 +8,11 @@ reviewed_at: null
 
 # `@stackra/vite` — Vite config orchestrator
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md)
-**Reference:** `.ref/packages/vite/`
-**Depends on:** `@stackra/support` (Str), `@stackra/contracts` (light);
-`vite` is a required peer.
-**Design effort:** 8 days across 5 phases
+**Status:** Planned **Anchor ADRs:**
+[ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md)
+**Reference:** `.ref/packages/vite/` **Depends on:** `@stackra/support` (Str),
+`@stackra/contracts` (light); `vite` is a required peer. **Design effort:** 8
+days across 5 phases
 
 ## Purpose
 
@@ -55,7 +54,11 @@ export default defineConfig({
   server: { port: 3000 },
   build: { target: "es2022" },
   plugins: {
-    react: { enabled: true, factory: react, options: { jsxRuntime: "automatic" } },
+    react: {
+      enabled: true,
+      factory: react,
+      options: { jsxRuntime: "automatic" },
+    },
     tsconfigPaths: { enabled: true, factory: tsconfigPaths, options: {} },
     "config-inline": {
       enabled: process.env.APP_ENV !== "test",
@@ -66,8 +69,8 @@ export default defineConfig({
 });
 ```
 
-Returns a Vite `UserConfig` — every consuming project's `vite.config.ts`
-does `export default defineConfig({...})`.
+Returns a Vite `UserConfig` — every consuming project's `vite.config.ts` does
+`export default defineConfig({...})`.
 
 ### `mergeConfigs(...configs)`
 
@@ -83,19 +86,19 @@ export default mergeConfigs(base, overrides);
 
 ### `pluginMap<T>(entries)`
 
-Type-safe helper for the plugin-map envelope. Auto-infers the factory's
-options type:
+Type-safe helper for the plugin-map envelope. Auto-infers the factory's options
+type:
 
 ```typescript
 const plugins = pluginMap({
-  react: { enabled: true, factory: react, options: { /* auto-typed */ } },
+  react: { enabled: true, factory: react, options: {/* auto-typed */} },
 });
 ```
 
 ### `WorkspaceEnv` — env-var reader
 
-Wraps `import.meta.env` w/ typed accessors. Fails fast on missing required
-keys at Vite build time (not at runtime):
+Wraps `import.meta.env` w/ typed accessors. Fails fast on missing required keys
+at Vite build time (not at runtime):
 
 ```typescript
 import { WorkspaceEnv } from "@stackra/vite/env";
@@ -203,8 +206,8 @@ Every `defineConfig` call inherits these defaults (overridable):
 
 - [ ] Unit tests (12+).
 - [ ] README documents every helper w/ a 5-plugin composite example.
-- [ ] Cross-refs to `@stackra/config`, `@stackra/i18n`, `@stackra/testing`
-      (each of which ships a Vite plugin).
+- [ ] Cross-refs to `@stackra/config`, `@stackra/i18n`, `@stackra/testing` (each
+      of which ships a Vite plugin).
 
 ## Exit criteria
 

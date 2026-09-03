@@ -71,22 +71,12 @@
     },
     "heroui-react": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@heroui/react-mcp@latest"
-      ],
-      "autoApprove": [
-        "get_component_docs",
-        "list_components",
-        "get_theme_variables"
-      ]
+      "args": ["-y", "@heroui/react-mcp@latest"],
+      "autoApprove": ["get_component_docs", "list_components", "get_theme_variables"]
     },
     "heroui-native": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@heroui/native-mcp@latest"
-      ]
+      "args": ["-y", "@heroui/native-mcp@latest"]
     },
     "heroui-pro": {
       "command": "/opt/homebrew/bin/doppler",

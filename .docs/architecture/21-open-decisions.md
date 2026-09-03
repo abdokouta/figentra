@@ -54,8 +54,10 @@
 38. Deployment/Terraform runner.
 39. Cloudflare vs AWS service placement.
 40. Observability provider.
-41. Whether centralized webhook ingress remains one Worker or is split by provider/domain.
-42. Whether the Registry Worker needs D1 only or D1 + KV caching at production scale.
+41. Whether centralized webhook ingress remains one Worker or is split by
+    provider/domain.
+42. Whether the Registry Worker needs D1 only or D1 + KV caching at production
+    scale.
 
 ## Process
 

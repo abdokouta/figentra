@@ -8,14 +8,14 @@ reviewed_at: null
 
 # @stackra/queue — architecture plan
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
+**Status:** Planned **Anchor ADRs:**
+[ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
 [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
 [ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md),
 [ADR-0018](../../.docs/adr/ADR-0018-service-to-service-transport.md),
-[ADR-0083](../../.docs/adr/ADR-0083-queue-runtime-boundary.md)
-**Reference:** `.ref/packages/queue/` (`@stackra/queue` v0.1.0)
-**Depends on:** `@stackra/container` (Task 13), `@stackra/contracts` (Task 6),
+[ADR-0083](../../.docs/adr/ADR-0083-queue-runtime-boundary.md) **Reference:**
+`.ref/packages/queue/` (`@stackra/queue` v0.1.0) **Depends on:**
+`@stackra/container` (Task 13), `@stackra/contracts` (Task 6),
 `@stackra/support` (Manager), `@stackra/logger` (job lifecycle logs)
 
 ## Purpose
@@ -30,19 +30,17 @@ requirements day one:
   manual inspection.
 - **Delayed jobs** — `queue.dispatch(job, { delay: 60_000 })`.
 - **Priority queues** — `{ priority: "high" | "normal" | "low" }`.
-- **Idempotency** — `{ idempotencyKey }` — duplicate dispatches within a
-  window resolve to the SAME job.
-- **Job chains + batches** — sequence of jobs with cancel-on-any-fail
-  semantics.
+- **Idempotency** — `{ idempotencyKey }` — duplicate dispatches within a window
+  resolve to the SAME job.
+- **Job chains + batches** — sequence of jobs with cancel-on-any-fail semantics.
 - **Observability** — every job emits `job.queued`, `job.started`,
   `job.retried`, `job.failed`, `job.completed` events via `@stackra/events`.
-- **Auto-discovery** — `@Processor(name)`-decorated classes auto-register
-  via `IDiscoveryService`.
+- **Auto-discovery** — `@Processor(name)`-decorated classes auto-register via
+  `IDiscoveryService`.
 - **Rate-limiting** — per-queue max-jobs-per-second.
 - **Concurrency** — per-queue max-parallel-workers.
 - **Cross-runtime** — Node/NestJS uses BullMQ or NATS JetStream; Workers use
-  Cloudflare Queues; browser uses BroadcastChannel + IndexedDB (offline
-  queue).
+  Cloudflare Queues; browser uses BroadcastChannel + IndexedDB (offline queue).
 
 ## Non-goals
 
@@ -119,22 +117,22 @@ packages/queue/
 
 ## Contracts split
 
-| Symbol                        | Kind      |
-| ----------------------------- | --------- |
-| `IQueueConnector`             | interface |
-| `IQueueConnection`            | interface |
-| `IQueueManager`               | interface |
-| `IJob<TPayload, TResult>`     | interface |
-| `IJobOptions`                 | interface |
-| `IProcessor<TPayload>`        | interface |
-| `IQueueEventBus`              | interface |
-| `JobStatus` enum              | enum      |
-| `QUEUE_MANAGER`               | token     |
-| `QUEUE_CONFIG`                | token     |
-| `QUEUE_EVENT_BUS`             | token     |
-| `QUEUE_EVENTS`                | constant map |
-| `JobFailedError`              | class     |
-| `JobTimeoutError`             | class     |
+| Symbol                    | Kind         |
+| ------------------------- | ------------ |
+| `IQueueConnector`         | interface    |
+| `IQueueConnection`        | interface    |
+| `IQueueManager`           | interface    |
+| `IJob<TPayload, TResult>` | interface    |
+| `IJobOptions`             | interface    |
+| `IProcessor<TPayload>`    | interface    |
+| `IQueueEventBus`          | interface    |
+| `JobStatus` enum          | enum         |
+| `QUEUE_MANAGER`           | token        |
+| `QUEUE_CONFIG`            | token        |
+| `QUEUE_EVENT_BUS`         | token        |
+| `QUEUE_EVENTS`            | constant map |
+| `JobFailedError`          | class        |
+| `JobTimeoutError`         | class        |
 
 ## Core API (locked)
 
@@ -145,9 +143,17 @@ interface IQueueManager {
 
 interface IQueueConnection {
   // Dispatch
-  dispatch<TPayload>(name: string, payload: TPayload, options?: IJobOptions): Promise<IJobHandle>;
-  dispatchChain(jobs: Array<{ name: string; payload: unknown; options?: IJobOptions }>): Promise<IJobHandle>;
-  dispatchBatch(jobs: Array<{ name: string; payload: unknown }>): Promise<IJobHandle[]>;
+  dispatch<TPayload>(
+    name: string,
+    payload: TPayload,
+    options?: IJobOptions,
+  ): Promise<IJobHandle>;
+  dispatchChain(
+    jobs: Array<{ name: string; payload: unknown; options?: IJobOptions }>,
+  ): Promise<IJobHandle>;
+  dispatchBatch(
+    jobs: Array<{ name: string; payload: unknown }>,
+  ): Promise<IJobHandle[]>;
 
   // Introspection + control
   size(): Promise<number>;
@@ -156,17 +162,25 @@ interface IQueueConnection {
   resume(): Promise<void>;
 
   // Worker (server-side)
-  process<TPayload>(name: string, handler: IProcessor<TPayload>, options?: IProcessorOptions): void;
+  process<TPayload>(
+    name: string,
+    handler: IProcessor<TPayload>,
+    options?: IProcessorOptions,
+  ): void;
 }
 
 interface IJobOptions {
-  delay?: number;              // ms
+  delay?: number; // ms
   priority?: "high" | "normal" | "low";
-  attempts?: number;           // default: 3
-  backoff?: { type: "exponential" | "linear" | "fixed"; delay: number; jitter?: boolean };
-  timeout?: number;            // ms
+  attempts?: number; // default: 3
+  backoff?: {
+    type: "exponential" | "linear" | "fixed";
+    delay: number;
+    jitter?: boolean;
+  };
+  timeout?: number; // ms
   idempotencyKey?: string;
-  removeOnComplete?: boolean | number;  // keep last N, or false to keep all
+  removeOnComplete?: boolean | number; // keep last N, or false to keep all
   removeOnFail?: boolean | number;
 }
 
@@ -177,18 +191,18 @@ interface IProcessor<TPayload> {
 
 ## Connectors (locked catalogue)
 
-| Connector           | Home                                            | Runtime | Backend                          |
-| ------------------- | ----------------------------------------------- | ------- | -------------------------------- |
-| `memory`            | `core/connectors/memory.connector.ts`           | Every   | In-process Map + setTimeout      |
-| `null`              | `core/connectors/null.connector.ts`             | Every   | No-op                            |
-| `sync`              | `core/connectors/sync.connector.ts`             | Every   | Fire synchronously (dev/tests)   |
-| `broadcast-channel` | `core/connectors/broadcast-channel.connector.ts` | Browser | BroadcastChannel (cross-tab)     |
-| `indexeddb`         | `core/connectors/indexeddb.connector.ts`        | Browser | IDB (offline queue)              |
-| `local-storage`     | `core/connectors/local-storage.connector.ts`    | Browser | localStorage (fallback)          |
-| `qstash`            | `core/connectors/qstash.connector.ts`           | Every   | Upstash QStash HTTP              |
-| `bullmq`            | `nestjs/connectors/bullmq.connector.ts`         | Node    | Redis + BullMQ                   |
-| `nats`              | `nestjs/connectors/nats.connector.ts`           | Node    | NATS JetStream (ADR-0018/0020)   |
-| `cloudflare-queues` | `worker/connectors/cloudflare-queues.connector.ts` | Worker  | env.QUEUE binding                |
+| Connector           | Home                                               | Runtime | Backend                        |
+| ------------------- | -------------------------------------------------- | ------- | ------------------------------ |
+| `memory`            | `core/connectors/memory.connector.ts`              | Every   | In-process Map + setTimeout    |
+| `null`              | `core/connectors/null.connector.ts`                | Every   | No-op                          |
+| `sync`              | `core/connectors/sync.connector.ts`                | Every   | Fire synchronously (dev/tests) |
+| `broadcast-channel` | `core/connectors/broadcast-channel.connector.ts`   | Browser | BroadcastChannel (cross-tab)   |
+| `indexeddb`         | `core/connectors/indexeddb.connector.ts`           | Browser | IDB (offline queue)            |
+| `local-storage`     | `core/connectors/local-storage.connector.ts`       | Browser | localStorage (fallback)        |
+| `qstash`            | `core/connectors/qstash.connector.ts`              | Every   | Upstash QStash HTTP            |
+| `bullmq`            | `nestjs/connectors/bullmq.connector.ts`            | Node    | Redis + BullMQ                 |
+| `nats`              | `nestjs/connectors/nats.connector.ts`              | Node    | NATS JetStream (ADR-0018/0020) |
+| `cloudflare-queues` | `worker/connectors/cloudflare-queues.connector.ts` | Worker  | env.QUEUE binding              |
 
 ## Decorators + Auto-registration
 
@@ -197,8 +211,12 @@ interface IProcessor<TPayload> {
 ```typescript
 @Processor("send-welcome-email")
 @Injectable()
-export class SendWelcomeEmailProcessor implements IProcessor<{ userId: string }> {
-  public constructor(@Inject(EMAIL_SERVICE) private readonly mail: IEmailService) {}
+export class SendWelcomeEmailProcessor implements IProcessor<{
+  userId: string;
+}> {
+  public constructor(
+    @Inject(EMAIL_SERVICE) private readonly mail: IEmailService,
+  ) {}
 
   public async handle(job: IJob<{ userId: string }>): Promise<void> {
     await this.mail.sendTemplate("welcome", { userId: job.payload.userId });
@@ -207,8 +225,8 @@ export class SendWelcomeEmailProcessor implements IProcessor<{ userId: string }>
 ```
 
 `ProcessorSubscribersLoader` (from `.ref/packages/queue/src/core/services/`)
-walks discovered `@Processor` classes at `OnApplicationBootstrap` and
-registers each with the appropriate queue via `manager.connection().process()`.
+walks discovered `@Processor` classes at `OnApplicationBootstrap` and registers
+each with the appropriate queue via `manager.connection().process()`.
 
 Additional decorators:
 
@@ -218,14 +236,13 @@ Additional decorators:
 
 ## DLQ + retry semantics
 
-- Every failed job increments `attempts` counter. After
-  `options.attempts` (default 3) the job routes to the `<queue>.dead-letter`
-  destination.
-- DLQ is a separate connector-registered queue (BullMQ has native DLQ; NATS
-  uses stream max-deliver + Terminal ack; Cloudflare Queues has a
-  `deadLetterQueue` binding).
-- CLI `queue:failed` lists DLQ jobs. `queue:retry <id>` re-dispatches from
-  DLQ back to origin queue.
+- Every failed job increments `attempts` counter. After `options.attempts`
+  (default 3) the job routes to the `<queue>.dead-letter` destination.
+- DLQ is a separate connector-registered queue (BullMQ has native DLQ; NATS uses
+  stream max-deliver + Terminal ack; Cloudflare Queues has a `deadLetterQueue`
+  binding).
+- CLI `queue:failed` lists DLQ jobs. `queue:retry <id>` re-dispatches from DLQ
+  back to origin queue.
 
 ## Events lifecycle
 
@@ -267,15 +284,15 @@ Downstream: audit trail (`@stackra/audit`), Sentry hooks, monitoring gauges.
     "@nestjs/core": "catalog:nestjs",
     "react": "catalog:react",
     "bullmq": "^5.0.0",
-    "nats": "^2.29.0"
+    "nats": "^2.29.0",
   },
   "peerDependenciesMeta": {
     "@nestjs/common": { "optional": true },
     "@nestjs/core": { "optional": true },
     "react": { "optional": true },
     "bullmq": { "optional": true },
-    "nats": { "optional": true }
-  }
+    "nats": { "optional": true },
+  },
 }
 ```
 
@@ -309,8 +326,7 @@ Downstream: audit trail (`@stackra/audit`), Sentry hooks, monitoring gauges.
 ### Phase 4 — Worker subpath (2 days)
 
 - [ ] `CloudflareQueuesConnector` — reads `env.QUEUE_*` bindings.
-- [ ] `DurableObjectQueueConnector` — DO-backed queue for stateful
-      workflows.
+- [ ] `DurableObjectQueueConnector` — DO-backed queue for stateful workflows.
 - [ ] Consumer-router: binds Worker's `queue()` handler to
       `WorkerService.process()`.
 
@@ -335,8 +351,7 @@ Downstream: audit trail (`@stackra/audit`), Sentry hooks, monitoring gauges.
 - [ ] 5 subpath exports build cleanly.
 - [ ] BullMQ round-trip (dispatch → process → complete) works against a real
       Redis in integration test.
-- [ ] Cloudflare Queues consumer smoke test (Miniflare) processes 100
-      messages.
+- [ ] Cloudflare Queues consumer smoke test (Miniflare) processes 100 messages.
 - [ ] DLQ: force 5 failures → job lands in `<queue>.dead-letter`.
 - [ ] Idempotency: 3 dispatches with same key + 5s window → 1 job runs.
 - [ ] Metrics: hit / process / retry / fail counters exposed by health

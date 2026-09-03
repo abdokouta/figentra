@@ -42,10 +42,8 @@ export const theme = {
   border: "rgba(20, 20, 20, 0.12)",
   borderStrong: "rgba(20, 20, 20, 0.24)",
 
-  fontSans:
-    '"Geist", "Inter", -apple-system, "Segoe UI", Roboto, Helvetica, sans-serif',
-  fontMono:
-    '"Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace',
+  fontSans: '"Geist", "Inter", -apple-system, "Segoe UI", Roboto, Helvetica, sans-serif',
+  fontMono: '"Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace',
 
   radius: 12,
   radiusSm: 8,
@@ -77,10 +75,7 @@ export interface EmailShellProps {
   children: React.ReactNode;
 }
 
-export function EmailShell({
-  preview,
-  children,
-}: EmailShellProps): React.ReactElement {
+export function EmailShell({ preview, children }: EmailShellProps): React.ReactElement {
   return (
     <Html lang="en">
       <Head>
@@ -287,13 +282,7 @@ export function Muted({ children }: { children: React.ReactNode }) {
 }
 
 /* ── CTA button · bulletproof table button ─────────────── */
-export function CTA({
-  href,
-  label,
-}: {
-  href: string;
-  label: string;
-}): React.ReactElement {
+export function CTA({ href, label }: { href: string; label: string }): React.ReactElement {
   return (
     <table role="presentation" cellPadding={0} cellSpacing={0} style={{ margin: "8px 0 24px" }}>
       <tbody>
@@ -409,8 +398,8 @@ export function EmailFooter(): React.ReactElement {
           lineHeight: 1.5,
         }}
       >
-        You're getting this because your academy uses Academorix. Every
-        message we send carries a plain-text unsubscribe below.
+        You're getting this because your academy uses Academorix. Every message we send carries a
+        plain-text unsubscribe below.
       </Text>
       <Text
         style={{

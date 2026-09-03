@@ -1,6 +1,4 @@
 {
   "$schema": "https://oxc.rs/schema/oxlint.json",
-  "extends": [
-    "@stackra/oxlint-config/native"
-  ]
+  "extends": ["@stackra/oxlint-config/native"]
 }

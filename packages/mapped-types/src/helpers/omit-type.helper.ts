@@ -2,9 +2,9 @@ import {
   inheritValidationMetadata,
   inheritPropertyInitializers,
   inheritTransformationMetadata,
-} from '@/utils';
-import type { MappedType } from '@/interfaces';
-import type { Type, RemoveFieldsWithType } from '@/types';
+} from "@/utils";
+import type { MappedType } from "@/interfaces";
+import type { Type, RemoveFieldsWithType } from "@/types";
 
 /**
  * @function OmitType

@@ -50,8 +50,4 @@ export interface IExistingProvider<T = unknown> {
  * Union of every supported provider shape.
  */
 export type Provider<T = unknown> =
-  | Type<T>
-  | IClassProvider<T>
-  | IValueProvider<T>
-  | IFactoryProvider<T>
-  | IExistingProvider<T>;
+  Type<T> | IClassProvider<T> | IValueProvider<T> | IFactoryProvider<T> | IExistingProvider<T>;

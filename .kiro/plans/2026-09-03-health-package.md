@@ -8,26 +8,26 @@ reviewed_at: null
 
 # @stackra/health — architecture plan
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
-[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md)
-**Reference:** `.ref/packages/health/` (`@stackra/nestjs-health` v0.1.0)
-**Depends on:** `@stackra/container`, `@stackra/contracts`, `@stackra/logger`,
+**Status:** Planned **Anchor ADRs:**
+[ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
+[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md) **Reference:**
+`.ref/packages/health/` (`@stackra/nestjs-health` v0.1.0) **Depends on:**
+`@stackra/container`, `@stackra/contracts`, `@stackra/logger`,
 `@stackra/support`, `@nestjs/terminus`
 
 ## Purpose
 
-`@stackra/health` is the workspace's canonical health-check module.
-Enterprise requirements day one:
+`@stackra/health` is the workspace's canonical health-check module. Enterprise
+requirements day one:
 
 - **Kubernetes probes** — `/live` (liveness), `/ready` (readiness), `/health`
   (aggregate). Match the exact spec Kubernetes checks against.
-- **Auto-discovery of indicators** — `@HealthIndicator("db")`-decorated
-  classes auto-register via `IDiscoveryService`.
+- **Auto-discovery of indicators** — `@HealthIndicator("db")`-decorated classes
+  auto-register via `IDiscoveryService`.
 - **Pluggable result stores** — in-memory (dev), database (persistent history),
   Redis (shared across replicas).
-- **Scheduling** — indicators run on interval (via `@stackra/scheduler`
-  future dep OR internal setInterval).
+- **Scheduling** — indicators run on interval (via `@stackra/scheduler` future
+  dep OR internal setInterval).
 - **Alerting hooks** — degraded/failing status routes to
   `@stackra/notifications` (planned).
 - **CLI** — `health:check`, `health:list`, `health:test`.
@@ -43,8 +43,8 @@ Enterprise requirements day one:
 ## Package pattern — NOT driver-manager
 
 Health is not a "swap driver" concern — you always run ALL registered
-indicators. But the RESULT STORE is swappable (in-memory / DB / Redis) — a
-mini Manager<T> pattern lives internally for stores, exposed as
+indicators. But the RESULT STORE is swappable (in-memory / DB / Redis) — a mini
+Manager<T> pattern lives internally for stores, exposed as
 `healthConfig.store = "in-memory" | "database" | "redis"`.
 
 ## Subpath layout (per ADR-0091)
@@ -94,29 +94,29 @@ packages/health/
 
 ## Contracts split
 
-| Symbol                    | Kind      |
-| ------------------------- | --------- |
-| `IHealthIndicator`        | interface |
-| `IHealthResult`           | interface |
-| `IHealthReport`           | interface |
-| `IHealthResultStore`      | interface |
-| `IHealthProbe`            | interface |
-| `HealthStatus` enum       | enum      |
-| `HEALTH_SERVICE`          | token     |
-| `HEALTH_CONFIG`           | token     |
-| `HealthCheckError`        | class     |
+| Symbol               | Kind      |
+| -------------------- | --------- |
+| `IHealthIndicator`   | interface |
+| `IHealthResult`      | interface |
+| `IHealthReport`      | interface |
+| `IHealthResultStore` | interface |
+| `IHealthProbe`       | interface |
+| `HealthStatus` enum  | enum      |
+| `HEALTH_SERVICE`     | token     |
+| `HEALTH_CONFIG`      | token     |
+| `HealthCheckError`   | class     |
 
 ## Core API
 
 ```typescript
 interface IHealthIndicator {
-  readonly key: string;                 // "database.postgres", "cache.redis"
-  readonly critical: boolean;           // fails aggregate if this fails
+  readonly key: string; // "database.postgres", "cache.redis"
+  readonly critical: boolean; // fails aggregate if this fails
   check(): Promise<IHealthResult>;
 }
 
 interface IHealthResult {
-  status: HealthStatus;                 // ok | degraded | failing
+  status: HealthStatus; // ok | degraded | failing
   message?: string;
   meta?: Record<string, unknown>;
   latencyMs?: number;
@@ -143,7 +143,8 @@ enum HealthStatus {
 
 **Core (runtime-agnostic):**
 
-- `MemoryIndicator` — process memory usage (Node) or `performance.memory` (browser).
+- `MemoryIndicator` — process memory usage (Node) or `performance.memory`
+  (browser).
 - `EventLoopLagIndicator` — Node event-loop lag histogram.
 - `ProcessUptimeIndicator` — process uptime + last-restart.
 
@@ -171,7 +172,9 @@ enum HealthStatus {
 })
 @Injectable()
 export class PostgresHealthIndicator implements IHealthIndicator {
-  public constructor(@Inject(DATABASE) private readonly db: IDatabaseConnection) {}
+  public constructor(
+    @Inject(DATABASE) private readonly db: IDatabaseConnection,
+  ) {}
 
   public async check(): Promise<IHealthResult> {
     const start = Date.now();
@@ -223,7 +226,8 @@ Three canonical endpoints:
   fails. Kubernetes restarts on 503.
 - `GET /ready` — 200 if ready to serve traffic; 503 if any readiness indicator
   fails. Kubernetes removes from service on 503.
-- `GET /health` — aggregate report with every indicator's status. Human-readable.
+- `GET /health` — aggregate report with every indicator's status.
+  Human-readable.
 
 Every response has consistent JSON:
 
@@ -286,13 +290,13 @@ Downstream `@stackra/notifications` subscribes and dispatches alerts.
     "@stackra/events": "workspace:*",
     "@nestjs/common": "catalog:nestjs",
     "@nestjs/core": "catalog:nestjs",
-    "@nestjs/terminus": "catalog:nestjs"
+    "@nestjs/terminus": "catalog:nestjs",
   },
   "peerDependenciesMeta": {
     "@nestjs/common": { "optional": true },
     "@nestjs/core": { "optional": true },
-    "@nestjs/terminus": { "optional": true }
-  }
+    "@nestjs/terminus": { "optional": true },
+  },
 }
 ```
 
@@ -307,8 +311,7 @@ Downstream `@stackra/notifications` subscribes and dispatches alerts.
 
 ### Phase 2 — Core (3 days)
 
-- [ ] Port core indicators (memory, event-loop-lag, process-uptime,
-      disk).
+- [ ] Port core indicators (memory, event-loop-lag, process-uptime, disk).
 - [ ] `IndicatorRegistry`, `IndicatorLoader` (via DiscoveryService).
 - [ ] `HealthService` w/ report aggregation.
 - [ ] 3 result stores (in-memory, database, redis).

@@ -8,16 +8,15 @@ reviewed_at: null
 
 # `@stackra/mail` — enterprise email sending
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
+**Status:** Planned **Anchor ADRs:**
+[ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
 [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
-[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md)
-**Reference:** `.ref/packages/mail/` (`@nesvel/nestjs-mail` v0.1.0)
-**Depends on:** `@stackra/container`, `@stackra/contracts`, `@stackra/support`,
+[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md) **Reference:**
+`.ref/packages/mail/` (`@nesvel/nestjs-mail` v0.1.0) **Depends on:**
+`@stackra/container`, `@stackra/contracts`, `@stackra/support`,
 `@stackra/config`, `@stackra/queue` (for async delivery), `@stackra/logger`,
 `@stackra/link` (for signed URLs in emails), `@react-email/render` (optional
-peer)
-**Design effort:** 24 days across 10 phases
+peer) **Design effort:** 24 days across 10 phases
 
 ## Purpose
 
@@ -26,11 +25,12 @@ Mailables + BullMQ queues + React email templates + 5 transport providers.
 
 Every service that sends email composes from this. Ships:
 
-- **Multi-transport** — SMTP / AWS SES / SendGrid / Mailgun / Postmark /
-  Resend / stdout (dev). Selected via `MailManager` (Shape B — one connection
-  per environment / brand).
+- **Multi-transport** — SMTP / AWS SES / SendGrid / Mailgun / Postmark / Resend
+  / stdout (dev). Selected via `MailManager` (Shape B — one connection per
+  environment / brand).
 - **Mailable classes** — Laravel-style declarative API. Author a `WelcomeEmail`
-  class w/ subject, view, attachments, cc/bcc; send it via `mail.to(user).send(new WelcomeEmail(user))`.
+  class w/ subject, view, attachments, cc/bcc; send it via
+  `mail.to(user).send(new WelcomeEmail(user))`.
 - **React email templates** — via `@react-email/render`. Type-safe props;
   cross-client-tested HTML output.
 - **Queued by default** — every send goes through `@stackra/queue`. Sync send
@@ -46,8 +46,8 @@ Every service that sends email composes from this. Ships:
 
 ## Non-goals
 
-- Marketing-email campaigns (opt-in list management, drip campaigns) — that's
-  a marketing-platform concern (Mailchimp / SendGrid Marketing API).
+- Marketing-email campaigns (opt-in list management, drip campaigns) — that's a
+  marketing-platform concern (Mailchimp / SendGrid Marketing API).
 - SMS — separate package (`@stackra/sms` — future).
 - Push notifications — separate package (`@stackra/push` — future).
 - Inbox parsing / IMAP — not shipped; would be a separate package.
@@ -92,17 +92,17 @@ mail.instance("marketing").to(user).send(new NewsletterEmail(newsletter));
 
 ## Transport drivers
 
-| Driver     | Peer                      | Provides                                                    |
-| ---------- | ------------------------- | ----------------------------------------------------------- |
-| `smtp`     | `nodemailer`              | Generic SMTP (self-hosted / any provider).                  |
-| `ses`      | `@aws-sdk/client-sesv2`   | AWS SES — bounce/complaint via SNS webhook.                 |
-| `sendgrid` | native `fetch`             | SendGrid v3 API + event webhook.                            |
-| `mailgun`  | native `fetch`             | Mailgun v4 API + event webhook.                             |
-| `postmark` | native `fetch`             | Postmark server tokens + delivery hooks.                    |
-| `resend`   | native `fetch`             | Resend API — modern, DX-focused.                            |
-| `log`      | none                       | Prints to stdout; dev-only.                                 |
-| `array`    | none                       | Captures in memory; test-only.                              |
-| `null`     | none                       | No-op; benchmarks + tenant-suspended.                       |
+| Driver     | Peer                    | Provides                                    |
+| ---------- | ----------------------- | ------------------------------------------- |
+| `smtp`     | `nodemailer`            | Generic SMTP (self-hosted / any provider).  |
+| `ses`      | `@aws-sdk/client-sesv2` | AWS SES — bounce/complaint via SNS webhook. |
+| `sendgrid` | native `fetch`          | SendGrid v3 API + event webhook.            |
+| `mailgun`  | native `fetch`          | Mailgun v4 API + event webhook.             |
+| `postmark` | native `fetch`          | Postmark server tokens + delivery hooks.    |
+| `resend`   | native `fetch`          | Resend API — modern, DX-focused.            |
+| `log`      | none                    | Prints to stdout; dev-only.                 |
+| `array`    | none                    | Captures in memory; test-only.              |
+| `null`     | none                    | No-op; benchmarks + tenant-suspended.       |
 
 ## Public API — locked
 
@@ -176,7 +176,7 @@ class WelcomeEmail extends Mailable {
 import { mailFake } from "@stackra/mail/testing";
 
 test("welcome email sends", async () => {
-  const fake = mailFake();  // swaps default instance to "array" driver
+  const fake = mailFake(); // swaps default instance to "array" driver
 
   await userService.register({ email: "foo@bar.com" });
 
@@ -192,13 +192,13 @@ test("welcome email sends", async () => {
 
 ### Queued sends via `@stackra/queue`
 
-`.send(mailable)` dispatches `SendMailJob` to `@stackra/queue`. Processor
-lives in the same package. Config:
+`.send(mailable)` dispatches `SendMailJob` to `@stackra/queue`. Processor lives
+in the same package. Config:
 
 ```typescript
 MailModule.forRoot({
   queue: {
-    connection: "primary",   // @stackra/queue connection name
+    connection: "primary", // @stackra/queue connection name
     queueName: "mail",
     concurrency: 10,
     attempts: 3,
@@ -247,23 +247,30 @@ Every send records to `mail_deliveries`:
 
 ```typescript
 interface IMailDelivery {
-  id: string;                     // ULID
+  id: string; // ULID
   messageId: string;
-  transport: string;              // "ses" / "sendgrid" / ...
-  mailable: string;                // class name
+  transport: string; // "ses" / "sendgrid" / ...
+  mailable: string; // class name
   recipient: string;
   cc: string[];
   bcc: string[];
   subject: string;
-  status: "queued" | "sent" | "delivered" | "bounced" | "complained" | "opened" | "clicked";
-  events: IMailEvent[];             // timestamped state transitions
+  status:
+    | "queued"
+    | "sent"
+    | "delivered"
+    | "bounced"
+    | "complained"
+    | "opened"
+    | "clicked";
+  events: IMailEvent[]; // timestamped state transitions
   createdAt: Date;
   metadata: Record<string, unknown>;
 }
 ```
 
-Webhook handlers update the `status` + append `events`. Enables the admin
-"why didn't this email arrive?" flow.
+Webhook handlers update the `status` + append `events`. Enables the admin "why
+didn't this email arrive?" flow.
 
 ## Subpath layout
 
@@ -357,8 +364,8 @@ packages/mail/
 
 Every Mailable class registered via `@Mailable()` decorator ships:
 
-- A **preview URL** — `/dev/mail-preview/<mailable-name>` renders the email
-  in the browser (dev-only middleware).
+- A **preview URL** — `/dev/mail-preview/<mailable-name>` renders the email in
+  the browser (dev-only middleware).
 - A **CLI command** — `stackra mail:preview WelcomeEmail --to=foo@bar.com`.
 
 Enables designers to iterate on templates without a full send.
@@ -432,10 +439,10 @@ Enables designers to iterate on templates without a full send.
 
 ## Exit criteria
 
-- [ ] Every transport driver sends successfully in dev (SMTP / SES /
-      SendGrid / Mailgun / Postmark / Resend).
-- [ ] React email template renders w/ dark-mode support (Gmail + Apple Mail
-      + Outlook rendering verified).
+- [ ] Every transport driver sends successfully in dev (SMTP / SES / SendGrid /
+      Mailgun / Postmark / Resend).
+- [ ] React email template renders w/ dark-mode support (Gmail + Apple Mail +
+      Outlook rendering verified).
 - [ ] Queued sends complete + failure retries per policy.
 - [ ] Bounce webhook adds recipient to suppression list; subsequent sends
       short-circuit.

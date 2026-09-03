@@ -8,22 +8,23 @@ reviewed_at: null
 
 # @stackra/container — architecture plan
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
+**Status:** Planned **Anchor ADRs:**
+[ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
 [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
-[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md)
-**Reference plan:** `.ref/packages/container/stackra-container-architecture-plan.md` (3405 lines)
+[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md) **Reference
+plan:** `.ref/packages/container/stackra-container-architecture-plan.md` (3405
+lines)
 
 ## Purpose
 
 `@stackra/container` is the workspace's DI substrate. It ships:
 
 - A NestJS-compatible dependency-injection resolver that runs identically in
-  **the browser**, **React Native**, **Cloudflare Workers**, and **inside a NestJS
-  server** (via a Nest adapter).
+  **the browser**, **React Native**, **Cloudflare Workers**, and **inside a
+  NestJS server** (via a Nest adapter).
 - A canonical `IDiscoveryService` primitive that other packages (`logger`,
-  `cache`, `queue`, `event-bus`, ...) consume to auto-register decorated
-  classes without inventing their own discovery.
+  `cache`, `queue`, `event-bus`, ...) consume to auto-register decorated classes
+  without inventing their own discovery.
 - Request-scoped context — an AsyncLocalStorage-shaped resolver so a single
   request's correlation ID, tenant ID, and logger flow to every service that
   needs them.
@@ -44,8 +45,7 @@ origins into the cross-runtime shape mandated by ADR-0091.
   `forwardRef`, request-per-request AsyncLocalStorage nesting, MVC-style
   request-scoped controllers.
 - Runtime code generation (proxies, dynamic module IDs). Every provider is
-  registered ahead of time; discovery is convention-based against metadata
-  keys.
+  registered ahead of time; discovery is convention-based against metadata keys.
 - Replacement for `@nestjs/core`. Inside a NestJS server, we adapt to Nest's
   container (via `@stackra/container/nestjs`), not replace it.
 
@@ -116,26 +116,26 @@ packages/container/
 
 The following symbols land in `@stackra/contracts` (not in this package):
 
-| Symbol                    | Kind      | Location in contracts                            |
-| ------------------------- | --------- | ------------------------------------------------ |
-| `IContainerResolver`      | interface | `packages/contracts/src/interfaces/container/`   |
-| `IApplicationContext`     | interface | `packages/contracts/src/interfaces/container/`   |
-| `IRequestContext`         | interface | `packages/contracts/src/interfaces/container/`   |
-| `IDiscoveryService`       | interface | `packages/contracts/src/interfaces/container/`   |
-| `IDiscoveredProvider`     | interface | `packages/contracts/src/interfaces/container/`   |
-| `IModuleReference`        | interface | `packages/contracts/src/interfaces/container/`   |
-| `IProvider` (union)       | type      | `packages/contracts/src/interfaces/container/`   |
-| `IClassProvider`          | interface | `packages/contracts/src/interfaces/container/`   |
-| `IValueProvider`          | interface | `packages/contracts/src/interfaces/container/`   |
-| `IFactoryProvider`        | interface | `packages/contracts/src/interfaces/container/`   |
-| `Scope` enum              | enum      | `packages/contracts/src/enums/`                  |
-| `CONTAINER`               | token     | `packages/contracts/src/tokens/container.tokens.ts` |
-| `APPLICATION_CONTEXT`     | token     | same                                             |
-| `REQUEST_CONTEXT`         | token     | same                                             |
-| `DISCOVERY_SERVICE`       | token     | same                                             |
-| `IContainerModuleOptions` | interface | `packages/contracts/src/interfaces/container/`   |
-| `ContainerResolutionError`| class     | `packages/contracts/src/errors/`                 |
-| `MetadataError`           | class     | `packages/contracts/src/errors/`                 |
+| Symbol                     | Kind      | Location in contracts                               |
+| -------------------------- | --------- | --------------------------------------------------- |
+| `IContainerResolver`       | interface | `packages/contracts/src/interfaces/container/`      |
+| `IApplicationContext`      | interface | `packages/contracts/src/interfaces/container/`      |
+| `IRequestContext`          | interface | `packages/contracts/src/interfaces/container/`      |
+| `IDiscoveryService`        | interface | `packages/contracts/src/interfaces/container/`      |
+| `IDiscoveredProvider`      | interface | `packages/contracts/src/interfaces/container/`      |
+| `IModuleReference`         | interface | `packages/contracts/src/interfaces/container/`      |
+| `IProvider` (union)        | type      | `packages/contracts/src/interfaces/container/`      |
+| `IClassProvider`           | interface | `packages/contracts/src/interfaces/container/`      |
+| `IValueProvider`           | interface | `packages/contracts/src/interfaces/container/`      |
+| `IFactoryProvider`         | interface | `packages/contracts/src/interfaces/container/`      |
+| `Scope` enum               | enum      | `packages/contracts/src/enums/`                     |
+| `CONTAINER`                | token     | `packages/contracts/src/tokens/container.tokens.ts` |
+| `APPLICATION_CONTEXT`      | token     | same                                                |
+| `REQUEST_CONTEXT`          | token     | same                                                |
+| `DISCOVERY_SERVICE`        | token     | same                                                |
+| `IContainerModuleOptions`  | interface | `packages/contracts/src/interfaces/container/`      |
+| `ContainerResolutionError` | class     | `packages/contracts/src/errors/`                    |
+| `MetadataError`            | class     | `packages/contracts/src/errors/`                    |
 
 `@stackra/container` `.` exports concrete `ContainerResolver`,
 `ApplicationContext`, `Module`, `defineDynamicModule()`, decorators, and every
@@ -171,8 +171,8 @@ export type { OnApplicationShutdown } from "./core/lifecycle";
 export { forwardRef } from "./core/utils";
 ```
 
-**Consumers** re-export `@stackra/contracts` for the interfaces/tokens they
-use (subject to `contract-reexports.md` — no forwarding through this package).
+**Consumers** re-export `@stackra/contracts` for the interfaces/tokens they use
+(subject to `contract-reexports.md` — no forwarding through this package).
 
 ### `@stackra/container/nestjs`
 
@@ -256,8 +256,8 @@ interface IDiscoveredProvider {
 
 - Browser / RN: our own `DiscoveryService` walks the `ContainerResolver`'s
   instance registry, filtering by metadata key from `Reflect.getMetadata()`.
-- Worker: same — the `WorkerContainer` builds the same registry at boot from
-  the discovered providers.
+- Worker: same — the `WorkerContainer` builds the same registry at boot from the
+  discovered providers.
 - NestJS: `NestDiscoveryAdapter` wraps `@nestjs/core`'s `DiscoveryService` +
   `Reflector` and exposes it under `IDiscoveryService`.
 
@@ -295,7 +295,9 @@ export class LoggerModule {
     };
   }
 
-  public static forRootAsync(options: ILoggerModuleAsyncOptions): IDynamicModule {
+  public static forRootAsync(
+    options: ILoggerModuleAsyncOptions,
+  ): IDynamicModule {
     return {
       module: LoggerModule,
       global: true,
@@ -333,10 +335,9 @@ interface IRequestContext {
 
 Runtime bindings:
 
-- **NestJS server** — `@stackra/container/nestjs`'s
-  `RequestContextMiddleware` binds one `IRequestContext` to the request via
-  Node's `AsyncLocalStorage`. Every service in the request tree resolves the
-  SAME instance.
+- **NestJS server** — `@stackra/container/nestjs`'s `RequestContextMiddleware`
+  binds one `IRequestContext` to the request via Node's `AsyncLocalStorage`.
+  Every service in the request tree resolves the SAME instance.
 - **Cloudflare Worker** — `@stackra/container/worker`'s per-request container
   binds one `IRequestContext` for the fetch handler's lifetime; DO's use their
   own binding. Flushed via `ctx.waitUntil()`.
@@ -370,7 +371,8 @@ import { TestContainer } from "@stackra/container/testing";
 const container = TestContainer.create({
   modules: [MyModule],
 })
-  .overrideProvider(UserRepository).useValue(mockUserRepo)
+  .overrideProvider(UserRepository)
+  .useValue(mockUserRepo)
   .overrideDiscovery(mockDiscovery)
   .compile();
 
@@ -393,19 +395,19 @@ Runtime peers (all except `@stackra/contracts` optional):
     "@nestjs/core": "catalog:nestjs",
     "reflect-metadata": "catalog:",
     "react": "catalog:react",
-    "react-native": "catalog:react-native"
+    "react-native": "catalog:react-native",
   },
   "peerDependenciesMeta": {
     "@nestjs/common": { "optional": true },
     "@nestjs/core": { "optional": true },
     "react": { "optional": true },
-    "react-native": { "optional": true }
-  }
+    "react-native": { "optional": true },
+  },
 }
 ```
 
-No runtime deps beyond `reflect-metadata` (browser-safe polyfill loaded via
-side effect at package boot).
+No runtime deps beyond `reflect-metadata` (browser-safe polyfill loaded via side
+effect at package boot).
 
 ## Phases
 
@@ -413,8 +415,9 @@ side effect at package boot).
 
 - [ ] Author `packages/contracts/src/interfaces/container/*.interface.ts` for
       every listed contract (§Contracts split).
-- [ ] Author `packages/contracts/src/tokens/container.tokens.ts` with `CONTAINER`,
-      `APPLICATION_CONTEXT`, `REQUEST_CONTEXT`, `DISCOVERY_SERVICE`.
+- [ ] Author `packages/contracts/src/tokens/container.tokens.ts` with
+      `CONTAINER`, `APPLICATION_CONTEXT`, `REQUEST_CONTEXT`,
+      `DISCOVERY_SERVICE`.
 - [ ] Author `packages/contracts/src/errors/container-*.error.ts`.
 - [ ] Bump `@stackra/contracts` to `0.2.0` (minor — additive).
 
@@ -439,8 +442,8 @@ side effect at package boot).
 - [ ] Lifecycle hook wiring (`OnModuleInit`, `OnApplicationBootstrap`,
       `OnApplicationShutdown`).
 - [ ] `forwardRef` for circular deps.
-- [ ] Cross-platform `useInject` / `useOptionalInject` hooks under
-      `core/hooks/` (per ADR-0091 §Rule 3).
+- [ ] Cross-platform `useInject` / `useOptionalInject` hooks under `core/hooks/`
+      (per ADR-0091 §Rule 3).
 - [ ] Cross-platform `<ContainerProvider>` under `core/providers/`.
 
 ### Phase 4 — NestJS adapter (3 days)
@@ -456,8 +459,8 @@ side effect at package boot).
 
 ### Phase 5 — Worker adapter (3 days)
 
-- [ ] `createWorkerContainer(env, ctx)` — factory that builds a
-      per-request container tied to Cloudflare's `env` + `ctx`.
+- [ ] `createWorkerContainer(env, ctx)` — factory that builds a per-request
+      container tied to Cloudflare's `env` + `ctx`.
 - [ ] `IWorkerEnv` type + env-binding wire-up.
 - [ ] `flushOnWaitUntil(container, ctx)` — flushes deferred lifecycle work.
 - [ ] Per-request `RequestContext` binding.
@@ -479,8 +482,8 @@ side effect at package boot).
 
 ### Phase 8 — Testing package alignment (1 day)
 
-- [ ] Retire `@stackra/testing/core/container`'s standalone
-      `TestContainer` in favor of `@stackra/container/testing`.
+- [ ] Retire `@stackra/testing/core/container`'s standalone `TestContainer` in
+      favor of `@stackra/container/testing`.
 - [ ] `@stackra/testing/core/container` becomes a re-export from
       `@stackra/container/testing` (optional peer). If container isn't
       installed, `@stackra/testing/core/container` throws a friendly error
@@ -509,13 +512,13 @@ parallelism across core/nest/worker).
 
 ## Migration risks
 
-| Risk                                                                        | Mitigation                                                                    |
-| --------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| `reflect-metadata` polyfill order — decorators fail if it loads after them  | Side-effect import at the top of `core/index.ts`. Documented + tested.        |
-| Nest's `DiscoveryService` uses `providers` array from module metadata; our contract exposes a different shape | `NestDiscoveryAdapter` translates. Contract-side tests verify wire compatibility. |
-| Cross-runtime hooks (`useInject`) — React vs React Native differ on Context internals | Both use React's public `useContext`; identical semantics on both surfaces.   |
-| Worker `AsyncLocalStorage` availability — Cloudflare Workers ship a polyfill via `nodejs_compat`  | Enable `nodejs_compat` flag; document in `worker/README.md`.                  |
-| Testing container drift between `@stackra/testing` and `@stackra/container/testing` | Phase 8 makes them one surface. Grep asserts `@stackra/testing/core/container` re-exports from `@stackra/container/testing`. |
+| Risk                                                                                                          | Mitigation                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `reflect-metadata` polyfill order — decorators fail if it loads after them                                    | Side-effect import at the top of `core/index.ts`. Documented + tested.                                                       |
+| Nest's `DiscoveryService` uses `providers` array from module metadata; our contract exposes a different shape | `NestDiscoveryAdapter` translates. Contract-side tests verify wire compatibility.                                            |
+| Cross-runtime hooks (`useInject`) — React vs React Native differ on Context internals                         | Both use React's public `useContext`; identical semantics on both surfaces.                                                  |
+| Worker `AsyncLocalStorage` availability — Cloudflare Workers ship a polyfill via `nodejs_compat`              | Enable `nodejs_compat` flag; document in `worker/README.md`.                                                                 |
+| Testing container drift between `@stackra/testing` and `@stackra/container/testing`                           | Phase 8 makes them one surface. Grep asserts `@stackra/testing/core/container` re-exports from `@stackra/container/testing`. |
 
 ## Success criteria
 

@@ -1,26 +1,26 @@
-import { getAllMetadata } from '@/get-all-metadata';
-import { defineMetadata } from '@/define-metadata';
+import { getAllMetadata } from "@/get-all-metadata";
+import { defineMetadata } from "@/define-metadata";
 
-describe('getAllMetadata', () => {
-  describe('Basic Functionality', () => {
+describe("getAllMetadata", () => {
+  describe("Basic Functionality", () => {
     /**
      * Test case: getAllMetadata should retrieve all requested metadata values
      *
      * This test validates the core functionality of retrieving multiple
      * metadata values in a single operation.
      */
-    it('should return all metadata for specified keys', () => {
+    it("should return all metadata for specified keys", () => {
       // Arrange: Create a class with multiple metadata entries
       class TestClass {}
-      const metadataKeys = ['config', 'version', 'author'];
+      const metadataKeys = ["config", "version", "author"];
 
       const configData = { timeout: 5000, retries: 3 };
-      const versionData = '2.1.0';
-      const authorData = { name: 'John Doe', email: 'john@example.com' };
+      const versionData = "2.1.0";
+      const authorData = { name: "John Doe", email: "john@example.com" };
 
-      Reflect.defineMetadata('config', configData, TestClass.prototype);
-      Reflect.defineMetadata('version', versionData, TestClass.prototype);
-      Reflect.defineMetadata('author', authorData, TestClass.prototype);
+      Reflect.defineMetadata("config", configData, TestClass.prototype);
+      Reflect.defineMetadata("version", versionData, TestClass.prototype);
+      Reflect.defineMetadata("author", authorData, TestClass.prototype);
 
       // Act: Retrieve all metadata at once
       const result = getAllMetadata<{
@@ -42,13 +42,13 @@ describe('getAllMetadata', () => {
      * This test ensures that missing metadata values are returned as undefined
      * without breaking the overall operation.
      */
-    it('should return undefined for missing metadata keys', () => {
+    it("should return undefined for missing metadata keys", () => {
       // Arrange: Create a class with partial metadata
       class TestClass {}
-      const metadataKeys = ['existing', 'missing1', 'missing2'];
+      const metadataKeys = ["existing", "missing1", "missing2"];
 
       const existingData = { exists: true };
-      Reflect.defineMetadata('existing', existingData, TestClass);
+      Reflect.defineMetadata("existing", existingData, TestClass);
 
       // Act: Request both existing and non-existing metadata
       const result = getAllMetadata<{
@@ -69,10 +69,10 @@ describe('getAllMetadata', () => {
      *
      * This test validates behavior when no keys are requested.
      */
-    it('should return empty object for empty key array', () => {
+    it("should return empty object for empty key array", () => {
       // Arrange: Create a class with metadata
       class TestClass {}
-      Reflect.defineMetadata('someKey', 'someValue', TestClass);
+      Reflect.defineMetadata("someKey", "someValue", TestClass);
 
       // Act: Request no metadata keys
       const result = getAllMetadata<{}>([], TestClass);
@@ -83,35 +83,35 @@ describe('getAllMetadata', () => {
     });
   });
 
-  describe('Property-specific Metadata', () => {
+  describe("Property-specific Metadata", () => {
     /**
      * Test case: getAllMetadata should retrieve metadata from specific properties
      *
      * This test validates retrieving multiple metadata values associated with
      * specific class properties.
      */
-    it('should retrieve metadata from class properties', () => {
+    it("should retrieve metadata from class properties", () => {
       // Arrange: Create a class with property metadata
       class UserModel {
-        name: string = '';
-        email: string = '';
+        name: string = "";
+        email: string = "";
         age: number = 0;
       }
 
       const nameValidation = { required: true, minLength: 2, maxLength: 50 };
       const nameFormat = { capitalize: true, trim: true };
-      const nameDisplay = { label: 'Full Name', placeholder: 'Enter your name' };
+      const nameDisplay = { label: "Full Name", placeholder: "Enter your name" };
 
-      defineMetadata('validation', nameValidation, UserModel.prototype, 'name');
-      defineMetadata('format', nameFormat, UserModel.prototype, 'name');
-      defineMetadata('display', nameDisplay, UserModel.prototype, 'name');
+      defineMetadata("validation", nameValidation, UserModel.prototype, "name");
+      defineMetadata("format", nameFormat, UserModel.prototype, "name");
+      defineMetadata("display", nameDisplay, UserModel.prototype, "name");
 
       // Act: Get all metadata for the 'name' property
       const result = getAllMetadata<{
         validation: typeof nameValidation;
         format: typeof nameFormat;
         display: typeof nameDisplay;
-      }>(['validation', 'format', 'display'], UserModel.prototype, 'name');
+      }>(["validation", "format", "display"], UserModel.prototype, "name");
 
       // Assert: Should return all property-specific metadata
       expect(result.validation).toEqual(nameValidation);
@@ -124,21 +124,21 @@ describe('getAllMetadata', () => {
      *
      * This test ensures that class-level and property-level metadata are kept separate.
      */
-    it('should distinguish between class and property metadata', () => {
+    it("should distinguish between class and property metadata", () => {
       // Arrange: Create class with both class and property metadata
       class ApiController {
         handleRequest(): void {}
       }
 
-      const classConfig = { baseRoute: '/api', version: 'v1' };
-      const methodConfig = { route: '/users', method: 'GET' };
+      const classConfig = { baseRoute: "/api", version: "v1" };
+      const methodConfig = { route: "/users", method: "GET" };
 
-      defineMetadata('config', classConfig, ApiController);
-      defineMetadata('config', methodConfig, ApiController.prototype, 'handleRequest');
+      defineMetadata("config", classConfig, ApiController);
+      defineMetadata("config", methodConfig, ApiController.prototype, "handleRequest");
 
       // Act: Get metadata from both class and method
-      const classResult = getAllMetadata(['config'], ApiController);
-      const methodResult = getAllMetadata(['config'], ApiController.prototype, 'handleRequest');
+      const classResult = getAllMetadata(["config"], ApiController);
+      const methodResult = getAllMetadata(["config"], ApiController.prototype, "handleRequest");
 
       // Assert: Should return different metadata for each level
       expect(classResult.config).toEqual(classConfig);
@@ -147,31 +147,31 @@ describe('getAllMetadata', () => {
     });
   });
 
-  describe('Inheritance and Prototype Chain', () => {
+  describe("Inheritance and Prototype Chain", () => {
     /**
      * Test case: getAllMetadata should retrieve inherited metadata
      *
      * This test validates that metadata from parent classes is accessible
      * through the prototype chain.
      */
-    it('should retrieve metadata from parent classes', () => {
+    it("should retrieve metadata from parent classes", () => {
       // Arrange: Create inheritance hierarchy with metadata
       class BaseService {
         process(): void {}
       }
       class UserService extends BaseService {}
 
-      const baseMetadata = { service: 'base', level: 1 };
+      const baseMetadata = { service: "base", level: 1 };
       const configMetadata = { timeout: 5000 };
 
-      defineMetadata('service', baseMetadata, BaseService);
-      defineMetadata('config', configMetadata, BaseService);
+      defineMetadata("service", baseMetadata, BaseService);
+      defineMetadata("config", configMetadata, BaseService);
 
       // Act: Get metadata from child class
       const result = getAllMetadata<{
         service: typeof baseMetadata;
         config: typeof configMetadata;
-      }>(['service', 'config'], UserService);
+      }>(["service", "config"], UserService);
 
       // Assert: Should retrieve inherited metadata
       expect(result.service).toEqual(baseMetadata);
@@ -184,84 +184,84 @@ describe('getAllMetadata', () => {
      * This test ensures that when both parent and child define the same metadata key,
      * the child's metadata takes precedence.
      */
-    it('should prioritize child metadata over parent metadata', () => {
+    it("should prioritize child metadata over parent metadata", () => {
       // Arrange: Create inheritance with overriding metadata
       class ParentClass {}
       class ChildClass extends ParentClass {}
 
-      const parentData = { source: 'parent', priority: 1 };
-      const childData = { source: 'child', priority: 2 };
+      const parentData = { source: "parent", priority: 1 };
+      const childData = { source: "child", priority: 2 };
       const sharedData = { shared: true };
 
-      defineMetadata('override', parentData, ParentClass);
-      defineMetadata('shared', sharedData, ParentClass);
-      defineMetadata('override', childData, ChildClass);
+      defineMetadata("override", parentData, ParentClass);
+      defineMetadata("shared", sharedData, ParentClass);
+      defineMetadata("override", childData, ChildClass);
 
       // Act: Get metadata from child class
       const result = getAllMetadata<{
         override: typeof childData;
         shared: typeof sharedData;
-      }>(['override', 'shared'], ChildClass);
+      }>(["override", "shared"], ChildClass);
 
       // Assert: Child metadata should override parent, shared should be inherited
       expect(result.override).toEqual(childData);
-      expect(result.override.source).toBe('child');
+      expect(result.override.source).toBe("child");
       expect(result.shared).toEqual(sharedData);
     });
   });
 
-  describe('Type Safety and Complex Structures', () => {
+  describe("Type Safety and Complex Structures", () => {
     /**
      * Test case: getAllMetadata should work with complex nested metadata structures
      *
      * This test validates handling of complex, deeply nested metadata objects.
      */
-    it('should handle complex nested metadata structures', () => {
+    it("should handle complex nested metadata structures", () => {
       // Arrange: Create complex metadata structures
       class APIEndpoint {}
 
       const routeConfig = {
-        method: 'POST',
-        path: '/api/users/:id',
-        middleware: ['auth', 'validation'],
+        method: "POST",
+        path: "/api/users/:id",
+        middleware: ["auth", "validation"],
         parameters: {
-          path: { id: { type: 'string', required: true } },
-          body: { user: { type: 'object', required: true } },
+          path: { id: { type: "string", required: true } },
+          body: { user: { type: "object", required: true } },
         },
       };
 
       const securityConfig = {
-        authentication: { required: true, type: 'bearer' },
-        authorization: { roles: ['admin', 'user'], permissions: ['user:write'] },
+        authentication: { required: true, type: "bearer" },
+        authorization: { roles: ["admin", "user"], permissions: ["user:write"] },
         rateLimit: { requests: 100, window: 3600 },
       };
 
       const docsConfig = {
-        title: 'Update User',
-        description: 'Updates an existing user record',
-        tags: ['users', 'management'],
+        title: "Update User",
+        description: "Updates an existing user record",
+        tags: ["users", "management"],
         examples: {
-          request: { user: { name: 'John', email: 'john@example.com' } },
-          response: { success: true, user: { id: 1, name: 'John' } },
+          request: { user: { name: "John", email: "john@example.com" } },
+          response: { success: true, user: { id: 1, name: "John" } },
         },
       };
 
-      defineMetadata('route', routeConfig, APIEndpoint);
-      defineMetadata('security', securityConfig, APIEndpoint);
-      defineMetadata('docs', docsConfig, APIEndpoint);
+      defineMetadata("route", routeConfig, APIEndpoint);
+      defineMetadata("security", securityConfig, APIEndpoint);
+      defineMetadata("docs", docsConfig, APIEndpoint);
 
       // Act: Retrieve all complex metadata
       const result = getAllMetadata<{
         route: typeof routeConfig;
         security: typeof securityConfig;
         docs: typeof docsConfig;
-      }>(['route', 'security', 'docs'], APIEndpoint);
+      }>(["route", "security", "docs"], APIEndpoint);
 
       // Assert: Complex structures should be preserved
       expect(result.route).toEqual(routeConfig);
-      expect(result.route.parameters.path.id.type).toBe('string');
-      expect(result.security.authorization.roles).toContain('admin');
-      expect(result.docs.examples.request.user.name).toBe('John');
+      expect(result.route.parameters.path.id.type).toBe("string");
+      expect(result.security.authorization.roles).toContain("admin");
+      expect(result.docs.examples.request.user.name).toBe("John");
     });
 
     /**
@@ -269,7 +269,7 @@ describe('getAllMetadata', () => {
      *
      * This test validates that the generic type parameter works correctly.
      */
-    it('should provide type-safe metadata retrieval', () => {
+    it("should provide type-safe metadata retrieval", () => {
       // Arrange: Define typed metadata interfaces
       interface ServiceConfig {
         name: string;
@@ -280,55 +280,55 @@ describe('getAllMetadata', () => {
       interface CacheConfig {
         enabled: boolean;
         ttl: number;
-        strategy: 'lru' | 'fifo';
+        strategy: "lru" | "fifo";
       }
 
       class MicroService {}
 
       const serviceConfig: ServiceConfig = {
-        name: 'user-service',
-        version: '2.1.0',
-        endpoints: ['/users', '/auth', '/profile'],
+        name: "user-service",
+        version: "2.1.0",
+        endpoints: ["/users", "/auth", "/profile"],
       };
 
       const cacheConfig: CacheConfig = {
         enabled: true,
         ttl: 3600,
-        strategy: 'lru',
+        strategy: "lru",
       };
 
-      defineMetadata('service', serviceConfig, MicroService);
-      defineMetadata('cache', cacheConfig, MicroService);
+      defineMetadata("service", serviceConfig, MicroService);
+      defineMetadata("cache", cacheConfig, MicroService);
 
       // Act: Retrieve with strong typing
       const result = getAllMetadata<{
         service: ServiceConfig;
         cache: CacheConfig;
-      }>(['service', 'cache'], MicroService);
+      }>(["service", "cache"], MicroService);
 
       // Assert: Should return properly typed metadata
       expect(result.service).toEqual(serviceConfig);
       expect(result.service.endpoints).toHaveLength(3);
-      expect(result.cache.strategy).toBe('lru');
-      expect(typeof result.service.version).toBe('string');
-      expect(typeof result.cache.enabled).toBe('boolean');
+      expect(result.cache.strategy).toBe("lru");
+      expect(typeof result.service.version).toBe("string");
+      expect(typeof result.cache.enabled).toBe("boolean");
     });
   });
 
-  describe('Edge Cases and Error Handling', () => {
+  describe("Edge Cases and Error Handling", () => {
     /**
      * Test case: getAllMetadata should handle Symbol keys
      *
      * This test validates that Symbol keys work correctly in batch operations.
      */
-    it('should work with Symbol metadata keys', () => {
+    it("should work with Symbol metadata keys", () => {
       // Arrange: Create metadata with Symbol keys
       class TestClass {}
-      const symbol1 = Symbol('internal-config');
-      const symbol2 = Symbol('debug-info');
+      const symbol1 = Symbol("internal-config");
+      const symbol2 = Symbol("debug-info");
 
-      const internalConfig = { debug: true, level: 'verbose' };
-      const debugInfo = { timestamp: Date.now(), session: 'test-session' };
+      const internalConfig = { debug: true, level: "verbose" };
+      const debugInfo = { timestamp: Date.now(), session: "test-session" };
 
       defineMetadata(symbol1, internalConfig, TestClass);
       defineMetadata(symbol2, debugInfo, TestClass);
@@ -349,16 +349,16 @@ describe('getAllMetadata', () => {
      *
      * This test validates handling of different key types in the same request.
      */
-    it('should work with mixed key types', () => {
+    it("should work with mixed key types", () => {
       // Arrange: Create metadata with different key types
       class TestClass {}
-      const stringKey = 'string-metadata';
-      const symbolKey = Symbol('symbol-metadata');
+      const stringKey = "string-metadata";
+      const symbolKey = Symbol("symbol-metadata");
       const numberKey = 42;
 
-      const stringValue = 'string data';
+      const stringValue = "string data";
       const symbolValue = { symbol: true };
-      const numberValue = ['numeric', 'array'];
+      const numberValue = ["numeric", "array"];
 
       defineMetadata(stringKey, stringValue, TestClass);
       defineMetadata(symbolKey, symbolValue, TestClass);
@@ -382,7 +382,7 @@ describe('getAllMetadata', () => {
      *
      * This test ensures the function works with class instances, not just constructors.
      */
-    it('should work with class instances', () => {
+    it("should work with class instances", () => {
       // Arrange: Create instances with metadata
       class TestClass {
         instanceId: string;
@@ -391,29 +391,29 @@ describe('getAllMetadata', () => {
         }
       }
 
-      const instance1 = new TestClass('instance-1');
-      const instance2 = new TestClass('instance-2');
+      const instance1 = new TestClass("instance-1");
+      const instance2 = new TestClass("instance-2");
 
       const config1 = { instance: 1, active: true };
       const config2 = { instance: 2, active: false };
-      const settings1 = { theme: 'dark', lang: 'en' };
-      const settings2 = { theme: 'light', lang: 'es' };
+      const settings1 = { theme: "dark", lang: "en" };
+      const settings2 = { theme: "light", lang: "es" };
 
-      defineMetadata('config', config1, instance1);
-      defineMetadata('settings', settings1, instance1);
-      defineMetadata('config', config2, instance2);
-      defineMetadata('settings', settings2, instance2);
+      defineMetadata("config", config1, instance1);
+      defineMetadata("settings", settings1, instance1);
+      defineMetadata("config", config2, instance2);
+      defineMetadata("settings", settings2, instance2);
 
       // Act: Get metadata from different instances
       const result1 = getAllMetadata<{
         config: typeof config1;
         settings: typeof settings1;
-      }>(['config', 'settings'], instance1);
+      }>(["config", "settings"], instance1);
 
       const result2 = getAllMetadata<{
         config: typeof config2;
         settings: typeof settings2;
-      }>(['config', 'settings'], instance2);
+      }>(["config", "settings"], instance2);
 
       // Assert: Each instance should have its own metadata
       expect(result1.config).toEqual(config1);

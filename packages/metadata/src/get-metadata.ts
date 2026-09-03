@@ -1,4 +1,4 @@
-import 'reflect-metadata';
+import "reflect-metadata";
 
 /**
  * Retrieves metadata value associated with a specific metadata key from the target object or its prototype chain.
@@ -41,7 +41,7 @@ import 'reflect-metadata';
 export function getMetadata<T = any>(
   metadataKey: unknown,
   target: object,
-  propertyKey?: string | symbol
+  propertyKey?: string | symbol,
 ): T | undefined {
   // Use Reflect.getMetadata to retrieve metadata from the target or its prototype chain
   // The third parameter (propertyKey) is optional and used for property-specific metadata

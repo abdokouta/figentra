@@ -8,33 +8,32 @@ reviewed_at: null
 
 # `@stackra/hashing` — password hashing w/ pluggable algorithms
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
+**Status:** Planned **Anchor ADRs:**
+[ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
 [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
-[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md)
-**Reference:** `.ref/packages/hashing/` (`@stackra/nestjs-hashing` v0.1.0)
-**Depends on:** `@stackra/container`, `@stackra/contracts`, `@stackra/support`,
-`@stackra/logger` (optional)
-**Design effort:** 8 days across 5 phases
+[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md) **Reference:**
+`.ref/packages/hashing/` (`@stackra/nestjs-hashing` v0.1.0) **Depends on:**
+`@stackra/container`, `@stackra/contracts`, `@stackra/support`,
+`@stackra/logger` (optional) **Design effort:** 8 days across 5 phases
 
 ## Purpose
 
-Password hashing w/ pluggable algorithms — bcrypt, argon2 (recommended),
-scrypt. Ships:
+Password hashing w/ pluggable algorithms — bcrypt, argon2 (recommended), scrypt.
+Ships:
 
 - `HashingManager extends Manager<IHashingDriver>` — Shape A. ONE active
   algorithm at a time (per app).
 - Timing-safe verification.
 - Rehash detection — the service detects when a hash's cost params fall below
-  current defaults + returns `needsRehash: true`. Enables graceful cost bumps
-  on login without a mass password reset.
+  current defaults + returns `needsRehash: true`. Enables graceful cost bumps on
+  login without a mass password reset.
 
 ## Non-goals
 
 - Symmetric encryption — that's `@stackra/encryption`.
 - HMAC signing — that's `@stackra/signing` (future).
-- Password strength validation — separate concern; consider `@stackra/validation`
-  or a Zod schema.
+- Password strength validation — separate concern; consider
+  `@stackra/validation` or a Zod schema.
 
 ## Public API — locked
 
@@ -44,12 +43,20 @@ class HashingService {
 
   async check(plaintext: string, hash: string): Promise<boolean>;
 
-  async needsRehash(hash: string, targetOpts?: {
-    driver?: string;      // hash was produced by a different algorithm?
-    cost?: number;         // cost param below current default?
-  }): Promise<boolean>;
+  async needsRehash(
+    hash: string,
+    targetOpts?: {
+      driver?: string; // hash was produced by a different algorithm?
+      cost?: number; // cost param below current default?
+    },
+  ): Promise<boolean>;
 
-  info(hash: string): { algorithm: string; cost: number; salt: string; hash: string };
+  info(hash: string): {
+    algorithm: string;
+    cost: number;
+    salt: string;
+    hash: string;
+  };
 }
 ```
 
@@ -67,15 +74,16 @@ class User {
 
 ## Drivers
 
-| Driver     | Peer                     | Recommended? |
-| ---------- | ------------------------ | ------------ |
-| `argon2id` | `@node-rs/argon2`        | Yes — memory-hard, GPU-resistant, RFC-9106 approved. |
-| `argon2i`  | `@node-rs/argon2`        | Password hashing default (v1 fallback). |
-| `bcrypt`   | `bcrypt` (npm) OR `@node-rs/bcrypt` | Legacy compat only; new hashes use argon2id. |
-| `scrypt`   | Node's `crypto.scrypt`    | Node-only; no external dep. Deprecated for new deployments. |
+| Driver     | Peer                                | Recommended?                                                |
+| ---------- | ----------------------------------- | ----------------------------------------------------------- |
+| `argon2id` | `@node-rs/argon2`                   | Yes — memory-hard, GPU-resistant, RFC-9106 approved.        |
+| `argon2i`  | `@node-rs/argon2`                   | Password hashing default (v1 fallback).                     |
+| `bcrypt`   | `bcrypt` (npm) OR `@node-rs/bcrypt` | Legacy compat only; new hashes use argon2id.                |
+| `scrypt`   | Node's `crypto.scrypt`              | Node-only; no external dep. Deprecated for new deployments. |
 
-**Default:** `argon2id` w/ params `{ memoryCost: 19456 (19 MiB), timeCost: 2,
-parallelism: 1 }` — OWASP recommendation as of 2024.
+**Default:** `argon2id` w/ params
+`{ memoryCost: 19456 (19 MiB), timeCost: 2, parallelism: 1 }` — OWASP
+recommendation as of 2024.
 
 Fallback: `bcrypt` w/ cost `12` when `argon2id` peer isn't installed.
 

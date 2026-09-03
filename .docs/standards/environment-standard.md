@@ -1,11 +1,13 @@
 # Environment Standard
 
 Canonical:
+
 - development
 - staging
 - production
 
 Aliases:
+
 - dev
 - stg
 - prd

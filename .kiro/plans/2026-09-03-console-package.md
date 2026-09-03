@@ -9,21 +9,21 @@ reviewed_at: null
 # `@stackra/console` — CLI framework
 
 **Status:** Planned (already used by workspace scripts; needs plan of record)
-**Anchor ADRs:** [ADR-0051](../../.docs/adr/ADR-0051-cli-package-dependencies-exception.md),
+**Anchor ADRs:**
+[ADR-0051](../../.docs/adr/ADR-0051-cli-package-dependencies-exception.md),
 [ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
 [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
-[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md)
-**Reference:** `.ref/packages/console/`
-**Depends on:** `@stackra/container` (Task 13), `@stackra/contracts` (Task 6),
-`@stackra/support`, `@stackra/logger` (optional)
+[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md) **Reference:**
+`.ref/packages/console/` **Depends on:** `@stackra/container` (Task 13),
+`@stackra/contracts` (Task 6), `@stackra/support`, `@stackra/logger` (optional)
 **Design effort:** 18 days across 8 phases
 
 ## Purpose
 
-The workspace CLI framework. Ships a `bin/stackra` binary + a
-`ConsoleModule` DI module + auto-discovery of `@Command()`-decorated classes.
-Consumers author commands as classes; the kernel resolves them via
-`@stackra/container` + wires interactive prompts + typed args.
+The workspace CLI framework. Ships a `bin/stackra` binary + a `ConsoleModule` DI
+module + auto-discovery of `@Command()`-decorated classes. Consumers author
+commands as classes; the kernel resolves them via `@stackra/container` + wires
+interactive prompts + typed args.
 
 CLI runtime is the canonical exception to the zero-runtime-deps rule per
 ADR-0051 — the six deps listed below are CLI-time only + the binary IS their
@@ -55,13 +55,18 @@ sole caller.
   name: "user:create",
   description: "Create a new user",
   aliases: ["u:c"],
-  hidden: false,     // hide from help; default false
+  hidden: false, // hide from help; default false
 })
 export class CreateUserCommand extends BaseCommand {
   @Argument({ name: "email", required: true, description: "User email" })
   email!: string;
 
-  @Option({ name: "role", short: "r", default: "member", description: "User role" })
+  @Option({
+    name: "role",
+    short: "r",
+    default: "member",
+    description: "User role",
+  })
   role!: string;
 
   @Option({ name: "verbose", short: "v", type: "boolean" })
@@ -84,9 +89,9 @@ Every command extends this. Provides:
 
 - **Output helpers** — `.info()`, `.warn()`, `.error()`, `.success()`,
   `.debug()` (respects `verbose` flag).
-- **Prompts** — `.prompt(question)`, `.confirm(question)`, `.select(question,
-  choices)`, `.multiselect(question, choices)`, `.password(question)`,
-  `.text(question, options?)`.
+- **Prompts** — `.prompt(question)`, `.confirm(question)`,
+  `.select(question, choices)`, `.multiselect(question, choices)`,
+  `.password(question)`, `.text(question, options?)`.
 - **Rendering** — `.table(rows)`, `.box(content, options?)`, `.spinner(msg)`.
 - **Progress** — `.progress(total).increment().finish()`.
 - **DI access** — `this.container` returns the resolver; injected services
@@ -198,16 +203,15 @@ packages/console/
 
 ## Discovery loader
 
-`CommandDiscoveryLoader implements OnApplicationBootstrap` — scans the
-container for every provider carrying the `COMMAND_METADATA` symbol and
-registers each in `CommandRegistry`. Follows the ADR-0092 auto-registration
-convention.
+`CommandDiscoveryLoader implements OnApplicationBootstrap` — scans the container
+for every provider carrying the `COMMAND_METADATA` symbol and registers each in
+`CommandRegistry`. Follows the ADR-0092 auto-registration convention.
 
 ## Config publishing
 
-`stackra publish <package>` command copies EJS-rendered configs from a
-package's `config/` folder into the consuming app's config dir. Enables the
-"publish config to override defaults" workflow Laravel-style consumers expect.
+`stackra publish <package>` command copies EJS-rendered configs from a package's
+`config/` folder into the consuming app's config dir. Enables the "publish
+config to override defaults" workflow Laravel-style consumers expect.
 
 Every `@stackra/*` package that ships defaults declares:
 
@@ -216,9 +220,9 @@ Every `@stackra/*` package that ships defaults declares:
 {
   "stackra": {
     "publish": {
-      "config": "./config/**/*.ejs"
-    }
-  }
+      "config": "./config/**/*.ejs",
+    },
+  },
 }
 ```
 
@@ -270,8 +274,8 @@ into their `config/` dir.
 
 ### Phase 8 — Verification (4 days)
 
-- [ ] Every workspace-authored script that currently invokes `node scripts/*.mjs`
-      migrates to `stackra <cmd>` OR documents why not.
+- [ ] Every workspace-authored script that currently invokes
+      `node scripts/*.mjs` migrates to `stackra <cmd>` OR documents why not.
 - [ ] `stackra publish` verified end-to-end (cache config → project's
       `config/cache.ts`).
 - [ ] Cross-runtime — CLI runs on Node 24, verified in CI.
@@ -283,8 +287,8 @@ into their `config/` dir.
 - [ ] `stackra <cmd> --help` produces formatted help.
 - [ ] Interactive prompts work (verified w/ manual test + `PromptMocker`).
 - [ ] `stackra publish @stackra/cache` copies configs correctly.
-- [ ] Testing helpers work — every consumer package's commands testable
-      without a real terminal.
+- [ ] Testing helpers work — every consumer package's commands testable without
+      a real terminal.
 - [ ] Exit codes correct: 0 success, 1 error, 2 invalid usage.
 - [ ] Every ref-package command migrated (if any).
 

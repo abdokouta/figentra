@@ -8,14 +8,13 @@ reviewed_at: null
 
 # `@stackra/swagger` — OpenAPI documentation for Nest services
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
-[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md)
-**Reference:** `.ref/packages/swagger/` (`@stackra/nestjs-swagger` v0.1.0)
-**Depends on:** `@stackra/container`, `@stackra/contracts`,
-`@stackra/response` (envelope integration), `@nestjs/swagger` (required peer),
-`swagger-themes` (optional peer)
-**Design effort:** 10 days across 6 phases
+**Status:** Planned **Anchor ADRs:**
+[ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
+[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md) **Reference:**
+`.ref/packages/swagger/` (`@stackra/nestjs-swagger` v0.1.0) **Depends on:**
+`@stackra/container`, `@stackra/contracts`, `@stackra/response` (envelope
+integration), `@nestjs/swagger` (required peer), `swagger-themes` (optional
+peer) **Design effort:** 10 days across 6 phases
 
 ## Purpose
 
@@ -23,16 +22,15 @@ Production-ready OpenAPI documentation for every Nest service. Handles:
 
 - **Auto-discovery** of controllers + DTOs.
 - **Auth schemes** — Bearer / OAuth2 / API Key / Basic — all pre-configured.
-- **Response envelope** — every 2xx wraps the payload in the
-  `@stackra/response` envelope automatically (no manual `@ApiResponse` per
-  endpoint).
+- **Response envelope** — every 2xx wraps the payload in the `@stackra/response`
+  envelope automatically (no manual `@ApiResponse` per endpoint).
 - **Theming + branding** — dark mode, workspace logo, custom favicon, per-env
   color scheme via `swagger-themes`.
 - **Path filtering** — `?tags=admin` hides everything not tagged.
 - **Multiple docs surfaces** — `/api/docs` (public), `/api/docs/internal`
   (auth-gated), `/api/docs/admin` (super-admin gated).
-- **Static export** — `stackra swagger:export` (via `@stackra/console`)
-  dumps `openapi.yaml` / `openapi.json` for consumer SDK generation.
+- **Static export** — `stackra swagger:export` (via `@stackra/console`) dumps
+  `openapi.yaml` / `openapi.json` for consumer SDK generation.
 
 ## Non-goals
 
@@ -55,13 +53,13 @@ SwaggerModule.forRoot({
 
   docs: [
     {
-      path: "/api/docs",                    // ← multi-surface
-      audience: "public",                    // filters controllers by @ApiAudience
+      path: "/api/docs", // ← multi-surface
+      audience: "public", // filters controllers by @ApiAudience
     },
     {
       path: "/api/docs/internal",
       audience: "internal",
-      auth: { scheme: "bearer" },            // gate w/ guard
+      auth: { scheme: "bearer" }, // gate w/ guard
     },
   ],
 
@@ -213,7 +211,8 @@ Consumers override individual scheme fields; the module deep-merges.
 ## Envelope integration
 
 When `envelope.autoWrap: true`, the module runs after Nest's Swagger scanner
-+ mutates every `2xx` response schema:
+
+- mutates every `2xx` response schema:
 
 ```typescript
 // Before
@@ -275,8 +274,8 @@ composes them w/ workspace overrides:
 ### Phase 6 — Testing + docs (2 days)
 
 - [ ] Unit tests (12+).
-- [ ] Integration test — boot service + hit `/api/docs` + assert HTML +
-      schema shape.
+- [ ] Integration test — boot service + hit `/api/docs` + assert HTML + schema
+      shape.
 - [ ] README documents every option + shows a screenshot of the themed UI.
 
 ## Exit criteria

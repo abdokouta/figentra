@@ -81,8 +81,8 @@ function dependencies(deployable) {
     "nats-jetstream": { service: "nats", condition: "service_healthy" },
     "redis-cache": { service: "redis", condition: "service_healthy" },
     "supabase-postgres": { service: "postgres", condition: "service_healthy" },
-    "kafka": { service: "kafka", condition: "service_healthy" },
-    "meilisearch": { service: "meilisearch", condition: "service_healthy" },
+    kafka: { service: "kafka", condition: "service_healthy" },
+    meilisearch: { service: "meilisearch", condition: "service_healthy" },
     "otel-collector": { service: "otel-collector", condition: "service_started" },
   };
 
@@ -116,8 +116,14 @@ function toComposeService(deployable, environment) {
 
   const port = deployable.container?.port ?? deployable.docker?.container_port;
   const healthPath = deployable.container?.health_path ?? deployable.docker?.health_path;
-  if (!port || !healthPath) throw new Error(`Docker contract incomplete for ${deployable.slug}: container.port and container.health_path are required`);
-  if (deployable.docker.container_port !== port) throw new Error(`Docker port drift for ${deployable.slug}: container.port != docker.container_port`);
+  if (!port || !healthPath)
+    throw new Error(
+      `Docker contract incomplete for ${deployable.slug}: container.port and container.health_path are required`,
+    );
+  if (deployable.docker.container_port !== port)
+    throw new Error(
+      `Docker port drift for ${deployable.slug}: container.port != docker.container_port`,
+    );
   const depends = dependencies(deployable);
 
   return {
@@ -210,11 +216,15 @@ async function mergeModuleComposeFragments(deployables, services) {
  * @returns {Promise<object>} Compose document.
  */
 async function generate(environment) {
-  if (environment === "production") throw new Error("Production is not a local Docker Compose environment; use the provider deployment pipeline instead.");
+  if (environment === "production")
+    throw new Error(
+      "Production is not a local Docker Compose environment; use the provider deployment pipeline instead.",
+    );
   const catalog = await readDocument(CATALOG_PATH);
   const dockerInfra = await readDocument(INFRA_PATH);
   const environmentManifest = await readDocument(resolve(ENVIRONMENTS_PATH, `${environment}.yaml`));
-  if (environmentManifest.environment !== environment) throw new Error(`Environment manifest mismatch for ${environment}`);
+  if (environmentManifest.environment !== environment)
+    throw new Error(`Environment manifest mismatch for ${environment}`);
   const services = {};
 
   for (const deployable of catalog.deployables ?? []) {

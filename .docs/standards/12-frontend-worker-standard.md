@@ -39,5 +39,5 @@ entrypoint files.
 
 ## Linting
 
-Oxlint is the repository linter. Do not add ESLint to deployable applications
-or Workers.
+Oxlint is the repository linter. Do not add ESLint to deployable applications or
+Workers.

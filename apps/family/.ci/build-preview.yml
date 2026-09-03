@@ -22,7 +22,7 @@ name: Build family — preview
 
 on:
   push:
-    branches: ['develop']
+    branches: ["develop"]
   workflow_dispatch:
 
 jobs:

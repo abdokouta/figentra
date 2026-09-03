@@ -6,25 +6,25 @@
 
 ## Writers (bounded — one lane, one kind of edit)
 
-| Agent | Lane |
-| ----- | ---- |
-| `framework-core-builder` | Non-UI `@stackra/*` packages source |
-| `code-standards-steward` | File/folder standards enforcement |
-| `code-documentation-writer` | Docblocks + JSDoc |
-| `docs-adr-steward` | ADRs + steering rules |
-| `docs-changesets-steward` | READMEs + changesets + CHANGELOGs |
-| `env-naming-steward` | Env-var naming audit |
-| `support-utilities-steward` | @stackra/support helper migration |
-| `vitest-test-engineer` | Vitest test suites |
+| Agent                               | Lane                                     |
+| ----------------------------------- | ---------------------------------------- |
+| `framework-core-builder`            | Non-UI `@stackra/*` packages source      |
+| `code-standards-steward`            | File/folder standards enforcement        |
+| `code-documentation-writer`         | Docblocks + JSDoc                        |
+| `docs-adr-steward`                  | ADRs + steering rules                    |
+| `docs-changesets-steward`           | READMEs + changesets + CHANGELOGs        |
+| `env-naming-steward`                | Env-var naming audit                     |
+| `support-utilities-steward`         | @stackra/support helper migration        |
+| `vitest-test-engineer`              | Vitest test suites                       |
 | `workspace-standardization-steward` | Package manifests + config normalization |
 
 ## Reviewers (read-only audits)
 
-| Agent | Lane |
-| ----- | ---- |
+| Agent                          | Lane                                  |
+| ------------------------------ | ------------------------------------- |
 | `package-api-release-reviewer` | Exports, builds, semver, supply chain |
-| `security-compliance-reviewer` | Security + privacy audit |
-| `frontend-package-auditor` | Per-package audit checklist |
+| `security-compliance-reviewer` | Security + privacy audit              |
+| `frontend-package-auditor`     | Per-package audit checklist           |
 
 ## Aspirational agents → `.ref/agents/`
 

@@ -201,36 +201,36 @@ Runtime-prefixed keys still respect the layer rule:
 
 ## Rule 4 — Vendor catalog (canonical names — one spelling each)
 
-| Canonical       | Aliases to reject                                   |
-| --------------- | --------------------------------------------------- |
-| `CLOUDFLARE`    | `CF`                                                |
-| `SENTRY`        | —                                                   |
-| `ONEUPTIME`     | `1UPTIME`, `OU`                                     |
-| `DOPPLER`       | **`DOOPLER`** (typo — every occurrence renames)     |
-| `AWS`           | `S3`, `IAM`, `KMS`, `DYNAMODB` (roll under `AWS_*`) |
-| `GITLAB`        | `GL`                                                |
-| `GITHUB`        | `GH`                                                |
-| `SLACK`         | —                                                   |
-| `PAGERDUTY`     | `PD`                                                |
-| `BETTER_STACK`  | `BS`, `BETTERSTACK` (canonical is underscored)      |
-| `RESEND`        | —                                                   |
-| `EXPO`          | `EAS` (EAS is a service under Expo — same vendor)   |
-| `APPLE`         | `APPLE_ID`, `ASC`, `APP_STORE_CONNECT`              |
-| `GOOGLE_PLAY`   | `PLAY`, `GPLAY`                                     |
-| `GOOGLE_CLOUD`  | `GCP`, `GCLOUD`                                     |
-| `FIREBASE`      | —                                                   |
-| `HEROUI`        | `HERO_UI`                                           |
-| `UNIWIND`       | —                                                   |
-| `TURBO`         | `TURBOREPO`, `VERCEL_TURBO`                         |
-| `POSTGRES`      | `PG`, `POSTGRESQL`                                  |
-| `REDIS`         | —                                                   |
-| `VALKEY`        | —                                                   |
-| `MEILISEARCH`   | `MEILI`                                             |
-| `MAILPIT`       | —                                                   |
-| `STRIPE`        | —                                                   |
-| `PADDLE`        | —                                                   |
-| `OPENAI`        | `OAI`                                               |
-| `ANTHROPIC`     | —                                                   |
+| Canonical      | Aliases to reject                                   |
+| -------------- | --------------------------------------------------- |
+| `CLOUDFLARE`   | `CF`                                                |
+| `SENTRY`       | —                                                   |
+| `ONEUPTIME`    | `1UPTIME`, `OU`                                     |
+| `DOPPLER`      | **`DOOPLER`** (typo — every occurrence renames)     |
+| `AWS`          | `S3`, `IAM`, `KMS`, `DYNAMODB` (roll under `AWS_*`) |
+| `GITLAB`       | `GL`                                                |
+| `GITHUB`       | `GH`                                                |
+| `SLACK`        | —                                                   |
+| `PAGERDUTY`    | `PD`                                                |
+| `BETTER_STACK` | `BS`, `BETTERSTACK` (canonical is underscored)      |
+| `RESEND`       | —                                                   |
+| `EXPO`         | `EAS` (EAS is a service under Expo — same vendor)   |
+| `APPLE`        | `APPLE_ID`, `ASC`, `APP_STORE_CONNECT`              |
+| `GOOGLE_PLAY`  | `PLAY`, `GPLAY`                                     |
+| `GOOGLE_CLOUD` | `GCP`, `GCLOUD`                                     |
+| `FIREBASE`     | —                                                   |
+| `HEROUI`       | `HERO_UI`                                           |
+| `UNIWIND`      | —                                                   |
+| `TURBO`        | `TURBOREPO`, `VERCEL_TURBO`                         |
+| `POSTGRES`     | `PG`, `POSTGRESQL`                                  |
+| `REDIS`        | —                                                   |
+| `VALKEY`       | —                                                   |
+| `MEILISEARCH`  | `MEILI`                                             |
+| `MAILPIT`      | —                                                   |
+| `STRIPE`       | —                                                   |
+| `PADDLE`       | —                                                   |
+| `OPENAI`       | `OAI`                                               |
+| `ANTHROPIC`    | —                                                   |
 
 Adding a new vendor: (1) add here, (2) add to
 [`scripts/_lib/env-naming.mjs`](../../scripts/_lib/env-naming.mjs)
@@ -303,7 +303,8 @@ Consumer usage:
   drops into an interactive shell with every alias exported.
 - **Cloudflare Worker per-service** — the `cloudflare-worker` terraform module
   reads Layer 1 vars via `TF_VAR_*` bindings + provisions the Layer 2 Doppler
-  secrets under vendor-standard names (never a brand prefix inside a Worker's env).
+  secrets under vendor-standard names (never a brand prefix inside a Worker's
+  env).
 
 ### Rules
 
@@ -455,9 +456,9 @@ Taint marks the token for destroy+recreate; apply creates a fresh token
 
 ## Rule 7 — Framework runtime code reads via Doppler-canonical names too
 
-Inside a Worker, `env.SENTRY_DSN` reads the value Wrangler injected from Layer 2.
-Inside `src/main.tsx` for a Vite SPA, `import.meta.env.VITE_SENTRY_DSN` reads the
-value Vite built into the bundle from Layer 2.
+Inside a Worker, `env.SENTRY_DSN` reads the value Wrangler injected from
+Layer 2. Inside `src/main.tsx` for a Vite SPA, `import.meta.env.VITE_SENTRY_DSN`
+reads the value Vite built into the bundle from Layer 2.
 
 Neither reads a Layer 1 key directly. The remap layer (Rule 6) is the sole
 bridge; framework code stays clean.
@@ -474,8 +475,8 @@ terraform-provisioned from those Layer 1 values.
 
 ### Concrete envelopes
 
-**A Worker service** (`figentra-<slug>-service/<env>`, `academorix-api/<env>`)
-— 12 to 20 keys:
+**A Worker service** (`figentra-<slug>-service/<env>`, `academorix-api/<env>`) —
+12 to 20 keys:
 
 ```
 APP_ENV                    (production | staging | development)

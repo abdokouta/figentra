@@ -8,19 +8,19 @@ reviewed_at: null
 
 # `@academorix/email-templates` · v1.1 draft
 
-Sprint 2 · React Email workspace for every outbound Academorix message.
-Four templates ship in v1.1:
+Sprint 2 · React Email workspace for every outbound Academorix message. Four
+templates ship in v1.1:
 
-| Template            | Trigger                                 | Provider hint |
-| ------------------- | --------------------------------------- | ------------- |
-| `welcome`           | Coach account created · post-verification | Transactional |
-| `session-reminder`  | T-24h before a scheduled training session | Transactional |
-| `invoice`           | Monthly subscription + per-athlete invoice | Transactional |
-| `newsletter`        | Monthly `The Track` roll-up               | Marketing     |
+| Template           | Trigger                                    | Provider hint |
+| ------------------ | ------------------------------------------ | ------------- |
+| `welcome`          | Coach account created · post-verification  | Transactional |
+| `session-reminder` | T-24h before a scheduled training session  | Transactional |
+| `invoice`          | Monthly subscription + per-athlete invoice | Transactional |
+| `newsletter`       | Monthly `The Track` roll-up                | Marketing     |
 
-Every template inherits from `src/_theme.tsx` — Track Orange rebind,
-Geist stack, ink/paper contrast pair, A-Chevron logo mark. If the
-theme drifts from the Sprint 1 `_shared/tokens.css`, Sprint 1 wins.
+Every template inherits from `src/_theme.tsx` — Track Orange rebind, Geist
+stack, ink/paper contrast pair, A-Chevron logo mark. If the theme drifts from
+the Sprint 1 `_shared/tokens.css`, Sprint 1 wins.
 
 ## Local preview
 
@@ -30,8 +30,8 @@ pnpm dev
 # → open http://localhost:3005
 ```
 
-React Email's dev server mounts every file in `src/*.tsx` (except
-`_*.tsx`) as an addressable preview. Edit + save · hot-reloads.
+React Email's dev server mounts every file in `src/*.tsx` (except `_*.tsx`) as
+an addressable preview. Edit + save · hot-reloads.
 
 ## Rendering for Resend
 
@@ -80,12 +80,11 @@ pnpm render:newsletter        # writes .out/newsletter.html
 ## Voice + tone
 
 - Coach-forward · second-person · no marketing verbs.
-- Every subject line reads like a scoreboard update, never a "big
-  announcement".
+- Every subject line reads like a scoreboard update, never a "big announcement".
 - Every CTA verb is a real action: `Open roster`, `Confirm session`,
   `Download invoice`, `Read this week's Track`.
-- Every footer carries the operator-of-record (Figentra L.L.C) +
-  a plain-text unsubscribe link (per CAN-SPAM + GDPR Art. 8).
+- Every footer carries the operator-of-record (Figentra L.L.C) + a plain-text
+  unsubscribe link (per CAN-SPAM + GDPR Art. 8).
 
 ## Files
 

@@ -6,6 +6,7 @@ Every directory under `apps/*`, `workers/*`, and `services/*` that is deployable
 must contain `cloud.yaml`.
 
 It declares:
+
 - deployment identity
 - runtime
 - source path
@@ -32,7 +33,8 @@ infrastructure/terraform/deployables/<slug>/
 These are thin ownership modules. Shared infrastructure implementations remain
 under `infrastructure/terraform/modules`.
 
-The root Terraform stack remains catalog-driven and authoritative for composition.
+The root Terraform stack remains catalog-driven and authoritative for
+composition.
 
 ## Docker
 
@@ -65,8 +67,8 @@ The generated file is disposable, gitignored, and must not be hand-edited. See
 
 ## Internal service networking
 
-Docker Compose does not publish service ports to the host by default.
-Containers communicate using Docker DNS and the service name.
+Docker Compose does not publish service ports to the host by default. Containers
+communicate using Docker DNS and the service name.
 
 Example:
 

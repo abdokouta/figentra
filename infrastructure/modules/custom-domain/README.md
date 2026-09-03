@@ -2,7 +2,9 @@
 
 > **Category:** networking · **Maturity:** beta · **Version:** 1.0.0
 
-Bring-your-own-domain + TLS provisioning. Provisions a Cloudflare custom hostname + origin certificate for the deployable, enabling tenant-branded URLs (e.g. academy.example.com).
+Bring-your-own-domain + TLS provisioning. Provisions a Cloudflare custom
+hostname + origin certificate for the deployable, enabling tenant-branded URLs
+(e.g. academy.example.com).
 
 ## Provides
 
@@ -17,8 +19,8 @@ Bring-your-own-domain + TLS provisioning. Provisions a Cloudflare custom hostnam
 
 ## Environment variables
 
-| Variable | Description | Source |
-| -------- | ----------- | ------ |
+| Variable                | Description                      | Source         |
+| ----------------------- | -------------------------------- | -------------- |
 | `CUSTOM_DOMAIN_ENABLED` | Whether custom domain is active. | `literal:true` |
 
 ## Usage in `cloud.yaml`
@@ -33,6 +35,8 @@ modules:
 
 ## Cross-references
 
-- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) — module manifest schema.
+- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) —
+  module manifest schema.
 - [`infrastructure/modules/README.md`](../README.md) — registry catalog.
-- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md) — authorising plan.
+- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md)
+  — authorising plan.

@@ -17,6 +17,7 @@ Pricing
 ```
 
 Platform:
+
 - Overview
 - Appointments
 - Customers
@@ -29,6 +30,7 @@ Platform:
 - Reporting
 
 Solutions:
+
 - Beauty Centers
 - Salons
 - Wellness Centers
@@ -36,17 +38,20 @@ Solutions:
 - Multi-Branch Businesses
 
 For Teams:
+
 - Owners & Managers
 - Front Desk
 - Practitioners
 
 Resources:
+
 - Guides
 - Case Studies
 - Help Center
 - Insights
 
 Company:
+
 - About
 - Team
 - Careers
@@ -59,15 +64,18 @@ Company:
 **Eyebrow:** `CARE · BEAUTY · WELLNESS OPERATIONS`
 
 **Headline:**
+
 > **Run every appointment. Remember every customer. Grow every location.**
 
 **Subhead:**
-> Beautilon brings appointments, customers, services, practitioners, payments and branch operations into one beautifully simple platform.
 
-CTA: `Book a demo`
-Secondary: `Explore the platform`
+> Beautilon brings appointments, customers, services, practitioners, payments
+> and branch operations into one beautifully simple platform.
+
+CTA: `Book a demo` Secondary: `Explore the platform`
 
 Hero layout:
+
 - editorial photography or elegant product interaction;
 - large negative space;
 - product UI integrated into the composition;
@@ -84,6 +92,7 @@ Show how Beautilon connects the full journey.
 ### Owner section
 
 Outcomes:
+
 - know what is happening across locations;
 - understand revenue and utilization;
 - coordinate teams;
@@ -107,7 +116,8 @@ Outcomes:
 
 ### Multi-branch section
 
-Distinctive visual: one brand controlling multiple locations without losing local operational control.
+Distinctive visual: one brand controlling multiple locations without losing
+local operational control.
 
 ### Customer experience
 
@@ -115,11 +125,13 @@ Show the customer-facing journey rather than only back-office dashboards.
 
 ### Trust
 
-Security, access controls, data protection, auditability, backups and support. Publish certifications or regulatory claims only when verified.
+Security, access controls, data protection, auditability, backups and support.
+Publish certifications or regulatory claims only when verified.
 
 ### CTA
 
-> **Give your team one place to run the day — and your customers a better reason to return.**
+> **Give your team one place to run the day — and your customers a better reason
+> to return.**
 
 `Book a demo`
 
@@ -138,11 +150,13 @@ Each feature receives its own visual language:
 
 ## Footer
 
-Products, solutions, resources, company, security, privacy, terms, contact and social links.
+Products, solutions, resources, company, security, privacy, terms, contact and
+social links.
 
 ## SEO
 
 Dedicated, genuinely useful pages for:
+
 - beauty salon management software;
 - beauty center management;
 - wellness center software;

@@ -9,6 +9,7 @@ No service directly mutates another service's database.
 ## Communication
 
 Use:
+
 - APIs
 - events
 - projections

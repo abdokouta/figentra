@@ -60,10 +60,7 @@ export interface IOutboxHarness {
    * Assert at least one row exists with `type` (and optionally
    * matches `matcher`). Throws a descriptive error otherwise.
    */
-  assertPublished(
-    type: string,
-    matcher?: (row: IOutboxRow) => boolean,
-  ): void;
+  assertPublished(type: string, matcher?: (row: IOutboxRow) => boolean): void;
 
   /** Reset the harness — every row is discarded. */
   reset(): void;
@@ -109,9 +106,7 @@ export function createOutboxHarness(): IOutboxHarness {
       return Object.freeze(rows.slice());
     },
 
-    async drain(
-      handler: (row: IOutboxRow) => Promise<void> | void,
-    ): Promise<void> {
+    async drain(handler: (row: IOutboxRow) => Promise<void> | void): Promise<void> {
       for (const row of rows) {
         if (row.status !== "pending") continue;
         try {
@@ -124,13 +119,8 @@ export function createOutboxHarness(): IOutboxHarness {
       }
     },
 
-    assertPublished(
-      type: string,
-      matcher?: (row: IOutboxRow) => boolean,
-    ): void {
-      const match = rows.find(
-        (r) => r.type === type && (!matcher || matcher(r)),
-      );
+    assertPublished(type: string, matcher?: (row: IOutboxRow) => boolean): void {
+      const match = rows.find((r) => r.type === type && (!matcher || matcher(r)));
       if (!match) {
         const seen = rows.map((r) => r.type).join(", ") || "(none)";
         throw new Error(

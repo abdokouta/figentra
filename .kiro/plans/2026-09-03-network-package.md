@@ -8,8 +8,8 @@ reviewed_at: null
 
 # @stackra/network — architecture plan
 
-**Status:** Planned (extend `.ref/packages/network` v3.0.0)
-**Anchor ADRs:** [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md)
+**Status:** Planned (extend `.ref/packages/network` v3.0.0) **Anchor ADRs:**
+[ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md)
 **Reference:** `.ref/packages/network/` — already ADR-0091-shaped, v3.0.0
 **Depends on:** `@stackra/container`, `@stackra/contracts`, `@stackra/logger`
 
@@ -17,28 +17,28 @@ reviewed_at: null
 
 `@stackra/network` provides cross-runtime network-status detection:
 
-- **Browser** — `navigator.onLine`, `navigator.connection` (Network
-  Information API), `online`/`offline` events, connection type + effective
-  bandwidth.
+- **Browser** — `navigator.onLine`, `navigator.connection` (Network Information
+  API), `online`/`offline` events, connection type + effective bandwidth.
 - **React Native** — `@react-native-community/netinfo` — WiFi vs cellular,
   connection strength, expensive-network detection.
 - **Node** — `NodeNetworkDetector` (from .ref) — DNS probe-based detection.
-- **Cloudflare Worker** — noop detector (Workers are always "online" or dead;
-  no network state to detect).
+- **Cloudflare Worker** — noop detector (Workers are always "online" or dead; no
+  network state to detect).
 
 Enterprise requirements day one:
 
-- **Reactive status** — subscribers receive `{ online, connectionType,
-  effectiveType, downlink, rtt, saveData }` on every state change.
+- **Reactive status** — subscribers receive
+  `{ online, connectionType, effectiveType, downlink, rtt, saveData }` on every
+  state change.
 - **Offline event bus** — emit `network.online`, `network.offline`,
   `network.changed` on `@stackra/events`.
-- **Retry-aware** — expose `IRetryable` interface for HTTP/queue packages
-  to gate retries on network state.
-- **Auto-pause queues** — subscribers can gate `@stackra/queue` dispatches
-  when offline (buffer via IndexedDB queue connector).
+- **Retry-aware** — expose `IRetryable` interface for HTTP/queue packages to
+  gate retries on network state.
+- **Auto-pause queues** — subscribers can gate `@stackra/queue` dispatches when
+  offline (buffer via IndexedDB queue connector).
 - **React hooks** — `useNetworkStatus()`, `useOnline()`, `useConnectionType()`.
-- **RN device-state integration** — expose foreground/background app state
-  (via `AppState`) alongside connection state.
+- **RN device-state integration** — expose foreground/background app state (via
+  `AppState`) alongside connection state.
 
 ## Non-goals
 
@@ -87,27 +87,27 @@ packages/network/
 
 ## Contracts split
 
-| Symbol                    | Kind      |
-| ------------------------- | --------- |
-| `INetworkDetector`        | interface |
-| `INetworkService`         | interface |
-| `INetworkStatus`          | interface |
-| `IConnectionType`         | interface |
-| `NETWORK_DETECTOR`        | token     |
-| `NETWORK_SERVICE`         | token     |
-| `NETWORK_EVENTS`          | constant map |
+| Symbol             | Kind         |
+| ------------------ | ------------ |
+| `INetworkDetector` | interface    |
+| `INetworkService`  | interface    |
+| `INetworkStatus`   | interface    |
+| `IConnectionType`  | interface    |
+| `NETWORK_DETECTOR` | token        |
+| `NETWORK_SERVICE`  | token        |
+| `NETWORK_EVENTS`   | constant map |
 
 ## Core API (locked from .ref)
 
 ```typescript
 interface INetworkStatus {
   online: boolean;
-  connectionType: ConnectionType;      // "wifi" | "cellular" | "ethernet" | "unknown" | "none"
-  effectiveType: EffectiveType;        // "slow-2g" | "2g" | "3g" | "4g" | "unknown"
-  downlink?: number;                   // Mbps
-  rtt?: number;                        // Round-trip time (ms)
-  saveData?: boolean;                  // "Data-saver" enabled
-  lastChangedAt: string;               // ISO 8601
+  connectionType: ConnectionType; // "wifi" | "cellular" | "ethernet" | "unknown" | "none"
+  effectiveType: EffectiveType; // "slow-2g" | "2g" | "3g" | "4g" | "unknown"
+  downlink?: number; // Mbps
+  rtt?: number; // Round-trip time (ms)
+  saveData?: boolean; // "Data-saver" enabled
+  lastChangedAt: string; // ISO 8601
 }
 
 interface INetworkService {
@@ -128,12 +128,12 @@ interface INetworkDetector {
 
 ## Detectors
 
-| Detector                | Home                                            | Runtime         |
-| ----------------------- | ----------------------------------------------- | --------------- |
-| `NoopNetworkDetector`   | `core/detectors/noop.detector.ts`               | Every runtime (fallback) |
-| `NodeNetworkDetector`   | `core/detectors/node-network.detector.ts`       | Node — DNS probe |
-| `BrowserNetworkDetector` | `react/detectors/browser-network.detector.ts`  | Browser — window.online + Network Info API |
-| `NativeNetworkDetector` | `native/detectors/native-network.detector.ts`   | RN — @react-native-community/netinfo |
+| Detector                 | Home                                          | Runtime                                    |
+| ------------------------ | --------------------------------------------- | ------------------------------------------ |
+| `NoopNetworkDetector`    | `core/detectors/noop.detector.ts`             | Every runtime (fallback)                   |
+| `NodeNetworkDetector`    | `core/detectors/node-network.detector.ts`     | Node — DNS probe                           |
+| `BrowserNetworkDetector` | `react/detectors/browser-network.detector.ts` | Browser — window.online + Network Info API |
+| `NativeNetworkDetector`  | `native/detectors/native-network.detector.ts` | RN — @react-native-community/netinfo       |
 
 Runtime picks via DI:
 
@@ -160,8 +160,8 @@ export function useOnline(): boolean {
 }
 ```
 
-Works identically on React DOM + React Native — same file re-exported from
-both `/react` and `/native` per ADR-0091 §Rule 3.
+Works identically on React DOM + React Native — same file re-exported from both
+`/react` and `/native` per ADR-0091 §Rule 3.
 
 ## Events integration
 
@@ -174,8 +174,8 @@ NETWORK_EVENTS.CHANGED        → { previousStatus, currentStatus }
 NETWORK_EVENTS.SLOW_CONNECTION → { effectiveType, downlink }
 ```
 
-Downstream: HTTP client circuit-breaker, queue offline buffer, analytics
-pauses on save-data.
+Downstream: HTTP client circuit-breaker, queue offline buffer, analytics pauses
+on save-data.
 
 ## Retry-when-online helper
 
@@ -184,10 +184,10 @@ Composable retry that WAITS for online before firing:
 ```typescript
 import { retryWhenOnline } from "@stackra/network";
 
-const result = await retryWhenOnline(
-  () => http.post("/api/orders", data),
-  { attempts: 3, offlineTimeoutMs: 60_000 },
-);
+const result = await retryWhenOnline(() => http.post("/api/orders", data), {
+  attempts: 3,
+  offlineTimeoutMs: 60_000,
+});
 ```
 
 If offline, waits (with subscription to `NETWORK_EVENTS.ONLINE`) up to
@@ -207,14 +207,14 @@ If offline, waits (with subscription to `NETWORK_EVENTS.ONLINE`) up to
     "@stackra/testing": "workspace:*",
     "react": "catalog:react",
     "react-native": "catalog:react-native",
-    "@react-native-community/netinfo": "^12.0.0"
+    "@react-native-community/netinfo": "^12.0.0",
   },
   "peerDependenciesMeta": {
     "@stackra/ui": { "optional": true },
     "react": { "optional": true },
     "react-native": { "optional": true },
-    "@react-native-community/netinfo": { "optional": true }
-  }
+    "@react-native-community/netinfo": { "optional": true },
+  },
 }
 ```
 
@@ -252,8 +252,8 @@ If offline, waits (with subscription to `NETWORK_EVENTS.ONLINE`) up to
 ## Success criteria
 
 - [ ] 4 subpath exports build cleanly.
-- [ ] Browser detector fires `network.offline` when DevTools "Offline"
-      throttle enabled.
+- [ ] Browser detector fires `network.offline` when DevTools "Offline" throttle
+      enabled.
 - [ ] RN detector reports connection type transitions (wifi → cellular).
 - [ ] Node detector re-probes on interval; emits change events.
 - [ ] Worker detector is a no-op (never emits).

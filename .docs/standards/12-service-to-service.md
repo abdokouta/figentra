@@ -18,10 +18,9 @@ Use one of:
 
 ## Nest integration
 
-`@nestjs/microservices` is a transport abstraction, not the architecture
-itself. The application code should depend on a Figentra internal messaging
-port/adapter rather than directly constructing `ClientProxy` throughout domain
-code.
+`@nestjs/microservices` is a transport abstraction, not the architecture itself.
+The application code should depend on a Figentra internal messaging port/adapter
+rather than directly constructing `ClientProxy` throughout domain code.
 
 The Nest documentation provides `ClientProxy`, `ClientsModule`, `send()` for
 request-response, and `emit()` for event publication. citeturn0search0
@@ -29,6 +28,7 @@ request-response, and `emit()` for event publication. citeturn0search0
 ## Security
 
 Every internal message carries:
+
 - message id
 - correlation id
 - causation id
@@ -48,12 +48,14 @@ Authorization remains an IAM decision.
 Consumers must be idempotent.
 
 Commands require:
+
 - timeout
 - bounded retry
 - idempotency key
 - explicit failure semantics
 
 Events require:
+
 - durable publication/outbox
 - consumer retry
 - dead-letter handling

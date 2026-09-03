@@ -25,18 +25,14 @@ import { PipelineError } from "../../src/errors/pipeline.error";
  * semantics without introducing a class.
  */
 function addPipe(delta: number) {
-  return (value: number, next: (value: number) => unknown): unknown =>
-    next(value + delta);
+  return (value: number, next: (value: number) => unknown): unknown => next(value + delta);
 }
 
 /**
  * A closure pipe that doubles the numeric result AFTER `next()` returns.
  * Demonstrates output transformation (the second half of the chain).
  */
-function doubleResult(): (
-  value: number,
-  next: (value: number) => unknown,
-) => unknown {
+function doubleResult(): (value: number, next: (value: number) => unknown) => unknown {
   return (value, next) => {
     const result = next(value) as number;
     return result * 2;
@@ -148,9 +144,7 @@ describe("Pipeline", () => {
       const result = new Pipeline<number, number>()
         .send(2)
         // pipe passes `value * value` downstream — destination sees 4.
-        .through([
-          (value: number, next: (v: number) => unknown) => next(value * value),
-        ])
+        .through([(value: number, next: (v: number) => unknown) => next(value * value)])
         .then(destination);
 
       expect(destination).toHaveBeenCalledWith(4);
@@ -184,10 +178,7 @@ describe("Pipeline", () => {
     it("awaits async closure pipes through the terminal", async () => {
       const asyncPipe =
         (delta: number) =>
-        async (
-          value: number,
-          next: (value: number) => unknown,
-        ): Promise<unknown> => {
+        async (value: number, next: (value: number) => unknown): Promise<unknown> => {
           // Simulate a boundary crossing (await something) before
           // handing off to the next pipe. `next(...)` returns a
           // Promise which we await so this pipe resolves after the
@@ -209,10 +200,7 @@ describe("Pipeline", () => {
 
   describe("error propagation", () => {
     it("bubbles a synchronous throw from a middleware as a PipelineError", () => {
-      const throwingPipe = (
-        _value: number,
-        _next: (value: number) => unknown,
-      ): unknown => {
+      const throwingPipe = (_value: number, _next: (value: number) => unknown): unknown => {
         throw new Error("boom");
       };
 
@@ -242,10 +230,7 @@ describe("Pipeline", () => {
 
     it("preserves an already-typed PipelineError unchanged (no double-wrap)", () => {
       const original = new PipelineError("typed", "CUSTOM_CODE");
-      const throwingPipe = (
-        _value: number,
-        _next: (value: number) => unknown,
-      ): unknown => {
+      const throwingPipe = (_value: number, _next: (value: number) => unknown): unknown => {
         throw original;
       };
 
@@ -268,9 +253,7 @@ describe("Pipeline", () => {
       // `Pipeline` treats an object as an `{ handle(value, next) }`
       // pipe by default. This is the OOP-style middleware shape.
       const handler = {
-        handle: vi.fn((value: number, next: (v: number) => unknown) =>
-          next(value + 1),
-        ),
+        handle: vi.fn((value: number, next: (v: number) => unknown) => next(value + 1)),
       };
 
       const result = new Pipeline<number, number>()
@@ -287,9 +270,7 @@ describe("Pipeline", () => {
       // pipe in the chain. Handy for interop with adapters that use a
       // different method-name convention.
       const handler = {
-        process: vi.fn((value: number, next: (v: number) => unknown) =>
-          next(value + 100),
-        ),
+        process: vi.fn((value: number, next: (v: number) => unknown) => next(value + 100)),
       };
 
       const result = new Pipeline<number, number>()
@@ -380,8 +361,7 @@ describe("Pipeline", () => {
       // 'authPipe'. `Pipeline.carry()` will look it up and invoke
       // `handle(value, next)`.
       const authPipe = {
-        handle: (value: number, next: (v: number) => unknown) =>
-          next(value + 42),
+        handle: (value: number, next: (v: number) => unknown) => next(value + 42),
       };
       app.provide("authPipe", authPipe);
 

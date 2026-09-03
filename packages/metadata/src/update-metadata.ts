@@ -1,6 +1,6 @@
-import { getMetadata } from './get-metadata';
-import { defineMetadata } from './define-metadata';
-import { hasMetadata } from './has-metadata';
+import { getMetadata } from "./get-metadata";
+import { defineMetadata } from "./define-metadata";
+import { hasMetadata } from "./has-metadata";
 
 /**
  * Updates existing metadata or creates new metadata using a callback function to transform the value.
@@ -88,7 +88,7 @@ export function updateMetadata<TMetadata>(
   defaultMetadataValue: TMetadata,
   callback: (metadataValue: TMetadata) => TMetadata,
   target: object,
-  propertyKey?: string | symbol
+  propertyKey?: string | symbol,
 ): void {
   // Check if metadata exists first, then retrieve its value or use the default
   // This ensures we distinguish between "no metadata" and "metadata exists but is null/undefined"

@@ -44,12 +44,7 @@ export function defineBaseConfig(
     resolvedEntry = entry;
   } else if (typeof entry === "string") {
     resolvedEntry = [entry];
-  } else if (
-    entry &&
-    typeof entry === "object" &&
-    "entry" in entry &&
-    entry.entry !== undefined
-  ) {
+  } else if (entry && typeof entry === "object" && "entry" in entry && entry.entry !== undefined) {
     resolvedEntry = entry.entry as Options["entry"];
     mergedOverrides = { ...entry, ...overrides };
   } else {

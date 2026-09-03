@@ -45,9 +45,7 @@ export interface IKvFixture {
  * await kv.dispose();
  * ```
  */
-export async function createKvFixture(
-  options: ICreateKvFixtureOptions = {},
-): Promise<IKvFixture> {
+export async function createKvFixture(options: ICreateKvFixtureOptions = {}): Promise<IKvFixture> {
   const mf = new Miniflare({
     modules: true,
     script: "export default { async fetch() { return new Response('ok'); } }",

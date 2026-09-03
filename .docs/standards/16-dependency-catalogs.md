@@ -4,8 +4,8 @@
 
 ## Rule
 
-Every dependency shared by more than one workspace package belongs in the
-root pnpm catalog.
+Every dependency shared by more than one workspace package belongs in the root
+pnpm catalog.
 
 Workspace packages use:
 
@@ -58,4 +58,5 @@ exception is documented by an ADR.
 - Vitest 4
 - Oxlint 1.x
 
-Version numbers are centrally managed in the root `pnpm-workspace.yaml` catalog. The root `pnpm-lock.yaml` is the reproducibility gate.
+Version numbers are centrally managed in the root `pnpm-workspace.yaml` catalog.
+The root `pnpm-lock.yaml` is the reproducibility gate.

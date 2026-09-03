@@ -34,11 +34,13 @@ Event type + schema version define compatibility.
 
 ## Webhooks
 
-Webhook versions can evolve independently where provider compatibility requires it.
+Webhook versions can evolve independently where provider compatibility requires
+it.
 
 ## Deprecation
 
 Every public contract needs:
+
 - owner
 - current version
 - supported versions

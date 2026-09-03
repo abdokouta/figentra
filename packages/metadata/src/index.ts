@@ -1,10 +1,10 @@
-import { getMetadata } from './get-metadata';
-import { hasMetadata } from './has-metadata';
-import { clearMetadata } from './clear-metadata';
-import { updateMetadata } from './update-metadata';
-import { defineMetadata } from './define-metadata';
-import { getAllMetadata } from './get-all-metadata';
-import { hasOwnMetadata } from './has-own-metadata';
+import { getMetadata } from "./get-metadata";
+import { hasMetadata } from "./has-metadata";
+import { clearMetadata } from "./clear-metadata";
+import { updateMetadata } from "./update-metadata";
+import { defineMetadata } from "./define-metadata";
+import { getAllMetadata } from "./get-all-metadata";
+import { hasOwnMetadata } from "./has-own-metadata";
 
 /**
  * Core metadata utilities export.

@@ -4,14 +4,14 @@
  * This file follows the repository documentation, security, and layering
  * standards. Public symbols must remain explicitly documented.
  */
-import { version } from 'expo/package.json';
-import { Image } from 'expo-image';
-import { useColorScheme, StyleSheet } from 'react-native';
+import { version } from "expo/package.json";
+import { Image } from "expo-image";
+import { useColorScheme, StyleSheet } from "react-native";
 
-import { ThemedText } from './themed-text';
-import { ThemedView } from './themed-view';
+import { ThemedText } from "./themed-text";
+import { ThemedView } from "./themed-view";
 
-import { Spacing } from '@/constants/theme';
+import { Spacing } from "@/constants/theme";
 
 /**
  * Public Figentra API symbol.
@@ -26,9 +26,9 @@ export function WebBadge() {
       </ThemedText>
       <Image
         source={
-          scheme === 'dark'
-            ? require('@/assets/images/expo-badge-white.png')
-            : require('@/assets/images/expo-badge.png')
+          scheme === "dark"
+            ? require("@/assets/images/expo-badge-white.png")
+            : require("@/assets/images/expo-badge.png")
         }
         style={styles.badgeImage}
       />
@@ -39,11 +39,11 @@ export function WebBadge() {
 const styles = StyleSheet.create({
   container: {
     padding: Spacing.five,
-    alignItems: 'center',
+    alignItems: "center",
     gap: Spacing.two,
   },
   versionText: {
-    textAlign: 'center',
+    textAlign: "center",
   },
   badgeImage: {
     width: 123,

@@ -25,21 +25,14 @@
  *   ```
  */
 
-import {
-  buildFastifyTestApp,
-  type IFastifyTestAppOptions,
-} from "./build-fastify-test-app";
-import {
-  createTestingModule,
-  type INestTestingModuleOptions,
-} from "./create-testing-module";
+import { buildFastifyTestApp, type IFastifyTestAppOptions } from "./build-fastify-test-app";
+import { createTestingModule, type INestTestingModuleOptions } from "./create-testing-module";
 import { supertestClient } from "./supertest-client";
 import type { INestTestContext } from "./testing-context.interface";
 
 /** Union of `INestTestingModuleOptions` + `IFastifyTestAppOptions`. */
 export interface ICreateNestTestContextOptions
-  extends INestTestingModuleOptions,
-    IFastifyTestAppOptions {}
+  extends INestTestingModuleOptions, IFastifyTestAppOptions {}
 
 /**
  * Build a ready-to-use `INestTestContext`.

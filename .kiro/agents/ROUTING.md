@@ -11,19 +11,19 @@ non-overlap, `.kiro/agents/README.md`) explicitly permits.
 
 ### "Add / modify / test code"
 
-| Task                                                           | Agent                           | Repo       |
-| -------------------------------------------------------------- | ------------------------------- | ---------- |
-| Add a backend service feature (Cloudflare Worker, TypeScript)  | `framework-core-builder`        | backend    |
-| Add a `@stackra/*` non-UI framework package                    | `framework-core-builder`        | frontend   |
-| Add a React component in `@stackra/ui` or apps                 | `heroui-ui-builder`             | frontend   |
-| Add a React Native screen or navigation                        | `heroui-native-builder`         | mobile     |
-| Add a FastAPI endpoint or LangGraph flow                       | `python-service-builder`        | ai         |
-| Author a custom Terraform provider resource in Go              | `go-terraform-provider-builder` | terraform  |
-| Author or update an HCL module under `terraform/modules/`      | `go-terraform-provider-builder` | terraform  |
-| Compose an env root under `terraform/envs/<env>/`              | `go-terraform-provider-builder` | terraform  |
-| Write Vitest / RTL tests                                       | `vitest-test-engineer`          | frontend   |
-| Write Jest / Detox tests for React Native                      | `native-test-engineer`          | mobile     |
-| Write Playwright end-to-end tests                              | `e2e-test-engineer`             | web/mobile |
+| Task                                                          | Agent                           | Repo       |
+| ------------------------------------------------------------- | ------------------------------- | ---------- |
+| Add a backend service feature (Cloudflare Worker, TypeScript) | `framework-core-builder`        | backend    |
+| Add a `@stackra/*` non-UI framework package                   | `framework-core-builder`        | frontend   |
+| Add a React component in `@stackra/ui` or apps                | `heroui-ui-builder`             | frontend   |
+| Add a React Native screen or navigation                       | `heroui-native-builder`         | mobile     |
+| Add a FastAPI endpoint or LangGraph flow                      | `python-service-builder`        | ai         |
+| Author a custom Terraform provider resource in Go             | `go-terraform-provider-builder` | terraform  |
+| Author or update an HCL module under `terraform/modules/`     | `go-terraform-provider-builder` | terraform  |
+| Compose an env root under `terraform/envs/<env>/`             | `go-terraform-provider-builder` | terraform  |
+| Write Vitest / RTL tests                                      | `vitest-test-engineer`          | frontend   |
+| Write Jest / Detox tests for React Native                     | `native-test-engineer`          | mobile     |
+| Write Playwright end-to-end tests                             | `e2e-test-engineer`             | web/mobile |
 
 ### "Author documentation / plans / decisions"
 
@@ -48,19 +48,19 @@ non-overlap, `.kiro/agents/README.md`) explicitly permits.
 
 ### "Audit / review / verify"
 
-| Task                                                               | Agent                                |
-| ------------------------------------------------------------------ | ------------------------------------ |
-| Audit a `@stackra/*` frontend package                              | `frontend-package-auditor`           |
-| Audit DI / container / framework architecture                      | `container-di-architecture-reviewer` |
-| Audit React Native platform (Metro, bundle, deep-links)            | `native-platform-reviewer`           |
-| Audit UI design + component-level accessibility                    | `ui-design-a11y-reviewer`            |
-| Full WCAG 2.2 AA audit (axe, keyboard, screen reader)              | `accessibility-audit-lead`           |
-| Audit security + privacy + minor consent + PAT + JWT               | `security-compliance-reviewer`       |
-| Audit AI service deploy + observability + canary                   | `mlops-reviewer`                     |
-| Audit prompt design + eval harnesses                               | `data-scientist-reviewer`            |
-| Audit package API surface (tsup, exports, tree-shake)              | `package-api-release-reviewer`       |
-| Audit env-var + secret naming across every workspace repo          | `env-naming-steward`                 |
-| Semantic review of code changes (narrative-organized, cross-file)  | `semantic_reviewer`                  |
+| Task                                                              | Agent                                |
+| ----------------------------------------------------------------- | ------------------------------------ |
+| Audit a `@stackra/*` frontend package                             | `frontend-package-auditor`           |
+| Audit DI / container / framework architecture                     | `container-di-architecture-reviewer` |
+| Audit React Native platform (Metro, bundle, deep-links)           | `native-platform-reviewer`           |
+| Audit UI design + component-level accessibility                   | `ui-design-a11y-reviewer`            |
+| Full WCAG 2.2 AA audit (axe, keyboard, screen reader)             | `accessibility-audit-lead`           |
+| Audit security + privacy + minor consent + PAT + JWT              | `security-compliance-reviewer`       |
+| Audit AI service deploy + observability + canary                  | `mlops-reviewer`                     |
+| Audit prompt design + eval harnesses                              | `data-scientist-reviewer`            |
+| Audit package API surface (tsup, exports, tree-shake)             | `package-api-release-reviewer`       |
+| Audit env-var + secret naming across every workspace repo         | `env-naming-steward`                 |
+| Semantic review of code changes (narrative-organized, cross-file) | `semantic_reviewer`                  |
 
 ### "Mechanical fixes across a codebase"
 

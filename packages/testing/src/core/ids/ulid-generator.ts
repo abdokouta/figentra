@@ -35,12 +35,9 @@ import { Rng } from "../factories/rng";
  * ```
  */
 export function createUlidGenerator(
-  optionsOrSeed:
-    | number
-    | { readonly seed: number; readonly monotonic?: boolean } = 1,
+  optionsOrSeed: number | { readonly seed: number; readonly monotonic?: boolean } = 1,
 ): () => string {
-  const options =
-    typeof optionsOrSeed === "number" ? { seed: optionsOrSeed } : optionsOrSeed;
+  const options = typeof optionsOrSeed === "number" ? { seed: optionsOrSeed } : optionsOrSeed;
   const rng = new Rng(options.seed);
   const prng = (): number => rng.next();
 

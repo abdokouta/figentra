@@ -68,7 +68,8 @@ workers/
 └── webhooks/     # centralized external webhook ingress/verification/dispatch
 ```
 
-These are separate deployables only when operationally justified; the package layout does not require three independent deployments on day one.
+These are separate deployables only when operationally justified; the package
+layout does not require three independent deployments on day one.
 
 ## Gateway
 

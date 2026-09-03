@@ -14,7 +14,8 @@ It answers:
 
 V1 provider: **Supabase Auth**.
 
-Figentra does not implement password authentication, MFA cryptography, SAML engines, OIDC engines, password recovery, passkeys, etc. from scratch.
+Figentra does not implement password authentication, MFA cryptography, SAML
+engines, OIDC engines, password recovery, passkeys, etc. from scratch.
 
 ## Responsibilities
 
@@ -59,7 +60,8 @@ Supabase Auth is the authentication provider.
 
 Figentra is the platform security authority.
 
-Supabase Auth's internal IDs, organization roles and permissions must not become the universal Figentra model.
+Supabase Auth's internal IDs, organization roles and permissions must not become
+the universal Figentra model.
 
 ## Identity provider adapter
 
@@ -173,7 +175,8 @@ Credential and Principal storage are defined separately.
 
 ## Supabase V1 implementation boundary
 
-Supabase Auth is used for the authentication lifecycle, while Figentra normalizes the result into its canonical Identity model.
+Supabase Auth is used for the authentication lifecycle, while Figentra
+normalizes the result into its canonical Identity model.
 
 Supabase Auth user IDs must not be used as Figentra Principal IDs.
 

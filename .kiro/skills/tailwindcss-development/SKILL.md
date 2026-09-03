@@ -7,9 +7,9 @@ description:
   mobile-toggle navs), styling UI components (cards, tables, navbars, pricing
   sections, forms, inputs, badges), adding dark mode variants, fixing spacing or
   typography, and Tailwind v3/v4 work. The core use case: writing or fixing
-  Tailwind utility classes in HTML templates (JSX, Vue). Skip for backend
-  logic, database queries, API routes, JavaScript with no HTML/CSS
-  component, CSS file audits, build tool configuration, and vanilla CSS."
+  Tailwind utility classes in HTML templates (JSX, Vue). Skip for backend logic,
+  database queries, API routes, JavaScript with no HTML/CSS component, CSS file
+  audits, build tool configuration, and vanilla CSS."
 license: MIT
 metadata:
   author: stackra

@@ -27,7 +27,13 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
 
-import { loadRegistry, resolveModules, capabilitiesToModules, MODULES_DIR, REPO_ROOT } from "./_lib/module-registry.mjs";
+import {
+  loadRegistry,
+  resolveModules,
+  capabilitiesToModules,
+  MODULES_DIR,
+  REPO_ROOT,
+} from "./_lib/module-registry.mjs";
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -35,14 +41,21 @@ import { loadRegistry, resolveModules, capabilitiesToModules, MODULES_DIR, REPO_
 
 /** Allowed categories — must match module.v1.json's enum. */
 const VALID_CATEGORIES = new Set([
-  "messaging", "realtime", "storage", "search", "third-party",
-  "background", "ai", "observability", "networking", "auth", "cloudflare",
+  "messaging",
+  "realtime",
+  "storage",
+  "search",
+  "third-party",
+  "background",
+  "ai",
+  "observability",
+  "networking",
+  "auth",
+  "cloudflare",
 ]);
 
 /** Allowed maturity levels — must match module.v1.json's enum. */
-const VALID_MATURITIES = new Set([
-  "planned", "alpha", "beta", "stable", "deprecated",
-]);
+const VALID_MATURITIES = new Set(["planned", "alpha", "beta", "stable", "deprecated"]);
 
 /** Allowed runtime-target keys. */
 const VALID_TARGETS = new Set(["terraform", "docker", "wrangler"]);
@@ -97,7 +110,9 @@ function validateRegistryDeep(registry) {
         if (typeof filePath === "string") {
           const absPath = join(moduleDir, filePath);
           if (!existsSync(absPath)) {
-            errors.push(`${prefix}: runtime_target.${target} references "${filePath}" which does not exist`);
+            errors.push(
+              `${prefix}: runtime_target.${target} references "${filePath}" which does not exist`,
+            );
           }
         }
       }
@@ -121,7 +136,8 @@ function validateRegistryDeep(registry) {
     } else {
       for (const envVar of manifest.env_vars) {
         if (!envVar.name) errors.push(`${prefix}: env_var missing name`);
-        if (!envVar.description) errors.push(`${prefix}: env_var "${envVar.name}" missing description`);
+        if (!envVar.description)
+          errors.push(`${prefix}: env_var "${envVar.name}" missing description`);
         if (!envVar.source) errors.push(`${prefix}: env_var "${envVar.name}" missing source`);
       }
     }

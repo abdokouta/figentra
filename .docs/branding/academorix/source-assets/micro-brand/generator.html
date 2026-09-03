@@ -216,8 +216,12 @@
       }
 
       /* hide the tournament view when season is selected + vice-versa */
-      .view { display: none; }
-      .view[data-active="true"] { display: grid; }
+      .view {
+        display: none;
+      }
+      .view[data-active="true"] {
+        display: grid;
+      }
 
       /* export tooltip */
       .toast {
@@ -238,10 +242,14 @@
         pointer-events: none;
         transition: opacity 200ms var(--ease-out-quart);
       }
-      .toast[data-visible="true"] { opacity: 1; }
+      .toast[data-visible="true"] {
+        opacity: 1;
+      }
 
       @media (max-width: 900px) {
-        .layout { grid-template-columns: 1fr; }
+        .layout {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
@@ -252,30 +260,26 @@
         <p class="kicker">Micro-brand · season + tournament</p>
         <h1>Generate a season mark or tournament crest.</h1>
         <p>
-          Two templates, one recipe. Type into the variable-slot fields
-          on the left; the mark updates live on the right. Right-click
-          the mark to save it, or use the export buttons at the bottom
-          of the form. The same substitution logic runs server-side
-          when the runtime lands.
+          Two templates, one recipe. Type into the variable-slot fields on the left; the mark
+          updates live on the right. Right-click the mark to save it, or use the export buttons at
+          the bottom of the form. The same substitution logic runs server-side when the runtime
+          lands.
         </p>
       </header>
 
       <!-- ── tab bar ─────────────────────────────────────── -->
       <div class="tabs" role="tablist" aria-label="Mark type">
-        <button
-          role="tab"
-          aria-selected="true"
-          data-tab="season"
-        >
-          Season mark
-        </button>
-        <button role="tab" aria-selected="false" data-tab="tournament">
-          Tournament crest
-        </button>
+        <button role="tab" aria-selected="true" data-tab="season">Season mark</button>
+        <button role="tab" aria-selected="false" data-tab="tournament">Tournament crest</button>
       </div>
 
       <!-- ─────────────────── SEASON VIEW ───────────────── -->
-      <section class="layout view" data-view="season" data-active="true" aria-label="Season mark generator">
+      <section
+        class="layout view"
+        data-view="season"
+        data-active="true"
+        aria-label="Season mark generator"
+      >
         <div class="form">
           <div>
             <h2>Season mark</h2>
@@ -314,14 +318,27 @@
           <div class="anatomy">
             <h3>Anatomy</h3>
             <ol>
-              <li><strong>Outer double ring</strong> — ink hairlines + 12-tick minute marks; top tick painted Track Orange.</li>
+              <li>
+                <strong>Outer double ring</strong> — ink hairlines + 12-tick minute marks; top tick
+                painted Track Orange.
+              </li>
               <li><strong>Top arc</strong> — academy name in Geist Mono, letter-spacing 0.24em.</li>
               <li><strong>Bottom arc</strong> — season + year in Geist Mono at 72% opacity.</li>
-              <li><strong>A-Chevron mark</strong> — 1.2× default scale, ink strokes, Track Orange apex marker.</li>
-              <li><strong>Season plate</strong> — Track Orange band with the season name centred.</li>
+              <li>
+                <strong>A-Chevron mark</strong> — 1.2× default scale, ink strokes, Track Orange apex
+                marker.
+              </li>
+              <li>
+                <strong>Season plate</strong> — Track Orange band with the season name centred.
+              </li>
               <li><strong>Discipline tag</strong> — mono caption at 62% opacity.</li>
-              <li><strong>Chevron cluster</strong> — 3 chevrons descending in opacity, decorative footer.</li>
-              <li><strong>Provenance stamp</strong> — "RECORDED · ACADEMORIX" mono at 50% opacity.</li>
+              <li>
+                <strong>Chevron cluster</strong> — 3 chevrons descending in opacity, decorative
+                footer.
+              </li>
+              <li>
+                <strong>Provenance stamp</strong> — "RECORDED · ACADEMORIX" mono at 50% opacity.
+              </li>
             </ol>
           </div>
         </div>
@@ -332,7 +349,10 @@
         <div class="form">
           <div>
             <h2>Tournament crest</h2>
-            <p>Shield crest with the tournament title on a Track Orange plate. Ships on programme covers, match reports, medal ribbons.</p>
+            <p>
+              Shield crest with the tournament title on a Track Orange plate. Ships on programme
+              covers, match reports, medal ribbons.
+            </p>
           </div>
           <div class="field">
             <label for="t-title">Tournament title</label>
@@ -356,7 +376,11 @@
           </div>
           <div class="field">
             <label for="t-discipline">Discipline row</label>
-            <input id="t-discipline" data-slot="DISCIPLINE_ROW" value="PADEL · YOUTH U14 · DOUBLES" />
+            <input
+              id="t-discipline"
+              data-slot="DISCIPLINE_ROW"
+              value="PADEL · YOUTH U14 · DOUBLES"
+            />
             <span class="hint">Footer mono · dot-separated</span>
           </div>
           <div class="actions">
@@ -366,21 +390,34 @@
         </div>
 
         <div class="preview">
-          <div class="canvas" id="tournament-canvas" style="aspect-ratio: 5 / 7;">
+          <div class="canvas" id="tournament-canvas" style="aspect-ratio: 5 / 7">
             <!-- Inline SVG loaded via fetch on boot -->
           </div>
           <div class="anatomy">
             <h3>Anatomy</h3>
             <ol>
-              <li><strong>Shield outline</strong> — ink 4px stroke, inset hairline at 42% opacity.</li>
-              <li><strong>Track Orange rank pin</strong> — top of the shield · echoes the A-Chevron apex marker.</li>
-              <li><strong>Chevron rank stack</strong> — 3 chevrons descending in weight + opacity through the shield face.</li>
+              <li>
+                <strong>Shield outline</strong> — ink 4px stroke, inset hairline at 42% opacity.
+              </li>
+              <li>
+                <strong>Track Orange rank pin</strong> — top of the shield · echoes the A-Chevron
+                apex marker.
+              </li>
+              <li>
+                <strong>Chevron rank stack</strong> — 3 chevrons descending in weight + opacity
+                through the shield face.
+              </li>
               <li><strong>Top arc</strong> — host city / country in Geist Mono at 72%.</li>
-              <li><strong>Title plate</strong> — Track Orange band with the tournament title, ink chevron tick-marks at each edge.</li>
+              <li>
+                <strong>Title plate</strong> — Track Orange band with the tournament title, ink
+                chevron tick-marks at each edge.
+              </li>
               <li><strong>Edition</strong> — Roman-numeral + year in Geist Mono, weight 600.</li>
               <li><strong>Host academy</strong> — mono line · "HOSTED · ..." at 62%.</li>
               <li><strong>Discipline row</strong> — dot-separated mono at 72%.</li>
-              <li><strong>Provenance stamp</strong> — small A-Chevron mark + "RECORDED · ACADEMORIX".</li>
+              <li>
+                <strong>Provenance stamp</strong> — small A-Chevron mark + "RECORDED · ACADEMORIX".
+              </li>
             </ol>
           </div>
         </div>
@@ -425,11 +462,7 @@
        * on the DOM node so we can re-substitute on every input.
        */
       function bindTemplateNodes(svgRoot) {
-        const walker = document.createTreeWalker(
-          svgRoot,
-          NodeFilter.SHOW_TEXT,
-          null,
-        );
+        const walker = document.createTreeWalker(svgRoot, NodeFilter.SHOW_TEXT, null);
         const templated = [];
         while (walker.nextNode()) {
           const node = walker.currentNode;

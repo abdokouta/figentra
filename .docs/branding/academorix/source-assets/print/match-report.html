@@ -78,8 +78,13 @@
         gap: 6mm;
       }
       @media print {
-        body { padding: 0; background: white; }
-        .print-nav { display: none; }
+        body {
+          padding: 0;
+          background: white;
+        }
+        .print-nav {
+          display: none;
+        }
         .sheet {
           box-shadow: none;
           width: auto;
@@ -97,9 +102,20 @@
         border-bottom: 2px solid var(--ink);
         padding-bottom: 10px;
       }
-      .rh-brand { display: flex; align-items: center; gap: 10px; }
-      .rh-brand svg { width: 26px; height: 26px; }
-      .rh-brand strong { font-size: 16px; font-weight: 500; letter-spacing: -0.02em; }
+      .rh-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .rh-brand svg {
+        width: 26px;
+        height: 26px;
+      }
+      .rh-brand strong {
+        font-size: 16px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+      }
       .rh-brand .subline {
         font-family: var(--font-mono);
         font-size: 10px;
@@ -107,7 +123,9 @@
         text-transform: uppercase;
         color: var(--text-muted);
       }
-      .rh-meta { text-align: right; }
+      .rh-meta {
+        text-align: right;
+      }
       .rh-meta .kicker {
         font-family: var(--font-mono);
         font-size: 10px;
@@ -115,7 +133,12 @@
         letter-spacing: 0.16em;
         text-transform: uppercase;
       }
-      .rh-meta h1 { font-size: 20px; font-weight: 500; letter-spacing: -0.02em; margin: 0; }
+      .rh-meta h1 {
+        font-size: 20px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        margin: 0;
+      }
       .rh-meta .stamp {
         font-family: var(--font-mono);
         font-size: 10px;
@@ -133,8 +156,12 @@
         gap: 12mm;
         align-items: center;
       }
-      .scoreboard .team { text-align: left; }
-      .scoreboard .team.right { text-align: right; }
+      .scoreboard .team {
+        text-align: left;
+      }
+      .scoreboard .team.right {
+        text-align: right;
+      }
       .scoreboard .team .name {
         font-family: var(--font-sans);
         font-weight: 500;
@@ -160,12 +187,16 @@
         letter-spacing: -0.03em;
         line-height: 1;
       }
-      .scoreboard .score .home { color: var(--signal); }
+      .scoreboard .score .home {
+        color: var(--signal);
+      }
       .scoreboard .score .colon {
         font-size: 32px;
         color: rgba(250, 250, 250, 0.5);
       }
-      .scoreboard .score .away { color: var(--paper); }
+      .scoreboard .score .away {
+        color: var(--paper);
+      }
 
       /* ── match meta strip ────────────────────── */
       .meta-row {
@@ -215,7 +246,8 @@
         font-family: var(--font-sans);
         font-size: 11px;
       }
-      table.periods th, table.periods td {
+      table.periods th,
+      table.periods td {
         padding: 5px 8px;
         text-align: center;
         border-bottom: 1px solid var(--border);
@@ -229,13 +261,18 @@
         border-bottom-color: var(--ink);
         border-bottom-width: 2px;
       }
-      table.periods td.team { text-align: left; font-weight: 500; }
+      table.periods td.team {
+        text-align: left;
+        font-weight: 500;
+      }
       table.periods td.total {
         font-family: var(--font-mono);
         font-weight: 600;
         color: var(--signal);
       }
-      table.periods .win td { background: var(--signal-tint); }
+      table.periods .win td {
+        background: var(--signal-tint);
+      }
 
       /* ── key moments timeline ────────────────── */
       .timeline {
@@ -252,8 +289,14 @@
         font-weight: 600;
         letter-spacing: -0.01em;
       }
-      .timeline .m { color: var(--ink); line-height: 1.4; }
-      .timeline .m strong { font-weight: 500; margin-right: 4px; }
+      .timeline .m {
+        color: var(--ink);
+        line-height: 1.4;
+      }
+      .timeline .m strong {
+        font-weight: 500;
+        margin-right: 4px;
+      }
       .timeline .m .team-badge {
         display: inline-block;
         padding: 1px 6px;
@@ -267,7 +310,10 @@
         margin-right: 4px;
         vertical-align: middle;
       }
-      .timeline .m .team-badge.home { background: var(--signal); color: var(--ink); }
+      .timeline .m .team-badge.home {
+        background: var(--signal);
+        color: var(--ink);
+      }
 
       /* ── squad performance grid ──────────────── */
       .squads {
@@ -292,10 +338,21 @@
         text-transform: uppercase;
         margin-right: 6px;
       }
-      .squad .badge.home { background: var(--signal); color: var(--ink); }
-      .squad .badge.away { background: var(--ink); color: var(--paper); }
-      .squad table { width: 100%; border-collapse: collapse; font-size: 10px; }
-      .squad th, .squad td {
+      .squad .badge.home {
+        background: var(--signal);
+        color: var(--ink);
+      }
+      .squad .badge.away {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .squad table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 10px;
+      }
+      .squad th,
+      .squad td {
         padding: 4px 6px;
         text-align: left;
         border-bottom: 1px dashed var(--border);
@@ -347,8 +404,15 @@
         padding-top: 6mm;
         border-top: 2px solid var(--ink);
       }
-      .signature .box { display: flex; flex-direction: column; gap: 4px; }
-      .signature .line { height: 12mm; border-bottom: 1.5px solid var(--ink); }
+      .signature .box {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .signature .line {
+        height: 12mm;
+        border-bottom: 1.5px solid var(--ink);
+      }
       .signature .caption {
         font-family: var(--font-mono);
         font-size: 9px;
@@ -371,7 +435,9 @@
         display: flex;
         justify-content: space-between;
       }
-      .footer-note .provenance { color: var(--signal); }
+      .footer-note .provenance {
+        color: var(--signal);
+      }
     </style>
   </head>
 
@@ -386,10 +452,26 @@
       <header class="rh">
         <div class="rh-brand">
           <svg viewBox="0 0 120 120" aria-hidden="true">
-            <line x1="60" y1="24" x2="30" y2="96" stroke="currentColor" stroke-width="10" stroke-linecap="square"/>
-            <line x1="60" y1="24" x2="90" y2="96" stroke="currentColor" stroke-width="10" stroke-linecap="square"/>
-            <rect x="40" y="60" width="40" height="10" fill="currentColor"/>
-            <rect x="56" y="14" width="8" height="6" fill="#FF6B35"/>
+            <line
+              x1="60"
+              y1="24"
+              x2="30"
+              y2="96"
+              stroke="currentColor"
+              stroke-width="10"
+              stroke-linecap="square"
+            />
+            <line
+              x1="60"
+              y1="24"
+              x2="90"
+              y2="96"
+              stroke="currentColor"
+              stroke-width="10"
+              stroke-linecap="square"
+            />
+            <rect x="40" y="60" width="40" height="10" fill="currentColor" />
+            <rect x="56" y="14" width="8" height="6" fill="#FF6B35" />
           </svg>
           <div>
             <strong>Academorix</strong>
@@ -449,7 +531,7 @@
       <table class="periods" aria-label="Score by period">
         <thead>
           <tr>
-            <th style="text-align: left;">Team</th>
+            <th style="text-align: left">Team</th>
             <th>Set 1</th>
             <th>Set 2</th>
             <th>Set 3</th>
@@ -458,18 +540,22 @@
         </thead>
         <tbody>
           <tr class="win">
-            <td class="team">Falcons · <em style="font-weight: 400; color: var(--text-muted);">home</em></td>
+            <td class="team">
+              Falcons · <em style="font-weight: 400; color: var(--text-muted)">home</em>
+            </td>
             <td>6</td>
             <td>4</td>
             <td>6</td>
             <td class="total">16 games · 21 pts</td>
           </tr>
           <tr>
-            <td class="team">Comets · <em style="font-weight: 400; color: var(--text-muted);">away</em></td>
+            <td class="team">
+              Comets · <em style="font-weight: 400; color: var(--text-muted)">away</em>
+            </td>
             <td>4</td>
             <td>6</td>
             <td>3</td>
-            <td class="total" style="color: var(--ink);">13 games · 18 pts</td>
+            <td class="total" style="color: var(--ink)">13 games · 18 pts</td>
           </tr>
         </tbody>
       </table>
@@ -478,17 +564,35 @@
       <h2 class="section-title">Key moments</h2>
       <div class="timeline">
         <div class="t">04:22</div>
-        <div class="m"><span class="team-badge home">Home</span><strong>Bensaid</strong>opens set 1 with a lob winner (2-0).</div>
+        <div class="m">
+          <span class="team-badge home">Home</span><strong>Bensaid</strong>opens set 1 with a lob
+          winner (2-0).
+        </div>
         <div class="t">18:35</div>
-        <div class="m"><span class="team-badge">Away</span><strong>Ahmed</strong>breaks serve · Comets take set 1 · 6-4.</div>
+        <div class="m">
+          <span class="team-badge">Away</span><strong>Ahmed</strong>breaks serve · Comets take set 1
+          · 6-4.
+        </div>
         <div class="t">32:11</div>
-        <div class="m"><span class="team-badge home">Home</span><strong>Hakim</strong>PB on backhand rally · noted for the parent digest.</div>
+        <div class="m">
+          <span class="team-badge home">Home</span><strong>Hakim</strong>PB on backhand rally ·
+          noted for the parent digest.
+        </div>
         <div class="t">45:08</div>
-        <div class="m"><span class="team-badge home">Home</span><strong>Bensaid + Hakim</strong>close set 2 · 6-4.</div>
+        <div class="m">
+          <span class="team-badge home">Home</span><strong>Bensaid + Hakim</strong>close set 2 ·
+          6-4.
+        </div>
         <div class="t">58:44</div>
-        <div class="m"><span class="team-badge">Away</span>Injury pause · Comets · Ahmed (right ankle · walk-off).</div>
+        <div class="m">
+          <span class="team-badge">Away</span>Injury pause · Comets · Ahmed (right ankle ·
+          walk-off).
+        </div>
         <div class="t">01:14</div>
-        <div class="m"><span class="team-badge home">Home</span>Match point on serve · <strong>Bensaid</strong>closes set 3 · 6-3.</div>
+        <div class="m">
+          <span class="team-badge home">Home</span>Match point on serve ·
+          <strong>Bensaid</strong>closes set 3 · 6-3.
+        </div>
       </div>
 
       <!-- ── squads ──────────────────────────── -->
@@ -507,10 +611,34 @@
               </tr>
             </thead>
             <tbody>
-              <tr><td class="no">07</td><td>Aya Bensaid</td><td class="stat">12</td><td class="stat">4</td><td class="stat">1</td></tr>
-              <tr><td class="no">09</td><td>Youssef Hakim</td><td class="stat">9</td><td class="stat">2</td><td class="stat">3</td></tr>
-              <tr><td class="no">12</td><td>Sara El Amrani</td><td class="stat">–</td><td class="stat">–</td><td class="stat">–</td></tr>
-              <tr><td class="no">14</td><td>Salma Fassi</td><td class="stat">–</td><td class="stat">–</td><td class="stat">–</td></tr>
+              <tr>
+                <td class="no">07</td>
+                <td>Aya Bensaid</td>
+                <td class="stat">12</td>
+                <td class="stat">4</td>
+                <td class="stat">1</td>
+              </tr>
+              <tr>
+                <td class="no">09</td>
+                <td>Youssef Hakim</td>
+                <td class="stat">9</td>
+                <td class="stat">2</td>
+                <td class="stat">3</td>
+              </tr>
+              <tr>
+                <td class="no">12</td>
+                <td>Sara El Amrani</td>
+                <td class="stat">–</td>
+                <td class="stat">–</td>
+                <td class="stat">–</td>
+              </tr>
+              <tr>
+                <td class="no">14</td>
+                <td>Salma Fassi</td>
+                <td class="stat">–</td>
+                <td class="stat">–</td>
+                <td class="stat">–</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -527,10 +655,34 @@
               </tr>
             </thead>
             <tbody>
-              <tr><td class="no">03</td><td>Ahmed R.</td><td class="stat">7</td><td class="stat">2</td><td class="stat">2</td></tr>
-              <tr><td class="no">08</td><td>Karim B.</td><td class="stat">11</td><td class="stat">3</td><td class="stat">4</td></tr>
-              <tr><td class="no">15</td><td>Younes N.</td><td class="stat">–</td><td class="stat">–</td><td class="stat">–</td></tr>
-              <tr><td class="no">17</td><td>Mehdi A.</td><td class="stat">–</td><td class="stat">–</td><td class="stat">–</td></tr>
+              <tr>
+                <td class="no">03</td>
+                <td>Ahmed R.</td>
+                <td class="stat">7</td>
+                <td class="stat">2</td>
+                <td class="stat">2</td>
+              </tr>
+              <tr>
+                <td class="no">08</td>
+                <td>Karim B.</td>
+                <td class="stat">11</td>
+                <td class="stat">3</td>
+                <td class="stat">4</td>
+              </tr>
+              <tr>
+                <td class="no">15</td>
+                <td>Younes N.</td>
+                <td class="stat">–</td>
+                <td class="stat">–</td>
+                <td class="stat">–</td>
+              </tr>
+              <tr>
+                <td class="no">17</td>
+                <td>Mehdi A.</td>
+                <td class="stat">–</td>
+                <td class="stat">–</td>
+                <td class="stat">–</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -539,10 +691,9 @@
       <!-- ── referee notes ───────────────────── -->
       <h2 class="section-title">Referee notes</h2>
       <div class="notes">
-        Injury sub for Comets in set 3 recorded on athlete file
-        Ahmed R. · left the court walking · academy medical officer
-        cleared for follow-up within 48 h. No cards issued. Match
-        finished in regulation. Result final on this report.
+        Injury sub for Comets in set 3 recorded on athlete file Ahmed R. · left the court walking ·
+        academy medical officer cleared for follow-up within 48 h. No cards issued. Match finished
+        in regulation. Result final on this report.
         <div class="lines"></div>
         <div class="lines"></div>
       </div>

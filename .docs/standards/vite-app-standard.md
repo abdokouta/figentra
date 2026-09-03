@@ -1,8 +1,8 @@
 # Vite Application Standard
 
-Figentra web applications use Vite, React 19, HeroUI 3, Tailwind CSS 4,
-React Router 7, Stackra Query/HTTP/State packages where applicable, Oxlint,
-Prettier, and Vitest.
+Figentra web applications use Vite, React 19, HeroUI 3, Tailwind CSS 4, React
+Router 7, Stackra Query/HTTP/State packages where applicable, Oxlint, Prettier,
+and Vitest.
 
 ## Required project files
 

@@ -1,9 +1,9 @@
 # 05 — Monetization & Hierarchical Billing
 
-**Status:** Baseline
-**Owner:** Monetization service
-**Runtime:** Cloudflare Container + NestJS · **Store:** Supabase PostgreSQL
-**Related:** [04 IAM](04-iam-and-authorization.md), [03 Tenancy](03-tenancy-and-domains.md), [17 Security](17-security-and-compliance.md)
+**Status:** Baseline **Owner:** Monetization service **Runtime:** Cloudflare
+Container + NestJS · **Store:** Supabase PostgreSQL **Related:**
+[04 IAM](04-iam-and-authorization.md), [03 Tenancy](03-tenancy-and-domains.md),
+[17 Security](17-security-and-compliance.md)
 
 ---
 
@@ -145,14 +145,14 @@ Parent billing account (bacc_parent, payer = self)
 
 Several roles can differ and are tracked explicitly:
 
-| Role              | Meaning                                            |
-| ----------------- | -------------------------------------------------- |
-| Resource owner    | Tenant that owns the resource/application          |
-| Subscription owner| Billing account the subscription belongs to        |
-| **Payer**         | Account financially responsible (may be an ancestor)|
-| Invoice recipient | Who receives the invoice                           |
-| Payment account   | Which provider customer is charged                 |
-| Usage owner       | Which account's usage is being metered             |
+| Role               | Meaning                                              |
+| ------------------ | ---------------------------------------------------- |
+| Resource owner     | Tenant that owns the resource/application            |
+| Subscription owner | Billing account the subscription belongs to          |
+| **Payer**          | Account financially responsible (may be an ancestor) |
+| Invoice recipient  | Who receives the invoice                             |
+| Payment account    | Which provider customer is charged                   |
+| Usage owner        | Which account's usage is being metered               |
 
 Example: **Parent pays**, **Academorix owns the application**, **Barcelona
 consumes the service**. Resolution walks the `payer` chain up to the responsible
@@ -191,8 +191,8 @@ User → Subscription                      (only for B2C products)
 ```
 
 Lifecycle emits `subscription.created`, `subscription.updated`,
-`subscription.canceled`, each of which projects into entitlements + access caches
-([04 §9](04-iam-and-authorization.md), [11](11-events-and-workflows.md)).
+`subscription.canceled`, each of which projects into entitlements + access
+caches ([04 §9](04-iam-and-authorization.md), [11](11-events-and-workflows.md)).
 
 ---
 
@@ -200,13 +200,13 @@ Lifecycle emits `subscription.created`, `subscription.updated`,
 
 These must never be conflated (they answer different questions):
 
-| Concept        | Question                              | Owner        | Example                       |
-| -------------- | ------------------------------------- | ------------ | ----------------------------- |
-| **Permission** | Can the actor do this action?         | IAM          | `crm.export`                  |
-| **Entitlement**| Has the tenant enabled this capability?| Monetization | `crm.exports = true`          |
-| **Quota**      | How much is allowed in a period?      | Monetization | `10,000 exports / month`      |
-| **Rate limit** | How fast is allowed?                  | Gateway/edge | `10 export requests / minute` |
-| **Usage**      | How much has been consumed?           | Monetization | `7,245 exports consumed`      |
+| Concept         | Question                                | Owner        | Example                       |
+| --------------- | --------------------------------------- | ------------ | ----------------------------- |
+| **Permission**  | Can the actor do this action?           | IAM          | `crm.export`                  |
+| **Entitlement** | Has the tenant enabled this capability? | Monetization | `crm.exports = true`          |
+| **Quota**       | How much is allowed in a period?        | Monetization | `10,000 exports / month`      |
+| **Rate limit**  | How fast is allowed?                    | Gateway/edge | `10 export requests / minute` |
+| **Usage**       | How much has been consumed?             | Monetization | `7,245 exports consumed`      |
 
 ---
 
@@ -248,9 +248,10 @@ GET /v1/tenants/:id/entitlements/:key
 ```
 
 The IAM/SDK `requireEntitlement('crm.ai')` and `getEntitlement('crm.max_users')`
-helpers wrap these ([04 §6.1](04-iam-and-authorization.md)). Entitlements resolve
-against the tenant; where a capability is inherited down a billing hierarchy, the
-resolver may consult the parent account's plan (documented per-capability).
+helpers wrap these ([04 §6.1](04-iam-and-authorization.md)). Entitlements
+resolve against the tenant; where a capability is inherited down a billing
+hierarchy, the resolver may consult the parent account's plan (documented
+per-capability).
 
 ---
 
@@ -314,7 +315,8 @@ BillingGateway (adapter interface)
 Billing operations are **idempotent** and tolerate provider retries via
 `idempotency_key` / `provider_event_id` / `external_event_id`. Provider webhooks
 (`payment.completed`, `invoice.created`, `subscription.updated`) are verified
-(signature) and deduplicated before processing ([17](17-security-and-compliance.md)).
+(signature) and deduplicated before processing
+([17](17-security-and-compliance.md)).
 
 ---
 
@@ -391,16 +393,16 @@ the gateway then re-emitted internally.
 
 ## 14. Non-goals / anti-patterns
 
-| Anti-pattern                                                       | Correct                                                      |
-| ------------------------------------------------------------------ | ------------------------------------------------------------ |
-| Naming this `subscription-service` or `commerce`                   | `monetization-service`; `commerce` = the application.        |
-| Letting Stripe/Paddle define the domain hierarchy                  | Figentra owns billing hierarchy; providers are adapters.    |
-| Conflating permission / entitlement / quota / rate-limit / usage   | Five distinct concepts, [§6](#6-five-distinct-consumption-concepts). |
-| Merging org hierarchy and billing hierarchy                        | Two separate trees ([§4](#4-billing-hierarchy-r-3)).          |
-| User-centric subscriptions for B2B products                        | Account/tenant-centric.                                      |
-| Non-idempotent billing/usage processing                           | `idempotency_key` on every mutation + webhook.               |
-| Applications hard-coding plan names                                | Ask for entitlements.                                        |
-| Mixing tenant billing with Figentra infra FinOps                  | Two separate domains ([§11](#11-two-billing-domains-do-not-mix)). |
+| Anti-pattern                                                     | Correct                                                              |
+| ---------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Naming this `subscription-service` or `commerce`                 | `monetization-service`; `commerce` = the application.                |
+| Letting Stripe/Paddle define the domain hierarchy                | Figentra owns billing hierarchy; providers are adapters.             |
+| Conflating permission / entitlement / quota / rate-limit / usage | Five distinct concepts, [§6](#6-five-distinct-consumption-concepts). |
+| Merging org hierarchy and billing hierarchy                      | Two separate trees ([§4](#4-billing-hierarchy-r-3)).                 |
+| User-centric subscriptions for B2B products                      | Account/tenant-centric.                                              |
+| Non-idempotent billing/usage processing                          | `idempotency_key` on every mutation + webhook.                       |
+| Applications hard-coding plan names                              | Ask for entitlements.                                                |
+| Mixing tenant billing with Figentra infra FinOps                 | Two separate domains ([§11](#11-two-billing-domains-do-not-mix)).    |
 
 ---
 

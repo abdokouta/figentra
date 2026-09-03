@@ -4,14 +4,14 @@
  * Fastify is Nest's HTTP adapter for low-overhead request handling. Hono is
  * reserved for edge Workers; Nest owns substantial domain/application logic.
  */
-import 'reflect-metadata';
+import "reflect-metadata";
 
-import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
-import { ValidationPipe, VersioningType } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { Logger } from 'nestjs-pino';
+import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
+import { ValidationPipe, VersioningType } from "@nestjs/common";
+import { NestFactory } from "@nestjs/core";
+import { Logger } from "nestjs-pino";
 
-import { AppModule } from './app.module';
+import { AppModule } from "./app.module";
 import { createFigentraObservability } from "@figentra/observability/nest";
 import { SERVICE_NAME, SERVICE_VERSION } from "./constants/service.constant";
 import { SwaggerSetupService } from "@figentra/swagger";
@@ -20,7 +20,10 @@ import { SwaggerSetupService } from "@figentra/swagger";
  * Bootstraps the HTTP application and applies platform-wide invariants.
  */
 async function bootstrap(): Promise<void> {
-  const { instrument: observeInstrument } = createFigentraObservability({ serviceId: SERVICE_NAME, serviceVersion: SERVICE_VERSION });
+  const { instrument: observeInstrument } = createFigentraObservability({
+    serviceId: SERVICE_NAME,
+    serviceVersion: SERVICE_VERSION,
+  });
 
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
@@ -37,8 +40,8 @@ async function bootstrap(): Promise<void> {
   app.useLogger(app.get(Logger));
 
   // Version the public service contract at the HTTP boundary.
-  app.setGlobalPrefix('api');
-  app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
+  app.setGlobalPrefix("api");
+  app.enableVersioning({ type: VersioningType.URI, defaultVersion: "1" });
 
   // Reject unknown input fields and avoid implicit coercion.
   app.useGlobalPipes(
@@ -55,7 +58,7 @@ async function bootstrap(): Promise<void> {
 
   const port = Number(process.env.PORT ?? 3000);
   app.get(SwaggerSetupService).setup(app);
-  await app.listen(port, '0.0.0.0');
+  await app.listen(port, "0.0.0.0");
 }
 
 await bootstrap();

@@ -2,7 +2,9 @@
 
 > **Category:** realtime · **Maturity:** beta · **Version:** 1.0.0
 
-WebSocket bi-directional realtime channel. Runtime-config module that declares the WebSocket endpoint path, auth strategy, and connection limits. No separate infrastructure provisioned — the deployable's HTTP server handles the upgrade.
+WebSocket bi-directional realtime channel. Runtime-config module that declares
+the WebSocket endpoint path, auth strategy, and connection limits. No separate
+infrastructure provisioned — the deployable's HTTP server handles the upgrade.
 
 ## Provides
 
@@ -16,11 +18,11 @@ WebSocket bi-directional realtime channel. Runtime-config module that declares t
 
 ## Environment variables
 
-| Variable | Description | Source |
-| -------- | ----------- | ------ |
-| `WEBSOCKET_PATH` | WebSocket upgrade endpoint path. | `module.config.path` |
-| `WEBSOCKET_AUTH` | Auth strategy. | `module.config.auth` |
-| `WEBSOCKET_MAX_CONNECTIONS` | Max concurrent WS connections. | `module.config.max_connections` |
+| Variable                    | Description                      | Source                          |
+| --------------------------- | -------------------------------- | ------------------------------- |
+| `WEBSOCKET_PATH`            | WebSocket upgrade endpoint path. | `module.config.path`            |
+| `WEBSOCKET_AUTH`            | Auth strategy.                   | `module.config.auth`            |
+| `WEBSOCKET_MAX_CONNECTIONS` | Max concurrent WS connections.   | `module.config.max_connections` |
 
 ## Usage in `cloud.yaml`
 
@@ -34,6 +36,8 @@ modules:
 
 ## Cross-references
 
-- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) — module manifest schema.
+- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) —
+  module manifest schema.
 - [`infrastructure/modules/README.md`](../README.md) — registry catalog.
-- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md) — authorising plan.
+- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md)
+  — authorising plan.

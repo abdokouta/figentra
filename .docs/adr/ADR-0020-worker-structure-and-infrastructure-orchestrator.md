@@ -1,16 +1,19 @@
 # ADR-0020 — Worker structure and Infrastructure Orchestrator
 
 ## Status
+
 Accepted
 
 ## Context
+
 Figentra Workers are becoming control-plane components and must remain easy to
 review, test, and operate. Terraform requires a real process/filesystem runtime
 and should not be executed directly inside a request Worker.
 
 ## Decision
-1. Every Worker uses `src/index.ts` as a thin runtime entrypoint and `src/app.ts`
-   as the Hono composition root.
+
+1. Every Worker uses `src/index.ts` as a thin runtime entrypoint and
+   `src/app.ts` as the Hono composition root.
 2. Every exported interface/type/enum/constant/schema gets its own appropriately
    suffixed file.
 3. Registry D1 executable schema lives only under `database/migrations`;
@@ -23,6 +26,8 @@ and should not be executed directly inside a request Worker.
    requires both IAM permission and an approval/change reference.
 
 ## Rationale
-Cloudflare Containers provide a Linux runtime and process execution model suitable
-for Terraform, while Workers provide the authenticated API and control plane.
-Cloudflare Workflows provides durable multi-step orchestration and retries.
+
+Cloudflare Containers provide a Linux runtime and process execution model
+suitable for Terraform, while Workers provide the authenticated API and control
+plane. Cloudflare Workflows provides durable multi-step orchestration and
+retries.

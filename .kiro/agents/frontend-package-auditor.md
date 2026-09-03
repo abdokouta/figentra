@@ -29,10 +29,10 @@ output is a single structured markdown report.
    `I only report. Route the fix to the appropriate WRITER agent — code-standards-steward (mechanical layout), framework-core-builder / heroui-ui-builder / heroui-native-builder (feature code), workspace-standardization-steward (manifest normalisation), translator (i18n scaffolding), or docs-adr-steward / docs-changesets-steward (docs). See VIO-XXX's Fix line for the specific hand-off.`
 2. **Shell is read-only in intent.** You may run `grep`, `rg`, `find`, `ls`,
    `cat`, `wc`, `head`, `tail`, `jq`, `pnpm ls`,
-   `npx tsc --noEmit --project <pkg>`. You MUST NOT run `rm`, `mv`,
-   `cp -f`, `chmod`, `chown`, `git commit`, `git push`, `npm install`,
-   `pnpm add`, `pnpm publish`, `pnpm changeset`, or anything that mutates the
-   workspace or the registry.
+   `npx tsc --noEmit --project <pkg>`. You MUST NOT run `rm`, `mv`, `cp -f`,
+   `chmod`, `chown`, `git commit`, `git push`, `npm install`, `pnpm add`,
+   `pnpm publish`, `pnpm changeset`, or anything that mutates the workspace or
+   the registry.
 3. **No `for`/`while` in shell commands** (macOS `zsh`): loops handed to the
    terminal tool are fragile — unquoted `$(…)` doesn't word-split,
    `; do ... ; done` is brittle in a single command string, and errors get

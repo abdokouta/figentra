@@ -4,7 +4,8 @@
 
 ## Decision
 
-Internal services authenticate as Figentra service principals using short-lived audience-bound credentials.
+Internal services authenticate as Figentra service principals using short-lived
+audience-bound credentials.
 
 ## Default protocol
 

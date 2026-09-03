@@ -11,20 +11,20 @@ reviewed_at: null
 **Status:** Planned (already USED by `@stackra/testing`; needs plan of record)
 **Anchor ADRs:** [ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
 [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md)
-**Reference:** `.ref/packages/support/` (`@stackra/ts-support` v0.1.0)
-**Depends on:** ZERO runtime dependencies (foundation tier)
-**Design effort:** 12 days across 5 phases
+**Reference:** `.ref/packages/support/` (`@stackra/ts-support` v0.1.0) **Depends
+on:** ZERO runtime dependencies (foundation tier) **Design effort:** 12 days
+across 5 phases
 
 ## Purpose
 
-The workspace's ONE utility layer — every `@stackra/*` package composes from
-it. Ships Laravel-Support-inspired primitives (Str/Arr/Num/Env),
-BaseRegistry + Manager patterns (used by every driver-based package per
-ADR-0090), and cross-runtime helpers (Sleep/Retry/Timebox/Pipeline).
+The workspace's ONE utility layer — every `@stackra/*` package composes from it.
+Ships Laravel-Support-inspired primitives (Str/Arr/Num/Env), BaseRegistry +
+Manager patterns (used by every driver-based package per ADR-0090), and
+cross-runtime helpers (Sleep/Retry/Timebox/Pipeline).
 
-Zero runtime deps. Every symbol usable in browser, RN, Worker, Node. No
-platform detection — every helper is either pure JS OR guards on the presence
-of a global (`typeof window`).
+Zero runtime deps. Every symbol usable in browser, RN, Worker, Node. No platform
+detection — every helper is either pure JS OR guards on the presence of a global
+(`typeof window`).
 
 ## Rules `@stackra/support` MUST follow
 
@@ -35,8 +35,8 @@ of a global (`typeof window`).
 3. **Zero side effects** — `sideEffects: false`. Tree-shakable per-symbol.
 4. **Cross-runtime by construction** — every helper works in browser + RN +
    Worker + Node without conditional imports.
-5. **Locked API surface** — once shipped, adding is fine; renaming is a
-   breaking change requiring a major bump + 90-day deprecation.
+5. **Locked API surface** — once shipped, adding is fine; renaming is a breaking
+   change requiring a major bump + 90-day deprecation.
 
 ## Public API — locked
 
@@ -52,8 +52,8 @@ Static class with Laravel-Str-inspired methods:
 - `Str.uuid()` — RFC-4122 v4 UUID.
 - `Str.ulid()` — Crockford base32 ULID (proxies to `ulid` package — the only
   supported optional peer for this method).
-- `Str.camel(s)`, `Str.snake(s, delimiter?)`, `Str.kebab(s)`,
-  `Str.studly(s)` — case conversions.
+- `Str.camel(s)`, `Str.snake(s, delimiter?)`, `Str.kebab(s)`, `Str.studly(s)` —
+  case conversions.
 - `Str.startsWith(s, needle)`, `Str.endsWith(s, needle)`,
   `Str.contains(s, needle)`.
 - `Str.limit(s, length, suffix?)` — truncate w/ suffix.
@@ -81,8 +81,8 @@ Static class with Laravel-Str-inspired methods:
 
 ### Env utilities — `Env`
 
-- `Env.get(key, default?)` — reads `process.env` OR `import.meta.env` OR
-  Worker `env` (via injected shim). Type-aware defaults.
+- `Env.get(key, default?)` — reads `process.env` OR `import.meta.env` OR Worker
+  `env` (via injected shim). Type-aware defaults.
 - `Env.getRequired(key)` — throws if missing.
 - `Env.getBoolean(key, default?)` — parses `"true"` / `"1"` / `"yes"`.
 - `Env.getNumber(key, default?)`.
@@ -106,7 +106,7 @@ FeatureRegistry, ...). Provides:
 ```typescript
 abstract class Manager<T> {
   protected abstract getDefaultDriver(): string;
-  driver(name?: string): T;  // cached lookup; name defaults to getDefaultDriver()
+  driver(name?: string): T; // cached lookup; name defaults to getDefaultDriver()
   extend(name: string, creator: () => T): void;
   // Sub-classes implement create<Studly>Driver() methods per Str.studly.
 }
@@ -117,7 +117,10 @@ abstract class Manager<T> {
 ```typescript
 abstract class MultipleInstanceManager<T> {
   protected abstract getDefaultInstance(): string;
-  protected abstract getInstanceConfig(name: string): { driver: string; [k: string]: any };
+  protected abstract getInstanceConfig(name: string): {
+    driver: string;
+    [k: string]: any;
+  };
   instance(name?: string): T;
   extend(driver: string, creator: (config) => T): void;
   setDefaultInstance(name: string): void;
@@ -138,8 +141,8 @@ abstract class MultipleInstanceManager<T> {
 
 ### Data helpers
 
-- `Collection<T>` — Laravel-Collection-inspired w/ `.filter`, `.map`,
-  `.reduce`, `.first`, `.last`, `.pluck`, `.groupBy`, `.chunk`, etc. Chainable.
+- `Collection<T>` — Laravel-Collection-inspired w/ `.filter`, `.map`, `.reduce`,
+  `.first`, `.last`, `.pluck`, `.groupBy`, `.chunk`, etc. Chainable.
 - `Fluent<T>` — dot-notation getter/setter over an object.
 - `HtmlString` — mark strings as HTML-safe.
 - `Conditionable<T>` — mixin w/ `.when(cond).then(...)` chains.

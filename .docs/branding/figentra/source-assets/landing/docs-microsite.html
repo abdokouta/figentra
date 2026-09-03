@@ -26,10 +26,7 @@
     <title>Docs · Figentra</title>
 
     <link rel="preconnect" href="https://rsms.me/" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://rsms.me/inter/inter.css"
-    />
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
 
     <style>
       :root {
@@ -44,10 +41,8 @@
         --text-dim: rgba(20, 20, 20, 0.42);
         --border: rgba(20, 20, 20, 0.1);
         --border-strong: rgba(20, 20, 20, 0.18);
-        --font-sans: "Geist", "Inter", system-ui, -apple-system,
-          sans-serif;
-        --font-mono: "Geist Mono", "SF Mono", ui-monospace, "Menlo",
-          monospace;
+        --font-sans: "Geist", "Inter", system-ui, -apple-system, sans-serif;
+        --font-mono: "Geist Mono", "SF Mono", ui-monospace, "Menlo", monospace;
       }
 
       @media (prefers-color-scheme: dark) {
@@ -623,10 +618,9 @@
         </p>
         <h1>@stackra/container</h1>
         <p class="lede">
-          NestJS-compatible dependency injection for the workspace's
-          TypeScript packages. Runs identically in Node, Vite,
-          React Native, and web-workers — one container primitive,
-          every runtime.
+          NestJS-compatible dependency injection for the workspace's TypeScript packages. Runs
+          identically in Node, Vite, React Native, and web-workers — one container primitive, every
+          runtime.
         </p>
         <div class="meta-row">
           <span class="dot" aria-hidden="true"></span>
@@ -637,11 +631,10 @@
         </div>
 
         <p>
-          <code>@stackra/container</code> ships the DI runtime every
-          <code>@stackra/*</code> feature package depends on. It composes on
-          top of <code>reflect-metadata</code> and follows the NestJS
-          Provider + DynamicModule + lifecycle-hook contract exactly —
-          engineers moving from a NestJS backend recognise every primitive.
+          <code>@stackra/container</code> ships the DI runtime every <code>@stackra/*</code> feature
+          package depends on. It composes on top of <code>reflect-metadata</code> and follows the
+          NestJS Provider + DynamicModule + lifecycle-hook contract exactly — engineers moving from
+          a NestJS backend recognise every primitive.
         </p>
 
         <h2 id="install">Install</h2>
@@ -653,9 +646,7 @@ pnpm add <span class="str">@stackra/container reflect-metadata</span>
 <span class="kw">import</span> <span class="str">"reflect-metadata"</span>;</pre>
 
         <h2 id="quick-start">Quick start</h2>
-        <p>
-          A minimal module + service + top-level composition looks like this:
-        </p>
+        <p>A minimal module + service + top-level composition looks like this:</p>
         <pre><span class="kw">import</span> { Module, Injectable } <span class="kw">from</span> <span class="str">"@stackra/container"</span>;
 
 <span class="kw">@Injectable</span>()
@@ -675,12 +666,10 @@ logger.info(<span class="str">"container booted"</span>);</pre>
         <div class="callout">
           <p class="callout-title">Lifecycle</p>
           <p>
-            Services extending <code>OnModuleInit</code> run their
-            <code>onModuleInit</code> hook after every dependency has been
-            resolved. Discovery loaders extend
-            <code>OnApplicationBootstrap</code> — the phase after every
-            module has finished init. Never do side-effect work inside a
-            constructor.
+            Services extending <code>OnModuleInit</code> run their <code>onModuleInit</code> hook
+            after every dependency has been resolved. Discovery loaders extend
+            <code>OnApplicationBootstrap</code> — the phase after every module has finished init.
+            Never do side-effect work inside a constructor.
           </p>
         </div>
 
@@ -692,8 +681,8 @@ logger.info(<span class="str">"container booted"</span>);</pre>
             <span class="api-type">decorator</span>
           </div>
           <div class="api-desc">
-            Declares a container module. Options: <code>providers</code>,
-            <code>imports</code>, <code>exports</code>, <code>global</code>.
+            Declares a container module. Options: <code>providers</code>, <code>imports</code>,
+            <code>exports</code>, <code>global</code>.
           </div>
         </div>
         <div class="api-row">
@@ -702,8 +691,7 @@ logger.info(<span class="str">"container booted"</span>);</pre>
             <span class="api-type">decorator</span>
           </div>
           <div class="api-desc">
-            Marks a class as injectable. Reflects constructor parameter
-            types for DI resolution.
+            Marks a class as injectable. Reflects constructor parameter types for DI resolution.
           </div>
         </div>
         <div class="api-row">
@@ -712,8 +700,8 @@ logger.info(<span class="str">"container booted"</span>);</pre>
             <span class="api-type">parameter decorator</span>
           </div>
           <div class="api-desc">
-            Overrides the reflected type with an explicit DI token (string
-            or symbol) — used for interfaces and cross-package contracts.
+            Overrides the reflected type with an explicit DI token (string or symbol) — used for
+            interfaces and cross-package contracts.
           </div>
         </div>
         <div class="api-row">
@@ -722,40 +710,38 @@ logger.info(<span class="str">"container booted"</span>);</pre>
             <span class="api-type">async factory</span>
           </div>
           <div class="api-desc">
-            Boots the container. Runs every module's <code>onModuleInit</code>,
-            then every service's <code>onApplicationBootstrap</code>. Returns
-            an application instance with <code>.get(ClassOrToken)</code>.
+            Boots the container. Runs every module's <code>onModuleInit</code>, then every service's
+            <code>onApplicationBootstrap</code>. Returns an application instance with
+            <code>.get(ClassOrToken)</code>.
           </div>
         </div>
 
         <h2 id="lifecycle">Lifecycle hooks</h2>
         <p>
-          Every provider MAY implement one or more lifecycle interfaces.
-          Hooks fire in the order Container.create resolves them.
+          Every provider MAY implement one or more lifecycle interfaces. Hooks fire in the order
+          Container.create resolves them.
         </p>
         <h3 id="on-module-init">OnModuleInit</h3>
         <p>
-          Fires once per provider after its dependencies are resolved.
-          Use for module-local initialisation — seeding a registry with
-          config-driven values, warming a memoisation cache.
+          Fires once per provider after its dependencies are resolved. Use for module-local
+          initialisation — seeding a registry with config-driven values, warming a memoisation
+          cache.
         </p>
 
         <h3 id="on-application-bootstrap">OnApplicationBootstrap</h3>
         <p>
           Fires once per provider AFTER every module has finished
-          <code>onModuleInit</code>. Use for cross-module coordination —
-          discovery loaders scan the container for
-          <code>@AsController</code>-marked classes; feature registrars
-          extend base registries with per-feature contributions.
+          <code>onModuleInit</code>. Use for cross-module coordination — discovery loaders scan the
+          container for <code>@AsController</code>-marked classes; feature registrars extend base
+          registries with per-feature contributions.
         </p>
 
         <div class="callout">
           <p class="callout-title">See also</p>
           <p>
-            <a href="#">Discovery vs Loader convention</a> · the naming
-            rule that separates the framework primitive from the domain
-            adapter · <a href="#">Module lifecycle steering</a> · the
-            forbidden patterns list.
+            <a href="#">Discovery vs Loader convention</a> · the naming rule that separates the
+            framework primitive from the domain adapter ·
+            <a href="#">Module lifecycle steering</a> · the forbidden patterns list.
           </p>
         </div>
       </main>
@@ -784,9 +770,7 @@ logger.info(<span class="str">"container booted"</span>);</pre>
             <a href="#on-module-init" class="toc-l2">OnModuleInit</a>
           </li>
           <li class="toc-l2">
-            <a href="#on-application-bootstrap" class="toc-l2"
-              >OnApplicationBootstrap</a
-            >
+            <a href="#on-application-bootstrap" class="toc-l2">OnApplicationBootstrap</a>
           </li>
         </ul>
       </aside>

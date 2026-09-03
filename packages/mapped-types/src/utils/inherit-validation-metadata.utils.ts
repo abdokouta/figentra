@@ -1,5 +1,5 @@
-import 'reflect-metadata';
-import type { Type } from '@/types';
+import "reflect-metadata";
+import type { Type } from "@/types";
 
 /**
  * @function inheritValidationMetadata
@@ -29,7 +29,7 @@ import type { Type } from '@/types';
 export function inheritValidationMetadata(
   parentClass: Type<any>,
   targetClass: Function,
-  isPropertyInherited?: (key: string) => boolean
+  isPropertyInherited?: (key: string) => boolean,
 ) {
   // Check if class-validator is available in the project
   if (!isClassValidatorAvailable()) {
@@ -38,11 +38,11 @@ export function inheritValidationMetadata(
 
   try {
     // Import class-validator dynamically
-    const classValidator: typeof import('class-validator') = require('class-validator');
+    const classValidator: typeof import("class-validator") = require("class-validator");
 
     // Get the metadata storage from class-validator
     // This handles different versions of class-validator
-    const metadataStorage: import('class-validator').MetadataStorage = (classValidator as any)
+    const metadataStorage: import("class-validator").MetadataStorage = (classValidator as any)
       .getMetadataStorage
       ? (classValidator as any).getMetadataStorage()
       : classValidator.getFromContainer(classValidator.MetadataStorage);
@@ -63,18 +63,18 @@ export function inheritValidationMetadata(
         .map((value) => {
           // Get the original type metadata
           const originalType = Reflect.getMetadata(
-            'design:type',
+            "design:type",
             parentClass.prototype,
-            value.propertyName
+            value.propertyName,
           );
 
           // If the original type exists, define it on the target class
           if (originalType) {
             Reflect.defineMetadata(
-              'design:type',
+              "design:type",
               originalType,
               targetClass.prototype,
-              value.propertyName
+              value.propertyName,
             );
           }
 
@@ -91,7 +91,7 @@ export function inheritValidationMetadata(
   } catch (err: Error | any) {
     // Log errors that occur during the inheritance process
     console.error(
-      `Validation ("class-validator") metadata cannot be inherited for "${parentClass.name}" class.`
+      `Validation ("class-validator") metadata cannot be inherited for "${parentClass.name}" class.`,
     );
 
     console.error(err);
@@ -110,7 +110,7 @@ export function inheritValidationMetadata(
 function isClassValidatorAvailable() {
   try {
     // Attempt to require class-validator
-    require('class-validator');
+    require("class-validator");
     return true;
   } catch {
     // Return false if class-validator is not available

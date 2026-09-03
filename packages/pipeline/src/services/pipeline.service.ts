@@ -84,9 +84,7 @@ export class Pipeline<TPassable = unknown, TReturn = TPassable> {
    *   When provided, string pipes are resolved via `container.get(pipeName)`.
    *   When omitted, string pipes will throw a PipelineError.
    */
-  public constructor(
-    @Optional() @Inject(APPLICATION) container?: IApplication,
-  ) {
+  public constructor(@Optional() @Inject(APPLICATION) container?: IApplication) {
     this.container = container ?? undefined;
   }
 
@@ -171,18 +169,11 @@ export class Pipeline<TPassable = unknown, TReturn = TPassable> {
    * @throws {PipelineError} When a pipe cannot be resolved or executed
    */
   public then<R = TReturn>(destination: (passable: TPassable) => R): R {
-    const pipeline = this.pipes.reduceRight<(passable: TPassable) => R>(
-      (next, pipe) => {
-        return (passable: TPassable): R => {
-          return this.carry(
-            pipe,
-            passable,
-            next as (passable: TPassable) => unknown,
-          ) as R;
-        };
-      },
-      this.prepareDestination(destination),
-    );
+    const pipeline = this.pipes.reduceRight<(passable: TPassable) => R>((next, pipe) => {
+      return (passable: TPassable): R => {
+        return this.carry(pipe, passable, next as (passable: TPassable) => unknown) as R;
+      };
+    }, this.prepareDestination(destination));
 
     const result = pipeline(this.passable);
 
@@ -251,12 +242,10 @@ export class Pipeline<TPassable = unknown, TReturn = TPassable> {
 
       // Function pipe
       if (typeof pipe === "function") {
-        return (
-          pipe as (
-            passable: TPassable,
-            next: (passable: TPassable) => unknown,
-          ) => unknown
-        )(passable, next);
+        return (pipe as (passable: TPassable, next: (passable: TPassable) => unknown) => unknown)(
+          passable,
+          next,
+        );
       }
 
       // String pipe (container resolution)
@@ -403,11 +392,6 @@ export class Pipeline<TPassable = unknown, TReturn = TPassable> {
       );
     }
 
-    return (handler as (...args: unknown[]) => unknown).call(
-      pipe,
-      passable,
-      next,
-      ...params,
-    );
+    return (handler as (...args: unknown[]) => unknown).call(pipe, passable, next, ...params);
   }
 }

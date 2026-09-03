@@ -64,9 +64,7 @@ export class PipelineHub {
   /**
    * @param container - Optional application context passed to created Pipeline instances
    */
-  public constructor(
-    @Optional() @Inject(APPLICATION) container?: IApplication,
-  ) {
+  public constructor(@Optional() @Inject(APPLICATION) container?: IApplication) {
     this.container = container ?? undefined;
   }
 
@@ -94,10 +92,7 @@ export class PipelineHub {
    */
   public pipeline(name: string, callback: PipelineDefinition): void {
     if (!name) {
-      throw new PipelineError(
-        "Pipeline name cannot be empty.",
-        "INVALID_PIPELINE_NAME",
-      );
+      throw new PipelineError("Pipeline name cannot be empty.", "INVALID_PIPELINE_NAME");
     }
     this.pipelines.set(name, callback);
   }

@@ -23,10 +23,7 @@ amount
 
 ## Candidate engines
 
-Cedar
-OPA/Rego
-CEL
-Zanzibar-style relationships
+Cedar OPA/Rego CEL Zanzibar-style relationships
 
 ## Requirements
 

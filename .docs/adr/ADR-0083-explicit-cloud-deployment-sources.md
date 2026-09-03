@@ -1,14 +1,15 @@
 # ADR-0083 — Explicit Cloud Deployment Sources
 
 ## Status
+
 Accepted.
 
 ## Context
 
-Implicit filesystem discovery makes deployment enrollment accidental: creating
-a `cloud.yaml` in a directory can silently change the deployment catalog. This
-is unsafe for an enterprise platform with gradual rollout and controlled
-production enrollment.
+Implicit filesystem discovery makes deployment enrollment accidental: creating a
+`cloud.yaml` in a directory can silently change the deployment catalog. This is
+unsafe for an enterprise platform with gradual rollout and controlled production
+enrollment.
 
 ## Decision
 
@@ -56,6 +57,6 @@ gitignored (see
 
 - Deployment enrollment is auditable and reviewable.
 - Experimental directories can remain outside deployment simply by not being
-enrolled.
+  enrolled.
 - Glob patterns allow gradual enrollment without duplicating every path.
 - Missing manifests fail the collector instead of being silently skipped.

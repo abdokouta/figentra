@@ -11,6 +11,7 @@
 ## Authorization
 
 Every protected operation must identify:
+
 - principal
 - action
 - resource
@@ -55,6 +56,7 @@ Require stronger authentication/authorization and full audit.
 ## Break glass
 
 Emergency access must:
+
 - be explicitly authorized
 - be time bounded
 - be audited

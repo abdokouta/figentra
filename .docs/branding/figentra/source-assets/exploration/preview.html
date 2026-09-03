@@ -941,20 +941,18 @@
       <div class="container">
         <div class="hero">
           <div>
-            <p class="hero-eyebrow micro">Decision &middot; F-Cursor &middot; Signal mint &middot; Geist 500</p>
-            <h1 class="display-l hero-title">
-              A mark that blinks in the rhythm you deploy from.
-            </h1>
+            <p class="hero-eyebrow micro">
+              Decision &middot; F-Cursor &middot; Signal mint &middot; Geist 500
+            </p>
+            <h1 class="display-l hero-title">A mark that blinks in the rhythm you deploy from.</h1>
             <p class="lede body">
-              We ship <strong>Concept B</strong> — the F-Cursor mark, rendered
-              in a single ink weight, with a Signal-mint cursor bar that blinks
-              on a 1&thinsp;s steps cycle. Same rhythm every developer knows
-              from their terminal. Paired with <strong>Geist 500</strong>: the
-              typeface Vercel released in 2024 that Cloudflare and Turbo
-              adopted. The mark reads at 16&thinsp;px favicon, inverts cleanly
-              on dark surfaces, and costs zero external font license to ship.
-              It encodes what our positioning already says out loud: this
-              company is the one you deploy on.
+              We ship <strong>Concept B</strong> — the F-Cursor mark, rendered in a single ink
+              weight, with a Signal-mint cursor bar that blinks on a 1&thinsp;s steps cycle. Same
+              rhythm every developer knows from their terminal. Paired with
+              <strong>Geist 500</strong>: the typeface Vercel released in 2024 that Cloudflare and
+              Turbo adopted. The mark reads at 16&thinsp;px favicon, inverts cleanly on dark
+              surfaces, and costs zero external font license to ship. It encodes what our
+              positioning already says out loud: this company is the one you deploy on.
             </p>
           </div>
           <div class="hero-mark mark">
@@ -975,10 +973,9 @@
         <p class="section-num micro">Contents</p>
         <h2 class="display-m section-title">What's in this document</h2>
         <p class="lede body section-lede">
-          Sections in order. Each is a specific artefact the decision produces
-          — the geometry, the sizing rules, the motion contract, the in-context
-          proof, the substrate tokens, the alternates reserved for other
-          surfaces, and the shipping plan.
+          Sections in order. Each is a specific artefact the decision produces — the geometry, the
+          sizing rules, the motion contract, the in-context proof, the substrate tokens, the
+          alternates reserved for other surfaces, and the shipping plan.
         </p>
         <nav class="toc">
           <a href="#s1"
@@ -1006,16 +1003,14 @@
             ><span class="toc-title">Alternates &mdash; A + C</span></a
           >
           <a href="#s7"
-            ><span class="toc-num micro">07</span
-            ><span class="toc-title">Tagline surgery</span></a
+            ><span class="toc-num micro">07</span><span class="toc-title">Tagline surgery</span></a
           >
           <a href="#s8"
             ><span class="toc-num micro">08</span
             ><span class="toc-title">What shipped, what's pending</span></a
           >
           <a href="#s9"
-            ><span class="toc-num micro">09</span
-            ><span class="toc-title">Provenance</span></a
+            ><span class="toc-num micro">09</span><span class="toc-title">Provenance</span></a
           >
         </nav>
       </div>
@@ -1027,11 +1022,10 @@
         <p class="section-num micro">§01</p>
         <h2 class="display-m section-title">The mark, at spec</h2>
         <p class="lede body section-lede">
-          Two canvases below, one card. Left canvas renders the mark on Paper;
-          right canvas renders it on Graphite&nbsp;900. Ink strokes inherit via
-          <code class="tok">currentColor</code>; the Signal-mint cursor stays
-          mint on every surface. No gradients, no stroke tapers, no shadows
-          on the mark itself.
+          Two canvases below, one card. Left canvas renders the mark on Paper; right canvas renders
+          it on Graphite&nbsp;900. Ink strokes inherit via
+          <code class="tok">currentColor</code>; the Signal-mint cursor stays mint on every surface.
+          No gradients, no stroke tapers, no shadows on the mark itself.
         </p>
 
         <div class="spec">
@@ -1047,10 +1041,19 @@
             </svg>
           </div>
           <div class="spec-canvas on-dark">
-            <span class="micro muted" style="position: absolute; top: 20px; left: 24px; color: var(--graphite-400)"
+            <span
+              class="micro muted"
+              style="position: absolute; top: 20px; left: 24px; color: var(--graphite-400)"
               >Graphite&nbsp;900 &middot; #0F1424</span
             >
-            <svg width="200" height="200" viewBox="0 0 120 120" class="mark" style="color: var(--paper)" aria-hidden="true">
+            <svg
+              width="200"
+              height="200"
+              viewBox="0 0 120 120"
+              class="mark"
+              style="color: var(--paper)"
+              aria-hidden="true"
+            >
               <rect x="30" y="24" width="10" height="72" fill="currentColor" />
               <rect x="30" y="24" width="52" height="10" fill="currentColor" />
               <rect x="30" y="56" width="34" height="10" fill="currentColor" />
@@ -1062,11 +1065,10 @@
         <div class="spec-details">
           <h3 class="heading">F-Cursor &mdash; geometry</h3>
           <p class="small muted" style="margin-top: 8px">
-            A geometric F with three orthogonal strokes on a 120-unit grid,
-            terminating in a Signal-mint cursor bar at its top-right. The
-            cursor blinks live on a 1&thinsp;s steps cycle, encoding
-            <em>engineering / command prompt / ready for input</em> into the
-            letterform itself.
+            A geometric F with three orthogonal strokes on a 120-unit grid, terminating in a
+            Signal-mint cursor bar at its top-right. The cursor blinks live on a 1&thinsp;s steps
+            cycle, encoding
+            <em>engineering / command prompt / ready for input</em> into the letterform itself.
           </p>
           <ul class="attrs">
             <li>
@@ -1079,7 +1081,9 @@
             </li>
             <li>
               <span class="label">Stroke weight</span>
-              <span class="small">10 units &middot; ≈ 14% of cap &middot; matches Geist 500's letter weight</span>
+              <span class="small"
+                >10 units &middot; ≈ 14% of cap &middot; matches Geist 500's letter weight</span
+              >
             </li>
             <li>
               <span class="label">Middle-bar ratio</span>
@@ -1087,15 +1091,24 @@
             </li>
             <li>
               <span class="label">Signal cursor</span>
-              <span class="small">14 × 6 units at (88, 26) &middot; 6-unit gap from top-stroke end &middot; fill <code class="tok">#00E5A0</code></span>
+              <span class="small"
+                >14 × 6 units at (88, 26) &middot; 6-unit gap from top-stroke end &middot; fill
+                <code class="tok">#00E5A0</code></span
+              >
             </li>
             <li>
               <span class="label">Ink</span>
-              <span class="small"><code class="tok">currentColor</code> &middot; inherits Ink on Paper, Paper on Graphite</span>
+              <span class="small"
+                ><code class="tok">currentColor</code> &middot; inherits Ink on Paper, Paper on
+                Graphite</span
+              >
             </li>
             <li>
               <span class="label">Clearspace</span>
-              <span class="small">1× stroke weight (10 units) on all sides &middot; ≥ 16&thinsp;px margin in every render context</span>
+              <span class="small"
+                >1× stroke weight (10 units) on all sides &middot; ≥ 16&thinsp;px margin in every
+                render context</span
+              >
             </li>
           </ul>
         </div>
@@ -1108,11 +1121,10 @@
         <p class="section-num micro">§02</p>
         <h2 class="display-m section-title">Every size the mark renders at</h2>
         <p class="lede body section-lede">
-          The mark holds at 16&thinsp;px favicon size because the stroke
-          weight is 10&thinsp;units — thin enough for hero-scale clarity,
-          thick enough to survive the smallest rasteriser. Below
-          16&thinsp;px, drop to Concept A (wordmark only). Above
-          240&thinsp;px, the mark can carry the full lockup at hero scale.
+          The mark holds at 16&thinsp;px favicon size because the stroke weight is 10&thinsp;units —
+          thin enough for hero-scale clarity, thick enough to survive the smallest rasteriser. Below
+          16&thinsp;px, drop to Concept A (wordmark only). Above 240&thinsp;px, the mark can carry
+          the full lockup at hero scale.
         </p>
 
         <div class="ladder">
@@ -1199,10 +1211,9 @@
         <h2 class="display-m section-title">The terminal blink</h2>
         <p class="lede body section-lede">
           Every cycle is 1000&thinsp;ms on a <code class="tok">steps(1)</code>
-          timing function — hard on, hard off. The cursor is fully opaque
-          from 0-49% of the cycle, then fully invisible from 50-100%. Same
-          rhythm every developer's IDE ships. Slower than a heartbeat,
-          because the mark is not a live indicator — it is a
+          timing function — hard on, hard off. The cursor is fully opaque from 0-49% of the cycle,
+          then fully invisible from 50-100%. Same rhythm every developer's IDE ships. Slower than a
+          heartbeat, because the mark is not a live indicator — it is a
           <em>waiting-for-input</em> prompt. <code class="tok">prefers-reduced-motion</code>
           disables the animation; the cursor stays visible.
         </p>
@@ -1254,10 +1265,9 @@
         <p class="section-num micro">§04</p>
         <h2 class="display-m section-title">The mark on real surfaces</h2>
         <p class="lede body section-lede">
-          Every touchpoint the mark actually lands on. Nav bar, favicon,
-          social OG card, email signature, invoice header, business card —
-          each rendered at real dimensions so the mark's clearspace + weight
-          hold up when you see them side by side.
+          Every touchpoint the mark actually lands on. Nav bar, favicon, social OG card, email
+          signature, invoice header, business card — each rendered at real dimensions so the mark's
+          clearspace + weight hold up when you see them side by side.
         </p>
 
         <div class="surfaces" style="margin-top: 32px">
@@ -1273,7 +1283,9 @@
                 </svg>
                 <span class="wordmark">Figentra</span>
               </span>
-              <nav class="small"><span>How we build</span><span>Team</span><span>Governance</span><span>Trust</span></nav>
+              <nav class="small">
+                <span>How we build</span><span>Team</span><span>Governance</span><span>Trust</span>
+              </nav>
               <span class="cta">Talk to us →</span>
             </div>
           </div>
@@ -1290,7 +1302,9 @@
                 </svg>
                 <span class="wordmark">Figentra</span>
               </span>
-              <nav class="small"><span>How we build</span><span>Team</span><span>Governance</span><span>Trust</span></nav>
+              <nav class="small">
+                <span>How we build</span><span>Team</span><span>Governance</span><span>Trust</span>
+              </nav>
               <span class="cta">Talk to us →</span>
             </div>
           </div>
@@ -1346,10 +1360,36 @@
           </div>
 
           <div class="surface">
-            <div class="surface-caption micro">PWA tile &middot; 512 × 512 &middot; Graphite 900 background</div>
-            <div style="padding: 32px; background: var(--paper); display: flex; justify-content: center;">
-              <div style="width: 160px; height: 160px; background: var(--graphite-900); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 2px rgb(0 0 0 / 8%);">
-                <svg width="80" height="80" viewBox="0 0 120 120" class="mark" style="color: var(--paper)">
+            <div class="surface-caption micro">
+              PWA tile &middot; 512 × 512 &middot; Graphite 900 background
+            </div>
+            <div
+              style="
+                padding: 32px;
+                background: var(--paper);
+                display: flex;
+                justify-content: center;
+              "
+            >
+              <div
+                style="
+                  width: 160px;
+                  height: 160px;
+                  background: var(--graphite-900);
+                  border-radius: 20px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  box-shadow: 0 1px 2px rgb(0 0 0 / 8%);
+                "
+              >
+                <svg
+                  width="80"
+                  height="80"
+                  viewBox="0 0 120 120"
+                  class="mark"
+                  style="color: var(--paper)"
+                >
                   <rect x="30" y="24" width="10" height="72" fill="currentColor" />
                   <rect x="30" y="24" width="52" height="10" fill="currentColor" />
                   <rect x="30" y="56" width="34" height="10" fill="currentColor" />
@@ -1372,7 +1412,9 @@
                 <span class="wordmark" style="font-size: 15px">Figentra</span>
               </span>
               <p class="og-title">Autonomous Engineering, running in production.</p>
-              <p class="og-caption">62 AI Engineers &middot; one governed process &middot; enterprise SaaS end-to-end</p>
+              <p class="og-caption">
+                62 AI Engineers &middot; one governed process &middot; enterprise SaaS end-to-end
+              </p>
             </div>
           </div>
 
@@ -1388,7 +1430,11 @@
                   <rect x="30" y="56" width="34" height="10" fill="currentColor" />
                   <rect x="88" y="26" width="14" height="6" fill="var(--signal)" />
                 </svg>
-                <span class="micro" style="font-family: var(--font-display); font-size: 13px; font-weight: 500">Figentra</span>
+                <span
+                  class="micro"
+                  style="font-family: var(--font-display); font-size: 13px; font-weight: 500"
+                  >Figentra</span
+                >
               </span>
               <p class="sig-links">figentra.com &middot; +1 (___) ___-____</p>
             </div>
@@ -1396,8 +1442,11 @@
 
           <div class="surface">
             <div class="surface-caption micro">Business card &middot; 85 × 55 mm</div>
-            <div style="padding: 24px; background: var(--graphite-100);">
-              <div class="mock-card on-dark" style="border-radius: 6px; box-shadow: 0 1px 2px rgb(0 0 0 / 8%);">
+            <div style="padding: 24px; background: var(--graphite-100)">
+              <div
+                class="mock-card on-dark"
+                style="border-radius: 6px; box-shadow: 0 1px 2px rgb(0 0 0 / 8%)"
+              >
                 <span class="mark" style="color: var(--paper)">
                   <svg width="24" height="24" viewBox="0 0 120 120">
                     <rect x="30" y="24" width="10" height="72" fill="currentColor" />
@@ -1415,7 +1464,9 @@
           </div>
 
           <div class="surface" style="grid-column: 1 / -1">
-            <div class="surface-caption micro">Invoice header &middot; A4 print (monochrome variant)</div>
+            <div class="surface-caption micro">
+              Invoice header &middot; A4 print (monochrome variant)
+            </div>
             <div class="mock-invoice">
               <span class="lockup mark">
                 <svg width="32" height="32" viewBox="0 0 120 120">
@@ -1444,10 +1495,9 @@
         <h2 class="display-m section-title">The substrate the mark hooks into</h2>
         <p class="lede body section-lede">
           Every token below comes from
-          <code class="tok">docs/brand/04-visual-identity.md</code>. The mark's
-          ink strokes read <code class="tok">currentColor</code>, so it
-          inherits Ink on Paper surfaces and Paper on Graphite&nbsp;900. The
-          Signal-mint cursor stays mint in every context — it is the one
+          <code class="tok">docs/brand/04-visual-identity.md</code>. The mark's ink strokes read
+          <code class="tok">currentColor</code>, so it inherits Ink on Paper surfaces and Paper on
+          Graphite&nbsp;900. The Signal-mint cursor stays mint in every context — it is the one
           fixed color in the entire system.
         </p>
 
@@ -1467,7 +1517,10 @@
             </div>
           </div>
           <div class="swatch-card">
-            <span class="swatch-fill" style="background: var(--paper); border-bottom: 1px solid var(--graphite-200)"></span>
+            <span
+              class="swatch-fill"
+              style="background: var(--paper); border-bottom: 1px solid var(--graphite-200)"
+            ></span>
             <div class="swatch-meta">
               <p class="swatch-name">Paper</p>
               <p class="small swatch-hex mono">#FAFAF7</p>
@@ -1517,11 +1570,10 @@
         <p class="section-num micro">§06</p>
         <h2 class="display-m section-title">Sanctioned alternates</h2>
         <p class="lede body section-lede">
-          Two secondary marks reserved for surfaces where the F-Cursor doesn't
-          fit. <strong>Concept A</strong> ships on print, email signatures
-          under 14&thinsp;px, and any static context where the blink cannot
-          animate. <strong>Concept C</strong> ships as the section-opening
-          seal on <code class="tok">/governance</code> and
+          Two secondary marks reserved for surfaces where the F-Cursor doesn't fit.
+          <strong>Concept A</strong> ships on print, email signatures under 14&thinsp;px, and any
+          static context where the blink cannot animate. <strong>Concept C</strong> ships as the
+          section-opening seal on <code class="tok">/governance</code> and
           <code class="tok">/trust</code> only.
         </p>
 
@@ -1534,9 +1586,8 @@
               <p class="micro alt-role">Concept A &middot; wordmark only</p>
               <p class="subheading" style="margin-bottom: 12px">Print, static, small sizes.</p>
               <p class="small muted">
-                Pure Geist 500 wordmark. Reserved for print (invoice header,
-                DPA cover), email signatures below 14&thinsp;px, and social
-                profile art where the blink cannot render.
+                Pure Geist 500 wordmark. Reserved for print (invoice header, DPA cover), email
+                signatures below 14&thinsp;px, and social profile art where the blink cannot render.
               </p>
             </div>
           </div>
@@ -1560,10 +1611,9 @@
               <p class="micro alt-role">Concept C &middot; provenance gate</p>
               <p class="subheading" style="margin-bottom: 12px">Governance seals only.</p>
               <p class="small muted">
-                An F reduced to a spine plus top stroke; the middle-bar slot
-                is occupied by a Signal-mint check tick. Ships as the
-                section-opening seal on the governance and trust pages.
-                Never the primary nav mark.
+                An F reduced to a spine plus top stroke; the middle-bar slot is occupied by a
+                Signal-mint check tick. Ships as the section-opening seal on the governance and
+                trust pages. Never the primary nav mark.
               </p>
             </div>
           </div>
@@ -1577,18 +1627,20 @@
         <p class="section-num micro">§07</p>
         <h2 class="display-m section-title">Tagline surgery</h2>
         <p class="lede body section-lede">
-          <em>Smart Solutions. Integrated. Fast.</em> lived only in the
-          retired image logo &mdash; a workspace-wide grep on 2026-08-14
-          returned zero matches across every code file. Retired the moment
-          the mark image is replaced. Sanctioned taglines from
-          <code class="tok">docs/brand/00-foundation.md §5</code> ship in
-          hero copy only &mdash; never next to the wordmark in the top nav.
+          <em>Smart Solutions. Integrated. Fast.</em> lived only in the retired image logo &mdash; a
+          workspace-wide grep on 2026-08-14 returned zero matches across every code file. Retired
+          the moment the mark image is replaced. Sanctioned taglines from
+          <code class="tok">docs/brand/00-foundation.md §5</code> ship in hero copy only &mdash;
+          never next to the wordmark in the top nav.
         </p>
 
         <p class="lede body">
-          <strong>Primary (CTO):</strong> <em>"Autonomous Engineering, running in production."</em><br />
-          <strong>Enterprise buyer:</strong> <em>"Enterprise SaaS, built the way it should be."</em><br />
-          <strong>Press &middot; investor &middot; partner:</strong> <em>"First Autonomous Engineering company. Shipped."</em>
+          <strong>Primary (CTO):</strong> <em>"Autonomous Engineering, running in production."</em
+          ><br />
+          <strong>Enterprise buyer:</strong> <em>"Enterprise SaaS, built the way it should be."</em
+          ><br />
+          <strong>Press &middot; investor &middot; partner:</strong>
+          <em>"First Autonomous Engineering company. Shipped."</em>
         </p>
       </div>
     </section>
@@ -1599,9 +1651,8 @@
         <p class="section-num micro">§08</p>
         <h2 class="display-m section-title">What shipped, what's pending</h2>
         <p class="lede body section-lede">
-          Ship-plan status. Every done step is landed; every pending step is
-          named with its owning agent lane. All done + pending items are
-          reversible via git.
+          Ship-plan status. Every done step is landed; every pending step is named with its owning
+          agent lane. All done + pending items are reversible via git.
         </p>
 
         <ol class="steps">
@@ -1630,10 +1681,12 @@
                 <span class="badge done">Done</span>
               </p>
               <p class="step-note">
-                <code class="tok">figentra-inc/landing-page/src/components/marketing/brand/brand.component.tsx</code>
-                now renders the inline F-Cursor SVG + Geist wordmark.
-                Bypasses <code class="tok">&lt;BrandLink&gt;</code> — the
-                framework primitive's <code class="tok">mark="A"</code>
+                <code class="tok"
+                  >figentra-inc/landing-page/src/components/marketing/brand/brand.component.tsx</code
+                >
+                now renders the inline F-Cursor SVG + Geist wordmark. Bypasses
+                <code class="tok">&lt;BrandLink&gt;</code> — the framework primitive's
+                <code class="tok">mark="A"</code>
                 API doesn't accommodate the F-Cursor geometry.
               </p>
             </div>
@@ -1646,12 +1699,11 @@
                 <span class="badge done">Done</span>
               </p>
               <p class="step-note">
-                <code class="tok">theme.css</code> — <code class="tok">--accent</code>
-                corrected from oklch(76.97% 0.2124 148.67) → oklch(85.14% 0.1897 158.05)
-                (exact Signal mint). Added <code class="tok">--font-display</code>
-                for Geist. Added <code class="tok">.figentra-cursor</code>
-                keyframe. <code class="tok">index.html</code> now loads Geist
-                alongside Inter.
+                <code class="tok">theme.css</code> — <code class="tok">--accent</code> corrected
+                from oklch(76.97% 0.2124 148.67) → oklch(85.14% 0.1897 158.05) (exact Signal mint).
+                Added <code class="tok">--font-display</code> for Geist. Added
+                <code class="tok">.figentra-cursor</code> keyframe.
+                <code class="tok">index.html</code> now loads Geist alongside Inter.
               </p>
             </div>
             <span class="step-owner">kiro</span>
@@ -1663,8 +1715,7 @@
                 <span class="badge done">Done</span>
               </p>
               <p class="step-note">
-                Zero code references confirmed via grep before delete.
-                Retired without impact.
+                Zero code references confirmed via grep before delete. Retired without impact.
               </p>
             </div>
             <span class="step-owner">kiro</span>
@@ -1676,9 +1727,8 @@
                 <span class="badge done">Done · no-op</span>
               </p>
               <p class="step-note">
-                <em>Smart Solutions. Integrated. Fast.</em> lived only in the
-                retired image logo. Workspace-wide grep returned zero matches
-                in any code file. Nothing to sweep.
+                <em>Smart Solutions. Integrated. Fast.</em> lived only in the retired image logo.
+                Workspace-wide grep returned zero matches in any code file. Nothing to sweep.
               </p>
             </div>
             <span class="step-owner">kiro</span>
@@ -1690,9 +1740,8 @@
                 <span class="badge done">Done</span>
               </p>
               <p class="step-note">
-                <code class="tok">docs/brand/12-logo-spec.md</code> shipped
-                as the permanent spec. Provenance frontmatter carries
-                <code class="tok">reviewed_by: null</code> pending
+                <code class="tok">docs/brand/12-logo-spec.md</code> shipped as the permanent spec.
+                Provenance frontmatter carries <code class="tok">reviewed_by: null</code> pending
                 Founding-Partner countersign.
               </p>
             </div>
@@ -1705,15 +1754,14 @@
                 <span class="badge pending">Pending</span>
               </p>
               <p class="step-note">
-                Requires sharp-cli or an equivalent SVG-to-PNG pipeline.
-                Six PNG assets under <code class="tok">public/</code>:
-                <code class="tok">pwa-64x64.png</code>,
+                Requires sharp-cli or an equivalent SVG-to-PNG pipeline. Six PNG assets under
+                <code class="tok">public/</code>: <code class="tok">pwa-64x64.png</code>,
                 <code class="tok">pwa-192x192.png</code>,
                 <code class="tok">pwa-512x512.png</code> (with Graphite 900 background),
                 <code class="tok">maskable-icon-512x512.png</code>,
-                <code class="tok">apple-touch-icon-180x180.png</code>,
-                and <code class="tok">favicon.ico</code>. Every regenerated
-                asset must preserve the mark's clearspace.
+                <code class="tok">apple-touch-icon-180x180.png</code>, and
+                <code class="tok">favicon.ico</code>. Every regenerated asset must preserve the
+                mark's clearspace.
               </p>
             </div>
             <span class="step-owner">heroui-ui-builder</span>
@@ -1725,9 +1773,8 @@
                 <span class="badge pending">Pending</span>
               </p>
               <p class="step-note">
-                Sales deck, pitch deck, LinkedIn / X / GitHub profile art,
-                cached OG images at CDN edges. Founding Partners to
-                coordinate the external-surface sweep.
+                Sales deck, pitch deck, LinkedIn / X / GitHub profile art, cached OG images at CDN
+                edges. Founding Partners to coordinate the external-surface sweep.
               </p>
             </div>
             <span class="step-owner">context-gatherer</span>
@@ -1742,13 +1789,11 @@
         <p class="section-num micro">§09</p>
         <h2 class="display-m section-title">Provenance</h2>
         <p class="lede body section-lede">
-          Every artefact this document produces carries the workspace's
-          standard provenance frontmatter per
-          <code class="tok">.kiro/steering/provenance-frontmatter.md</code>.
-          The permanent spec at
-          <code class="tok">docs/brand/12-logo-spec.md</code> waits on
-          Founding-Partner sign-off before
-          <code class="tok">reviewed_by</code> populates.
+          Every artefact this document produces carries the workspace's standard provenance
+          frontmatter per
+          <code class="tok">.kiro/steering/provenance-frontmatter.md</code>. The permanent spec at
+          <code class="tok">docs/brand/12-logo-spec.md</code> waits on Founding-Partner sign-off
+          before <code class="tok">reviewed_by</code> populates.
         </p>
 
         <div class="type-specimen" style="padding: 32px 40px">
@@ -1771,7 +1816,9 @@
           <div class="type-row">
             <span class="micro muted">Companion files</span>
             <span class="small mono">
-              matrix.html · mouv-check.html · variants.html · a-wordmark.svg · b-fsignal-mark.svg · b-fsignal-lockup.svg · b-fsignal-mono.svg · c-provenance-mark.svg · c-provenance-lockup.svg
+              matrix.html · mouv-check.html · variants.html · a-wordmark.svg · b-fsignal-mark.svg ·
+              b-fsignal-lockup.svg · b-fsignal-mono.svg · c-provenance-mark.svg ·
+              c-provenance-lockup.svg
             </span>
           </div>
           <div class="type-row">

@@ -60,7 +60,8 @@ Quota
 Billing
 ```
 
-Start with PostgreSQL where volume permits. Introduce Timescale/analytics stores only when justified.
+Start with PostgreSQL where volume permits. Introduce Timescale/analytics stores
+only when justified.
 
 ## Billing hierarchy
 

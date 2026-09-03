@@ -19,8 +19,8 @@ drift.
 
 ## Orient first
 
-Read: root `README.md`; `package.json workspaces` (the authoritative package list +
-catalogs); `.changeset/` (config + pending changesets); each package's
+Read: root `README.md`; `package.json workspaces` (the authoritative package
+list + catalogs); `.changeset/` (config + pending changesets); each package's
 `package.json` `description`
 
 - existing `README.md`; `.kiro/steering/` (existing rules + inclusion modes).

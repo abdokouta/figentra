@@ -92,9 +92,7 @@ describe("createAssertableProxy", () => {
       expect(entry.method).toBe("boom");
       expect(entry.threw).toBe(true);
       expect(entry.result).toBeInstanceOf(Error);
-      expect((entry.result as Error).message).toBe(
-        "intentional real-method throw",
-      );
+      expect((entry.result as Error).message).toBe("intentional real-method throw");
     });
 
     it("preserves the original method behaviour (real target runs)", () => {
@@ -126,13 +124,9 @@ describe("createAssertableProxy", () => {
       svc.save(user);
 
       // Same shape, different reference — must match deep-equal.
-      expect(svc.$.wasCalledWith("save", [{ id: 1, name: "Ada" }])).toBe(
-        true,
-      );
+      expect(svc.$.wasCalledWith("save", [{ id: 1, name: "Ada" }])).toBe(true);
       // Different shape — must NOT match.
-      expect(svc.$.wasCalledWith("save", [{ id: 1, name: "Bob" }])).toBe(
-        false,
-      );
+      expect(svc.$.wasCalledWith("save", [{ id: 1, name: "Bob" }])).toBe(false);
       // Wrong method — must NOT match.
       expect(svc.$.wasCalledWith("find", [1])).toBe(false);
     });
@@ -265,9 +259,7 @@ describe("createAssertableProxy", () => {
 
     it("rejects with a descriptive message on timeout", async () => {
       const svc = createAssertableProxy(new InMemoryUserService());
-      await expect(svc.$.until("find", 3, 50)).rejects.toThrow(
-        /Timed out waiting for 'find'/,
-      );
+      await expect(svc.$.until("find", 3, 50)).rejects.toThrow(/Timed out waiting for 'find'/);
     });
 
     it("defaults to count=1 and resolves immediately when already satisfied", async () => {
@@ -288,9 +280,7 @@ describe("createAssertableProxy", () => {
 
     it("assertCalled throws a descriptive message when not invoked", () => {
       const svc = createAssertableProxy(new InMemoryUserService());
-      expect(() => svc.assertCalled("list")).toThrow(
-        /Expected 'list' to have been called/,
-      );
+      expect(() => svc.assertCalled("list")).toThrow(/Expected 'list' to have been called/);
     });
 
     it("assertCalledWith is silent for a matching call", () => {
@@ -312,9 +302,7 @@ describe("createAssertableProxy", () => {
     it("assertNotCalled throws when the method was invoked", () => {
       const svc = createAssertableProxy(new InMemoryUserService());
       svc.list();
-      expect(() => svc.assertNotCalled("list")).toThrow(
-        /Expected 'list' NOT to have been called/,
-      );
+      expect(() => svc.assertNotCalled("list")).toThrow(/Expected 'list' NOT to have been called/);
     });
 
     it("assertNotCalled is silent when the method was never called", () => {

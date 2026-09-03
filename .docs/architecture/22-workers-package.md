@@ -60,7 +60,8 @@ Registry does not own application business data.
 
 ## Webhook Gateway — Convoy
 
-Figentra uses **Convoy** as the webhook infrastructure rather than implementing a webhook platform inside a Worker.
+Figentra uses **Convoy** as the webhook infrastructure rather than implementing
+a webhook platform inside a Worker.
 
 Deployment location:
 
@@ -143,7 +144,8 @@ A webhook system needs durable delivery state and operational features:
 
 Building these in Workers would recreate an existing distributed system.
 
-Cloudflare Workers remain excellent for the API Gateway and Registry, where the workload is edge-oriented and lightweight.
+Cloudflare Workers remain excellent for the API Gateway and Registry, where the
+workload is edge-oriented and lightweight.
 
 ## Important boundary
 
@@ -182,7 +184,6 @@ Workers start from the official Cloudflare/Hono scaffold.
 Convoy uses its official Docker/self-hosted deployment model.
 
 Do not copy an ad-hoc Worker or Convoy deployment skeleton between environments.
-
 
 ## Queue boundary
 

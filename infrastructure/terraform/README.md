@@ -5,7 +5,8 @@ is `infrastructure/terraform`; environments are isolated by Terraform workspace.
 
 ## Source pipeline
 
-1. Root `cloud.yaml` explicitly enrolls local deployment paths and external repos.
+1. Root `cloud.yaml` explicitly enrolls local deployment paths and external
+   repos.
 2. Each enrolled source must provide its own `cloud.yaml`.
 3. `pnpm run catalog` produces `infrastructure/.generated/catalog.json`.
 4. Terraform decodes the generated catalog and composes reusable modules.
@@ -57,5 +58,5 @@ versions.tf
 ```
 
 Modules with outputs additionally contain `outputs.tf`. Every public input and
-output requires documentation. Secrets are injected by the deployment runner
-and are never committed to Terraform source.
+output requires documentation. Secrets are injected by the deployment runner and
+are never committed to Terraform source.

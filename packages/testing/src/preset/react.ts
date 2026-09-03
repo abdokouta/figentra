@@ -41,10 +41,7 @@ const react = mergeConfig(
       // Component tests need jest-dom matchers + RTL cleanup.
       setupFiles: ["@stackra/testing/react/setup"],
       // Include `.tsx` — component tests carry the JSX extension.
-      include: [
-        "__tests__/**/*.{test,spec}.{ts,tsx}",
-        "src/**/*.{test,spec}.{ts,tsx}",
-      ],
+      include: ["__tests__/**/*.{test,spec}.{ts,tsx}", "src/**/*.{test,spec}.{ts,tsx}"],
       // Enable CSS module handling so styled components resolve.
       css: {
         modules: {

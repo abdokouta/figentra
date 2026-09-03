@@ -30,7 +30,9 @@
         gap: 48px;
         align-items: center;
       }
-      .err-code .kicker { margin: 0; }
+      .err-code .kicker {
+        margin: 0;
+      }
       .err-code .code {
         font-family: var(--font-mono);
         font-weight: 600;
@@ -56,16 +58,24 @@
         margin: 0 0 24px;
         max-width: 480px;
       }
-      .err-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+      .err-cta {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
       .err-illo {
-        display: grid; place-items: center;
+        display: grid;
+        place-items: center;
         aspect-ratio: 4 / 3;
         background: var(--surface-2);
         border: 1px solid var(--border);
         border-radius: var(--radius-4);
         padding: 32px;
       }
-      .err-illo img { width: 100%; height: auto; }
+      .err-illo img {
+        width: 100%;
+        height: auto;
+      }
       .correlation {
         margin-top: 24px;
         padding: 12px 14px;
@@ -76,7 +86,10 @@
         color: var(--text-muted);
         border-left: 3px solid var(--signal);
       }
-      .correlation strong { color: var(--text); font-weight: 500; }
+      .correlation strong {
+        color: var(--text);
+        font-weight: 500;
+      }
       .correlation code {
         font-family: var(--font-mono);
         color: var(--signal);
@@ -84,8 +97,14 @@
         user-select: all;
       }
       @media (max-width: 720px) {
-        .err { grid-template-columns: 1fr; }
-        .err-illo { order: -1; max-width: 320px; margin: 0 auto; }
+        .err {
+          grid-template-columns: 1fr;
+        }
+        .err-illo {
+          order: -1;
+          max-width: 320px;
+          margin: 0 auto;
+        }
       }
     </style>
   </head>
@@ -96,14 +115,11 @@
           <p class="kicker">Scoreboard fault · we own this one</p>
           <div class="code" aria-hidden="true"><em>5</em>0<em>0</em></div>
         </div>
-        <h1 class="err-title">
-          The scoreboard glitched.<br />You didn&#39;t. We&#39;re on it.
-        </h1>
+        <h1 class="err-title">The scoreboard glitched.<br />You didn&#39;t. We&#39;re on it.</h1>
         <p class="err-body">
-          Something on our side threw a fault. The coach on call is
-          already looking at the incident. Try again in a minute — if it
-          keeps happening, send us the incident id below so we can find
-          your session in the logs.
+          Something on our side threw a fault. The coach on call is already looking at the incident.
+          Try again in a minute — if it keeps happening, send us the incident id below so we can
+          find your session in the logs.
         </p>
         <div class="err-cta">
           <a class="btn btn-primary" href="javascript:location.reload()">Try again</a>

@@ -3,7 +3,8 @@
 ## Repository work completed
 
 - Repository-wide YAML documentation standard.
-- All deployable cloud manifests rewritten with inline operational/security comments.
+- All deployable cloud manifests rewritten with inline operational/security
+  comments.
 - Dev/stg/prd environment manifests.
 - NATS v3 NestJS messaging adapter.
 - Transport-neutral message envelope/RPC/event contracts.
@@ -49,5 +50,5 @@ truthfully reported as provisioned by a repository-only build:
   documentation blocks.
 
 Terraform itself was not executed in this environment because the Terraform CLI
-is not installed here. Production provisioning is therefore intentionally left as
-an explicit external gate rather than being marked complete without evidence.
+is not installed here. Production provisioning is therefore intentionally left
+as an explicit external gate rather than being marked complete without evidence.

@@ -2,9 +2,7 @@
 
 ## Identity
 
-Service:
-Owner:
-Status:
+Service: Owner: Status:
 
 ## Purpose
 

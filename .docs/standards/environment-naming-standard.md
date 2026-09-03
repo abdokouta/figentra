@@ -28,5 +28,6 @@ before execution.
 
 - Never create a fourth environment without an ADR.
 - Never mix `prd`, `prod`, and `production` as independent identifiers.
-- Terraform canonical directories are `development`, `staging`, and `production`.
+- Terraform canonical directories are `development`, `staging`, and
+  `production`.
 - `dev`, `stg`, and `prd` are aliases only.

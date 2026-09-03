@@ -11,6 +11,7 @@ Public APIs use:
 ## Requests
 
 Include:
+
 - request ID
 - correlation ID where needed
 - idempotency key for non-idempotent retriable commands

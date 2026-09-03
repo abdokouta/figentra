@@ -1,16 +1,16 @@
 # ADR-0082 — Gateway Runtime: NestJS + Fastify
 
 ## Status
+
 Accepted — supersedes the Gateway runtime decision in ADR-0029.
 
 ## Context
 
 Figentra has standardized its substantial backend services on NestJS, Fastify,
-Pino, Nest Observe, shared health, OpenAPI, authentication, authorization,
-NATS, and the shared `@figentra/*` platform packages. Keeping the public API
-Gateway as a separate Hono Worker created a second application-server model for
-a component that owns substantial transport, security, upstream, and policy
-logic.
+Pino, Nest Observe, shared health, OpenAPI, authentication, authorization, NATS,
+and the shared `@figentra/*` platform packages. Keeping the public API Gateway
+as a separate Hono Worker created a second application-server model for a
+component that owns substantial transport, security, upstream, and policy logic.
 
 ## Decision
 

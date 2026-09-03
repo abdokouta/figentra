@@ -49,9 +49,9 @@ Every Hono Worker MUST:
 5. Never log bearer tokens, cookies, secrets, or credentials.
 6. Keep telemetry processing outside the Worker request path where possible.
 
-`hono-pino` is used as the Pino middleware. It has partial edge-runtime
-support; advanced Node-only Pino transports are explicitly prohibited in
-Cloudflare Workers.
+`hono-pino` is used as the Pino middleware. It has partial edge-runtime support;
+advanced Node-only Pino transports are explicitly prohibited in Cloudflare
+Workers.
 
 ### Web and native applications
 
@@ -75,8 +75,8 @@ remain available even when technical observability is degraded.
 
 ## No telemetry microservice
 
-Figentra MUST NOT introduce a generic telemetry forwarding microservice.
-Nest Observe and the runtime logging pipelines already provide the technical
+Figentra MUST NOT introduce a generic telemetry forwarding microservice. Nest
+Observe and the runtime logging pipelines already provide the technical
 telemetry path.
 
 The Audit Service remains a full NestJS domain service because it owns durable
@@ -85,5 +85,5 @@ semantics.
 
 ## Security
 
-Secrets are runtime-only. Observe credentials are supplied through the
-secret manager/runtime environment and never stored in `cloud.yaml` or source.
+Secrets are runtime-only. Observe credentials are supplied through the secret
+manager/runtime environment and never stored in `cloud.yaml` or source.

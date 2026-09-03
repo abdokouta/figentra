@@ -1,9 +1,10 @@
 # 04 — IAM & Authorization
 
-**Status:** Baseline
-**Owner:** IAM service
-**Runtime:** Cloudflare Container + NestJS · **Store:** Supabase PostgreSQL
-**Related:** [02 Identity & actors](02-identity-and-actors.md), [05 Monetization](05-monetization-and-billing.md), [17 Security](17-security-and-compliance.md)
+**Status:** Baseline **Owner:** IAM service **Runtime:** Cloudflare Container +
+NestJS · **Store:** Supabase PostgreSQL **Related:**
+[02 Identity & actors](02-identity-and-actors.md),
+[05 Monetization](05-monetization-and-billing.md),
+[17 Security](17-security-and-compliance.md)
 
 ---
 
@@ -13,10 +14,10 @@ IAM answers exactly one question:
 
 > **Is this actor allowed to perform this action on this resource?**
 
-It does **not** answer "who is the actor?" (Supabase Auth, [02](02-identity-and-actors.md))
-or "did the tenant purchase this capability?" (Monetization,
-[05](05-monetization-and-billing.md)). These are separate checks and both may be
-required on a single request.
+It does **not** answer "who is the actor?" (Supabase Auth,
+[02](02-identity-and-actors.md)) or "did the tenant purchase this capability?"
+(Monetization, [05](05-monetization-and-billing.md)). These are separate checks
+and both may be required on a single request.
 
 ---
 
@@ -44,12 +45,12 @@ required on a single request.
 
 ## 3. Permission vs Entitlement (mandatory distinction)
 
-| | IAM Permission | Entitlement |
-| --- | -------------- | ----------- |
+|          | IAM Permission                              | Entitlement                                           |
+| -------- | ------------------------------------------- | ----------------------------------------------------- |
 | Question | Is the **actor** allowed to do this action? | Has the **tenant** purchased/enabled this capability? |
-| Scope | actor + tenant + application + resource | tenant + application |
-| Example | `crm.customer.delete` | `crm.ai = true`, `crm.max_users = 500` |
-| Owner | IAM | Monetization |
+| Scope    | actor + tenant + application + resource     | tenant + application                                  |
+| Example  | `crm.customer.delete`                       | `crm.ai = true`, `crm.max_users = 500`                |
+| Owner    | IAM                                         | Monetization                                          |
 
 ```text
 Request
@@ -296,27 +297,27 @@ Authorization is on the hot path. To avoid an IAM round-trip per request:
 `access.granted`, `access.revoked`.
 
 **Consumed:** `tenant.created` (seed default roles/grants for the tenant),
-`application.enabled` (grant default application roles),
-`subscription.updated` / `entitlement.changed` (invalidate access caches).
+`application.enabled` (grant default application roles), `subscription.updated`
+/ `entitlement.changed` (invalidate access caches).
 
 ---
 
 ## 11. Non-goals / anti-patterns
 
-| Anti-pattern                                                     | Correct                                                        |
-| ---------------------------------------------------------------- | ------------------------------------------------------------- |
-| Merging permission and entitlement checks                        | Two independent checks (IAM + Monetization).                  |
-| Hard-coding subscription plans in application authorization      | Applications ask IAM for permissions + Monetization for entitlements. |
-| Storing all permissions in the Supabase Auth JWT                         | Fetch effective access from IAM (cached).                     |
-| Granting `*` / `admin` to a service                              | Least privilege; explicit scopes.                             |
-| Application writing IAM tables directly                          | Call the IAM API / emit events.                               |
-| A second authorization store inside the SDK                      | The SDK is a client; IAM is authoritative.                    |
+| Anti-pattern                                                | Correct                                                               |
+| ----------------------------------------------------------- | --------------------------------------------------------------------- |
+| Merging permission and entitlement checks                   | Two independent checks (IAM + Monetization).                          |
+| Hard-coding subscription plans in application authorization | Applications ask IAM for permissions + Monetization for entitlements. |
+| Storing all permissions in the Supabase Auth JWT            | Fetch effective access from IAM (cached).                             |
+| Granting `*` / `admin` to a service                         | Least privilege; explicit scopes.                                     |
+| Application writing IAM tables directly                     | Call the IAM API / emit events.                                       |
+| A second authorization store inside the SDK                 | The SDK is a client; IAM is authoritative.                            |
 
 ---
 
 ## 12. Open questions
 
-- Confirm whether tenant-custom roles ship in v1 or are deferred to v1.1 (affects
-  the `roles.tenant_id` + custom-role entitlement path).
+- Confirm whether tenant-custom roles ship in v1 or are deferred to v1.1
+  (affects the `roles.tenant_id` + custom-role entitlement path).
 - Confirm the initial permission catalog per application (owned by each
   application's manifest, aggregated by IAM).

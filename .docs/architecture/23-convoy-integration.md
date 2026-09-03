@@ -4,7 +4,8 @@
 
 ## Purpose
 
-Provide reliable inbound/outbound webhook infrastructure without implementing a custom delivery platform.
+Provide reliable inbound/outbound webhook infrastructure without implementing a
+custom delivery platform.
 
 ## Logical boundary
 
@@ -20,7 +21,8 @@ Figentra Webhook Contract
 
 ## Inbound
 
-Convoy receives provider webhooks and forwards normalized/validated events into Figentra's event boundary.
+Convoy receives provider webhooks and forwards normalized/validated events into
+Figentra's event boundary.
 
 Provider-specific verification must happen at the provider boundary.
 
@@ -58,6 +60,7 @@ Required:
 ## Ownership
 
 Figentra:
+
 - event schema
 - webhook schema
 - tenant
@@ -66,6 +69,7 @@ Figentra:
 - API/versioning
 
 Convoy:
+
 - delivery state
 - transport
 - retries

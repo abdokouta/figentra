@@ -2,12 +2,12 @@
 
 ## Runtime matrix
 
-| Runtime | Logging | Technical telemetry | Container |
-| --- | --- | --- | --- |
-| NestJS | `nestjs-pino` / Pino | NestJS Observe | Nest DI |
-| Cloudflare Worker | Hono structured logger + Pino | Worker runtime telemetry | Hono |
-| Vite | `@stackra/logger` | application telemetry adapter | `@stackra/container` |
-| Expo/native | `@stackra/logger` | application telemetry adapter | `@stackra/container` |
+| Runtime           | Logging                       | Technical telemetry           | Container            |
+| ----------------- | ----------------------------- | ----------------------------- | -------------------- |
+| NestJS            | `nestjs-pino` / Pino          | NestJS Observe                | Nest DI              |
+| Cloudflare Worker | Hono structured logger + Pino | Worker runtime telemetry      | Hono                 |
+| Vite              | `@stackra/logger`             | application telemetry adapter | `@stackra/container` |
+| Expo/native       | `@stackra/logger`             | application telemetry adapter | `@stackra/container` |
 
 ## Rules
 

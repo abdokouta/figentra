@@ -19,6 +19,7 @@ Internal HTTP
 Refine is removed from the platform architecture.
 
 The internal query package already provides:
+
 - useQuery
 - useMutation
 - useOne
@@ -34,6 +35,7 @@ Avoid overlapping data-layer abstractions.
 No server-driven UI.
 
 Backend provides:
+
 - data
 - permissions
 - capabilities
@@ -47,7 +49,8 @@ Frontend owns rendering.
 
 React Router 7 owns routing.
 
-Registry can provide resource metadata, but route generation must not eliminate explicit custom routes.
+Registry can provide resource metadata, but route generation must not eliminate
+explicit custom routes.
 
 Example:
 
@@ -84,6 +87,7 @@ Backend returns theme/configuration data, not JSX/UI schemas.
 Each application owns its portal/shell while sharing platform packages.
 
 Shared:
+
 - auth
 - query
 - HTTP
@@ -93,6 +97,7 @@ Shared:
 - navigation primitives
 
 Application-owned:
+
 - pages
 - domain components
 - business workflows

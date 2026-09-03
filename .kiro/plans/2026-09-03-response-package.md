@@ -8,13 +8,12 @@ reviewed_at: null
 
 # `@stackra/response` — HTTP response envelope + interceptors
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
-[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md)
-**Reference:** `.ref/packages/response/`
-**Depends on:** `@stackra/contracts`, `@stackra/exceptions`,
-`@stackra/pagination`, `@stackra/support`
-**Design effort:** 8 days across 5 phases
+**Status:** Planned **Anchor ADRs:**
+[ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
+[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md) **Reference:**
+`.ref/packages/response/` **Depends on:** `@stackra/contracts`,
+`@stackra/exceptions`, `@stackra/pagination`, `@stackra/support` **Design
+effort:** 8 days across 5 phases
 
 ## Purpose
 
@@ -76,8 +75,8 @@ shapes every controller return value into it. Also provides a
 - Content negotiation (`Accept: application/json` vs `text/html`) — Nest +
   Fastify's default negotiator handles it; this package assumes JSON.
 - Compression — `@stackra/http` client-side + gateway-level handles it.
-- Streaming responses — the envelope doesn't wrap streams; consumers return
-  raw `ReadableStream` for SSE / file downloads.
+- Streaming responses — the envelope doesn't wrap streams; consumers return raw
+  `ReadableStream` for SSE / file downloads.
 
 ## Public API — locked
 
@@ -106,9 +105,8 @@ export function errorResponse(err: HttpException | Error, opts?: {
 
 ### `ResponseInterceptor` (Nest)
 
-Wraps every controller return value into `successResponse(...)` unless the
-value is ALREADY an envelope. Registered globally via
-`APP_INTERCEPTOR`.
+Wraps every controller return value into `successResponse(...)` unless the value
+is ALREADY an envelope. Registered globally via `APP_INTERCEPTOR`.
 
 ```typescript
 @Module({
@@ -242,8 +240,8 @@ Every envelope carries `meta.request_id`. Sources:
 
 - [ ] Nest integration test — controller returns → envelope.
 - [ ] Worker integration test — handler returns → correct Response.
-- [ ] Envelope shape verified across the workspace (contracts +
-      approval + api services all consume identically).
+- [ ] Envelope shape verified across the workspace (contracts + approval + api
+      services all consume identically).
 
 ## Exit criteria
 
@@ -259,5 +257,5 @@ Every envelope carries `meta.request_id`. Sources:
 - `@stackra/exceptions` — the error class hierarchy the filter reads.
 - `@stackra/pagination` — the paginator shapes the envelope embeds.
 - `@stackra/observability` — trace ID propagation.
-- `.kiro/steering/*` — envelope shape is the workspace CONTRACT; every
-  service must return it.
+- `.kiro/steering/*` — envelope shape is the workspace CONTRACT; every service
+  must return it.

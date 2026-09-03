@@ -1,6 +1,8 @@
 # Figentra Platform — Kiro Specification Index
 
-Read `README.md` first. It is the complete architecture/engineering contract. Then use `00-implementation-checklist.md` and the component directories for implementation.
+Read `README.md` first. It is the complete architecture/engineering contract.
+Then use `00-implementation-checklist.md` and the component directories for
+implementation.
 
 ## Directories
 
@@ -12,4 +14,6 @@ Read `README.md` first. It is the complete architecture/engineering contract. Th
 
 ## Rule
 
-No implementation task is complete if it satisfies code compilation but violates its component spec. Any required architectural deviation becomes an ADR before implementation.
+No implementation task is complete if it satisfies code compilation but violates
+its component spec. Any required architectural deviation becomes an ADR before
+implementation.

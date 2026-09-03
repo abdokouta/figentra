@@ -8,11 +8,11 @@ reviewed_at: null
 
 # @stackra/file-system — architecture plan
 
-**Status:** Planned (NEW package — no `.ref/` reference)
-**Anchor ADRs:** [ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
+**Status:** Planned (NEW package — no `.ref/` reference) **Anchor ADRs:**
+[ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
 [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
-[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md)
-**Depends on:** `@stackra/container`, `@stackra/contracts`, `@stackra/support`,
+[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md) **Depends
+on:** `@stackra/container`, `@stackra/contracts`, `@stackra/support`,
 `@stackra/logger`
 
 ## Purpose
@@ -34,8 +34,8 @@ Enterprise requirements day one:
 - **Glob** — pattern-matching directory traversal.
 - **Streaming** — read/write large files without loading into memory.
 - **Atomic writes** — write-to-tmp + rename for crash-safe writes.
-- **Path safety** — reject `../` traversal outside the configured root
-  (chroot semantics).
+- **Path safety** — reject `../` traversal outside the configured root (chroot
+  semantics).
 - **Compression** — read/write gzip/zstd via helper streams.
 - **Hashing** — content-hash + directory-hash helpers.
 - **NestJS `@InjectFileSystem()` decorator**.
@@ -48,8 +48,8 @@ Enterprise requirements day one:
   in-process, designed for local persistence + config + logs + tmp files.
   chokidar watches, glob patterns.
 
-Different mental models; different APIs; different runtime constraints.
-Merging would produce a lowest-common-denominator API that satisfies neither.
+Different mental models; different APIs; different runtime constraints. Merging
+would produce a lowest-common-denominator API that satisfies neither.
 
 ## Non-goals
 
@@ -60,8 +60,8 @@ Merging would produce a lowest-common-denominator API that satisfies neither.
 
 ## Manager pattern — Manager (Shape A per ADR-0090)
 
-`FileSystemManager extends Manager<IFileSystem>` — Shape A: usually ONE
-active filesystem per app (`node-fs` for services; `memory` for tests). Named
+`FileSystemManager extends Manager<IFileSystem>` — Shape A: usually ONE active
+filesystem per app (`node-fs` for services; `memory` for tests). Named
 filesystems are a rare use-case (a scratch FS + a config FS).
 
 ```typescript
@@ -123,19 +123,19 @@ packages/file-system/
 
 ## Contracts split
 
-| Symbol                    | Kind      |
-| ------------------------- | --------- |
-| `IFileSystem`             | interface |
-| `IFileSystemManager`      | interface |
-| `IFileStat`               | interface |
-| `IFileWatcher`            | interface |
-| `IGlobOptions`            | interface |
-| `FileType` enum           | enum      |
-| `FILE_SYSTEM_MANAGER`     | token     |
-| `FILE_SYSTEM_DEFAULT`     | token     |
-| `FileNotFoundError`       | class     |
-| `PermissionDeniedError`   | class     |
-| `PathTraversalError`     | class     |
+| Symbol                  | Kind      |
+| ----------------------- | --------- |
+| `IFileSystem`           | interface |
+| `IFileSystemManager`    | interface |
+| `IFileStat`             | interface |
+| `IFileWatcher`          | interface |
+| `IGlobOptions`          | interface |
+| `FileType` enum         | enum      |
+| `FILE_SYSTEM_MANAGER`   | token     |
+| `FILE_SYSTEM_DEFAULT`   | token     |
+| `FileNotFoundError`     | class     |
+| `PermissionDeniedError` | class     |
+| `PathTraversalError`    | class     |
 
 ## Core API (locked)
 
@@ -148,8 +148,16 @@ interface IFileSystem {
   readLines(path: string): AsyncIterable<string>;
 
   // Write
-  writeFile(path: string, content: string | Buffer | ReadableStream, options?: IWriteOptions): Promise<void>;
-  writeJson(path: string, data: unknown, options?: IWriteOptions): Promise<void>;
+  writeFile(
+    path: string,
+    content: string | Buffer | ReadableStream,
+    options?: IWriteOptions,
+  ): Promise<void>;
+  writeJson(
+    path: string,
+    data: unknown,
+    options?: IWriteOptions,
+  ): Promise<void>;
   writeAtomic(path: string, content: string | Buffer): Promise<void>;
   writeStream(path: string): Promise<WritableStream>;
   appendFile(path: string, content: string | Buffer): Promise<void>;
@@ -157,7 +165,11 @@ interface IFileSystem {
   // Delete + move
   delete(path: string): Promise<void>;
   rename(oldPath: string, newPath: string): Promise<void>;
-  copy(sourcePath: string, destPath: string, options?: ICopyOptions): Promise<void>;
+  copy(
+    sourcePath: string,
+    destPath: string,
+    options?: ICopyOptions,
+  ): Promise<void>;
 
   // Introspect
   exists(path: string): Promise<boolean>;
@@ -185,13 +197,13 @@ interface IFileSystem {
 
   // Root introspection
   getRoot(): string;
-  resolve(path: string): string;  // resolves relative to root; rejects `../` outside root
+  resolve(path: string): string; // resolves relative to root; rejects `../` outside root
 }
 
 interface IFileStat {
   path: string;
   size: number;
-  type: FileType;                 // "file" | "directory" | "symlink"
+  type: FileType; // "file" | "directory" | "symlink"
   createdAt: Date;
   modifiedAt: Date;
   accessedAt: Date;
@@ -201,27 +213,26 @@ interface IFileStat {
 
 ## Drivers
 
-| Driver           | Home                                            | Runtime         | Deps                          |
-| ---------------- | ----------------------------------------------- | --------------- | ----------------------------- |
-| `node-fs`        | `node/node-fs.driver.ts`                        | Node            | `node:fs`, `chokidar`, `fast-glob` |
-| `memory`         | `core/drivers/memory-file-system.driver.ts`     | Every runtime   | None                          |
-| `r2-adapter`     | `worker/drivers/r2-adapter.driver.ts`           | Worker          | `@stackra/storage`            |
-| `kv-adapter`     | `worker/drivers/kv-adapter.driver.ts`           | Worker          | env.KV binding                |
+| Driver       | Home                                        | Runtime       | Deps                               |
+| ------------ | ------------------------------------------- | ------------- | ---------------------------------- |
+| `node-fs`    | `node/node-fs.driver.ts`                    | Node          | `node:fs`, `chokidar`, `fast-glob` |
+| `memory`     | `core/drivers/memory-file-system.driver.ts` | Every runtime | None                               |
+| `r2-adapter` | `worker/drivers/r2-adapter.driver.ts`       | Worker        | `@stackra/storage`                 |
+| `kv-adapter` | `worker/drivers/kv-adapter.driver.ts`       | Worker        | env.KV binding                     |
 
 ## Node driver — chroot
 
 Every `node-fs` filesystem is confined to its configured `root`:
 
 ```typescript
-const fs = manager.driver("node");  // root = "./data"
+const fs = manager.driver("node"); // root = "./data"
 
-await fs.readFile("config.json");           // reads ./data/config.json — OK
-await fs.readFile("../secrets/key.pem");    // throws PathTraversalError
-await fs.readFile("/etc/passwd");           // throws PathTraversalError
+await fs.readFile("config.json"); // reads ./data/config.json — OK
+await fs.readFile("../secrets/key.pem"); // throws PathTraversalError
+await fs.readFile("/etc/passwd"); // throws PathTraversalError
 ```
 
-`PathResolver.resolve()` normalises the path + rejects any that escape the
-root.
+`PathResolver.resolve()` normalises the path + rejects any that escape the root.
 
 ## Watch API
 
@@ -229,7 +240,7 @@ root.
 const watcher = fs.watch("./src", { recursive: true, glob: "*.ts" });
 
 watcher.onChange(({ event, path }) => {
-  console.log(event, path);   // "add" | "change" | "unlink"
+  console.log(event, path); // "add" | "change" | "unlink"
 });
 
 // ... later
@@ -258,24 +269,22 @@ Under the hood:
 
 Workers have no local FS. Two adapters bridge:
 
-- `r2-adapter` — treats an R2 bucket as a filesystem. Paths become object
-  keys. Directories are `/`-prefix-searches. `stat` maps to `head`.
-- `kv-adapter` — treats env.KV as a filesystem. Value size ≤ 25MB (KV
-  limit). Directories are prefix lists.
+- `r2-adapter` — treats an R2 bucket as a filesystem. Paths become object keys.
+  Directories are `/`-prefix-searches. `stat` maps to `head`.
+- `kv-adapter` — treats env.KV as a filesystem. Value size ≤ 25MB (KV limit).
+  Directories are prefix lists.
 
 Both are "filesystem-shaped" — familiar API — but slower than real R2/KV
 operations. Recommended: consumers use `@stackra/storage` directly for hot
-paths; use `@stackra/file-system/worker` only when the shape helps
-(config-file reads, migration playback).
+paths; use `@stackra/file-system/worker` only when the shape helps (config-file
+reads, migration playback).
 
 ## NestJS decorator
 
 ```typescript
 @Injectable()
 export class ConfigLoader {
-  public constructor(
-    @InjectFileSystem() private readonly fs: IFileSystem,
-  ) {}
+  public constructor(@InjectFileSystem() private readonly fs: IFileSystem) {}
 
   public async load(): Promise<IConfig> {
     return this.fs.readJson("config.yaml");
@@ -304,15 +313,15 @@ export class ConfigLoader {
     "@nestjs/common": "catalog:nestjs",
     "@nestjs/core": "catalog:nestjs",
     "chokidar": "^4.0.0",
-    "fast-glob": "^3.3.0"
+    "fast-glob": "^3.3.0",
   },
   "peerDependenciesMeta": {
     "@stackra/storage": { "optional": true },
     "@nestjs/common": { "optional": true },
     "@nestjs/core": { "optional": true },
     "chokidar": { "optional": true },
-    "fast-glob": { "optional": true }
-  }
+    "fast-glob": { "optional": true },
+  },
 }
 ```
 

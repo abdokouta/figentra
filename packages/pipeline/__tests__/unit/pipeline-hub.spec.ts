@@ -103,8 +103,7 @@ describe("PipelineHub", () => {
       // string pipes resolved from the container.
       const app = new MockApplication();
       const pipe = {
-        handle: (value: number, next: (v: number) => unknown) =>
-          next(value + 100),
+        handle: (value: number, next: (v: number) => unknown) => next(value + 100),
       };
       app.provide("bonus", pipe);
 
@@ -141,9 +140,7 @@ describe("PipelineHub", () => {
   describe("definition invocation contract", () => {
     it("passes (pipeline, passable) to the registered definition", () => {
       const hub = new PipelineHub();
-      const definition = vi.fn(
-        (_pipeline: unknown, _passable: unknown) => "result",
-      );
+      const definition = vi.fn((_pipeline: unknown, _passable: unknown) => "result");
       hub.pipeline("spy", definition);
 
       hub.pipe({ x: 1 }, "spy");

@@ -101,9 +101,7 @@ export function InvoiceEmail(props: InvoiceEmailProps): React.ReactElement {
         : { color: theme.ink, bg: "#fff2cc", text: "Due" };
 
   return (
-    <EmailShell
-      preview={`${p.currency} ${p.totalDue} due on ${p.dueDate} · one-click pay`}
-    >
+    <EmailShell preview={`${p.currency} ${p.totalDue} due on ${p.dueDate} · one-click pay`}>
       <Row>
         <Column>
           <Kicker>Invoice · {p.invoiceDate}</Kicker>
@@ -129,7 +127,8 @@ export function InvoiceEmail(props: InvoiceEmailProps): React.ReactElement {
       </Row>
 
       <H1>
-        {p.athleteName}<br />
+        {p.athleteName}
+        <br />
         <span style={{ color: theme.textMuted, fontSize: 20, fontWeight: 400 }}>
           September at {p.academyName}
         </span>
@@ -137,15 +136,11 @@ export function InvoiceEmail(props: InvoiceEmailProps): React.ReactElement {
 
       <P>
         Hi {p.parentName} — here&#39;s the statement for {p.athleteName}
-        &#39;s September training. Every line matches a session on your
-        parent dashboard. Pay online with one tap or reply with any question
-        before {p.dueDate}.
+        &#39;s September training. Every line matches a session on your parent dashboard. Pay online
+        with one tap or reply with any question before {p.dueDate}.
       </P>
 
-      <CTA
-        href={p.payUrl}
-        label={`Pay ${p.currency} ${p.totalDue} online →`}
-      />
+      <CTA href={p.payUrl} label={`Pay ${p.currency} ${p.totalDue} online →`} />
 
       <Text
         style={{
@@ -401,7 +396,7 @@ export function InvoiceEmail(props: InvoiceEmailProps): React.ReactElement {
           margin: "0 0 12px",
         }}
       >
-        Prefer a paper trail? Grab the PDF: {" "}
+        Prefer a paper trail? Grab the PDF:{" "}
         <a href={p.invoicePdfUrl} style={{ color: theme.signal }}>
           {p.invoiceNumber}.pdf
         </a>
@@ -409,9 +404,8 @@ export function InvoiceEmail(props: InvoiceEmailProps): React.ReactElement {
       </Text>
 
       <Muted>
-        Payments are processed by Stripe or Paddle depending on your
-        country. Neither Academorix nor {p.academyName} touches your card
-        number. PCI-DSS scope stays with the processor.
+        Payments are processed by Stripe or Paddle depending on your country. Neither Academorix nor{" "}
+        {p.academyName} touches your card number. PCI-DSS scope stays with the processor.
       </Muted>
     </EmailShell>
   );

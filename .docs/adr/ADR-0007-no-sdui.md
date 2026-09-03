@@ -8,7 +8,8 @@ Do not implement SDUI in V1.
 
 ## Rationale
 
-The applications need explicit, maintainable UI code. Previous attempts at SDUI created unnecessary complexity.
+The applications need explicit, maintainable UI code. Previous attempts at SDUI
+created unnecessary complexity.
 
 ## Consequence
 

@@ -1,4 +1,4 @@
-import 'reflect-metadata';
+import "reflect-metadata";
 
 /**
  * Defines metadata by associating a key-value pair with a target object or its property.
@@ -66,7 +66,7 @@ export function defineMetadata(
   metadataKey: any,
   metadataValue: any,
   target: object,
-  propertyKey?: string | symbol
+  propertyKey?: string | symbol,
 ): void {
   // Use Reflect.defineMetadata to store the key-value pair in the target's metadata store
   // The propertyKey parameter is optional - if provided, metadata is associated with that specific property

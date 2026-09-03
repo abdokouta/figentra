@@ -8,35 +8,34 @@ reviewed_at: null
 
 # `@stackra/link` — signed URLs + deep-link generation
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
-[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md)
-**Reference:** `.ref/packages/link/` (`@stackra/nestjs-link` v0.1.0)
-**Depends on:** `@stackra/container`, `@stackra/contracts`, `@stackra/support`
-(Uri, Str), `@stackra/encryption` (optional, for signed URLs)
-**Design effort:** 10 days across 6 phases
+**Status:** Planned **Anchor ADRs:**
+[ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
+[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md) **Reference:**
+`.ref/packages/link/` (`@stackra/nestjs-link` v0.1.0) **Depends on:**
+`@stackra/container`, `@stackra/contracts`, `@stackra/support` (Uri, Str),
+`@stackra/encryption` (optional, for signed URLs) **Design effort:** 10 days
+across 6 phases
 
 ## Purpose
 
-URL generation for the workspace — named routes, signed URLs (HMAC),
-temporary URLs (expiring), + deep-link handlers (mobile). One canonical way to
-build every URL the app emits, matching Laravel's `route()` /
-`URL::signedRoute()` shape.
+URL generation for the workspace — named routes, signed URLs (HMAC), temporary
+URLs (expiring), + deep-link handlers (mobile). One canonical way to build every
+URL the app emits, matching Laravel's `route()` / `URL::signedRoute()` shape.
 
 Solves the "which base URL do I concat to?" problem consistently across:
 
 - Web (browser) — `useLink()` hook returns the right URL for the SPA / API.
 - Nest server — controller emits URLs that the frontend consumes.
-- Emails (via `@stackra/mail`) — signed URLs for password reset / magic
-  links / unsubscribe.
+- Emails (via `@stackra/mail`) — signed URLs for password reset / magic links /
+  unsubscribe.
 - Deep links (RN mobile) — `stackra://user/42` → app resolves.
 
 ## Non-goals
 
 - Route MATCHING — that's the framework's job (Nest / React Router / Expo
   Router). This package GENERATES URLs; matching is upstream.
-- OAuth / IdP redirect flows — separate concern; consider `@stackra/auth`
-  future package.
+- OAuth / IdP redirect flows — separate concern; consider `@stackra/auth` future
+  package.
 - URL shortening — separate concern.
 
 ## Public API — locked
@@ -46,34 +45,50 @@ Solves the "which base URL do I concat to?" problem consistently across:
 ```typescript
 class LinkService {
   // Named-route generation
-  to(routeName: string, params?: Record<string, unknown>, opts?: {
-    absolute?: boolean;      // default false — returns "/api/users/42"
-    baseUrl?: string;        // override the default base
-    query?: Record<string, string>;
-  }): string;
+  to(
+    routeName: string,
+    params?: Record<string, unknown>,
+    opts?: {
+      absolute?: boolean; // default false — returns "/api/users/42"
+      baseUrl?: string; // override the default base
+      query?: Record<string, string>;
+    },
+  ): string;
 
   // Signed URLs — HMAC-SHA256 of path + params + expiry, appended as `?sig=...`
-  signed(routeName: string, params: Record<string, unknown>, opts: {
-    expiresIn?: number;       // seconds; default undefined = no expiry
-    scope?: string;           // context binding — sig invalid outside scope
-    absolute?: boolean;
-  }): string;
+  signed(
+    routeName: string,
+    params: Record<string, unknown>,
+    opts: {
+      expiresIn?: number; // seconds; default undefined = no expiry
+      scope?: string; // context binding — sig invalid outside scope
+      absolute?: boolean;
+    },
+  ): string;
 
   // Temporary URLs — signed w/ mandatory expiry
-  temporary(routeName: string, params: Record<string, unknown>, opts: {
-    expiresIn: number;        // required — seconds until expiry
-    scope?: string;
-    absolute?: boolean;
-  }): string;
+  temporary(
+    routeName: string,
+    params: Record<string, unknown>,
+    opts: {
+      expiresIn: number; // required — seconds until expiry
+      scope?: string;
+      absolute?: boolean;
+    },
+  ): string;
 
   // Verification
   hasValidSignature(url: string, opts?: { scope?: string }): boolean;
 
   // Registration — services author route templates via forFeature
-  registerRoute(name: string, template: string, opts?: {
-    middleware?: string[];    // hint for docs / discovery
-    scope?: string;           // default scope for signed variants
-  }): void;
+  registerRoute(
+    name: string,
+    template: string,
+    opts?: {
+      middleware?: string[]; // hint for docs / discovery
+      scope?: string; // default scope for signed variants
+    },
+  ): void;
 }
 ```
 
@@ -99,7 +114,11 @@ Every registered route is discoverable via `LinkRegistry.all()`.
 ```typescript
 const link = useLink();
 const url = link.to("users.show", { id: 42 });
-const signedUrl = link.signed("unsubscribe", { userId, list }, { expiresIn: 86_400 });
+const signedUrl = link.signed(
+  "unsubscribe",
+  { userId, list },
+  { expiresIn: 86_400 },
+);
 ```
 
 ### `useDeepLink()` RN hook
@@ -112,8 +131,8 @@ register("user.profile", "/user/:id", ({ params }) => {
 });
 ```
 
-Compatible w/ Expo Router's `<Link>` component; extracts the route from the
-same registry the web uses.
+Compatible w/ Expo Router's `<Link>` component; extracts the route from the same
+registry the web uses.
 
 ### `@stackra/link/nest` — controller decorator
 
@@ -142,8 +161,8 @@ sig = HMAC_SHA256(
 - `expiresAt` embedded in query string as `?expires=<epoch>`.
 - Verifier reads `expires` + reconstructs message + timing-safe compares
   signatures.
-- Optional `scope` binds usage — a signed URL scoped `email` won't verify
-  when hit from an in-app context (extra defense-in-depth).
+- Optional `scope` binds usage — a signed URL scoped `email` won't verify when
+  hit from an in-app context (extra defense-in-depth).
 
 ## Subpath layout
 
@@ -222,8 +241,8 @@ packages/link/
 
 ### Phase 3 — Signing (2 days)
 
-- [ ] `SignerService` — HMAC-SHA256 (via `@stackra/encryption` OR
-      WebCrypto direct).
+- [ ] `SignerService` — HMAC-SHA256 (via `@stackra/encryption` OR WebCrypto
+      direct).
 - [ ] `signed()` + `temporary()` variants.
 - [ ] `hasValidSignature()` w/ timing-safe compare + scope check.
 - [ ] Nest `SignatureGuard`.
@@ -242,8 +261,8 @@ packages/link/
 ### Phase 6 — Testing + docs (2 days)
 
 - [ ] Unit tests (15+).
-- [ ] Signed-URL security tests (invalid sig, expired, wrong scope,
-      timing attack).
+- [ ] Signed-URL security tests (invalid sig, expired, wrong scope, timing
+      attack).
 - [ ] README documents every generator + a signed-URL threat model.
 
 ## Exit criteria

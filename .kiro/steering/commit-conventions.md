@@ -64,21 +64,21 @@ release: 🎉 bump 11 v1+ packages alpha → beta
 One emoji per Conventional Commits type. The emoji is a visual anchor, not the
 primary signal (the type prefix is).
 
-| Type       | Emoji | Use case                                                 |
-| ---------- | ----- | -------------------------------------------------------- |
-| `feat`     | ✨    | New feature or capability                                |
-| `fix`      | 🐛    | Bug fix                                                  |
-| `docs`     | 📝    | Documentation-only changes                               |
-| `refactor` | ♻️    | Restructuring without changing behavior                  |
-| `perf`     | ⚡    | Performance improvement                                  |
-| `test`     | ✅    | Adding, fixing, or restructuring tests                   |
-| `build`    | 🔨    | Build system / bundler / tsup / tsconfig                 |
-| `ci`       | 👷    | CI/CD pipeline changes                                   |
-| `chore`    | 🔧    | Tooling, config, non-source housekeeping                 |
-| `revert`   | ⏪    | Revert of an earlier commit                              |
-| `style`    | 🎨    | Formatting, whitespace, lint-only (no code change)       |
+| Type       | Emoji | Use case                                                  |
+| ---------- | ----- | --------------------------------------------------------- |
+| `feat`     | ✨    | New feature or capability                                 |
+| `fix`      | 🐛    | Bug fix                                                   |
+| `docs`     | 📝    | Documentation-only changes                                |
+| `refactor` | ♻️    | Restructuring without changing behavior                   |
+| `perf`     | ⚡    | Performance improvement                                   |
+| `test`     | ✅    | Adding, fixing, or restructuring tests                    |
+| `build`    | 🔨    | Build system / bundler / tsup / tsconfig                  |
+| `ci`       | 👷    | CI/CD pipeline changes                                    |
+| `chore`    | 🔧    | Tooling, config, non-source housekeeping                  |
+| `revert`   | ⏪    | Revert of an earlier commit                               |
+| `style`    | 🎨    | Formatting, whitespace, lint-only (no code change)        |
 | `deps`     | 📦    | Dependency updates (npm overrides, package.json versions) |
-| `release`  | 🎉    | Version bumps + changeset consumption                    |
+| `release`  | 🎉    | Version bumps + changeset consumption                     |
 
 **Two cross-cutting emoji layered on top:**
 

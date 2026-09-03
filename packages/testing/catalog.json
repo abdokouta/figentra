@@ -2,16 +2,7 @@
   "name": "@stackra/testing",
   "tier": "framework",
   "kind": "tooling",
-  "surfaces": [
-    "core",
-    "preset",
-    "matchers",
-    "setup",
-    "nest",
-    "worker",
-    "database",
-    "react"
-  ],
+  "surfaces": ["core", "preset", "matchers", "setup", "nest", "worker", "database", "react"],
   "purpose": "Centralised Vitest preset + test-authoring toolkit for the Figentra platform.",
   "capabilities": [
     "Vitest presets for Node, NestJS+Fastify, Cloudflare Workers, and React+jsdom",
@@ -54,7 +45,5 @@
   "size_gzip_kb": {},
   "maturity": "beta",
   "owning_agent": "framework-core-builder",
-  "docs": [
-    "packages/testing/README.md"
-  ]
+  "docs": ["packages/testing/README.md"]
 }

@@ -76,9 +76,7 @@ describe("@stackra/testing barrel exports", () => {
 
     it("global matchers are registered — expect().toBeUlid() is usable", () => {
       // Direct proof the setup wired the matcher on global expect.
-      expect(() =>
-        expect("01HGP2Q3W4V5X6Y7Z8A9B0C1D2").toBeUlid(),
-      ).not.toThrow();
+      expect(() => expect("01HGP2Q3W4V5X6Y7Z8A9B0C1D2").toBeUlid()).not.toThrow();
     });
   });
 });

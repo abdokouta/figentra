@@ -14,14 +14,7 @@
  */
 
 import { execFileSync } from "node:child_process";
-import {
-  existsSync,
-  mkdirSync,
-  readdirSync,
-  readFileSync,
-  statSync,
-  writeFileSync,
-} from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -142,9 +135,12 @@ function normalizeDeployable(manifest, source) {
   if (!manifest.source?.path) fail(`manifest ${manifest.slug} missing source.path`);
   if (manifest.docker?.enabled) {
     if (!manifest.container?.port) fail(`manifest ${manifest.slug} missing container.port`);
-    if (!manifest.container?.health_path) fail(`manifest ${manifest.slug} missing container.health_path`);
-    if (manifest.docker.container_port !== manifest.container?.port) fail(`manifest ${manifest.slug} docker.container_port must equal container.port`);
-    if (manifest.docker.health_path !== manifest.container?.health_path) fail(`manifest ${manifest.slug} docker.health_path must equal container.health_path`);
+    if (!manifest.container?.health_path)
+      fail(`manifest ${manifest.slug} missing container.health_path`);
+    if (manifest.docker.container_port !== manifest.container?.port)
+      fail(`manifest ${manifest.slug} docker.container_port must equal container.port`);
+    if (manifest.docker.health_path !== manifest.container?.health_path)
+      fail(`manifest ${manifest.slug} docker.health_path must equal container.health_path`);
   }
 
   return {
@@ -167,11 +163,15 @@ function collectLocal(paths, slugs, target) {
     fail("root cloud.yaml must declare at least one `paths:` source");
   }
 
-  const includePatterns = paths.filter((pattern) => typeof pattern === "string" && !pattern.startsWith("!"));
-  const excludePatterns = paths.filter((pattern) => typeof pattern === "string" && pattern.startsWith("!"))
+  const includePatterns = paths.filter(
+    (pattern) => typeof pattern === "string" && !pattern.startsWith("!"),
+  );
+  const excludePatterns = paths
+    .filter((pattern) => typeof pattern === "string" && pattern.startsWith("!"))
     .map((pattern) => pattern.slice(1));
 
-  if (includePatterns.length === 0) fail("root cloud.yaml paths must contain at least one include pattern");
+  if (includePatterns.length === 0)
+    fail("root cloud.yaml paths must contain at least one include pattern");
 
   const excluded = new Set(excludePatterns.flatMap(resolveLocalPaths));
   const selected = new Set();
@@ -214,9 +214,13 @@ function collectExternal(repos, slugs, target) {
     if (!isDirectory(checkout)) {
       const url = `${GIT_BASE}${repo.repo}.git`;
       mkdirSync(dirname(checkout), { recursive: true });
-      execFileSync("git", ["clone", "--depth", "1", ...(repo.ref ? ["--branch", repo.ref] : []), url, checkout], {
-        stdio: "inherit",
-      });
+      execFileSync(
+        "git",
+        ["clone", "--depth", "1", ...(repo.ref ? ["--branch", repo.ref] : []), url, checkout],
+        {
+          stdio: "inherit",
+        },
+      );
     }
 
     const candidates = [];
@@ -270,4 +274,6 @@ writeFileSync(
   "utf8",
 );
 
-console.log(`✔ catalog: ${deployables.length} explicitly enrolled deployables -> ${relative(REPO_ROOT, CATALOG_OUT)}`);
+console.log(
+  `✔ catalog: ${deployables.length} explicitly enrolled deployables -> ${relative(REPO_ROOT, CATALOG_OUT)}`,
+);

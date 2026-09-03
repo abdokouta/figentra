@@ -1,8 +1,9 @@
 # 22 — Unified Health, Observability, Telemetry, Logging & Operational Signals
 
 **Status:** Normative platform standard  
-**Scope:** Every Figentra NestJS service, Cloudflare/Hono Worker, Vite application,
-mobile application, shared package, background worker, and infrastructure component  
+**Scope:** Every Figentra NestJS service, Cloudflare/Hono Worker, Vite
+application, mobile application, shared package, background worker, and
+infrastructure component  
 **Owner:** Platform / SRE / Observability  
 **Related:** `09-service-communication.md`, `16-observability.md`,
 `17-security-and-compliance.md`, `18-error-model-and-api-conventions.md`,
@@ -17,8 +18,9 @@ mobile application, shared package, background worker, and infrastructure compon
 
 ## 1. Executive decision
 
-Figentra will use **one conceptual operational-signal model across all runtimes**,
-but will not force one runtime-specific implementation onto every platform.
+Figentra will use **one conceptual operational-signal model across all
+runtimes**, but will not force one runtime-specific implementation onto every
+platform.
 
 The standard is:
 
@@ -56,8 +58,8 @@ underlying SDK differs.
 ### Core decisions
 
 1. **NestJS services:** use `@nestjs/terminus` for health endpoints.
-2. **NestJS services:** use `@nestjs/observe` for Nest-native telemetry where the
-   deployed Nest version supports the SDK contract.
+2. **NestJS services:** use `@nestjs/observe` for Nest-native telemetry where
+   the deployed Nest version supports the SDK contract.
 3. **NestJS services:** use structured Pino logging through the existing
    `@figentra/observability` / Stackra logging boundary; application code must
    not scatter raw `console.log`.
@@ -69,13 +71,14 @@ underlying SDK differs.
 6. **Health is not uptime monitoring.** Health endpoints answer whether a
    workload/dependency is currently healthy. Uptime monitoring answers whether
    an externally observable endpoint is reachable from an independent monitor.
-7. **Audit is not telemetry.** Audit is a durable domain/security record owned by
-   the Audit service.
+7. **Audit is not telemetry.** Audit is a durable domain/security record owned
+   by the Audit service.
 8. **Business events are not logs.** Events are durable integration facts with
    contracts, versions, ownership, and delivery semantics.
-9. **Correlation context must survive every synchronous and asynchronous boundary.**
-10. **No signal may contain secrets, raw tokens, credentials, payment secrets, or
-    unnecessary sensitive personal data.**
+9. **Correlation context must survive every synchronous and asynchronous
+   boundary.**
+10. **No signal may contain secrets, raw tokens, credentials, payment secrets,
+    or unnecessary sensitive personal data.**
 
 ---
 
@@ -88,8 +91,7 @@ The current NestJS v11 documentation provides `MikroOrmHealthIndicator` as a
 built-in indicator and supports custom indicators through
 `HealthIndicatorService`.
 
-Reference:
-https://docs.nestjs.com/v11/recipes/terminus
+Reference: https://docs.nestjs.com/v11/recipes/terminus
 
 Every NestJS service therefore uses:
 
@@ -134,8 +136,8 @@ packages/health/
 └── LICENSE
 ```
 
-The package provides the Figentra health abstraction while delegating the
-actual HTTP health implementation to the runtime's native mechanisms.
+The package provides the Figentra health abstraction while delegating the actual
+HTTP health implementation to the runtime's native mechanisms.
 
 ---
 
@@ -262,7 +264,8 @@ Typical indicators:
 
 Provides the aggregate human/operator view.
 
-It may combine liveness/readiness information and include safe dependency details.
+It may combine liveness/readiness information and include safe dependency
+details.
 
 ---
 
@@ -362,8 +365,8 @@ Gateway
  └── configured upstream availability only where readiness requires it
 ```
 
-Do not make Gateway readiness depend on every downstream service. Otherwise
-one unhealthy service can incorrectly remove the entire Gateway from service.
+Do not make Gateway readiness depend on every downstream service. Otherwise one
+unhealthy service can incorrectly remove the entire Gateway from service.
 
 ---
 
@@ -568,7 +571,8 @@ correlation context.
 
 # 9. Async context rules
 
-A message must not lose its originating context merely because it is asynchronous.
+A message must not lose its originating context merely because it is
+asynchronous.
 
 The consumer must record:
 
@@ -604,8 +608,8 @@ https://docs.nestjs.com/observability/sdk
 
 ## Figentra rule
 
-NestJS Observe is used for **NestJS services**, not as a universal telemetry
-SDK for every runtime.
+NestJS Observe is used for **NestJS services**, not as a universal telemetry SDK
+for every runtime.
 
 A service using Observe must configure:
 
@@ -1027,8 +1031,8 @@ Cache logs must not contain secret values.
 Cache health is readiness-critical only when the service cannot function
 correctly without that cache.
 
-A normal cache outage should generally degrade performance rather than make
-the service unavailable.
+A normal cache outage should generally degrade performance rather than make the
+service unavailable.
 
 ---
 
@@ -1553,8 +1557,8 @@ OTEL export where configured
 ```
 
 Cloudflare's current documentation explicitly states that Workers tracing is
-automatically instrumented and that Workers Logs collect invocation logs,
-custom logs, errors, and uncaught exceptions.
+automatically instrumented and that Workers Logs collect invocation logs, custom
+logs, errors, and uncaught exceptions.
 
 ---
 
@@ -1584,8 +1588,8 @@ Do not alert on every individual error.
 
 # 46. SLO burn-rate model
 
-Production alerts should eventually use SLO burn-rate logic rather than
-simple threshold-only alerts for critical services.
+Production alerts should eventually use SLO burn-rate logic rather than simple
+threshold-only alerts for critical services.
 
 Minimum:
 
@@ -1875,14 +1879,14 @@ They share contracts and context, not ownership.
 
 # 57. Final runtime matrix
 
-| Runtime | Health | Logging | Tracing | Errors | Uptime |
-|---|---|---|---|---|---|
-| NestJS | Terminus | Pino/nestjs-pino | Nest Observe / OTEL | Sentry where appropriate | Better Stack |
-| Hono Worker | Worker health handler | Hono/Pino + CF Logs | Cloudflare tracing | Sentry/CF | Better Stack |
-| Vite | browser health only where useful | Stackra Logger | browser tracing where justified | Sentry | Better Stack |
-| Mobile | app diagnostics | Stackra Logger | mobile tracing where justified | Sentry | external monitoring |
-| NATS consumers | process/readiness | Pino | event trace context | Sentry/central telemetry | service monitor |
-| Infrastructure | platform checks | platform logs | provider telemetry | provider tooling | Better Stack |
+| Runtime        | Health                           | Logging             | Tracing                         | Errors                   | Uptime              |
+| -------------- | -------------------------------- | ------------------- | ------------------------------- | ------------------------ | ------------------- |
+| NestJS         | Terminus                         | Pino/nestjs-pino    | Nest Observe / OTEL             | Sentry where appropriate | Better Stack        |
+| Hono Worker    | Worker health handler            | Hono/Pino + CF Logs | Cloudflare tracing              | Sentry/CF                | Better Stack        |
+| Vite           | browser health only where useful | Stackra Logger      | browser tracing where justified | Sentry                   | Better Stack        |
+| Mobile         | app diagnostics                  | Stackra Logger      | mobile tracing where justified  | Sentry                   | external monitoring |
+| NATS consumers | process/readiness                | Pino                | event trace context             | Sentry/central telemetry | service monitor     |
+| Infrastructure | platform checks                  | platform logs       | provider telemetry              | provider tooling         | Better Stack        |
 
 ---
 

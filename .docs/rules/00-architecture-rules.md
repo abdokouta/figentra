@@ -14,7 +14,8 @@ Supabase Auth authenticates. Figentra IAM authorizes.
 
 ## Rule 4 — No Person/User by default
 
-Introduce a new identity abstraction only when a concrete requirement proves it necessary.
+Introduce a new identity abstraction only when a concrete requirement proves it
+necessary.
 
 ## Rule 5 — Principal is universal
 

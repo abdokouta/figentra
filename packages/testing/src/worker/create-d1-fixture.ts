@@ -77,9 +77,7 @@ export interface ID1Fixture {
  * await d1.dispose();
  * ```
  */
-export async function createD1Fixture(
-  options: ICreateD1FixtureOptions = {},
-): Promise<ID1Fixture> {
+export async function createD1Fixture(options: ICreateD1FixtureOptions = {}): Promise<ID1Fixture> {
   const mf = new Miniflare({
     // Miniflare requires SOME script to boot; a stub Worker that
     // never runs is fine because we only need the D1 binding.

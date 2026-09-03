@@ -15,11 +15,5 @@ export {
   type ICreatePgliteDatabaseOptions,
   type IPgliteDatabase,
 } from "./create-pglite-database";
-export {
-  createTestEntityManager,
-  type ITestEntityManager,
-} from "./create-test-entity-manager";
-export {
-  withTransaction,
-  type ITransactionCapable,
-} from "./with-transaction";
+export { createTestEntityManager, type ITestEntityManager } from "./create-test-entity-manager";
+export { withTransaction, type ITransactionCapable } from "./with-transaction";

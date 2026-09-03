@@ -53,10 +53,12 @@
   --elevation-3: 0 12px 32px rgba(20, 20, 20, 0.12);
 
   /* Type stacks · Geist family with system fallbacks */
-  --font-sans: "Geist", "Inter", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "Geist Mono", "JetBrains Mono", "SF Mono", ui-monospace,
-    "Fira Code", "Menlo", "Consolas", monospace;
+  --font-sans:
+    "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  --font-mono:
+    "Geist Mono", "JetBrains Mono", "SF Mono", ui-monospace, "Fira Code", "Menlo", "Consolas",
+    monospace;
 
   /* Motion · cursor blink cadence + easing */
   --dur-blink: 1000ms;

@@ -8,32 +8,31 @@ reviewed_at: null
 
 # `@stackra/settings` — runtime user-editable settings package
 
-**Status:** Planned
-**Anchor ADRs:** [ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
+**Status:** Planned **Anchor ADRs:**
+[ADR-0090](../../.docs/adr/ADR-0090-manager-driver-pattern.md),
 [ADR-0091](../../.docs/adr/ADR-0091-cross-runtime-package-structure.md),
-[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md)
-**Reference:** `.ref/packages/settings/` (`@stackra/settings` v0.1.0)
-**Depends on:** `@stackra/container` (Task 13), `@stackra/contracts` (Task 6),
-`@stackra/support`, `@stackra/storage`, `@stackra/http`,
-`@stackra/realtime` (optional), `@stackra/logger` (optional),
-`@stackra/ui` (optional — HeroUI for React admin)
-**Design effort:** 24 days across 10 phases
+[ADR-0092](../../.docs/adr/ADR-0092-service-auto-registration.md) **Reference:**
+`.ref/packages/settings/` (`@stackra/settings` v0.1.0) **Depends on:**
+`@stackra/container` (Task 13), `@stackra/contracts` (Task 6),
+`@stackra/support`, `@stackra/storage`, `@stackra/http`, `@stackra/realtime`
+(optional), `@stackra/logger` (optional), `@stackra/ui` (optional — HeroUI for
+React admin) **Design effort:** 24 days across 10 phases
 
 ## Purpose
 
 Runtime user-editable settings with a **schema-first** contract and
 **multi-source persistence**. Distinct from `@stackra/config`:
 
-|                        | `@stackra/config`                          | `@stackra/settings`                                  |
-| ---------------------- | ------------------------------------------ | ---------------------------------------------------- |
-| Who edits values?      | Developers / operators (env, Doppler, CI)  | End-users (admin UI, preferences panel)              |
-| Cadence of change      | Deploy-time (rare)                         | Runtime (frequent — a user toggles a preference)     |
-| Schema origin          | Zod, TypeScript, build-time                | DTO decorators OR JSON schema fetched from API       |
-| Persistence            | env / Doppler / AWS Secrets / http         | memory / storage (localStorage / AsyncStorage) / api |
-| Cross-client sync      | HTTP driver refresh polling                | `@stackra/realtime` `settings.changed` events        |
-| React surface          | `useConfig(key)` typed hook                | `<SettingsForm>` schema-rendered HeroUI form         |
-| Override semantics     | Layered driver, right-most wins            | Local (user override) wraps remote (org default)     |
-| Access-control aware   | No                                         | Yes — schema fields carry `@RequirePermission`       |
+|                      | `@stackra/config`                         | `@stackra/settings`                                  |
+| -------------------- | ----------------------------------------- | ---------------------------------------------------- |
+| Who edits values?    | Developers / operators (env, Doppler, CI) | End-users (admin UI, preferences panel)              |
+| Cadence of change    | Deploy-time (rare)                        | Runtime (frequent — a user toggles a preference)     |
+| Schema origin        | Zod, TypeScript, build-time               | DTO decorators OR JSON schema fetched from API       |
+| Persistence          | env / Doppler / AWS Secrets / http        | memory / storage (localStorage / AsyncStorage) / api |
+| Cross-client sync    | HTTP driver refresh polling               | `@stackra/realtime` `settings.changed` events        |
+| React surface        | `useConfig(key)` typed hook               | `<SettingsForm>` schema-rendered HeroUI form         |
+| Override semantics   | Layered driver, right-most wins           | Local (user override) wraps remote (org default)     |
+| Access-control aware | No                                        | Yes — schema fields carry `@RequirePermission`       |
 
 ## Design highlights
 
@@ -45,26 +44,26 @@ Faithful to `.ref/packages/settings`. Production-day-one requirements:
 - **Debounced writes** — 300 ms default. Every input change triggers
   `settings.set(key, value)`; the debouncer batches and flushes once.
 - **Registry-driven** — `SettingsRegistry` accepts BOTH local DTOs (via
-  `@Setting()` / `@Field()` / `@Group()` / `@Section()`) AND remote JSON
-  schemas fetched at boot. Downstream code stays source-agnostic.
+  `@Setting()` / `@Field()` / `@Group()` / `@Section()`) AND remote JSON schemas
+  fetched at boot. Downstream code stays source-agnostic.
 - **Local + remote overlay** — a user's local overrides ALWAYS win over the
   remote default. UI shows both values + a "reset to org default" button per
   field.
 - **Access-control aware** — every `@Field()` accepts a `permission` prop;
   fields the caller can't edit render read-only. Integrates with
   `@stackra/authorization` (Task 6 dep).
-- **Cross-runtime** — same DTO shape on browser + RN + Nest server. The
-  server admin API (`GET /admin/settings/schema`) is authored on the SAME DTOs
-  the browser uses.
+- **Cross-runtime** — same DTO shape on browser + RN + Nest server. The server
+  admin API (`GET /admin/settings/schema`) is authored on the SAME DTOs the
+  browser uses.
 - **Realtime broadcast** — optional. When `@stackra/realtime` is installed +
   configured, `settings.changed` events merge into the local cache; every
   connected client re-renders.
 
 ## Manager pattern — Manager (Shape A per ADR-0090)
 
-`SettingsManager extends Manager<ISettingsStore>` — Shape A. ONE active store
-at a time (per app). The `layered` store composes N inner stores for the
-local + remote overlay (mirrors config's `layered` driver).
+`SettingsManager extends Manager<ISettingsStore>` — Shape A. ONE active store at
+a time (per app). The `layered` store composes N inner stores for the local +
+remote overlay (mirrors config's `layered` driver).
 
 ```typescript
 {
@@ -188,29 +187,29 @@ packages/settings/
 
 ## Public API — locked
 
-| Symbol                     | Kind         | Notes                                            |
-| -------------------------- | ------------ | ------------------------------------------------ |
-| `SettingsManager`          | class        | `Manager<ISettingsStore>`                        |
-| `SettingsService`          | class        | Sync `.get(dto)` + `.set(key, v)` + subscribe   |
-| `SettingsRegistry`         | class        | Accepts DTO classes + JSON schemas               |
-| `SettingsSchemaFetcher`    | class        | Loads schemas from API at boot                   |
-| `SettingsBroadcastListener` | class       | Optional — subscribes to `@stackra/realtime`     |
-| `@Setting(opts)`           | decorator    | Class-level: `key`, `version`, `namespace`       |
-| `@Field(opts)`             | decorator    | Property-level: `type`, `permission`, `default`  |
-| `@Group(label)`            | decorator    | Groups fields under a heading                    |
-| `@Section(label)`          | decorator    | Groups groups under a page section               |
-| `ControlType`              | enum         | text/number/boolean/select/multiselect/date/color/… |
-| `SETTINGS_MANAGER`         | token        |                                                  |
-| `SETTINGS_SERVICE`         | token        |                                                  |
-| `SETTINGS_REGISTRY`        | token        |                                                  |
-| `SETTINGS`                 | token (alias)| `manager.driver()` shortcut                       |
-| `SETTINGS_EVENTS`          | const object | `.CHANGED`, `.RESET`, `.SCHEMA_LOADED`           |
-| `SettingsValidationError`  | class        |                                                  |
-| `SettingsStoreError`       | class        |                                                  |
-| `<SettingsForm dto={...} />` | component  | React — schema-driven HeroUI form                 |
-| `useSetting(dto, key)`     | hook         | React — sync-read, debounced-write               |
-| `useSettings(dto)`         | hook         | React — whole DTO                                |
-| `useCanEditSetting(dto, k)`| hook         | React — permission gate                          |
+| Symbol                       | Kind          | Notes                                               |
+| ---------------------------- | ------------- | --------------------------------------------------- |
+| `SettingsManager`            | class         | `Manager<ISettingsStore>`                           |
+| `SettingsService`            | class         | Sync `.get(dto)` + `.set(key, v)` + subscribe       |
+| `SettingsRegistry`           | class         | Accepts DTO classes + JSON schemas                  |
+| `SettingsSchemaFetcher`      | class         | Loads schemas from API at boot                      |
+| `SettingsBroadcastListener`  | class         | Optional — subscribes to `@stackra/realtime`        |
+| `@Setting(opts)`             | decorator     | Class-level: `key`, `version`, `namespace`          |
+| `@Field(opts)`               | decorator     | Property-level: `type`, `permission`, `default`     |
+| `@Group(label)`              | decorator     | Groups fields under a heading                       |
+| `@Section(label)`            | decorator     | Groups groups under a page section                  |
+| `ControlType`                | enum          | text/number/boolean/select/multiselect/date/color/… |
+| `SETTINGS_MANAGER`           | token         |                                                     |
+| `SETTINGS_SERVICE`           | token         |                                                     |
+| `SETTINGS_REGISTRY`          | token         |                                                     |
+| `SETTINGS`                   | token (alias) | `manager.driver()` shortcut                         |
+| `SETTINGS_EVENTS`            | const object  | `.CHANGED`, `.RESET`, `.SCHEMA_LOADED`              |
+| `SettingsValidationError`    | class         |                                                     |
+| `SettingsStoreError`         | class         |                                                     |
+| `<SettingsForm dto={...} />` | component     | React — schema-driven HeroUI form                   |
+| `useSetting(dto, key)`       | hook          | React — sync-read, debounced-write                  |
+| `useSettings(dto)`           | hook          | React — whole DTO                                   |
+| `useCanEditSetting(dto, k)`  | hook          | React — permission gate                             |
 
 ## Sync `.get()` — the trick that makes React work
 
@@ -255,12 +254,11 @@ store (org default). UI shows: `[● local override] [reset to org default]`.
 
 ## Cross-client sync via `@stackra/realtime` (optional)
 
-When `@stackra/realtime` is installed AND `SettingsModule.forRoot({ realtime:
-{ enabled: true, room: "settings:<orgId>" }})`:
+When `@stackra/realtime` is installed AND
+`SettingsModule.forRoot({ realtime: { enabled: true, room: "settings:<orgId>" }})`:
 
 - Server publishes `settings.changed` events after PUT `/admin/settings/:key`.
-- `SettingsBroadcastListener` subscribes to the room + merges into local
-  cache.
+- `SettingsBroadcastListener` subscribes to the room + merges into local cache.
 - Every connected client re-renders instantly.
 
 ## Permission gating
@@ -274,27 +272,27 @@ class NotificationsSettings {
   @Field({
     type: ControlType.Select,
     options: ["basic", "advanced"],
-    permission: "settings.notifications.admin",  // ← gated
+    permission: "settings.notifications.admin", // ← gated
   })
   notificationTier: "basic" | "advanced";
 }
 ```
 
-`useCanEditSetting()` composes `@stackra/authorization` (Task 6 dep). Fields
-the caller can't edit render read-only + show a "requires
+`useCanEditSetting()` composes `@stackra/authorization` (Task 6 dep). Fields the
+caller can't edit render read-only + show a "requires
 `settings.notifications.admin`" tooltip.
 
 ## Options
 
-| Option              | Default                | Purpose                                          |
-| ------------------- | ---------------------- | ------------------------------------------------ |
-| `default`           | `"layered"`            | Default store name                               |
-| `stores`            | `{...}`                | Per-name store configs                           |
-| `debounceMs`        | `300`                  | Write debounce window                            |
-| `schemaUrl`         | `undefined`            | Optional URL for remote JSON schemas             |
-| `refreshMs`         | `60_000`               | API store refresh interval                       |
-| `realtime.enabled`  | `false`                | Enable @stackra/realtime broadcast subscription  |
-| `realtime.room`     | `"settings"`           | Room name for cross-client sync                  |
+| Option             | Default      | Purpose                                         |
+| ------------------ | ------------ | ----------------------------------------------- |
+| `default`          | `"layered"`  | Default store name                              |
+| `stores`           | `{...}`      | Per-name store configs                          |
+| `debounceMs`       | `300`        | Write debounce window                           |
+| `schemaUrl`        | `undefined`  | Optional URL for remote JSON schemas            |
+| `refreshMs`        | `60_000`     | API store refresh interval                      |
+| `realtime.enabled` | `false`      | Enable @stackra/realtime broadcast subscription |
+| `realtime.room`    | `"settings"` | Room name for cross-client sync                 |
 
 ## Testing
 
@@ -308,8 +306,8 @@ the caller can't edit render read-only + show a "requires
 
 - [ ] Package skeleton per `.kiro/steering/package-conventions.md`.
 - [ ] `SettingsRegistry` — accepts DTOs + JSON schemas via `register(...)`.
-- [ ] Decorators: `@Setting`, `@Field`, `@Group`, `@Section` — reflect
-      metadata used by the registry.
+- [ ] Decorators: `@Setting`, `@Field`, `@Group`, `@Section` — reflect metadata
+      used by the registry.
 
 ### Phase 2 — Manager + stores (3 days)
 
@@ -335,8 +333,8 @@ the caller can't edit render read-only + show a "requires
 - [ ] `<SettingsForm>` — schema-driven HeroUI form.
 - [ ] `<SettingsField>` — per-ControlType renderer (Input, Switch, Select,
       Textarea, DatePicker, ColorPicker).
-- [ ] `<SettingsResetButton>` — clears local override, falls through to
-      org default.
+- [ ] `<SettingsResetButton>` — clears local override, falls through to org
+      default.
 - [ ] Hooks: `useSetting`, `useSettings`, `useCanEditSetting`,
       `useSettingsStatus`.
 - [ ] Full `<SettingsPage>` shell w/ navigation.
@@ -361,14 +359,14 @@ the caller can't edit render read-only + show a "requires
 ### Phase 9 — Testing (2 days)
 
 - [ ] Unit tests for every service + registry + store.
-- [ ] Integration test — local override wraps remote (write locally →
-      remote poll fires → local value STILL wins).
+- [ ] Integration test — local override wraps remote (write locally → remote
+      poll fires → local value STILL wins).
 - [ ] Test coverage 90%.
 
 ### Phase 10 — Verification + docs (2 days)
 
-- [ ] README documents every subpath + a copy-pasteable
-      "declare-a-setting" example.
+- [ ] README documents every subpath + a copy-pasteable "declare-a-setting"
+      example.
 - [ ] Migration guide from `@stackra/config` for values that shouldn't live
       there (user-editable ones).
 - [ ] `.kiro/steering/testing.md` cross-ref.
@@ -377,17 +375,17 @@ the caller can't edit render read-only + show a "requires
 
 - [ ] 6 subpath exports build cleanly (`.`, `./react`, `./native`, `./nest`,
       `./testing`, barrel).
-- [ ] `useSetting()` returns synchronously with the DTO's decorator default
-      on first call; re-renders when async hydration completes.
-- [ ] Local storage override wraps remote API value (verified in
-      integration test).
-- [ ] `<SettingsForm>` renders every `ControlType` correctly (visual
-      regression test with 12+ field types).
+- [ ] `useSetting()` returns synchronously with the DTO's decorator default on
+      first call; re-renders when async hydration completes.
+- [ ] Local storage override wraps remote API value (verified in integration
+      test).
+- [ ] `<SettingsForm>` renders every `ControlType` correctly (visual regression
+      test with 12+ field types).
 - [ ] Permission-gated fields render read-only when caller lacks permission.
 - [ ] Debouncer flushes exactly one write per 300 ms window with 10 rapid
       inputs.
-- [ ] Cross-client sync round-trip verified (two browser tabs — write in tab
-      1, tab 2 sees update within 1 s).
+- [ ] Cross-client sync round-trip verified (two browser tabs — write in tab 1,
+      tab 2 sees update within 1 s).
 - [ ] Admin API validated end-to-end with a Nest e2e test.
 - [ ] 90% branch coverage.
 

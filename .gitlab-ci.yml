@@ -228,7 +228,24 @@ docker:build:
   parallel:
     matrix:
       - SERVICE:
-          [approval, audit, entitlements, files, gateway, iam, identity, integrations, monetization, notifications, policy, reporting, scope, search, tenant, usage]
+          [
+            approval,
+            audit,
+            entitlements,
+            files,
+            gateway,
+            iam,
+            identity,
+            integrations,
+            monetization,
+            notifications,
+            policy,
+            reporting,
+            scope,
+            search,
+            tenant,
+            usage,
+          ]
   script:
     - >
       doppler run --config "$DOPPLER_CONFIG" --
@@ -339,8 +356,7 @@ deploy:workers:
   extends: .wrangler
   parallel:
     matrix:
-      - WORKER:
-          [application-registry, infrastructure-orchestrator, workflow-runtime]
+      - WORKER: [application-registry, infrastructure-orchestrator, workflow-runtime]
   script:
     - cd "workers/$WORKER"
     - doppler run --config "$DOPPLER_CONFIG" -- pnpm exec wrangler deploy --env "$WRANGLER_ENV"
@@ -360,7 +376,24 @@ deploy:containers:
   parallel:
     matrix:
       - SERVICE:
-          [approval, audit, entitlements, files, gateway, iam, identity, integrations, monetization, notifications, policy, reporting, scope, search, tenant, usage]
+          [
+            approval,
+            audit,
+            entitlements,
+            files,
+            gateway,
+            iam,
+            identity,
+            integrations,
+            monetization,
+            notifications,
+            policy,
+            reporting,
+            scope,
+            search,
+            tenant,
+            usage,
+          ]
   script:
     - cd "services/$SERVICE"
     - doppler run --config "$DOPPLER_CONFIG" -- pnpm exec wrangler deploy --env "$WRANGLER_ENV"

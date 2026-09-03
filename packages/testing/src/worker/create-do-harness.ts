@@ -11,10 +11,7 @@
  */
 
 import { Miniflare } from "miniflare";
-import type {
-  DurableObjectNamespace,
-  DurableObjectStub,
-} from "@cloudflare/workers-types";
+import type { DurableObjectNamespace, DurableObjectStub } from "@cloudflare/workers-types";
 
 /** Options for `createDoHarness`. */
 export interface ICreateDoHarnessOptions {
@@ -51,11 +48,7 @@ export interface IDoHarness {
    * Send a request to the DO named `name`. Short-hand for
    * `harness.stub(name).fetch(...)`.
    */
-  fetch(
-    name: string,
-    input: string | URL,
-    init?: RequestInit,
-  ): Promise<Response>;
+  fetch(name: string, input: string | URL, init?: RequestInit): Promise<Response>;
   /** Release Miniflare. Idempotent. */
   dispose(): Promise<void>;
 }
@@ -79,15 +72,8 @@ export interface IDoHarness {
  * await doH.dispose();
  * ```
  */
-export async function createDoHarness(
-  options: ICreateDoHarnessOptions,
-): Promise<IDoHarness> {
-  const {
-    scriptPath,
-    className,
-    bindingName,
-    compatibilityDate = "2026-09-01",
-  } = options;
+export async function createDoHarness(options: ICreateDoHarnessOptions): Promise<IDoHarness> {
+  const { scriptPath, className, bindingName, compatibilityDate = "2026-09-01" } = options;
 
   const mf = new Miniflare({
     scriptPath,
@@ -98,9 +84,7 @@ export async function createDoHarness(
   });
 
   await mf.ready;
-  const ns = (await mf.getDurableObjectNamespace(
-    bindingName,
-  )) as unknown as DurableObjectNamespace;
+  const ns = (await mf.getDurableObjectNamespace(bindingName)) as unknown as DurableObjectNamespace;
 
   let disposed = false;
 
@@ -110,11 +94,7 @@ export async function createDoHarness(
     stub(name: string): DurableObjectStub {
       return ns.get(ns.idFromName(name));
     },
-    async fetch(
-      name: string,
-      input: string | URL,
-      init?: RequestInit,
-    ): Promise<Response> {
+    async fetch(name: string, input: string | URL, init?: RequestInit): Promise<Response> {
       const stub = ns.get(ns.idFromName(name));
       return (stub.fetch as unknown as typeof fetch)(input, init);
     },

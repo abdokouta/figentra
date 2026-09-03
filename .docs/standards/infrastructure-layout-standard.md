@@ -44,9 +44,10 @@ The generated Compose file is:
 
 `infrastructure/.generated/docker-compose.yml`
 
-It must be treated as generated output and must not become a competing source
-of truth. Every artefact under `infrastructure/.generated/` is machine-owned +
-gitignored; see [`infrastructure/.generated/README.md`](../../infrastructure/.generated/README.md).
+It must be treated as generated output and must not become a competing source of
+truth. Every artefact under `infrastructure/.generated/` is machine-owned +
+gitignored; see
+[`infrastructure/.generated/README.md`](../../infrastructure/.generated/README.md).
 
 ## Catalog naming
 
@@ -55,9 +56,8 @@ Do not use `infrastructure/.generated/catalog.json` for Docker Compose metadata.
 package metadata; the infrastructure catalog inside `.generated/` is a
 build-time deployment map.
 
-Docker infrastructure uses `infrastructure/docker/catalog.yaml` because it is
-an infrastructure generation contract rather than a publishable package
-catalog.
+Docker infrastructure uses `infrastructure/docker/catalog.yaml` because it is an
+infrastructure generation contract rather than a publishable package catalog.
 
 ## Scripts
 
@@ -75,5 +75,5 @@ Repository-wide scripts remain under:
 
 ## .gitkeep
 
-`.gitkeep` is allowed only for intentionally empty directories. Once a
-directory contains a real file, its `.gitkeep` must be removed.
+`.gitkeep` is allowed only for intentionally empty directories. Once a directory
+contains a real file, its `.gitkeep` must be removed.

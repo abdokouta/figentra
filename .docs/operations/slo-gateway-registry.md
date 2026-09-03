@@ -3,13 +3,13 @@
 These are the initial production SLO targets. They are targets, not claims of
 current measured performance.
 
-| Component | Availability | Latency target | Error budget |
-|---|---:|---:|---:|
-| API Gateway | 99.99% | p95 < 200ms excluding upstream | 52.6 min/year |
-| Registry reads | 99.99% | p95 < 150ms | 52.6 min/year |
-| Registry writes | 99.95% | p95 < 500ms | 4.38 hr/year |
-| Identity verification | 99.99% | p95 < 100ms cache-hit | 52.6 min/year |
-| IAM authorization | 99.99% | p95 < 100ms cache-hit | 52.6 min/year |
+| Component             | Availability |                 Latency target |  Error budget |
+| --------------------- | -----------: | -----------------------------: | ------------: |
+| API Gateway           |       99.99% | p95 < 200ms excluding upstream | 52.6 min/year |
+| Registry reads        |       99.99% |                    p95 < 150ms | 52.6 min/year |
+| Registry writes       |       99.95% |                    p95 < 500ms |  4.38 hr/year |
+| Identity verification |       99.99% |          p95 < 100ms cache-hit | 52.6 min/year |
+| IAM authorization     |       99.99% |          p95 < 100ms cache-hit | 52.6 min/year |
 
 ## Required telemetry
 

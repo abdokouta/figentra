@@ -24,4 +24,5 @@ Before any brand/site is considered production-ready:
 - [ ] No unsupported metrics or customer claims remain.
 - [ ] Final visual QA is approved.
 
-A checked documentation gate does not itself prove runtime implementation. Runtime gates must be executed against the deployed site.
+A checked documentation gate does not itself prove runtime implementation.
+Runtime gates must be executed against the deployed site.

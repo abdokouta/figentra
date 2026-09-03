@@ -40,15 +40,19 @@ Cloudflare DNS/WAF
 
 ## Communication
 
-Worker-to-worker uses Cloudflare Service Bindings where possible. Worker-to-container uses authenticated HTTPS. Async work uses Cloudflare Queues.
+Worker-to-worker uses Cloudflare Service Bindings where possible.
+Worker-to-container uses authenticated HTTPS. Async work uses Cloudflare Queues.
 
 ## Persistence
 
-Use D1/KV only for the worker's explicit control-plane/edge use case. Business transaction data belongs in its owning service PostgreSQL database.
+Use D1/KV only for the worker's explicit control-plane/edge use case. Business
+transaction data belongs in its owning service PostgreSQL database.
 
 ## Caching
 
-Cache only immutable/safe runtime metadata or edge-safe responses. Tenant-sensitive mutable business responses require explicit cache design and invalidation.
+Cache only immutable/safe runtime metadata or edge-safe responses.
+Tenant-sensitive mutable business responses require explicit cache design and
+invalidation.
 
 ## Testing
 
@@ -63,17 +67,23 @@ Cache only immutable/safe runtime metadata or edge-safe responses. Tenant-sensit
 
 ## OpenAPI
 
-Document public worker endpoints with OpenAPI-compatible schemas where applicable. Internal bindings use typed contracts.
+Document public worker endpoints with OpenAPI-compatible schemas where
+applicable. Internal bindings use typed contracts.
 
 ## Acceptance
 
-No business logic leakage, no unauthenticated protected route, deterministic routing, observability on every request, and tests for every route and trust-boundary failure.
+No business logic leakage, no unauthenticated protected route, deterministic
+routing, observability on every request, and tests for every route and
+trust-boundary failure.
 
 ## Package manifest (repository baseline)
 
-> This section is generated from the current repository `package.json`. The Kiro spec is the target contract; if implementation changes dependencies, update the spec and package manifest together.
+> This section is generated from the current repository `package.json`. The Kiro
+> spec is the target contract; if implementation changes dependencies, update
+> the spec and package manifest together.
 
 ### Runtime dependencies
+
 - `@figentra/observability`
 - `@figentra/sdk`
 - `hono`
@@ -83,6 +93,7 @@ No business logic leakage, no unauthenticated protected route, deterministic rou
 - `zod`
 
 ### Development dependencies
+
 - `@stackra/oxlint-config`
 - `@stackra/prettier-config`
 - `@stackra/typescript-config`
@@ -95,7 +106,9 @@ No business logic leakage, no unauthenticated protected route, deterministic rou
 - `wrangler`
 
 ### Peer dependencies
+
 - _None currently._
 
 ### Optional dependencies
+
 - _None currently._

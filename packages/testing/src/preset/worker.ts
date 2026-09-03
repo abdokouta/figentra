@@ -72,9 +72,7 @@ export interface IWorkerPresetOptions {
  * The result is a plain Vitest `UserConfig` — callers merge with
  * their own `defineConfig({...})` as usual.
  */
-export function createWorkerPreset(
-  options: IWorkerPresetOptions = {},
-) {
+export function createWorkerPreset(options: IWorkerPresetOptions = {}) {
   const {
     wranglerConfigPath = "./wrangler.jsonc",
     outboundNetworkAccess = false,

@@ -6,12 +6,12 @@ Accepted.
 
 ## Decision
 
-All Figentra NestJS services use the official NestJS Observe SDK as the
-standard Nest-native observability integration and the official NestJS
-Devtools integration for development/CI architecture inspection.
+All Figentra NestJS services use the official NestJS Observe SDK as the standard
+Nest-native observability integration and the official NestJS Devtools
+integration for development/CI architecture inspection.
 
-The shared implementation lives in `@figentra/observability/nest`; services
-only bind their stable service identifier.
+The shared implementation lives in `@figentra/observability/nest`; services only
+bind their stable service identifier.
 
 ## Observe
 
@@ -32,8 +32,8 @@ Non-secret deployment metadata:
 - `OBSERVE_SERVICE_VERSION` (normally the Git SHA)
 - optional `OBSERVE_ENDPOINT`
 
-Observe telemetry must never become an availability dependency: an inability
-to export telemetry must not prevent the business service from starting.
+Observe telemetry must never become an availability dependency: an inability to
+export telemetry must not prevent the business service from starting.
 
 ## Source context
 
@@ -71,4 +71,6 @@ SDK documentation requires Nest core 11.1.4 or later, while the current Nest
 core release is 12.0.1, so the integration is compatible with the repository's
 Nest major line.
 
-> Superseded/extended by ADR-0053 for the unified `@figentra/observability` package, Pino runtime logging, Worker logging, and web/native Stackra logging boundaries.
+> Superseded/extended by ADR-0053 for the unified `@figentra/observability`
+> package, Pino runtime logging, Worker logging, and web/native Stackra logging
+> boundaries.

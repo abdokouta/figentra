@@ -17,6 +17,7 @@ OpenTelemetry is preferred.
 Security/audit records must not be treated as ordinary logs.
 
 Never log:
+
 - passwords
 - tokens
 - API secrets

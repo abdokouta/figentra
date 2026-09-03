@@ -42,11 +42,7 @@ export class PipelineError extends StackraError {
    * @param code - Machine-readable error code
    * @param cause - The original error that triggered this pipeline error
    */
-  public constructor(
-    message: string,
-    code: string = "PIPELINE_ERROR",
-    cause?: Error,
-  ) {
+  public constructor(message: string, code: string = "PIPELINE_ERROR", cause?: Error) {
     super(message, { code, cause });
   }
 }

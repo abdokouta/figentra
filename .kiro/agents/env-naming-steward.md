@@ -136,8 +136,9 @@ duplicate.
 ### V5 — `NODE_*` prefix on app secret (P0)
 
 Any key starting with `NODE_` that isn't a Node runtime-tuning var (`NODE_ENV`,
-`NODE_OPTIONS`, `NODE_PATH`, `NODE_NO_WARNINGS`, `NODE_TLS_REJECT_UNAUTHORIZED`).
-`NODE_*` is reserved by the Node runtime; app secrets must not squat on it.
+`NODE_OPTIONS`, `NODE_PATH`, `NODE_NO_WARNINGS`,
+`NODE_TLS_REJECT_UNAUTHORIZED`). `NODE_*` is reserved by the Node runtime; app
+secrets must not squat on it.
 
 **Fix hint:** drop the `NODE_` prefix.
 

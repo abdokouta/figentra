@@ -1,8 +1,10 @@
 # 14 — Data & Persistence
 
 **Status:** Baseline (core), Deferred (residency depth, DR automation)
-**Owner:** Platform architecture / each service
-**Related:** [10 Domain patterns](10-domain-and-application-patterns.md), [03 Tenancy](03-tenancy-and-domains.md), [17 Security](17-security-and-compliance.md)
+**Owner:** Platform architecture / each service **Related:**
+[10 Domain patterns](10-domain-and-application-patterns.md),
+[03 Tenancy](03-tenancy-and-domains.md),
+[17 Security](17-security-and-compliance.md)
 
 ---
 
@@ -15,19 +17,19 @@ Define where each kind of data lives, database ownership, tenant isolation
 
 ## 2. Storage decision matrix
 
-| Data kind                              | Technology                     | Notes                                            |
-| -------------------------------------- | ------------------------------ | ------------------------------------------------ |
-| Identity                               | Supabase Auth                          | External managed.                                |
+| Data kind                                            | Technology          | Notes                                             |
+| ---------------------------------------------------- | ------------------- | ------------------------------------------------- |
+| Identity                                             | Supabase Auth       | External managed.                                 |
 | Platform relational data (IAM, Tenant, Monetization) | Supabase PostgreSQL | Per-service DB/schema.                            |
-| Application relational data            | Supabase PostgreSQL            | Per-application DB.                               |
-| Application registry / config          | Cloudflare D1                  | Lightweight, high-read.                           |
-| Edge cache / config                    | Cloudflare KV                  | Where read-optimized.                             |
-| Files / objects                        | Cloudflare R2                  | S3-compatible, no egress fees; long-term archive. |
-| Durable per-instance coordination      | Durable Objects                | Only where strong consistency is required.        |
-| High-performance shared cache          | Redis / Upstash                | Only where justified.                             |
-| Async / usage / event buffering        | Cloudflare Queues              | See [11].                                         |
-| Event archive / long-term logs         | R2                             | Cheap retention for replay/audit.                 |
-| Logs / traces                          | Better Stack / OTel            | See [16].                                         |
+| Application relational data                          | Supabase PostgreSQL | Per-application DB.                               |
+| Application registry / config                        | Cloudflare D1       | Lightweight, high-read.                           |
+| Edge cache / config                                  | Cloudflare KV       | Where read-optimized.                             |
+| Files / objects                                      | Cloudflare R2       | S3-compatible, no egress fees; long-term archive. |
+| Durable per-instance coordination                    | Durable Objects     | Only where strong consistency is required.        |
+| High-performance shared cache                        | Redis / Upstash     | Only where justified.                             |
+| Async / usage / event buffering                      | Cloudflare Queues   | See [11].                                         |
+| Event archive / long-term logs                       | R2                  | Cheap retention for replay/audit.                 |
+| Logs / traces                                        | Better Stack / OTel | See [16].                                         |
 
 **Rule:** D1 is for registry/config, **not** a replacement for the primary
 transactional PostgreSQL. Do not use container disk or process memory as a
@@ -38,8 +40,8 @@ system of record ([15 §Container rules]).
 ## 3. Database ownership
 
 Do **not** use one giant database for everything. Each service/application owns
-its own database (or schema), and **no service reads or writes another
-service's database** ([09 §3]).
+its own database (or schema), and **no service reads or writes another service's
+database** ([09 §3]).
 
 ```text
 Platform
@@ -54,17 +56,17 @@ Platform
     └── Analytics DB
 ```
 
-Cross-service reads use the owning service's API or an event-fed projection
-([04 §9], [09 §3]).
+Cross-service reads use the owning service's API or an event-fed projection ([04
+§9], [09 §3]).
 
 ---
 
 ## 4. Tenant isolation
 
 Every table that stores tenant-owned data carries a tenant boundary column.
-Prefer **`tenant_id`** (Figentra business/resource ownership). Where Supabase Auth
-organization identity is needed, store `supabase_org_id` as a trusted mapping —
-never as the isolation key itself.
+Prefer **`tenant_id`** (Figentra business/resource ownership). Where Supabase
+Auth organization identity is needed, store `supabase_org_id` as a trusted
+mapping — never as the isolation key itself.
 
 ```sql
 -- every tenant-owned table
@@ -94,24 +96,26 @@ create policy tenant_isolation on <table>
   using (tenant_id = current_setting('request.tenant_id')::uuid);
 ```
 
-- The exact JWT claim → RLS binding must match the **current** Supabase Auth↔Supabase
-  third-party auth integration (not the deprecated JWT-template approach —
-  [02 §2]).
+- The exact JWT claim → RLS binding must match the **current** Supabase
+  Auth↔Supabase third-party auth integration (not the deprecated JWT-template
+  approach — [02 §2]).
 - RLS complements server-side authorization; it is not a substitute for it.
-- Application databases that store tenant data enable RLS on tenant-owned tables.
+- Application databases that store tenant data enable RLS on tenant-owned
+  tables.
 
 ---
 
 ## 6. IDs
 
-Domain-prefixed identifiers ([18](18-error-model-and-api-conventions.md) §ID scheme):
+Domain-prefixed identifiers ([18](18-error-model-and-api-conventions.md) §ID
+scheme):
 
 ```text
 usr_  org_  ten_  app_  role_  perm_  sub_  plan_  ent_  dom_  bacc_  intg_  evt_  req_  trace_ ...
 ```
 
-Supabase Auth IDs are **never renamed** (`user_...`, `org_...`). A tenant record maps a
-Supabase Auth `org_...` to a Figentra `ten_...`.
+Supabase Auth IDs are **never renamed** (`user_...`, `org_...`). A tenant record
+maps a Supabase Auth `org_...` to a Figentra `ten_...`.
 
 ---
 
@@ -128,9 +132,9 @@ Tenant
 
 Residency affects: PostgreSQL region, R2 bucket region, logs, analytics,
 backups, and AI processing. Target regions (EU / KSA / UAE / US) are an open
-question (**O-6**). The `tenants.region` / `data_residency` fields
-([03 §2.1]) carry the intent now; enforcement across every substrate is a
-later hardening pass.
+question (**O-6**). The `tenants.region` / `data_residency` fields ([03 §2.1])
+carry the intent now; enforcement across every substrate is a later hardening
+pass.
 
 ---
 
@@ -163,23 +167,23 @@ Especially:
 - **Expired logs / files / billing history** — retention windows enforced.
 
 Export/import/backup/restore for tenants (users, customers, orders, config,
-audit logs, files, reports) is a compliance-relevant capability
-([17 §Data rights], [20] P1).
+audit logs, files, reports) is a compliance-relevant capability ([17 §Data
+rights], [20] P1).
 
 ---
 
 ## 10. Non-goals / anti-patterns
 
-| Anti-pattern                                            | Correct                                                     |
-| ------------------------------------------------------- | ----------------------------------------------------------- |
-| One giant DB for all apps/services                      | DB (or schema) per service/application.                     |
-| A service reading another service's DB                  | API / event-fed projection ([09]).                          |
-| D1 as the transactional business DB                     | D1 = registry/config; Supabase = transactional.             |
-| Container disk / memory as a system of record           | Persist to Supabase / R2 / D1 / Durable Object storage.     |
-| `organization_id` as the isolation key                  | `tenant_id`; keep `supabase_org_id` as a trusted mapping.      |
-| Trusting `?tenantId=` from the client                   | Derive server-side; RLS as defense in depth.                |
-| RLS as the only tenant control                          | Server-side authz + RLS + scoped queries (three layers).    |
-| Untested backups                                        | Restore testing is part of DR.                              |
+| Anti-pattern                                  | Correct                                                   |
+| --------------------------------------------- | --------------------------------------------------------- |
+| One giant DB for all apps/services            | DB (or schema) per service/application.                   |
+| A service reading another service's DB        | API / event-fed projection ([09]).                        |
+| D1 as the transactional business DB           | D1 = registry/config; Supabase = transactional.           |
+| Container disk / memory as a system of record | Persist to Supabase / R2 / D1 / Durable Object storage.   |
+| `organization_id` as the isolation key        | `tenant_id`; keep `supabase_org_id` as a trusted mapping. |
+| Trusting `?tenantId=` from the client         | Derive server-side; RLS as defense in depth.              |
+| RLS as the only tenant control                | Server-side authz + RLS + scoped queries (three layers).  |
+| Untested backups                              | Restore testing is part of DR.                            |
 
 ---
 
@@ -187,6 +191,6 @@ audit logs, files, reports) is a compliance-relevant capability
 
 - **O-6** — Target data-residency regions at launch (EU / KSA / UAE / US)?
   Determines how much residency enforcement is P0 vs deferred.
-- Confirm the exact Supabase Auth→Supabase claim mapping used for RLS (`request.tenant_id`
-  binding) against the current integration.
+- Confirm the exact Supabase Auth→Supabase claim mapping used for RLS
+  (`request.tenant_id` binding) against the current integration.
 - Confirm backup RPO/RTO targets per store (platform vs application).

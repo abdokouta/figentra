@@ -25,11 +25,11 @@ such.
 Three column families answer three different questions. They do NOT substitute
 for each other. A row can need one, two, or three of them; most rows need one.
 
-| Axis            | Column                            | Answers                                                        | Substrate                                                                                                        |
-| --------------- | --------------------------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| **Tenant**      | `tenant_id` (text ULID)           | "Which tenant owns this row?"                                  | Reference column. The `withTenant()` helper applies the read scope + fills the column on write; Supabase RLS enforces it at the DB. |
-| **Application** | `application_id` (text ULID)      | "Which of the N products does this row belong to?"             | Reference column on the 12 top-level rows only. Cascades through `tenant_id` for everything else — never a shortcut. |
-| **Scope**       | `scope_node_id` (text ULID) + `scopedTo()` | "What cascading-resolution path does this row participate in?" | `@stackra/scope` substrate. Materialised path. **Configuration consumers only** — never on domain data rows.  |
+| Axis            | Column                                     | Answers                                                        | Substrate                                                                                                                           |
+| --------------- | ------------------------------------------ | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **Tenant**      | `tenant_id` (text ULID)                    | "Which tenant owns this row?"                                  | Reference column. The `withTenant()` helper applies the read scope + fills the column on write; Supabase RLS enforces it at the DB. |
+| **Application** | `application_id` (text ULID)               | "Which of the N products does this row belong to?"             | Reference column on the 12 top-level rows only. Cascades through `tenant_id` for everything else — never a shortcut.                |
+| **Scope**       | `scope_node_id` (text ULID) + `scopedTo()` | "What cascading-resolution path does this row participate in?" | `@stackra/scope` substrate. Materialised path. **Configuration consumers only** — never on domain data rows.                        |
 
 Rule of thumb: if you can't state the question your column answers in one
 sentence from that table, you're using the wrong axis.
@@ -138,15 +138,15 @@ job: cascading value resolution across a per-tenant configurable hierarchy. Only
 
 ### Who integrates with scope
 
-| Package                                   | Role                     | Notes                                                                          |
-| ----------------------------------------- | ------------------------ | ------------------------------------------------------------------------------ |
+| Package                                   | Role                     | Notes                                                                           |
+| ----------------------------------------- | ------------------------ | ------------------------------------------------------------------------------- |
 | **scope**                                 | Owner                    | Provides `ScopeNode`, `ScopeValue`, `scopedTo()`, the resolve-scope middleware. |
-| **settings**                              | Consumer                 | Uses `scope.resolve('settings', key)` for hierarchical value resolution.       |
-| **Access** (permissions overlay)          | Consumer, planned        | Cascading permission grants through the tree.                                  |
-| **Entitlements** (feature flags + quotas) | Consumer, planned        | Reads tier + flag values via scope.                                            |
-| **Subscription** (pricing)                | Consumer, planned        | Per-node pricing overrides.                                                    |
-| **notifications**                         | Consumer, planned        | Per-user / per-branch prefs.                                                   |
-| Every other package                       | **Not a scope consumer** | Do not add `scope_node_id` to domain data rows.                                |
+| **settings**                              | Consumer                 | Uses `scope.resolve('settings', key)` for hierarchical value resolution.        |
+| **Access** (permissions overlay)          | Consumer, planned        | Cascading permission grants through the tree.                                   |
+| **Entitlements** (feature flags + quotas) | Consumer, planned        | Reads tier + flag values via scope.                                             |
+| **Subscription** (pricing)                | Consumer, planned        | Per-node pricing overrides.                                                     |
+| **notifications**                         | Consumer, planned        | Per-user / per-branch prefs.                                                    |
+| Every other package                       | **Not a scope consumer** | Do not add `scope_node_id` to domain data rows.                                 |
 
 The Application, Tenant, Organization, Region, Branch, Team, User models are
 **entities** the scope nodes reference (via `scope_nodes.entity_id`) — not
@@ -221,8 +221,8 @@ Enforcement is layered — every layer catches what the layer above missed.
 
 CI schema-lint that scans one package (or the whole codebase) against this
 mandate — the tenancy-attribution sibling of `no-cross-service-foreign-key`
-(§6.7). It walks each service's migrations, schema, and repositories
-statically; no runtime required.
+(§6.7). It walks each service's migrations, schema, and repositories statically;
+no runtime required.
 
 **When it fires:**
 
@@ -419,22 +419,22 @@ vs what's a known deferred fix.
 
 ### 9a. Open gaps
 
-| Gap                                                                                                                          | Owner                       | Blocker                                      | Priority |
-| ---------------------------------------------------------------------------------------------------------------------------- | --------------------------- | -------------------------------------------- | -------- |
-| Add `tenant_id` to `audits`                                                                                                  | Audit module                | None                                         | High     |
-| Add `tenant_id` to `activity_log`                                                                                            | Activity module             | None                                         | High     |
-| Split `User` into `Identity` + `User` (per-app)                                                                              | Identity + User modules     | Identity spec landing                        | High     |
-| Add `application_id` to `tenants`                                                                                            | Tenancy module              | Application module scaffold                  | High     |
-| Add `application_id` to `users` (post-split)                                                                                 | User module                 | Identity split                               | High     |
-| Add `application_id` to `roles`, `permissions`                                                                               | Access module               | Application module scaffold                  | High     |
-| Add `application_id` to `tenant_subscriptions`, `entitlement_licenses`                                                       | Subscription + Entitlements | Application module scaffold                  | High     |
-| Add `application_id` to `audits`, `activity_log`                                                                             | Audit + Activity            | Post-tenant_id + Application module scaffold | Medium   |
-| Register `settings` as scope consumer                                                                                        | settings module             | None                                         | Medium   |
-| Register `Access` permission overlay as scope consumer                                                                       | Access module               | Post-Identity split                          | Low      |
-| Verify Auth models against Identity split                                                                                    | Auth module                 | Identity spec landing                        | Deferred |
-| `ServiceAccount` model + `service_accounts` migration (backend side of the service-identity contract)                        | Auth / Access               | None                                         | High     |
-| `ServiceJwt` signer + verifier (backend side of the service-jwt contract; HS256, `>=32`-byte secret from Doppler)            | Auth                        | `ServiceAccount` landing                     | High     |
-| `@stackra/domain` — shared HTTP-DTO package referenced by the service-boundary contract                                      | Foundation                  | contracts finalised                          | Medium   |
+| Gap                                                                                                               | Owner                       | Blocker                                      | Priority |
+| ----------------------------------------------------------------------------------------------------------------- | --------------------------- | -------------------------------------------- | -------- |
+| Add `tenant_id` to `audits`                                                                                       | Audit module                | None                                         | High     |
+| Add `tenant_id` to `activity_log`                                                                                 | Activity module             | None                                         | High     |
+| Split `User` into `Identity` + `User` (per-app)                                                                   | Identity + User modules     | Identity spec landing                        | High     |
+| Add `application_id` to `tenants`                                                                                 | Tenancy module              | Application module scaffold                  | High     |
+| Add `application_id` to `users` (post-split)                                                                      | User module                 | Identity split                               | High     |
+| Add `application_id` to `roles`, `permissions`                                                                    | Access module               | Application module scaffold                  | High     |
+| Add `application_id` to `tenant_subscriptions`, `entitlement_licenses`                                            | Subscription + Entitlements | Application module scaffold                  | High     |
+| Add `application_id` to `audits`, `activity_log`                                                                  | Audit + Activity            | Post-tenant_id + Application module scaffold | Medium   |
+| Register `settings` as scope consumer                                                                             | settings module             | None                                         | Medium   |
+| Register `Access` permission overlay as scope consumer                                                            | Access module               | Post-Identity split                          | Low      |
+| Verify Auth models against Identity split                                                                         | Auth module                 | Identity spec landing                        | Deferred |
+| `ServiceAccount` model + `service_accounts` migration (backend side of the service-identity contract)             | Auth / Access               | None                                         | High     |
+| `ServiceJwt` signer + verifier (backend side of the service-jwt contract; HS256, `>=32`-byte secret from Doppler) | Auth                        | `ServiceAccount` landing                     | High     |
+| `@stackra/domain` — shared HTTP-DTO package referenced by the service-boundary contract                           | Foundation                  | contracts finalised                          | Medium   |
 
 ### 9b. Closed rows (E9 batch — ADR-0031 §D3)
 

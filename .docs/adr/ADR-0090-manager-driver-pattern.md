@@ -8,25 +8,22 @@ reviewed_at: null
 
 # ADR-0090 — Manager + MultipleInstanceManager pattern for driver-based packages
 
-**Status:** Accepted
-**Date:** 2026-09-03
-**Supersedes:** —
-**Superseded by:** —
+**Status:** Accepted **Date:** 2026-09-03 **Supersedes:** — **Superseded by:** —
 
 ## Context
 
 Several `@stackra/*` packages need to expose one API to consumers while
 supporting multiple swappable back-end implementations behind it:
 
-| Package               | Concern                    | Swappable back-ends                         |
-| --------------------- | -------------------------- | ------------------------------------------- |
-| `@stackra/logger`     | Log write pipeline         | `console`, `pino`, `winston`, `queue`, `http` |
-| `@stackra/cache`      | Cache reads/writes         | `memory`, `redis`, `valkey`, `d1-kv`        |
-| `@stackra/queue`      | Job producer               | `nats-jetstream`, `sqs`, `cloudflare-queue` |
-| `@stackra/storage`    | Blob/object storage        | `r2`, `s3`, `azure-blob`, `filesystem`      |
-| `@stackra/http`       | Named HTTP clients         | Per-config `{ baseURL, timeout, headers }`  |
-| `@stackra/monitoring` | Metric/error fan-out       | `sentry`, `datadog`, `console`              |
-| `@stackra/analytics`  | Product-event fan-out      | `posthog`, `mixpanel`, `segment`, `console` |
+| Package               | Concern               | Swappable back-ends                           |
+| --------------------- | --------------------- | --------------------------------------------- |
+| `@stackra/logger`     | Log write pipeline    | `console`, `pino`, `winston`, `queue`, `http` |
+| `@stackra/cache`      | Cache reads/writes    | `memory`, `redis`, `valkey`, `d1-kv`          |
+| `@stackra/queue`      | Job producer          | `nats-jetstream`, `sqs`, `cloudflare-queue`   |
+| `@stackra/storage`    | Blob/object storage   | `r2`, `s3`, `azure-blob`, `filesystem`        |
+| `@stackra/http`       | Named HTTP clients    | Per-config `{ baseURL, timeout, headers }`    |
+| `@stackra/monitoring` | Metric/error fan-out  | `sentry`, `datadog`, `console`                |
+| `@stackra/analytics`  | Product-event fan-out | `posthog`, `mixpanel`, `segment`, `console`   |
 
 Two shapes recur:
 
@@ -36,8 +33,8 @@ Two shapes recur:
    sub-block.
 2. **Named instances (multi-connection).** The consumer registers N named
    instances, each with its own driver + config. Example: `cache('users')` and
-   `cache('sessions')` may both use Redis but hit different DBs; `queue('emails')`
-   and `queue('notifications')` may use different SQS queues.
+   `cache('sessions')` may both use Redis but hit different DBs;
+   `queue('emails')` and `queue('notifications')` may use different SQS queues.
 
 Laravel solved this with `Illuminate\Support\Manager` (single) and
 `Illuminate\Support\MultipleInstanceManager` (multi). Our support package ships
@@ -49,8 +46,8 @@ NestJS packages inherit those base classes, or do we lean on NestJS-native
 
 **Every `@stackra/*` driver-based package composes on the abstract Manager base
 classes from `@stackra/support/managers`, exposed through a NestJS
-`DynamicModule` façade.** The Manager is the runtime resolver; the module is
-the DI adapter.
+`DynamicModule` façade.** The Manager is the runtime resolver; the module is the
+DI adapter.
 
 ### Two shapes, two base classes
 
@@ -70,7 +67,9 @@ import type { ILoggerConfig } from "../interfaces/logger-config.interface";
 
 @Injectable()
 export class LoggerManager extends Manager<ILogChannel> {
-  public constructor(@Inject(LOGGER_CONFIG) private readonly config: ILoggerConfig) {
+  public constructor(
+    @Inject(LOGGER_CONFIG) private readonly config: ILoggerConfig,
+  ) {
     super();
   }
 
@@ -92,8 +91,8 @@ export class LoggerManager extends Manager<ILogChannel> {
 }
 ```
 
-**Shape B — named instances.** Use `MultipleInstanceManager<TInstance>`.
-Applies when:
+**Shape B — named instances.** Use `MultipleInstanceManager<TInstance>`. Applies
+when:
 
 - The consumer configures N named instances, each with independent config.
 - The name IS the identity — same driver can back multiple instances.
@@ -107,7 +106,9 @@ import type { ICacheStore } from "@stackra/contracts";
 
 @Injectable()
 export class CacheManager extends MultipleInstanceManager<ICacheStore> {
-  public constructor(@Inject(CACHE_CONFIG) private readonly config: ICacheConfig) {
+  public constructor(
+    @Inject(CACHE_CONFIG) private readonly config: ICacheConfig,
+  ) {
     super();
   }
 
@@ -138,8 +139,8 @@ export class CacheManager extends MultipleInstanceManager<ICacheStore> {
 Every driver-based package ships a `<Name>Module.forRoot()` /
 `<Name>Module.forRootAsync()` pair. The module:
 
-1. Registers a config-token provider (`LOGGER_CONFIG`, `CACHE_CONFIG`, ...) bound
-   to the caller's config object.
+1. Registers a config-token provider (`LOGGER_CONFIG`, `CACHE_CONFIG`, ...)
+   bound to the caller's config object.
 2. Registers the Manager class as a singleton provider.
 3. Registers a **token alias** so consumers `@Inject(LOGGER_MANAGER)` receives
    the `LoggerManager` instance.
@@ -213,15 +214,15 @@ methods.
 
 ### Naming convention (locked)
 
-| Token / Class shape             | Example                | Notes                                            |
-| ------------------------------- | ---------------------- | ------------------------------------------------ |
-| Config token                    | `LOGGER_CONFIG`        | SCREAMING_SNAKE. Bound by `forRoot`.             |
-| Manager token                   | `LOGGER_MANAGER`       | Alias for the class token.                       |
-| Manager class                   | `LoggerManager`        | Extends `Manager<T>` or `MultipleInstanceManager<T>`. |
-| Default-driver convenience token | `LOGGER`              | Optional. Resolves via `manager.driver()` / `manager.instance()`. |
-| Driver interface                | `ILogChannel`          | Owned by `@stackra/contracts`.                   |
-| Concrete driver classes         | `ConsoleChannel`, `PinoChannel` | Live in the owning package. NEVER exported from contracts. |
-| Driver factory method           | `create<Studly>Driver` | Convention read by `Manager` via `Str.studly()`. |
+| Token / Class shape              | Example                         | Notes                                                             |
+| -------------------------------- | ------------------------------- | ----------------------------------------------------------------- |
+| Config token                     | `LOGGER_CONFIG`                 | SCREAMING_SNAKE. Bound by `forRoot`.                              |
+| Manager token                    | `LOGGER_MANAGER`                | Alias for the class token.                                        |
+| Manager class                    | `LoggerManager`                 | Extends `Manager<T>` or `MultipleInstanceManager<T>`.             |
+| Default-driver convenience token | `LOGGER`                        | Optional. Resolves via `manager.driver()` / `manager.instance()`. |
+| Driver interface                 | `ILogChannel`                   | Owned by `@stackra/contracts`.                                    |
+| Concrete driver classes          | `ConsoleChannel`, `PinoChannel` | Live in the owning package. NEVER exported from contracts.        |
+| Driver factory method            | `create<Studly>Driver`          | Convention read by `Manager` via `Str.studly()`.                  |
 
 ## Rationale
 
@@ -327,8 +328,8 @@ subscribers). Drivers are a KNOWN closed set with a KNOWN default.
 
 Reviewers verify:
 
-- Any `@stackra/*` package with 2+ swappable back-ends extends
-  `Manager<T>` or `MultipleInstanceManager<T>` from `@stackra/support/managers`.
+- Any `@stackra/*` package with 2+ swappable back-ends extends `Manager<T>` or
+  `MultipleInstanceManager<T>` from `@stackra/support/managers`.
 - No hand-rolled `switch (driver)` dispatch inside a `Module.forRoot()`
   `useFactory`.
 - Manager class file names end in `.manager.ts`; live under `src/core/`.

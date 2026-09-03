@@ -2,7 +2,8 @@
 
 > **Category:** observability · **Maturity:** stable · **Version:** 1.0.0
 
-Better Stack uptime monitoring. Provisions an uptime monitor that probes the deployable's health endpoint and alerts on downtime.
+Better Stack uptime monitoring. Provisions an uptime monitor that probes the
+deployable's health endpoint and alerts on downtime.
 
 ## Provides
 
@@ -13,7 +14,6 @@ Better Stack uptime monitoring. Provisions an uptime monitor that probes the dep
 - **terraform:** terraform.tf
 - **docker:** n/a
 - **wrangler:** n/a
-
 
 ## Usage in `cloud.yaml`
 
@@ -27,6 +27,8 @@ modules:
 
 ## Cross-references
 
-- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) — module manifest schema.
+- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) —
+  module manifest schema.
 - [`infrastructure/modules/README.md`](../README.md) — registry catalog.
-- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md) — authorising plan.
+- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md)
+  — authorising plan.

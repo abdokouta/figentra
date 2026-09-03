@@ -10,8 +10,5 @@
     "eamodio.gitlens",
     "PKief.material-icon-theme"
   ],
-  "unwantedRecommendations": [
-    "hashicorp.terraform",
-    "ms-python.python"
-  ]
+  "unwantedRecommendations": ["hashicorp.terraform", "ms-python.python"]
 }

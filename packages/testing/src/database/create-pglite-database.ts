@@ -117,12 +117,7 @@ export interface IPgliteDatabase {
 export async function createPgliteDatabase(
   options: ICreatePgliteDatabaseOptions = {},
 ): Promise<IPgliteDatabase> {
-  const {
-    schema,
-    migrations = [],
-    extensions,
-    dataDir = "memory://",
-  } = options;
+  const { schema, migrations = [], extensions, dataDir = "memory://" } = options;
 
   const db = new PGlite(dataDir, extensions ? { extensions } : undefined);
   await db.waitReady;
@@ -172,12 +167,8 @@ export async function createPgliteDatabase(
 
       // TRUNCATE ... CASCADE handles FK dependencies in one shot;
       // RESTART IDENTITY resets any auto-increment sequences.
-      const tables = rows
-        .map((r) => `"${r.tablename}"`)
-        .join(", ");
-      await db.exec(
-        `TRUNCATE ${tables} RESTART IDENTITY CASCADE`,
-      );
+      const tables = rows.map((r) => `"${r.tablename}"`).join(", ");
+      await db.exec(`TRUNCATE ${tables} RESTART IDENTITY CASCADE`);
     },
 
     async dispose(): Promise<void> {

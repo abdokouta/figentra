@@ -10,12 +10,15 @@ Do not maintain both Actor and Principal as foundational concepts.
 
 ## Rationale
 
-Principal maps directly to mature IAM terminology and cleanly represents any entity that can be authorized.
+Principal maps directly to mature IAM terminology and cleanly represents any
+entity that can be authorized.
 
 ## Types
 
-Human, service, integration, system and agent can be represented as principal types.
+Human, service, integration, system and agent can be represented as principal
+types.
 
 ## Consequence
 
-Audit may use `effective_principal` and `actual_principal` for delegation/impersonation without introducing Actor as another identity domain.
+Audit may use `effective_principal` and `actual_principal` for
+delegation/impersonation without introducing Actor as another identity domain.

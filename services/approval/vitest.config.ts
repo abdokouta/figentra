@@ -20,10 +20,7 @@ export default mergeConfig(
   preset,
   defineConfig({
     test: {
-      include: [
-        "__tests__/unit/**/*.test.ts",
-        "__tests__/integration/**/*.test.ts",
-      ],
+      include: ["__tests__/unit/**/*.test.ts", "__tests__/integration/**/*.test.ts"],
       setupFiles: ["./__tests__/vitest.setup.ts"],
     },
   }),

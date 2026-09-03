@@ -1,7 +1,7 @@
 # Enterprise Day-1 Gate
 
-A repository is not production-ready merely because its source tree is
-complete. The following gates must pass in the real target accounts.
+A repository is not production-ready merely because its source tree is complete.
+The following gates must pass in the real target accounts.
 
 ## Static/repository gates
 

@@ -2,13 +2,15 @@
 
 **Status: FOUNDATION**
 
-**Runtime: Cloudflare Worker + Hono · Store: D1 (with KV/cache where justified)**
+**Runtime: Cloudflare Worker + Hono · Store: D1 (with KV/cache where
+justified)**
 
 ## Purpose
 
 Registry stores application metadata and capabilities.
 
-The registry is a lightweight control-plane registry and is a Worker, not a NestJS service.
+The registry is a lightweight control-plane registry and is a Worker, not a
+NestJS service.
 
 Potential manifest:
 
@@ -34,9 +36,12 @@ Branding
 
 ## Runtime and placement
 
-The registry is high-read/low-compute metadata. Keep it in `workers/registry` using the official Cloudflare/Hono scaffold. Use D1 for authoritative registry records and KV/edge caching only for read optimization.
+The registry is high-read/low-compute metadata. Keep it in `workers/registry`
+using the official Cloudflare/Hono scaffold. Use D1 for authoritative registry
+records and KV/edge caching only for read optimization.
 
-It does not perform full IAM authorization; it can validate basic access at the edge and delegate authorization to IAM when needed.
+It does not perform full IAM authorization; it can validate basic access at the
+edge and delegate authorization to IAM when needed.
 
 ## Registry is not SDUI
 
@@ -101,14 +106,14 @@ Applications may publish:
 
 The UI remains application-owned.
 
-
 ## Producer-side NestJS integration
 
 `@figentra/registry` provides the preferred declarative producer pattern:
 `RegistryModule.forRoot()` establishes application identity/transport and
 `RegistryModule.forFeature()` adds explicit inventory. For larger applications,
-Nest `DiscoveryService` can collect metadata from decorators attached to providers
-and controllers, allowing teams to keep the manifest close to the owning class.
+Nest `DiscoveryService` can collect metadata from decorators attached to
+providers and controllers, allowing teams to keep the manifest close to the
+owning class.
 
 The collector is compile/registration tooling only. It never writes D1 directly;
 it produces the same canonical manifest submitted to the Registry Worker.

@@ -15,11 +15,7 @@ import { describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 
 import { createAssertableProxy } from "@/core/assertable";
-import {
-  toBeUlid,
-  toHaveBeenCalledWithinLast,
-  toMatchZodSchema,
-} from "@/matchers";
+import { toBeUlid, toHaveBeenCalledWithinLast, toMatchZodSchema } from "@/matchers";
 
 /**
  * A stand-in for Vitest's `MatcherState` so we can invoke the raw
@@ -48,15 +44,11 @@ describe("toBeUlid", () => {
   });
 
   it("fails when the leading character is 8 or 9", () => {
-    expect(() =>
-      expect("81HGP2Q3W4V5X6Y7Z8A9B0C1D2").toBeUlid(),
-    ).toThrow();
+    expect(() => expect("81HGP2Q3W4V5X6Y7Z8A9B0C1D2").toBeUlid()).toThrow();
   });
 
   it("fails when the string contains disallowed chars (I/L/O/U)", () => {
-    expect(() =>
-      expect("01HGP2Q3W4V5X6Y7Z8A9B0C1DI").toBeUlid(),
-    ).toThrow();
+    expect(() => expect("01HGP2Q3W4V5X6Y7Z8A9B0C1DI").toBeUlid()).toThrow();
   });
 
   it("fails on a non-string value", () => {
@@ -67,19 +59,14 @@ describe("toBeUlid", () => {
 
   it("supports .not.toBeUlid() for negation", () => {
     expect("not-a-ulid").not.toBeUlid();
-    expect(() =>
-      expect("01HGP2Q3W4V5X6Y7Z8A9B0C1D2").not.toBeUlid(),
-    ).toThrow();
+    expect(() => expect("01HGP2Q3W4V5X6Y7Z8A9B0C1D2").not.toBeUlid()).toThrow();
   });
 
   // ── Raw function contract ─────────────────────────────────────
 
   describe("raw matcher function", () => {
     it("returns pass=true for a valid ULID", () => {
-      const result = toBeUlid.call(
-        positiveState as never,
-        "01HGP2Q3W4V5X6Y7Z8A9B0C1D2",
-      );
+      const result = toBeUlid.call(positiveState as never, "01HGP2Q3W4V5X6Y7Z8A9B0C1D2");
       expect(result.pass).toBe(true);
       expect(result.expected).toMatch(/valid ULID/);
     });
@@ -91,10 +78,7 @@ describe("toBeUlid", () => {
     });
 
     it("inverts the message when isNot=true", () => {
-      const result = toBeUlid.call(
-        negatedState as never,
-        "01HGP2Q3W4V5X6Y7Z8A9B0C1D2",
-      );
+      const result = toBeUlid.call(negatedState as never, "01HGP2Q3W4V5X6Y7Z8A9B0C1D2");
       expect(result.message()).toMatch(/NOT to be a ULID/);
     });
   });
@@ -110,23 +94,15 @@ describe("toMatchZodSchema", () => {
   // ── expect().toMatchZodSchema() ───────────────────────────────
 
   it("passes for a value satisfying the schema", () => {
-    expect({ id: "u1", name: "Ada", age: 25 }).toMatchZodSchema(
-      UserSchema,
-    );
+    expect({ id: "u1", name: "Ada", age: 25 }).toMatchZodSchema(UserSchema);
   });
 
   it("fails for a value that violates the schema", () => {
-    expect(() =>
-      expect({ id: "u1", name: "Ada", age: -1 }).toMatchZodSchema(
-        UserSchema,
-      ),
-    ).toThrow();
+    expect(() => expect({ id: "u1", name: "Ada", age: -1 }).toMatchZodSchema(UserSchema)).toThrow();
   });
 
   it("fails when required fields are missing", () => {
-    expect(() =>
-      expect({ id: "u1" }).toMatchZodSchema(UserSchema),
-    ).toThrow();
+    expect(() => expect({ id: "u1" }).toMatchZodSchema(UserSchema)).toThrow();
   });
 
   it("supports .not.toMatchZodSchema()", () => {
@@ -194,9 +170,7 @@ describe("toHaveBeenCalledWithinLast", () => {
         /* noop */
       },
     });
-    expect(() =>
-      expect(svc).toHaveBeenCalledWithinLast("touch", 1000),
-    ).toThrow();
+    expect(() => expect(svc).toHaveBeenCalledWithinLast("touch", 1000)).toThrow();
   });
 
   it("fails when the last call is older than the window", () => {
@@ -214,33 +188,22 @@ describe("toHaveBeenCalledWithinLast", () => {
     // Advance an hour — well past a 1-second window.
     vi.setSystemTime(new Date("2026-01-01T01:00:00Z"));
 
-    expect(() =>
-      expect(svc).toHaveBeenCalledWithinLast("touch", 1000),
-    ).toThrow();
+    expect(() => expect(svc).toHaveBeenCalledWithinLast("touch", 1000)).toThrow();
 
     vi.useRealTimers();
   });
 
   it("fails when the receiver is not an assertable proxy", () => {
     // The matcher's error text names the missing shape.
-    expect(() =>
-      expect({}).toHaveBeenCalledWithinLast("anything", 1000),
-    ).toThrow();
-    expect(() =>
-      expect(null).toHaveBeenCalledWithinLast("anything", 1000),
-    ).toThrow();
+    expect(() => expect({}).toHaveBeenCalledWithinLast("anything", 1000)).toThrow();
+    expect(() => expect(null).toHaveBeenCalledWithinLast("anything", 1000)).toThrow();
   });
 
   // ── Raw function contract ─────────────────────────────────────
 
   describe("raw matcher function", () => {
     it("reports a helpful message when the receiver is not a proxy", () => {
-      const result = toHaveBeenCalledWithinLast.call(
-        positiveState as never,
-        {},
-        "anything",
-        1000,
-      );
+      const result = toHaveBeenCalledWithinLast.call(positiveState as never, {}, "anything", 1000);
       expect(result.pass).toBe(false);
       expect(result.message()).toMatch(/expected receiver to be an assertable proxy/);
     });

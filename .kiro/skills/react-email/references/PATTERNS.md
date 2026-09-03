@@ -160,7 +160,7 @@ export default function OrderConfirmation({
             <Section className="mb-6 rounded bg-gray-50 p-4">
               <Row>
                 <Column>
-                  <Text className="mb-1 text-xs text-gray-500 uppercase">
+                  <Text className="mb-1 text-xs uppercase text-gray-500">
                     Order Number
                   </Text>
                   <Text className="m-0 text-base font-bold text-gray-800">
@@ -168,7 +168,7 @@ export default function OrderConfirmation({
                   </Text>
                 </Column>
                 <Column>
-                  <Text className="mb-1 text-xs text-gray-500 uppercase">
+                  <Text className="mb-1 text-xs uppercase text-gray-500">
                     Order Date
                   </Text>
                   <Text className="m-0 text-base font-bold text-gray-800">
@@ -396,7 +396,7 @@ export default function Notification({
           <Container className="mx-auto max-w-xl overflow-hidden rounded border border-solid border-gray-200 bg-white">
             <Section className={`h-1 w-full ${severityColors[severity]}`} />
 
-            <Heading className="mx-6 mt-6 mb-4 text-2xl font-bold text-gray-800">
+            <Heading className="mx-6 mb-4 mt-6 text-2xl font-bold text-gray-800">
               {title}
             </Heading>
 
@@ -521,7 +521,7 @@ export default function Newsletter({
           <Preview>Your weekly roundup of the latest articles</Preview>
           <Container className="mx-auto max-w-xl">
             {/* Header */}
-            <Section className="px-5 pt-10 pb-5 text-center">
+            <Section className="px-5 pb-5 pt-10 text-center">
               <Img
                 src="https://via.placeholder.com/150x50?text=Logo"
                 alt="Company Logo"
@@ -755,7 +755,7 @@ export default function TeamInvitation({
             </Text>
 
             <Section className="my-6 rounded border border-solid border-gray-200 bg-gray-50 p-5">
-              <Text className="mb-2 text-xs font-bold text-gray-500 uppercase">
+              <Text className="mb-2 text-xs font-bold uppercase text-gray-500">
                 Role
               </Text>
               <Text className="m-0 text-lg font-bold text-gray-800">

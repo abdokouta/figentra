@@ -30,9 +30,15 @@ export default function RootLayout(): ReactElement | null {
       }
     }
     void bootstrap();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   if (!context) return null;
-  return <ContainerProvider context={context}><AppProviders /></ContainerProvider>;
+  return (
+    <ContainerProvider context={context}>
+      <AppProviders />
+    </ContainerProvider>
+  );
 }

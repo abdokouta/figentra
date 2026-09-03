@@ -2,7 +2,10 @@
 
 > **Category:** observability · **Maturity:** beta · **Version:** 1.0.0
 
-OpenTelemetry Collector sidecar for distributed tracing. Provisions an OTel Collector (Docker sidecar locally, managed exporter in prod) that receives OTLP traces/metrics and forwards them to the configured backend (Grafana Tempo, Jaeger, Datadog).
+OpenTelemetry Collector sidecar for distributed tracing. Provisions an OTel
+Collector (Docker sidecar locally, managed exporter in prod) that receives OTLP
+traces/metrics and forwards them to the configured backend (Grafana Tempo,
+Jaeger, Datadog).
 
 ## Provides
 
@@ -17,11 +20,11 @@ OpenTelemetry Collector sidecar for distributed tracing. Provisions an OTel Coll
 
 ## Environment variables
 
-| Variable | Description | Source |
-| -------- | ----------- | ------ |
+| Variable                      | Description                   | Source                           |
+| ----------------------------- | ----------------------------- | -------------------------------- |
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | OTel Collector OTLP endpoint. | `terraform_output.otel_endpoint` |
-| `OTEL_SERVICE_NAME` | Service identity for traces. | `deployable.slug` |
-| `OTEL_TRACES_SAMPLER_ARG` | Sampling ratio. | `module.config.sampling_ratio` |
+| `OTEL_SERVICE_NAME`           | Service identity for traces.  | `deployable.slug`                |
+| `OTEL_TRACES_SAMPLER_ARG`     | Sampling ratio.               | `module.config.sampling_ratio`   |
 
 ## Usage in `cloud.yaml`
 
@@ -35,6 +38,8 @@ modules:
 
 ## Cross-references
 
-- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) — module manifest schema.
+- [`infrastructure/modules/schema/module.v1.json`](../schema/module.v1.json) —
+  module manifest schema.
 - [`infrastructure/modules/README.md`](../README.md) — registry catalog.
-- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md) — authorising plan.
+- [`.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md`](../../../.kiro/plans/2026-09-03-cloud-yaml-capability-modules.md)
+  — authorising plan.
