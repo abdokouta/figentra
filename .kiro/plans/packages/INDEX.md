@@ -22,9 +22,9 @@ Root exports are runtime-neutral unless the package itself is a runtime foundati
 
 ## Capabilities
 
-`identity`, `tracking`, `workflow`, `sync`, `queue`, `query`, `state`, `media`, `search`, `audit`
+`identity`, `tracking`, `workflow`, `sync`, `queue`, `query`, `state`, `media`, `search`, `audit`, `sdui`, `page-builder`
 
-Capability packages may expose runtime/framework/provider/testing subpaths. `audit` is a reusable client/contract boundary; the Audit service remains the authoritative durable audit owner.
+Capability packages may expose runtime/framework/provider/testing subpaths. `audit` is a reusable client/contract boundary; the Audit service remains the authoritative durable audit owner. `sdui` owns the controlled runtime document/schema contract; it does not own pages or business data. `page-builder` owns visual authoring; it does not own persistence or publishing authority.
 
 ## Runtime foundations
 
@@ -44,11 +44,15 @@ These remain standalone only because they provide shared runtime/foundation beha
 
 - Business/domain implementations belong to services.
 - `@stackra/workflow` is the workflow definition/execution SDK; durable orchestration belongs to the Workflow service.
+- `@stackra/workflow` does not own page publication, and `@stackra/page-builder` does not become a workflow service.
 - Service workers, consumers and schedulers are roles of their owning NestJS service. Independent workers require an ADR/spec boundary.
 - Cross-service DTOs, commands, queries, events and errors belong to `@stackra/contracts`.
 - Cache is ephemeral; durable state belongs to database/object storage.
 - Observability is operational telemetry; Audit is the durable governance record.
 - Runtime foundation packages are not duplicated as per-capability packages.
+- Application Registry is an independent Cloudflare Worker + Hono control-plane runtime. It stores sanitized application metadata projections and never owns page documents.
+- SDUI is a controlled schema-driven rendering contract; it never transports executable code.
+- Page Builder edits typed documents rather than React/DOM trees. The owning NestJS service owns pages, revisions and publication.
 
 ## Consolidation targets
 
