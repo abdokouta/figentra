@@ -1,50 +1,121 @@
 ---
+authored_by: kiro
+authored_at: 2026-09-03
 status: canonical
 component: service
 service: integrations
 version: v1
 runtime: nestjs
+anchor_adrs: [ADR-0016, ADR-0020, ADR-0024]
 ---
-# Integrations Service — implementation-complete plan
+# Integrations Service — implementation plan
 
-## Mission
-Own external-system connections, provider configuration, credential references, inbound webhooks, outbound synchronization, mapping and reconciliation. Business services own the business meaning of synchronized records.
+## Mission and boundary
+Integrations is the external-system connectivity control plane. It owns provider definitions, tenant connections, credential references, inbound webhook verification, outbound API calls, synchronization orchestration, field mappings and reconciliation. Business services own the business meaning and authoritative business records.
+
+## Source tree
+```text
+services/integrations/src/
+├── modules/{providers,integrations,connections,credentials,webhooks,sync,mapping,reconciliation}
+├── application/{commands,queries,services}
+├── domain/{connection,webhook,sync-job}
+├── infrastructure/{database,http,nats,secrets,config}
+├── presentation/{http,openapi,webhooks}
+├── workers/{sync,reconciliation,webhook-processing}
+├── database/{entities,migrations}
+└── main.ts
+```
 
 ## Models
-`Integration(id,tenantId,providerKey,status,version,config,createdAt)`; `Connection(id,integrationId,externalAccountRef,status,lastSyncAt)`; `CredentialRef(id,connectionId,secretRef,version)`; `WebhookEvent(id,tenantId,provider,eventId,receivedAt,signatureStatus,status,payloadRef)`; `SyncJob(id,connectionId,direction,cursor,status,attempt,nextRunAt)`; `Mapping(id,connectionId,resourceType,externalKey,internalKey,version)`; `ReconciliationJob(id,connectionId,status,drift,checkpoint)`.
+`Integration(id,tenantId,providerKey,status,version,displayName,configSchemaRef)`
+`Connection(id,integrationId,tenantId,externalAccountRef,status,scopes,lastSyncAt,version)`
+`CredentialRef(id,connectionId,secretRef,provider,version,rotatedAt)`
+`WebhookEvent(id,tenantId,connectionId,provider,eventId,signatureStatus,payloadHash,payloadRef,status,receivedAt,processedAt)`
+`SyncJob(id,tenantId,connectionId,direction,resourceType,cursor,status,attempt,nextRunAt,checkpoint)`
+`Mapping(id,connectionId,resourceType,externalKey,internalKey,transformVersion)`
+`ReconciliationJob(id,tenantId,connectionId,status,drift,checkpoint,startedAt,completedAt)`
 
-## API/DTOs
-`POST/GET/PATCH/DELETE /v1/integrations`; `POST /v1/integrations/:id/connections`; `POST /v1/integrations/:id/sync`; `GET /v1/sync-jobs/:id`; `POST /v1/reconciliation`; provider webhooks at `/v1/webhooks/:provider`.
+## Public contracts
+```ts
+interface IntegrationProvider {
+  authorize(input:AuthorizeInput):Promise<AuthorizationResult>;
+  request<T>(input:ProviderRequest):Promise<ProviderResponse<T>>;
+  verifyWebhook(input:WebhookVerificationInput):Promise<VerifiedWebhook>;
+  capabilities():ProviderCapabilities;
+}
+interface SyncService {
+  start(ctx:RequestContext,input:StartSyncInput):Promise<SyncJobView>;
+  run(jobId:string):Promise<void>;
+  cancel(ctx:RequestContext,jobId:string):Promise<void>;
+}
+interface ReconciliationService {
+  compare(jobId:string):Promise<ReconciliationResult>;
+  repair(jobId:string):Promise<void>;
+}
+```
+DTOs: `CreateIntegrationDto`, `UpdateIntegrationDto`, `CreateConnectionDto`, `TestConnectionDto`, `StartSyncDto`, `ReplayWebhookDto`, `CreateMappingDto`, `StartReconciliationDto`.
 
-## Interfaces
-`IntegrationService.create/update/disable`; `ConnectionService.connect/disconnect/test`; `WebhookService.verify/ingest/process`; `SyncService.start/run`; `ReconciliationService.compare/repair`; `IntegrationProvider` with `authorize`, `request`, `verifyWebhook`, `map` and capability metadata.
+## HTTP controllers
+```text
+GET    /v1/integrations
+POST   /v1/integrations
+PATCH  /v1/integrations/:id
+DELETE /v1/integrations/:id
+POST   /v1/integrations/:id/connections
+POST   /v1/integrations/:id/connections/:connectionId/test
+DELETE /v1/integrations/:id/connections/:connectionId
+POST   /v1/integrations/:id/sync
+GET    /v1/sync-jobs/:id
+POST   /v1/reconciliation
+POST   /v1/webhooks/:provider
+POST   /v1/webhooks/:provider/:eventId/replay
+```
 
-## Provider boundary
-External SDKs are adapter-local. Provider credentials are secret references. Each provider declares API version, rate limits, webhook signature algorithm, pagination semantics, idempotency support and supported operations. Unsupported operations fail explicitly; no generic fake provider is accepted.
+## Provider contract
+Every provider declares API version, supported resources/actions, OAuth/token mode, webhook signature algorithm, pagination/cursor behavior, rate limits, idempotency support and data classification. Unsupported operations return typed `ProviderCapabilityError`; they do not silently no-op. Provider SDK types remain adapter-local.
+
+## Webhook execution
+`ingress → provider authenticity verification → payload size/schema validation → dedupe by provider/connection/event ID → durable webhook record → outbox/consumer → domain mapping → owning service command`. Unverified webhooks are rejected or quarantined and never reach domain consumers. Replay is admin-only and reuses the original verified envelope without double-applying the business command.
+
+## Sync execution
+Sync jobs use explicit cursor/checkpoint state, bounded pages, rate-limit-aware backoff and per-resource mappings. Writes to business services occur via versioned commands/events over NATS/HTTP. Integrations never writes another service database. Sync state is idempotent using provider resource IDs + mapping versions.
+
+## Reconciliation
+Reconciliation compares external authoritative state with internal business state where the integration contract declares the comparison safe. Automatic repair is allowed only for declared idempotent operations. Otherwise the service emits a repair proposal/task for operator/business workflow handling.
 
 ## Identity/IAM/Tenant
-Identity provides principal context. IAM authorizes integration administration, connection access and sync operations. Tenant owns the tenant boundary and is checked before every connection operation. Integration never stores user credentials directly when an OAuth/provider secret manager can hold them.
-
-## Webhooks
-Verify authenticity before persistence/processing. Deduplicate by provider event ID plus tenant/connection. Persist the verified envelope, then enqueue domain processing transactionally. Replay endpoints are admin-only and idempotent.
-
-## Sync/reconciliation
-Sync uses cursors/checkpoints and bounded pages. Writes to business services occur through contracts, not direct DB access. At-least-once delivery is assumed. Reconciliation compares provider and internal authoritative state and produces explicit repair jobs; automatic repair is permitted only for declared safe operations.
+Identity provides authenticated principal context for connection management. IAM authorizes provider/integration administration, secret rotation, sync/replay and reconciliation. Tenant is validated for every connection/job. External OAuth/provider secrets are stored only as secret references; token values never enter PostgreSQL or telemetry.
 
 ## Persistence
-PostgreSQL tables above plus `outbox`. Index provider/account/event ID/status/nextRunAt. No raw secrets; large provider payloads use Files/object storage when retention requires them.
+PostgreSQL tables above plus `outbox`. Index tenant/provider/account, webhook event IDs, sync job status/nextRunAt and reconciliation checkpoint. Large webhook payloads are stored as bounded Files/object references when required; DB retains hashes and metadata. Migrations use expand/contract.
 
-## Workers/scheduler
-Consumer processes verified webhooks; worker executes sync/reconciliation with per-provider concurrency/rate limits; scheduler polls providers lacking webhooks and retries due jobs.
+## Security/egress
+TLS and certificate verification are mandatory. Provider destinations are allowlisted/configured; dynamic URLs are SSRF-protected. OAuth state/nonce is validated. Webhook signatures/replay timestamps are enforced. Outbound headers/tokens are redacted. Egress and provider credentials use least privilege.
 
-## Security/reliability
-Egress host allowlists, TLS verification, SSRF-safe URL handling, signature verification, OAuth state validation, replay protection, bounded payloads, secret redaction and tenant isolation. Provider outage uses bounded backoff and does not corrupt business state.
+## Reliability
+Outbound calls have connect/read/overall deadlines. Retries are bounded and only automatic when operation semantics are idempotent. Rate limits use provider-specific backoff. Sync/webhook consumers are at-least-once with durable idempotency. Poison events go to DLQ. Reconciliation can resume from checkpoints after process loss.
+
+## Runtime roles
+`api` manages integrations/connections; `consumer` verifies/dispatches webhooks and integration events; `worker` executes sync/reconciliation; `scheduler` polls providers without webhooks and launches due jobs. All are roles of one NestJS service source tree.
 
 ## Observability
-Provider request latency/errors/rate limits, webhook lag/duplicates, sync backlog, reconciliation drift and token refresh failures. Trace external calls with safe provider/account identifiers only.
+Metrics: provider request latency/error/rate-limit, webhook verification/duplicate/replay, sync backlog/lag, mapping failures, token refresh failures and reconciliation drift. OTel spans identify provider/connection IDs without secrets or full payloads.
 
 ## Testing
-Provider contract fixtures, signature verification, duplicate/replay, rate limits, pagination/cursor recovery, mapping versioning, concurrent sync, tenant isolation, secret redaction, outage recovery and migration tests.
+Provider contract fixtures; signature verification and replay; OAuth state handling; pagination/cursor restart; idempotent sync; mapping-version compatibility; concurrent sync; rate limiting; SSRF/egress controls; tenant isolation; secret redaction; provider outage/DLQ recovery; migrations.
 
-## Completion gate
-Every enabled provider is real and versioned; credentials are secret references; webhooks are verified/idempotent; sync is resumable; reconciliation is explicit; business data is never accessed through another service's database.
+## Implementation phases
+1. Provider/connection contracts and scaffold.
+2. Credential reference and authorization flows.
+3. Webhook verification/ingestion.
+4. Sync/cursor/mapping engine.
+5. Reconciliation and polling scheduler.
+6. Security/observability/failure/load tests.
+7. Production provider rollout and runbooks.
+
+## Exit criteria
+- Every enabled provider is explicitly implemented and versioned.
+- Webhooks are verified, deduplicated and replayable.
+- Sync is resumable, idempotent and rate-limit-safe.
+- Business services are accessed only through contracts/transport.
+- No credentials/provider SDK types leak into domain code.
