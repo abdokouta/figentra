@@ -1,8 +1,6 @@
 # 00 — Figentra Implementation Checklist
 
-This file is the execution checklist for implementing the component specs. It is
-intentionally generic so every component can be audited against the same
-standard.
+This file is the execution checklist for implementing the component specs. It is intentionally generic so every component can be audited against the same standard.
 
 ## Scaffold
 
@@ -64,9 +62,11 @@ standard.
 - [ ] idempotent consumer
 - [ ] replay procedure
 
-## Security
+## Identity and authorization
 
-- [ ] authentication
+- [ ] authentication provider integration
+- [ ] principal normalization
+- [ ] identity context
 - [ ] service identity
 - [ ] tenant resolution
 - [ ] scope resolution
@@ -78,6 +78,56 @@ standard.
 - [ ] webhook verification
 - [ ] abuse/rate-limit behavior
 
+## Signal ownership
+
+- [ ] logs owned by logger
+- [ ] OTel traces/metrics/context owned by observability
+- [ ] operational monitoring owned by infrastructure/operations
+- [ ] audit owned by audit boundary
+- [ ] product/ad tracking owned by tracking
+- [ ] analytical ingestion/aggregation/query owned by analytics
+- [ ] campaign/audience/activation owned by marketing
+- [ ] billable usage owned by usage/metering
+- [ ] domain facts owned by events
+- [ ] notification delivery owned by notifications
+
+## Observability
+
+- [ ] structured logs
+- [ ] OpenTelemetry traces
+- [ ] OpenTelemetry metrics
+- [ ] W3C trace context propagation
+- [ ] request/correlation/causation IDs
+- [ ] resource attributes/service identity
+- [ ] log ↔ trace correlation
+- [ ] HTTP instrumentation
+- [ ] DB/ORM instrumentation
+- [ ] NATS/queue instrumentation
+- [ ] external provider instrumentation
+- [ ] bounded telemetry buffers
+- [ ] exporter failure isolation
+- [ ] redaction before export
+- [ ] health/readiness
+- [ ] SLO/SLI definitions
+- [ ] alerts/runbook
+
+## Tracking / analytics / marketing
+
+- [ ] tracking event schemas
+- [ ] consent/suppression policy
+- [ ] campaign/ad attribution context
+- [ ] ad impression/click/conversion events
+- [ ] tracking deduplication/offline buffering
+- [ ] analytics ingestion/deduplication
+- [ ] analytics aggregation/read models
+- [ ] versioned attribution models
+- [ ] marketing audiences/eligibility
+- [ ] campaign scheduling/journeys
+- [ ] server-side activation
+- [ ] conversion forwarding/reconciliation
+- [ ] provider credentials isolated server-side
+- [ ] tenant/privacy/deletion policy
+
 ## Performance
 
 - [ ] query budget
@@ -88,15 +138,8 @@ standard.
 - [ ] pagination limits
 - [ ] queue throughput
 - [ ] timeout/retry budget
-
-## Observability
-
-- [ ] logs
-- [ ] traces
-- [ ] metrics
-- [ ] correlation IDs
-- [ ] health/readiness
-- [ ] alerts/runbook
+- [ ] telemetry CPU/memory overhead budget
+- [ ] tracking/analytics ingestion throughput
 
 ## Tests
 
@@ -110,6 +153,12 @@ standard.
 - [ ] security
 - [ ] load/performance where justified
 - [ ] tenant isolation
+- [ ] trace/context propagation
+- [ ] telemetry redaction
+- [ ] exporter outage/recovery
+- [ ] tracking consent/privacy
+- [ ] analytics determinism/rebuild
+- [ ] marketing idempotency/retry/reconciliation
 
 ## Documentation
 
@@ -120,3 +169,6 @@ standard.
 - [ ] architecture diagram
 - [ ] dependency matrix
 - [ ] ownership matrix
+- [ ] signal ownership matrix
+- [ ] telemetry data-flow diagram
+- [ ] retention/privacy policy
