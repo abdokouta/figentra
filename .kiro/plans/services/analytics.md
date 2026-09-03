@@ -1,31 +1,47 @@
 ---
-authored_by: kiro
-authored_at: 2026-09-03
-status: Planned
+status: canonical
+component: service
+service: analytics
+version: v1
+runtime: nestjs
 ---
+# Analytics Service — implementation-complete plan
 
-# Analytics Service — implementation plan
+## Mission
+Turn behavioral and operational facts into queryable analytical models. Tracking collects events; Analytics validates, ingests, deduplicates, models, aggregates and serves analytical queries. It does not own user authentication, transactional business state or campaign execution.
 
-## Ownership
+## Modules
+`ingestion`, `event-catalog`, `facts`, `dimensions`, `metrics`, `aggregations`, `attribution`, `segments-read-model`, `query`, `backfill`, `retention`, `persistence`.
 
-Analytics owns durable analytical ingestion, normalization, deduplication, facts/dimensions/measures, aggregation, attribution and analytical query/read models. Product tracking collection remains an SDK concern of `@stackra/tracking`; analytics does not become a tracking SDK.
+## Models
+`AnalyticsEvent(id,tenantId,eventName,eventVersion,occurredAt,receivedAt,principalId,anonymousId,sessionId,properties,context,dedupeKey)`; `Fact(id,tenantId,type,entityId,timeBucket,measures,dimensions)`; `Dimension(name,version,key,attributes)`; `MetricDefinition(key,formula,window,version)`; `MetricObservation(metricKey,tenantId,bucket,value,dimensions,computedAt)`; `AttributionTouch(id,tenantId,subjectId,channel,campaign,occurredAt,weight)`.
 
-## Runtime roles
+## DTOs/interfaces
+`IngestEventDto`, `BatchIngestDto`, `MetricQueryDto`, `FunnelQueryDto`, `AttributionQueryDto`, `BackfillJobDto`; `AnalyticsIngestionService.ingest/batch`; `MetricService.query/compute`; `AttributionService.attribute`; `BackfillService.start/status/cancel`.
 
-- `api`: authorized analytical queries, report/read-model access and administrative controls.
-- `consumer` / `worker`: tracking/domain-event ingestion, deduplication, aggregation, attribution, backfills, retention and reconciliation.
-- Optional scheduler for analytics-owned retention/aggregation jobs.
+## Controllers
+`POST /v1/events`; `POST /v1/events/batch`; `GET /v1/metrics`; `POST /v1/metrics/query`; `POST /v1/funnels/query`; `POST /v1/attribution/query`; `POST /v1/backfills`; `GET /v1/backfills/:id`.
 
-All roles use the same `services/analytics` source tree and domain modules.
+## Identity/IAM/Tenant
+Identity supplies principal context when events are authenticated; anonymous identifiers are accepted only under the tracking consent contract. IAM authorizes administrative metric definitions, backfills and tenant data queries. Tenant is authoritative for tenant status/configuration. Analytical queries always include tenant isolation predicates.
 
-## Contracts
+## Ingestion semantics
+Events are schema-versioned, size-bounded and deduplicated by `(tenant,eventName,eventVersion,dedupeKey)` where configured. Ingestion acknowledges only after durable acceptance. Late events use event time while ingestion time remains available for operational analysis. Invalid events go to a quarantine path with safe diagnostics.
 
-External consumers use versioned `@stackra/contracts/analytics`. Tracking payloads, domain events and provider-specific data are validated at ingestion boundaries. No consumer imports analytics implementation code.
+## Persistence
+Analytical storage may use PostgreSQL for the first production phase with partitioned fact tables and materialized aggregates; a columnar warehouse adapter is allowed only through an ADR. Tables include `analytics_events`, `facts`, `metric_definitions`, `metric_observations`, `attribution_touches`, `backfill_jobs`, `ingestion_quarantine`.
 
-## Implementation requirements
+## Workers
+NestJS consumers ingest tracking batches; workers aggregate facts, recompute affected windows and run backfills; scheduler compacts/retains partitions. Durable work is NATS/JetStream-backed with idempotent handlers.
 
-Implement the complete analytics bounded context with durable ingestion, idempotency/deduplication, late-event handling, tenant isolation, analytical storage/read models, retention/backfill/replay, bounded worker concurrency, NATS/queue integration, audit where required, structured logs, OpenTelemetry, health/readiness, graceful shutdown, security, contract/integration/load tests and production deployment.
+## Security/privacy
+Consent state, data classification, retention and deletion propagation are first-class. Restricted PII is excluded from default analytical properties. Tenant deletion produces a durable purge job with completion evidence. No raw tokens or credentials are accepted.
 
-## Boundary rule
+## Reliability/observability
+Metrics: ingest acceptance/rejection, lag, dedupe rate, aggregation duration, query latency, backfill progress and quarantine volume. Backfills are checkpointed and resumable. Query limits prevent unbounded scans.
 
-Tracking collects behavioral events. Analytics determines statistical/analytical meaning. Marketing consumes analytical outputs to make activation decisions. Operational telemetry remains owned by observability.
+## Testing
+Schema compatibility, duplicate events, late arrivals, aggregation determinism, attribution models, tenant isolation, consent filtering, deletion propagation, backfill restart and query performance.
+
+## Completion gate
+Tracking and Analytics have clear boundaries; every analytical dataset has owner/schema/retention; every query is tenant-safe and bounded; backfills are durable and resumable; no transactional service database is used as an analytics API.
