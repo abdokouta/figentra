@@ -1,19 +1,27 @@
 # Worker Plans
 
-`workers/` is reserved for **independent worker applications** with a genuinely separate runtime/deployment boundary.
+`workers/` is reserved for genuinely independent runtime/deployment applications. The default background-processing pattern remains API/consumer/worker/scheduler roles inside the owning NestJS service.
 
-The default Figentra pattern is a worker **role of the owning NestJS service**, using the same service source tree and modules:
+## Canonical independent Workers
 
-```text
-services/<service>/
-  ├── API role
-  ├── NATS consumer role
-  ├── worker role
-  └── scheduler role
-```
+| Worker | Runtime | Purpose |
+|---|---|---|
+| Gateway | Cloudflare Worker + Hono | public edge routing, request normalization and upstream forwarding |
+| Registry | Cloudflare Worker + Hono | application metadata/control-plane registry; D1 authoritative, KV cache |
+| Infrastructure Orchestrator | Cloudflare Worker + Hono | authenticated infrastructure control/orchestration and reconciliation |
 
-Therefore do not create `workers/notifications`, `workers/analytics`, `workers/marketing`, `workers/audit`, etc. merely because those services perform asynchronous work. Their worker instances are deployments of the corresponding service.
+These three are explicit architecture components, not business services. The repository specifications define all three under `.kiro/specs/figentra-platform/workers/`.
 
-A top-level independent worker requires an ADR explaining why it cannot be represented as a service role. Existing exceptional workers such as gateway/registry/infrastructure-orchestrator remain only while their independent boundary is confirmed by the applicable specification/ADR.
+## Forbidden pattern
 
-Cloudflare Workers are a separate edge/serverless runtime and are not generic replacements for NestJS service worker roles. Containerized NestJS worker roles use Docker/Kubernetes/ECS/etc. according to infrastructure standards.
+Do not create `workers/notifications`, `workers/audit`, `workers/analytics`, `workers/search`, etc. merely because those services have asynchronous workloads. Their background execution belongs to the owning NestJS service source tree unless an ADR proves an independently deployable runtime boundary.
+
+## Runtime rule
+
+Cloudflare Workers are not generic replacements for NestJS workers. A Cloudflare Worker plan must explicitly define its entrypoint, bindings, state model, runtime limits, security boundary, deployment, observability and Worker-native tests. Service worker roles use the canonical NestJS source tree, Docker/container deployment where selected, durable transport, bounded concurrency, idempotency and graceful shutdown.
+
+## Canonical plans
+
+- `gateway.md`
+- `registry.md`
+- `infrastructure-orchestrator.md`
