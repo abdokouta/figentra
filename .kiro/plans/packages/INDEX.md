@@ -1,9 +1,8 @@
 # Canonical Package Plan Index
 
-Every reusable package has exactly one comprehensive implementation plan under this tree. A file is canonical only when it defines ownership, public API, source layout, adapters/providers, configuration, security, tenancy where applicable, failure/recovery, observability, persistence where applicable, testing, versioning and completion criteria.
+Every reusable package has exactly one comprehensive implementation plan under this tree. A file is canonical only when it defines ownership, public API, exact source layout, adapters/providers, configuration, security, tenancy where applicable, failure/recovery, observability, persistence where applicable, testing, versioning and completion criteria.
 
-## Package boundary law
-
+## Boundary law
 ```text
 CAPABILITY = PACKAGE
 PROVIDER / DRIVER = PACKAGE SUBPATH
@@ -11,60 +10,54 @@ RUNTIME INTEGRATION = PACKAGE SUBPATH
 FRAMEWORK INTEGRATION = PACKAGE SUBPATH
 TESTING INTEGRATION = PACKAGE SUBPATH
 ```
-
-A standalone package is permitted only when it has an independently meaningful ownership, lifecycle, dependency graph, deployment/runtime role, or release boundary. Do not split `cache/redis`, `http/axios`, `logger/nestjs`, `storage/filesystem`, `query/react`, etc. into separate packages.
+A standalone package is allowed only when it has independent ownership, lifecycle, dependency graph, deployment/runtime role, or release boundary.
 
 ## Base
-
-`contracts`, `container`, `support`, `errors`, `config`, `logger`, `observability`, `storage`, `cache`, `database`, `orm`, `schema`, `pagination`, `state-machine`, `pipeline`, `http`, `nats`, `realtime`, `link`, `events`, `security`, `coordinator`
+`contracts`, `container`, `support`, `errors`, `config`, `logger`, `observability`, `storage`, `cache`, `database`, `orm`, `schema`, `pagination`, `state-machine`, `pipeline`, `http`, `nats`, `realtime`, `link`, `events`, `security`, `coordinator`, `health`
 
 ## Capabilities
-
-`identity`, `tracking`, `workflow`, `sync`, `queue`, `query`, `state`, `media`, `search`, `reporting`, `dashboard`, `audit`, `sdui`, `page-builder`, `seo`
-
-Capability packages may expose runtime/framework/provider/testing subpaths. `audit` is a reusable client/contract boundary; the Audit service remains the authoritative durable audit owner. `search` is the provider-neutral client/adapter boundary; the Search service owns index lifecycle. `reporting` is the typed report client/builder contract; Reporting owns definitions, projections and execution. `dashboard` owns dashboard documents, widgets and presentation behavior; host services own persistence. `seo` provides the cross-layer SEO contract from domain/backend resolution to web rendering and sitemap/robots output. `sdui` owns the controlled runtime document/schema contract; `page-builder` owns visual authoring.
+`identity`, `scope`, `tracking`, `workflow`, `sync`, `queue`, `scheduler`, `query`, `state`, `media`, `search`, `audit`, `sdui`, `page-builder`, `dashboard`, `seo`, `pwa`, `kbd`, `ai`, `collaboration`, `consent`, `webhook`
 
 ## Runtime foundations
-
 `node`, `nestjs`, `browser`, `react`, `react-native`, `desktop`, `worker`
 
-These remain standalone only because they provide shared runtime/foundation behavior across multiple capabilities. Feature-specific integrations belong in the capability package as subpaths.
-
 ## Tooling
-
-`build`, `testing`, `console`, `vite`, `openapi` where implemented
+`build`, `testing`, `console`, `vite`, `openapi` / `swagger`
 
 ## UI
-
 `router`, `navigation`, `i18n`, `theming`, `ui`
 
-## Ownership rules
+## Canonical subpaths (not standalone package roots)
+```text
+@stackra/cache/redis
+@stackra/http/network
+@stackra/http/response
+@stackra/http/rate-limit
+@stackra/http/cookie
+@stackra/security/encryption
+@stackra/security/hashing
+@stackra/security/csp
+@stackra/observability/tracing
+@stackra/contracts/versioning
+@stackra/search/indexer
+@stackra/nats/pubsub
+@stackra/identity/session
+@stackra/notifications/email
+@stackra/notifications/slack
+@stackra/openapi/swagger
+```
 
-- Business/domain implementations belong to services.
-- `@stackra/workflow` is the workflow definition/execution SDK; durable orchestration belongs to the Workflow service.
-- Service workers, consumers and schedulers are roles of their owning NestJS service. Independent workers require an ADR/spec boundary.
-- Cross-service DTOs, commands, queries, events and errors belong to `@stackra/contracts`.
-- Cache is ephemeral; durable state belongs to database/object storage.
-- Observability is operational telemetry; Audit is the durable governance record.
-- Runtime foundation packages are not duplicated as per-capability packages.
-- Application Registry is an independent Cloudflare Worker + Hono control-plane runtime. It stores sanitized application metadata projections and never owns page documents.
-- SDUI is a controlled schema-driven rendering contract; it never transports executable code.
-- Page Builder edits typed documents rather than React/DOM trees. The owning NestJS service owns pages, revisions and publication.
-- Search clients never connect directly to search-engine infrastructure from browser/mobile runtimes; they use the authenticated HTTP contract. Provider SDKs live only under `@stackra/search/*` backend subpaths.
-- Reporting custom reports use registered datasets and a typed query AST; raw SQL is never a client contract.
-- Dashboard persistence is injected through `@stackra/dashboard/nestjs`; no Dashboard microservice is required.
-- SEO is a cross-layer capability, not a standalone service; domain services remain authoritative for the resources being indexed.
+## Identity / tenancy rule
+`@stackra/identity` owns authentication and principal/session orchestration. The Tenant service owns tenant/organization/membership/domain data. `@stackra/scope` is the client context/switcher package: `ScopeProvider`, `useScope`, tenant/workspace switchers and context propagation. Scope never stores authoritative tenant membership or authorization.
 
-## Consolidation targets
+## Search / reporting / dashboard / SEO
+- Search package is provider-neutral and connects React/Native → HTTP/OpenAPI → Search service → real provider adapters. Search service owns index lifecycle.
+- Reporting is a service-owned domain with a reusable client; report definitions use an allowlisted query AST and dataset contracts, never raw SQL.
+- Dashboard owns client document/widget/layout contracts; `@stackra/dashboard/nestjs` provides persistence/controller adapters. The host service owns database and publication.
+- SEO owns normalized SEO documents and rendering/generation contracts from domain/page revisions through React SSR, canonical/hreflang, JSON-LD, robots and sitemaps.
 
-- Redis → `@stackra/cache/redis`
-- filesystem storage → `@stackra/storage/filesystem`
-- encryption/hash primitives → `@stackra/security/*`
-- HTTP response/transport helpers → `@stackra/http/*`
-- exceptions → `@stackra/errors/*`
-- queue providers → `@stackra/queue/*`
-- search providers → `@stackra/search/*`
+## Service implementation standard
+All 14 services must enumerate, per module: exact source files, entities/value objects, commands/queries/application methods, DTOs/controllers, repository ports/adapters, emitted/consumed events, queue subjects, durable jobs, scheduler entries, notifications/email requests, authz rules, tenancy isolation, audit hooks, metrics/traces, health/readiness, migrations, unit/integration/contract/e2e/load/security tests and deployment configuration. The canonical checklist is `.kiro/plans/2026-09-03-service-implementation-contract.md`.
 
-## Completeness gate
-
-No package plan may contain placeholder architecture, unresolved driver, fake production provider, `TODO`, `TBD`, “define later” contract or target shim. Every public symbol must have a type, behavior, failure semantics and conformance tests specified before implementation.
+## Exact package plan requirement
+Every package plan must state package name, canonical directory, export map, source tree, runtime/framework/provider subpaths, public symbols and signatures, configuration keys, security/tenancy, lifecycle/DI, failure semantics/retries, observability, testing/conformance, versioning/migrations and exit criteria. No placeholder architecture, fake production driver, target shim, or unresolved provider is accepted.
