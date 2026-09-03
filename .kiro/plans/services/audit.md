@@ -1,50 +1,100 @@
 ---
+authored_by: kiro
+authored_at: 2026-09-03
 status: canonical
 component: service
 service: audit
 version: v1
 runtime: nestjs
+anchor_adrs: [ADR-0024]
 ---
-# Audit Service — implementation-complete plan
+# Audit Service — implementation plan
 
-## Mission
-Provide immutable, tenant-isolated records of security, authorization, administration and compliance-relevant actions. Audit is not application logging, OpenTelemetry, analytics, tracking, policy evaluation or notification delivery.
+## Mission and boundary
+Audit owns durable, append-oriented records of security, authorization, administration and compliance-relevant actions. It is not application logging, OpenTelemetry, analytics, tracking, policy evaluation or notification delivery. Audit records are immutable after append; corrections are additive records.
 
-## Models
-`AuditRecord(id,tenantId,eventType,action,actorPrincipalId,subjectPrincipalId,resourceType,resourceId,requestId,correlationId,causationId,occurredAt,recordedAt,result,reasonCode,metadataHash,previousHash,recordHash,schemaVersion)`; `AuditExport(id,tenantId,range,status,objectRef,checksum,requestedBy)`; `RetentionPolicy(id,tenantId,eventType,retentionDays,archiveClass)`; `IntegrityCheck(id,tenantId,startAt,endAt,status,verifiedCount,failureCount)`.
-
-## DTOs/interfaces
-`AppendAuditRecordDto`, `AuditQueryDto`, `AuditRecordDto`, `AuditExportDto`, `IntegrityCheckDto`, `RetentionPolicyDto`.
-```ts
-interface AuditService { append(ctx,input):Promise<AuditRecord>; query(ctx,input):Promise<Page<AuditRecord>>; export(ctx,input):Promise<AuditExport>; verify(ctx,input):Promise<IntegrityCheck> }
+## Source tree
+```text
+services/audit/src/
+├── modules/{records,queries,exports,integrity,retention,archive}
+├── application/{commands,queries,services}
+├── domain/{audit-record,hash-chain,retention-policy}
+├── infrastructure/{database,messaging,object-storage,config}
+├── presentation/{http,openapi}
+├── database/{entities,migrations}
+├── workers/{ingestion,exports,integrity,retention}
+└── main.ts
 ```
 
-## API
-`GET /v1/audit`; `GET /v1/audit/:id`; `POST /v1/audit/exports`; `GET /v1/audit/exports/:id`; `POST /v1/audit/integrity-checks`; `GET/PUT /v1/audit/retention`.
+## Models
+`AuditRecord(id,tenantId,eventId,eventType,action,actorPrincipalId,subjectPrincipalId,resourceType,resourceId,requestId,correlationId,causationId,occurredAt,recordedAt,result,reasonCode,metadataHash,previousHash,recordHash,schemaVersion)`
+`AuditExport(id,tenantId,range,status,objectRef,checksum,requestedBy,createdAt,expiresAt)`
+`RetentionPolicy(id,tenantId,eventType,retentionDays,archiveClass,effectiveAt,version)`
+`IntegrityCheck(id,tenantId,startAt,endAt,status,verifiedCount,failureCount,completedAt)`
 
-## Ingestion
-Security-significant services publish audit commands/events transactionally through their outbox. Audit ingestion is at-least-once and deduplicated by source event ID. Append succeeds only after durable persistence. Records are immutable after append; corrections are represented by new records, never mutation.
+## Public API
+```ts
+interface AuditService {
+  append(input:AppendAuditInput):Promise<AuditRecordView>;
+  query(ctx:RequestContext,input:AuditQuery):Promise<Paginated<AuditRecordView>>;
+  get(ctx:RequestContext,id:string):Promise<AuditRecordView>;
+  export(ctx:RequestContext,input:AuditExportInput):Promise<AuditExportView>;
+  verify(ctx:RequestContext,input:IntegrityCheckInput):Promise<IntegrityCheckView>;
+}
+```
+DTOs: `AppendAuditRecordDto`, `AuditQueryDto`, `AuditExportDto`, `IntegrityCheckDto`, `RetentionPolicyDto`.
 
-## IAM/Identity/Tenant
-Identity supplies actor/subject principal identifiers and authentication/delegation context. IAM authorizes querying/exporting/audit administration. Tenant is the isolation authority. Audit does not make authorization decisions; it records their results where required.
+## Controllers
+```text
+GET    /v1/audit
+GET    /v1/audit/:id
+POST   /v1/audit/exports
+GET    /v1/audit/exports/:id
+POST   /v1/audit/integrity-checks
+GET    /v1/audit/retention
+PUT    /v1/audit/retention
+```
+
+Query/export/admin operations require Identity context + IAM permission. Producers authenticate as service identities when publishing audit commands/events.
+
+## Ingestion semantics
+Producers emit audit contracts after successful business transactions through transactional outbox. Audit consumes at least once and deduplicates stable event IDs. Append is durable before acknowledgement. Ordering is per tenant/event stream where a producer supplies sequence information; global ordering is not promised.
 
 ## Integrity
-Records may form a per-tenant hash chain: `recordHash = H(version || canonicalRecord || previousHash)`. Verification detects tampering or gaps. Hashing proves record continuity but does not replace database access controls or archival immutability.
+Canonical serialization is hashed with a chained `previousHash`. `recordHash = H(schemaVersion || canonicalRecord || previousHash)`. Integrity checks detect missing/changed records and report gaps. Hashing supplements, but does not replace, database/object-storage access controls and archive immutability.
 
 ## Persistence
-PostgreSQL partitioned `audit_records`, `audit_exports`, `retention_policies`, `integrity_checks`, `outbox`. Index tenant/time, actor, subject, resource, action, correlation and event ID. Archive exports use Files/object storage with checksum and access control.
+PostgreSQL tables `audit_records`, `audit_exports`, `retention_policies`, `integrity_checks`, `outbox`. Append-only partitioning may be used for scale. Index tenant/time, actor, subject, resource, action, event ID and correlation ID. Exports use Files/object storage and checksums.
 
-## Workers/scheduler
-Consumer appends records; worker performs exports, integrity checks and archive transitions; scheduler executes retention after legal/configured windows. Deletion is forbidden unless retention policy explicitly permits it and produces evidence.
+## Retention/archive
+Retention policy is tenant/event-type specific where legally allowed. A scheduler creates bounded archive/delete batches. Destructive deletion requires explicit policy and produces an immutable deletion evidence record. Legal hold metadata blocks deletion/archive compaction.
 
-## Security
-Append credentials are service identities with narrow permissions. Query/export is IAM-protected. Restricted metadata is encrypted/classified. Audit payloads are excluded from normal logs and traces.
+## Reliability
+Ingestion retries are bounded. Poison audit messages go to DLQ without blocking other tenants. Export/check runs are resumable using checkpoints. Query remains available while ingestion is lagging. Database/object-storage outages surface dependency errors and do not acknowledge unpersisted audit records.
+
+## Security/tenancy
+Audit rows are tenant-isolated and append authorization is scoped to trusted service identities. Query/export fields are IAM-protected and date/range limited. Sensitive metadata is classified/encrypted and never printed to operational logs/traces.
+
+## Runtime roles
+`api` for query/export/admin APIs; `consumer` for audit-event ingestion; `worker` for exports/integrity/archive; `scheduler` for retention/legal-hold evaluation. One NestJS service tree only.
 
 ## Observability
-Ingestion lag, append failure, duplicate rate, query latency, export progress, integrity failures and retention backlog. Never log raw audit records.
+Metrics: ingestion lag, duplicate rate, append failures, query latency, export progress, integrity failures and retention backlog. OTel traces identify tenant/request/correlation IDs without raw records. Infrastructure owns dashboards/alerts.
 
 ## Testing
-Immutable semantics, hash-chain verification, duplicate ingestion, tenant isolation, IAM enforcement, pagination, export authorization, retention boundaries, archive integrity, migration compatibility and concurrent append ordering.
+Immutable append behavior; duplicate event ingestion; hash-chain verification/gap detection; tenant isolation; IAM enforcement; pagination/filtering; export authorization/checksum; retention/legal hold; concurrent appends; migration compatibility; outage/retry/DLQ recovery.
 
-## Completion gate
-Every required audit action has a canonical event contract and producer owner; records are immutable, queryable, integrity-verifiable and tenant-isolated; no generic log table is used as Audit.
+## Implementation phases
+1. Contracts/scaffold/database.
+2. Append model/outbox consumer.
+3. Query/filter/pagination API.
+4. Export/archive/integrity worker infrastructure.
+5. Retention/legal hold.
+6. Security, observability, load and failure verification.
+
+## Exit criteria
+- Every audited producer uses canonical Audit contracts.
+- Records are immutable and verifiable.
+- Query/export are tenant-isolated and IAM-protected.
+- Retention and archive are policy-driven and resumable.
+- Audit is not used as a logging or analytics database.
