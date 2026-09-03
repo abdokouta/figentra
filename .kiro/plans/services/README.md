@@ -1,18 +1,42 @@
 # Service Plans
 
-Services are the **sole owners of business/domain implementations** in Figentra. Implementation lives under `services/<service>/src/modules` and follows the corresponding `.kiro/specs/figentra-platform/services/*` specification.
+Services are the sole owners of business/domain implementations in Figentra. Implementation lives under `services/<service>/src/modules` and follows `.kiro/specs/figentra-platform/services/*`.
 
-A service may expose multiple deployment roles from the same NestJS codebase:
+## Canonical services
 
-- `api` — HTTP/control-plane endpoints;
-- `consumer` — NATS/event handlers;
-- `worker` — asynchronous jobs and durable background processing;
-- `scheduler` — scheduled orchestration when required.
+1. Identity
+2. Tenant
+3. IAM
+4. Monetization
+5. Usage
+6. Workflow
+7. Notifications
+8. Audit
+9. Files
+10. Integrations
+11. Search
+12. Reporting
+13. Analytics
+14. Marketing
 
-API and worker instances are independently scalable deployments of the same service source. A mirrored `workers/<service>` implementation is not allowed unless an ADR proves a genuinely independent runtime/deployment boundary.
+Retired standalone boundaries: Scope → Tenant/IAM context; Policy → IAM; Approval → Workflow; Entitlements → Monetization.
 
-Cross-service consumers import only versioned public contracts from `@stackra/contracts`. They never import another service's implementation, ORM entities, repositories, providers, or internal interfaces.
+## Runtime
 
-Current service specifications include: identity, tenant, scope, IAM, policy, approval, monetization, entitlements, usage, notifications, audit, files, integrations, reporting, search, and workflow.
+Each service may expose `api`, `consumer`, `worker` and `scheduler` roles from the same NestJS source tree. A mirrored `workers/<service>` implementation is forbidden unless an ADR proves an independent deployment boundary.
 
-Each service plan must document modules, API/message contracts, persistence, role bootstraps, NATS/queue consumers, idempotency, retries/DLQ, tenancy, security, observability, health/readiness, graceful shutdown, scaling, testing, migrations, and deployment.
+## Contracts
+
+Cross-service DTOs, commands, queries, events and errors are versioned in `@stackra/contracts`. Consumers never import another service's implementation, ORM entities, repositories or providers.
+
+## Workflow
+
+`@stackra/workflow` is the reusable workflow definition/execution-client SDK. The Workflow service owns durable execution, timers, retries, compensation, human tasks and approvals. Business services define workflows with the SDK and expose the business commands/events they execute.
+
+## Authorization
+
+Identity answers who is authenticated. IAM answers whether the principal may act. Policy is part of IAM. Monetization provides commercial entitlement decisions. Services do not implement private authorization systems.
+
+## Required coverage
+
+Every service plan must define ownership, modules, models, relations, DTOs, application interfaces/methods, controllers, events/commands, persistence/migrations, runtime roles, idempotency, retries/DLQ, tenancy, security, audit, observability, health/readiness, graceful shutdown, scaling, tests and deployment.
