@@ -1,33 +1,46 @@
 # Figentra Platform — Kiro Specification Index
 
-Read `README.md` first, then `ARCHITECTURE.md` and `SERVICE-CATALOG.md`. These are the normative platform architecture and service inventory. Use `00-implementation-checklist.md` and the component directories for implementation.
+Read `README.md` first, then `ARCHITECTURE.md` and `SERVICE-CATALOG.md`. These are the normative platform architecture and service inventory. Use `00-implementation-checklist.md` and component directories for implementation.
 
 ## Canonical architecture documents
 
 - `README.md` — consolidated repository architecture/engineering contract
-- `ARCHITECTURE.md` — locked runtime, ownership, identity, communication and data boundaries
-- `SERVICE-CATALOG.md` — canonical count and review order of all services
+- `ARCHITECTURE.md` — locked ownership, runtime, identity, communication and data boundaries
+- `SERVICE-CATALOG.md` — canonical 14-service inventory and review order
 - `messaging.md` — NATS/JetStream/Redis/Kafka messaging contract
 - `00-implementation-checklist.md` — implementation gates
+
+## Canonical runtime components
+
+- `workers/01-gateway.md` — independent Cloudflare Worker + Hono public edge gateway
+- `workers/02-registry.md` — independent Cloudflare Worker + Hono application registry/control-plane metadata
+- `workers/03-infrastructure-orchestrator.md` — independent Cloudflare Worker for infrastructure orchestration/control endpoints
+
+Service background processing is not represented as separate worker applications. API, consumer, worker and scheduler roles remain part of the owning NestJS service source tree unless an ADR proves an independent boundary.
 
 ## Directories
 
 - `services/` — deployable NestJS bounded contexts
 - `packages/` — reusable platform libraries/contracts
 - `workers/` — independent Cloudflare edge/control-plane workers only
-- `apps/` — web/mobile/public applications
-- `stackra/` — external Stackra package usage contracts
+- `apps/` — product/public applications
+- `stackra/` — Stackra package usage contracts
 
 ## Service count
 
-**18 canonical deployable services:** Identity, Tenant, Scope, IAM, Policy, Approval, Monetization, Entitlements, Usage, Notifications, Audit, Files, Integrations, Reporting, Search, Workflow, Analytics, Marketing.
+**14 canonical deployable services:** Identity, Tenant, IAM, Monetization, Usage, Workflow, Notifications, Audit, Files, Integrations, Search, Reporting, Analytics, Marketing.
 
-Worker roles inside these services do not increase the service count. Gateway, Registry and Infrastructure Orchestrator are independent Cloudflare runtime components, not additional business services.
+### Removed standalone boundaries
 
-## Messaging rule
+- Scope → Tenant context + product-owned resource hierarchy + IAM evaluation context
+- Policy → IAM
+- Approval → Workflow human-task/workflow primitive
+- Entitlements → Monetization commercial-access model
 
-NATS + JetStream is the canonical durable service messaging platform. Redis is support infrastructure. Kafka requires an ADR.
+## Communication
+
+HTTPS + OpenAPI + typed SDK is the default synchronous service contract. NATS + JetStream is the canonical durable asynchronous transport. Redis is cache/coordination infrastructure. Kafka requires an ADR. Cloudflare Service Bindings are preferred for compatible Worker-to-Worker communication.
 
 ## Rule
 
-No implementation task is complete if it satisfies code compilation but violates its component spec. Any required architectural deviation becomes an ADR before implementation.
+No implementation task is complete if it satisfies compilation but violates its component spec. Any architectural deviation becomes an ADR before implementation.
