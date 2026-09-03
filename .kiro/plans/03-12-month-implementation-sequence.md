@@ -4,67 +4,75 @@ horizon: 12-months
 ---
 # Figentra — 12-Month Implementation Sequence
 
-This sequence implements the already-decided architecture; it is not permission to redesign boundaries later.
+This sequence implements the locked architecture. It is not permission to redesign boundaries later.
 
 ## Phase 0 — Architecture lock
-- Validate steering, specs and ADRs against `.kiro/plans/02-plan-audit-and-completeness.md`.
-- Remove/mark superseded duplicate plan targets.
-- Freeze contracts, package taxonomy, service ownership and runtime roles.
-- Establish CI gates for lint/typecheck/unit/contract/integration/e2e and architecture dependency checks.
+- Approve `.kiro/specs/figentra-platform/ARCHITECTURE.md` and `SERVICE-CATALOG.md`.
+- Apply ADR-0024 final domain boundaries and ADR-0025 workflow architecture.
+- Remove legacy Scope, Policy, Approval and Entitlements service targets.
+- Freeze package/service ownership and contract ownership.
 
-## Phase 1 — Repository/platform foundation
-- pnpm workspace/Turbo/build tooling and package publishing.
+## Phase 1 — Repository and platform foundation
+- pnpm/Turbo/build tooling and package publishing.
 - `@stackra/contracts`, container, support, errors, config.
-- Node/NestJS runtime baseline, service template and role bootstraps.
-- Docker build standards and Terraform environment/state structure.
+- Node/NestJS runtime baseline and service role bootstraps.
+- Docker and Terraform environment structure.
 
 ## Phase 2 — Persistence and transport
 - Database lifecycle, MikroORM, schema/validation, pagination, cache/storage.
-- HTTP client/server policy, NATS transport, realtime and link.
-- Transactional outbox/event infrastructure and idempotency primitives.
+- HTTP/OpenAPI, NATS/JetStream, realtime and link.
+- Transactional outbox and idempotency primitives.
 
 ## Phase 3 — Operational foundation
-- Logger and OpenTelemetry observability integrated into every runtime.
-- Health/readiness/liveness, graceful shutdown, correlation/trace propagation.
-- Collector/exporter infrastructure, dashboards, alerts, SLOs, retention, backup/DR and telemetry failure tests.
+- Logger and OpenTelemetry integrated into every runtime.
+- Health/readiness, graceful shutdown and context propagation.
+- Collector, metrics/traces/log storage, dashboards, alerts, SLOs and runbooks.
 
-## Phase 4 — Identity and access
-- `@stackra/identity` with real Supabase adapter.
-- Identity service principal/session state.
-- Tenant/scope/IAM/policy services and service authentication.
-- Approval workflow and audit integration.
+## Phase 4 — Identity and tenancy
+- Identity.
+- Tenant.
+- IAM including policy definitions/evaluation.
 
-## Phase 5 — Commercial/platform services
-- Monetization, entitlements and usage.
-- Notifications and files.
-- Integrations and webhook/reconciliation flows.
+## Phase 5 — Commercial platform
+- Monetization including entitlements.
+- Usage and metering.
 
-## Phase 6 — Data/product signals
-- Tracking SDK across browser/mobile/desktop.
-- Analytics ingestion, facts/dimensions, aggregation, attribution and query APIs.
-- Marketing audiences, campaigns, journeys and activation.
-- Reporting and search projections/read models.
+## Phase 6 — Orchestration and governance
+- Workflow including human tasks, approvals and compensation.
+- Audit.
 
-## Phase 7 — Workflow and asynchronous scale
-- Workflow execution/timers/compensation.
-- Service worker/consumer/scheduler roles with bounded concurrency, retry/DLQ, leases and reconciliation.
-- Independent gateway/registry/infrastructure-orchestrator workers only where their ADR/spec requires.
+## Phase 7 — Platform capabilities
+- Notifications.
+- Files.
+- Integrations.
+- Search.
+- Reporting.
 
-## Phase 8 — Applications
-- Portal, Family, Landing Page and Mobile application compositions.
-- Router/navigation/i18n/theming/UI runtime packages.
-- Identity/tracking/realtime integration with secure client storage.
+## Phase 8 — Data and growth
+- Analytics.
+- Marketing.
+- Tracking SDK integration.
 
-## Phase 9 — Production hardening
-- Load, soak, chaos/failure-mode and migration rehearsal.
-- Security review, dependency/SBOM scanning, secret rotation and least-privilege review.
-- Tenant isolation and authorization conformance suite.
-- Backups/restore/DR rehearsal and operational runbooks.
+## Phase 9 — Applications and edge
+- Gateway, registry and infrastructure orchestrator.
+- Web, React Native, desktop and other product applications.
+- Application-specific domain modules remain application-owned unless promoted to a genuine service boundary.
 
-## Phase 10 — Release governance
-- Versioned contracts and packages, changelogs and deprecation gates.
-- Progressive rollout/rollback and schema compatibility checks.
-- SLO/error-budget review and capacity planning.
+## Phase 10 — Production hardening
+- Contract compatibility.
+- Load/chaos/failure-mode testing.
+- Tenant isolation and security testing.
+- Backup/restore and disaster recovery.
+- Cost/capacity validation.
+- Deployment/rollback verification.
 
-## Definition of done
-Every planned component has implementation files, tests, contracts, observability, security controls, migration/compatibility behavior and deployment configuration. No component is marked complete while relying on a placeholder production driver, target shim or deferred architecture decision.
+## Phase 11 — Release governance
+- Architecture dependency checks.
+- Migration gates.
+- SLO/error-budget gates.
+- Versioned contracts and deprecation policy.
+- Operational runbooks and ownership review.
+
+## No-deferral rule
+
+Every phase must implement its locked production contract. No placeholder provider, target shim, fake production driver or post-implementation architecture redesign is permitted.
