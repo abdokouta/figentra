@@ -1,54 +1,129 @@
 ---
+authored_by: kiro
+authored_at: 2026-09-03
 status: canonical
 component: service
 service: tenant
 version: v1
 runtime: nestjs
+anchor_adrs: [ADR-0011, ADR-0024]
 ---
-# Tenant Service — implementation-complete plan
+# Tenant Service — implementation plan
 
-## Mission
-Own tenant and organization lifecycle, membership context, isolation metadata and tenant administration. Tenant is the enterprise boundary; it does not own authentication, authorization policy, billing, or application-domain resources.
+## Mission and boundary
+Tenant is the authoritative enterprise tenancy control plane. It owns tenant lifecycle, organizations, memberships, tenant domains, tenant settings, lifecycle state, isolation metadata and tenant administration. It does not own authentication (Identity), authorization/policy evaluation (IAM), commercial entitlements (Monetization), or product resource hierarchies.
 
-## Modules
-`tenant`, `organization`, `membership-context`, `settings`, `lifecycle`, `domains`, `isolation`, `administration`, `events`, `persistence`.
+The former standalone Scope service is removed. `tenantId` is the tenancy boundary; subordinate `scopeId` may remain contextual product metadata but has no independent platform database/service.
 
-## Models
-`Tenant(id,slug,name,status,region,defaultLocale,defaultCurrency,createdAt,updatedAt)`; `Organization(id,tenantId,parentId,name,key,status)`; `TenantDomain(id,tenantId,hostname,verifiedAt,status)`; `TenantMembership(id,tenantId,principalId,status,joinedAt,leftAt)`; `TenantSetting(id,tenantId,key,value,version)`; `TenantLifecycle(id,tenantId,state,reason,changedAt,version)`.
-
-Relations: Tenant→Organizations/Memberships/Domains/Settings; Organization self-hierarchy; Membership→Principal reference only. No FK to Identity database.
-
-## DTOs/interfaces
-`CreateTenantDto`, `UpdateTenantDto`, `ChangeTenantStatusDto`, `CreateOrganizationDto`, `UpdateOrganizationDto`, `AddMembershipDto`, `RemoveMembershipDto`, `VerifyDomainDto`, `TenantContextDto`, `ListTenantsQuery`.
-
-```ts
-interface TenantService { create(ctx,input):Promise<Tenant>; get(ctx,id):Promise<Tenant>; suspend(ctx,id,reason):Promise<Tenant>; activate(ctx,id):Promise<Tenant>; }
-interface TenantContextService { resolve(tenantId,principalId):Promise<TenantContext>; assertActive(tenantId):Promise<void>; }
+## Source tree
+```text
+services/tenant/src/
+├── modules/{tenants,organizations,memberships,domains,settings,lifecycle,isolation,administration}
+├── application/{commands,queries,services}
+├── domain/{entities,value-objects,policies}
+├── infrastructure/{database,cache,messaging,config}
+├── presentation/{http,openapi,mappers}
+├── events/
+├── database/{entities,migrations,seeds}
+├── app.module.ts
+└── main.ts
 ```
 
-## Controllers
-`POST /v1/tenants`; `GET/PATCH /v1/tenants/:id`; `POST /v1/tenants/:id/suspend`; `POST /v1/tenants/:id/activate`; `GET/POST/PATCH/DELETE /v1/tenants/:id/organizations`; `POST/DELETE /v1/tenants/:id/members`; `GET/PATCH /v1/tenants/:id/settings`; `POST /v1/tenants/:id/domains/verify`.
+## Domain models
+`Tenant(id,key,slug,name,status,region,defaultLocale,defaultCurrency,timezone,version,createdAt,updatedAt)`.
+`Organization(id,tenantId,parentId,key,name,status,version)`.
+`TenantMembership(id,tenantId,principalId,status,joinedAt,leftAt,version)`.
+`TenantDomain(id,tenantId,hostname,status,verifiedAt,verificationToken,version)`.
+`TenantSetting(id,tenantId,key,valueType,value,version,updatedAt)`.
+`TenantLifecycle(id,tenantId,state,reason,changedBy,changedAt,version)`.
 
-## Identity/IAM interactions
-Identity supplies authenticated principal identity. Tenant resolves membership/context from its own data. IAM authorizes tenant administration and organization operations. Tenant never evaluates permissions itself. A tenant context may be attached to RequestContext only after membership/status checks.
+Relations stay inside this service database except opaque `principalId` references. Product services own their own resources and may reference `tenantId` and an organization/resource context without foreign keys across service databases.
 
-## Isolation
-Every tenant-owned row carries `tenant_id`; queries require context. Cross-tenant system operations require explicit system principal and IAM authorization. Tenant suspension blocks new business mutations through service-contract context checks while allowing required administrative/recovery reads.
+## Lifecycle
+`provisioning → active → suspended → archived`. Transitions are guarded, versioned and idempotent. Suspension prevents ordinary business mutations when downstream services enforce the shared tenant context; required administration/recovery paths remain available. Archived tenants are read/export restricted and terminal except controlled recovery.
+
+## Public API
+```ts
+interface TenantService {
+  create(ctx:RequestContext,input:CreateTenantInput):Promise<TenantView>;
+  get(ctx:RequestContext,id:string):Promise<TenantView>;
+  update(ctx:RequestContext,id:string,input:UpdateTenantInput):Promise<TenantView>;
+  suspend(ctx:RequestContext,id:string,reason:string):Promise<void>;
+  activate(ctx:RequestContext,id:string):Promise<void>;
+  archive(ctx:RequestContext,id:string,reason:string):Promise<void>;
+}
+interface TenantContextService {
+  resolve(tenantId:string,principalId:string):Promise<TenantContext>;
+  assertActive(tenantId:string):Promise<void>;
+}
+interface MembershipService {
+  add(ctx:RequestContext,input:AddMembershipInput):Promise<MembershipView>;
+  revoke(ctx:RequestContext,tenantId:string,principalId:string):Promise<void>;
+  list(ctx:RequestContext,tenantId:string,query:MembershipQuery):Promise<Paginated<MembershipView>>;
+}
+```
+
+DTOs: `CreateTenantDto`, `UpdateTenantDto`, `ChangeTenantStatusDto`, `CreateOrganizationDto`, `UpdateOrganizationDto`, `AddMembershipDto`, `RemoveMembershipDto`, `CreateDomainDto`, `VerifyDomainDto`, `UpdateTenantSettingDto`, `TenantContextDto`.
+
+## HTTP controllers
+```text
+POST   /v1/tenants
+GET    /v1/tenants/:id
+PATCH  /v1/tenants/:id
+POST   /v1/tenants/:id/suspend
+POST   /v1/tenants/:id/activate
+POST   /v1/tenants/:id/archive
+GET    /v1/tenants/:id/organizations
+POST   /v1/tenants/:id/organizations
+PATCH  /v1/tenants/:id/organizations/:orgId
+DELETE /v1/tenants/:id/organizations/:orgId
+GET    /v1/tenants/:id/members
+POST   /v1/tenants/:id/members
+DELETE /v1/tenants/:id/members/:principalId
+GET    /v1/tenants/:id/domains
+POST   /v1/tenants/:id/domains
+POST   /v1/tenants/:id/domains/:domainId/verify
+GET    /v1/tenants/:id/settings
+PATCH  /v1/tenants/:id/settings/:key
+```
+
+All management endpoints require Identity-resolved authentication and IAM authorization. The controller never accepts a client-supplied principal as authoritative.
+
+## Request context and cross-service calls
+Identity establishes the authenticated principal. Tenant validates tenant membership/status when constructing `TenantContext`. IAM authorizes tenant administration. Monetization may be queried when tenant provisioning requires commercial plan validation, but Monetization remains authoritative for entitlements. Tenant must not evaluate permissions or billing rules itself.
 
 ## Persistence
-PostgreSQL tables `tenants`, `organizations`, `tenant_memberships`, `tenant_domains`, `tenant_settings`, `tenant_lifecycle`, `outbox`. Unique constraints on slug, active domain and `(tenant_id,principal_id)`. Hierarchy indexes support parent/descendant queries.
+PostgreSQL tables: `tenants`, `organizations`, `tenant_memberships`, `tenant_domains`, `tenant_settings`, `tenant_lifecycle`, `outbox`. Unique `(tenant_id,key)` organization/setting constraints, tenant slug/key uniqueness, active membership uniqueness and domain uniqueness. Index membership `(principal_id,status)`, organization `(tenant_id,parent_id)`, domain hostname and lifecycle state.
 
-## Workers
-Consumer handles identity/domain verification events; worker performs domain verification retries and tenant cleanup; scheduler processes lifecycle expiry/retention. Same NestJS service source tree.
+Migrations use expand/contract, online-safe indexes and explicit backfill jobs for large tenant populations. Outbox writes are committed atomically with state transitions.
 
-## Security
-Domain ownership verification, strict tenant identifiers, no tenant secrets in settings, encryption for restricted settings, audit events for administrative mutations and deny-by-default tenant status checks.
+## Isolation/security
+All tenant-owned queries require an explicit tenant predicate or fail-closed ORM filter. Missing tenant context is not interpreted as “global.” Cross-tenant operator actions require system principal + IAM permission. Domain verification uses one-time challenges and strict hostname canonicalization. Tenant settings may contain only approved data types and secret references, never raw secrets.
 
-## Reliability/observability
-Tenant lifecycle transitions are versioned and idempotent. Metrics cover tenant creation, status transitions, membership conflicts, domain verification and context-resolution latency. Cache is non-authoritative and invalidated after commit.
+## Caching and limits
+Tenant context may be cached by `tenantId:membershipVersion`. Cache invalidation is emitted after commit; cache is never authoritative. Membership batch size, organization depth, domain count and setting payload size are bounded and validated.
+
+## Runtime roles/reliability
+`api` serves control-plane APIs; `consumer` processes Identity/Monetization/domain events; `worker` handles verification/cleanup/reconciliation; `scheduler` executes expiry/retention tasks. Mutations are idempotent where retried. Consumers deduplicate event IDs. Shutdown drains active DB/NATS work before exit.
+
+## Observability
+Metrics: tenant lifecycle transitions, context-resolution latency, membership add/revoke rate, domain verification success/failure, cache hit rate and isolation-denial events. OTel traces propagate request/correlation/causation IDs. Sensitive settings and verification tokens are excluded from logs/traces.
 
 ## Testing
-Lifecycle state matrix, membership uniqueness, tenant isolation, cross-tenant denial, domain verification replay, suspension behavior, concurrent updates, migration/rollback compatibility, IAM integration and context propagation.
+Lifecycle transition matrix; organization hierarchy constraints; membership uniqueness; tenant isolation; forged tenant-context rejection; domain verification replay; concurrent status/membership updates; outbox idempotency; cache invalidation; migration upgrade/rollback compatibility; IAM authorization; load tests for context resolution.
 
-## Completion gate
-Tenant is the sole tenant boundary; no standalone Scope service exists. `scopeId` in RequestContext, where retained for product/resource context, is contextual metadata and never a separate control-plane database.
+## Implementation phases
+1. Scaffold, contracts, configuration and migrations.
+2. Tenant/organization aggregates and lifecycle.
+3. Membership and Identity/IAM integration.
+4. Domains/settings/isolation context.
+5. Outbox/events/cache and worker roles.
+6. Security/load/failure testing and production deployment.
+
+## Exit criteria
+- Tenant is the single tenancy control plane.
+- No Scope service/database remains.
+- Every tenant-owned row/query is isolated.
+- Lifecycle behavior is deterministic and migration-safe.
+- Membership/authentication/authorization boundaries are explicit.
+- Production API, consumer, worker and scheduler roles share one service source tree.
