@@ -2,117 +2,132 @@
 authored_by: kiro
 authored_at: 2026-09-03
 source: prompt://enterprise-day-one-plan-set
-reviewed_by: null
-reviewed_at: null
+status: canonical
 ---
 
 # Figentra — Enterprise Day-One Plan Index
 
-**Status:** Planned  
-**Planning standard:** `.kiro/plans/2026-09-03-enterprise-day-one-plan-standard.md`  
+**Planning standard:** `.kiro/plans/2026-09-03-enterprise-day-one-plan-standard.md`
 **Master plan:** `.kiro/plans/00-master-platform-plan.md`
+**Service/runtime standard:** `.kiro/plans/01-global/service-worker-architecture.md`
 
-## Objective
+## Ownership model
 
-This index defines the complete package-plan surface required to implement Figentra as an enterprise-grade platform from day one. Every plan follows the repository's established dated-package structure and must be reconciled with the applicable ADRs and steering documents before implementation.
+This index separates implementation ownership cleanly:
 
-## Plan inventory
+- **Packages:** reusable technical/platform libraries and genuine SDKs.
+- **Services:** business/domain bounded contexts; implementation lives under `services/<service>/src/modules`.
+- **Worker roles:** API/consumer/worker/scheduler deployments of the owning service source tree.
+- **Contracts:** versioned cross-service DTOs, schemas, commands, queries, events, errors and public protocol interfaces in `@stackra/contracts`.
+- **Cloudflare Workers:** explicit edge/serverless workloads only.
 
-### Foundation
+There is no default package + service + worker triplet.
 
-1. `2026-09-03-contracts-package.md` — `@stackra/contracts`
-2. `2026-09-03-container-package.md` — `@stackra/container`
-3. `2026-09-03-support-package.md` — `@stackra/support`
-4. `2026-09-03-errors-package.md` — `@stackra/errors`
-5. `2026-09-03-config-package.md` — `@stackra/config`
-6. `2026-09-03-logger-package.md` — `@stackra/logger`
-7. `2026-09-03-encryption-package.md` — `@stackra/encryption`
-8. `2026-09-03-storage-package.md` — `@stackra/storage`
-9. `2026-09-03-file-system-package.md` — `@stackra/file-system`
-10. `2026-09-03-cache-package.md` — `@stackra/cache`
-11. `2026-09-03-database-package.md` — `@stackra/database`
-12. `2026-09-03-orm-package.md` — `@stackra/orm`
-13. `2026-09-03-schema-package.md` — `@stackra/schema`
-14. `2026-09-03-pagination-package.md` — `@stackra/pagination`
-15. `2026-09-03-state-machine-package.md` — `@stackra/state-machine`
-16. `2026-09-03-pipeline-package.md` — `@stackra/pipeline`
-17. `2026-09-03-http-package.md` — `@stackra/http`
-18. `2026-09-03-nats-package.md` — `@stackra/nats`
-19. `2026-09-03-realtime-package.md` — `@stackra/realtime`
-20. `2026-09-03-link-package.md` — `@stackra/link`
+## Canonical reusable packages
 
-### Capabilities
+### Base
 
-21. `2026-09-03-events-package.md` — `@stackra/events`
-22. `2026-09-03-identity-package.md` — `@stackra/identity`
-23. `2026-09-03-auth-package.md` — `@stackra/auth`
-24. `2026-09-03-queue-package.md` — `@stackra/queue`
-25. `2026-09-03-sync-package.md` — `@stackra/sync`
-26. `2026-09-03-search-package.md` — `@stackra/search`
-27. `2026-09-03-media-package.md` — `@stackra/media`
-28. `2026-09-03-notifications-package.md` — `@stackra/notifications`
-29. `2026-09-03-workflow-package.md` — `@stackra/workflow`
-30. `2026-09-03-query-package.md` — `@stackra/query`
-31. `2026-09-03-state-package.md` — `@stackra/state`
-32. `2026-09-03-coordinator-package.md` — `@stackra/coordinator`
+- `.kiro/plans/packages/base/contracts.md` — `@stackra/contracts`
+- `.kiro/plans/packages/base/container.md` — `@stackra/container`
+- `.kiro/plans/packages/base/support.md` — `@stackra/support`
+- `.kiro/plans/packages/base/errors.md` — `@stackra/errors`
+- `.kiro/plans/packages/base/config.md` — `@stackra/config`
+- `.kiro/plans/packages/base/logger.md` — `@stackra/logger`
+- `.kiro/plans/packages/base/observability.md` — `@stackra/observability`
+- `.kiro/plans/packages/base/storage.md` — `@stackra/storage`
+- `.kiro/plans/packages/base/cache.md` — `@stackra/cache`
+- `.kiro/plans/packages/base/database.md` — `@stackra/database`
+- `.kiro/plans/packages/base/orm.md` — `@stackra/orm`
+- `.kiro/plans/packages/base/schema.md` — `@stackra/schema`
+- `.kiro/plans/packages/base/pagination.md` — `@stackra/pagination`
+- `.kiro/plans/packages/base/state-machine.md` — `@stackra/state-machine`
+- `.kiro/plans/packages/base/pipeline.md` — `@stackra/pipeline`
+- `.kiro/plans/packages/base/http.md` — `@stackra/http`
+- `.kiro/plans/packages/base/nats.md` — `@stackra/nats`
+- `.kiro/plans/packages/base/realtime.md` — `@stackra/realtime`
+- `.kiro/plans/packages/base/link.md` — `@stackra/link`
 
-### Runtime and UI
+### Reusable capabilities / SDKs
 
-33. `2026-09-03-router-package.md` — `@stackra/router`
-34. `2026-09-03-navigation-package.md` — `@stackra/navigation`
-35. `2026-09-03-i18n-package.md` — `@stackra/i18n`
-36. `2026-09-03-theming-package.md` — `@stackra/theming`
-37. `2026-09-03-tracking-package.md` — `@stackra/tracking`
-38. `2026-09-03-ui-package.md` — `@stackra/ui`
-39. `2026-09-03-react-runtime-package.md` — `@stackra/react`
-40. `2026-09-03-react-native-runtime-package.md` — `@stackra/react-native`
-41. `2026-09-03-browser-runtime-package.md` — `@stackra/browser`
-42. `2026-09-03-node-runtime-package.md` — `@stackra/node`
-43. `2026-09-03-nestjs-runtime-package.md` — `@stackra/nestjs`
-44. `2026-09-03-worker-runtime-package.md` — `@stackra/worker`
-45. `2026-09-03-desktop-runtime-package.md` — `@stackra/desktop`
+- `.kiro/plans/packages/capabilities/identity.md` — `@stackra/identity`; authentication + identity SDK boundary.
+- `.kiro/plans/packages/capabilities/tracking.md` — `@stackra/tracking`; client behavioral collection SDK.
+- `.kiro/plans/packages/capabilities/events.md` — `@stackra/events`; domain/application event infrastructure.
+- `.kiro/plans/packages/capabilities/queue.md` — `@stackra/queue`; durable job abstraction.
+- `.kiro/plans/packages/capabilities/sync.md` — `@stackra/sync`; reusable offline synchronization engine.
+- `.kiro/plans/packages/capabilities/search.md` — `@stackra/search`; provider-neutral indexing/search abstraction.
+- `.kiro/plans/packages/capabilities/media.md` — `@stackra/media`; reusable media boundary where domain-neutral.
+- `.kiro/plans/packages/capabilities/workflow.md` — `@stackra/workflow`; durable workflow runtime.
+- `.kiro/plans/packages/capabilities/query.md` — `@stackra/query`; reusable query infrastructure only.
+- `.kiro/plans/packages/capabilities/state.md` — `@stackra/state`; reusable state infrastructure only.
 
-### Platform and governance
+No domain implementation package is created for Notifications, Analytics, Marketing or Audit.
 
-46. `2026-09-03-build-tooling-plan.md` — build, packaging, exports, linting and release tooling
-47. `2026-09-03-testing-package.md` — shared testing and conformance strategy
-48. `2026-09-03-cloud-yaml-capability-modules.md` — cloud capability/module composition
-49. `2026-09-03-enterprise-security-plan.md` — security architecture and controls
-50. `2026-09-03-enterprise-observability-plan.md` — logs, metrics, traces and operational telemetry
-51. `2026-09-03-enterprise-tenancy-plan.md` — tenant isolation, context propagation and policy
-52. `2026-09-03-enterprise-reliability-plan.md` — resilience, SLOs, recovery and capacity
-53. `2026-09-03-global-standards-plan.md` — coding, architecture and package standards
-54. `2026-09-03-adr-reconciliation-plan.md` — ADR-to-package traceability and conflict resolution
-55. `2026-09-03-gap-review-and-migration-plan.md` — repository gap analysis and migrations
-56. `2026-09-03-implementation-checklist-plan.md` — implementation sequencing and verification
+## Runtime and UI packages
 
-## Required detail for every package plan
+- `.kiro/plans/packages/runtime/node.md` — `@stackra/node`
+- `.kiro/plans/packages/runtime/nestjs.md` — `@stackra/nestjs`
+- `.kiro/plans/packages/runtime/browser.md` — `@stackra/browser`
+- `.kiro/plans/packages/runtime/react.md` — `@stackra/react`
+- `.kiro/plans/packages/runtime/react-native.md` — `@stackra/react-native`
+- `.kiro/plans/packages/runtime/desktop.md` — `@stackra/desktop`
+- `.kiro/plans/packages/runtime/worker.md` — `@stackra/worker`
+- `.kiro/plans/packages/ui/router.md` — `@stackra/router`
+- `.kiro/plans/packages/ui/navigation.md` — `@stackra/navigation`
+- `.kiro/plans/packages/ui/i18n.md` — `@stackra/i18n`
+- `.kiro/plans/packages/ui/theming.md` — `@stackra/theming`
+- `.kiro/plans/packages/ui/ui.md` — `@stackra/ui`
 
-Each package plan must define, at minimum:
+## Canonical services
 
-- purpose and explicit non-goals
-- applicable ADRs and steering rules
-- dependencies and forbidden dependency edges
-- exact package/subpath/file layout
-- public exports and locked API surface
-- contracts and DI tokens
-- provider/module registration and lifecycle
-- manager/driver pattern where applicable
-- discovery/registry/populator/factory responsibilities
-- configuration and validation
-- runtime matrix and adapter boundaries
-- security, threat model, isolation and redaction
-- errors, retries, timeouts, cancellation and idempotency
-- concurrency and resource controls
-- observability, metrics, traces and audit events
-- persistence/migrations where applicable
-- compatibility and migration strategy
-- unit/integration/contract/conformance/runtime/E2E tests
-- performance and capacity acceptance criteria
-- documentation and examples
-- implementation phases with concrete files and exit criteria
-- final Definition of Done
+Each service owns its domain implementation under `services/<name>/src/modules` and may expose API, NATS consumer, worker and scheduler roles from that same source tree.
 
-## Enterprise day-one rule
+- `.kiro/plans/services/identity.md`
+- `.kiro/plans/services/tenant.md`
+- `.kiro/plans/services/scope.md`
+- `.kiro/plans/services/iam.md`
+- `.kiro/plans/services/policy.md`
+- `.kiro/plans/services/approval.md`
+- `.kiro/plans/services/monetization.md`
+- `.kiro/plans/services/entitlements.md`
+- `.kiro/plans/services/usage.md`
+- `.kiro/plans/services/notifications.md`
+- `.kiro/plans/services/audit.md`
+- `.kiro/plans/services/files.md`
+- `.kiro/plans/services/integrations.md`
+- `.kiro/plans/services/reporting.md`
+- `.kiro/plans/services/search.md`
+- `.kiro/plans/services/workflow.md`
+- `.kiro/plans/services/analytics.md`
+- `.kiro/plans/services/marketing.md`
 
-No package is considered planned merely because its name appears in this index. A package is implementation-ready only when its plan is sufficiently concrete that implementation does not require architectural invention. Any conflict between plans must be resolved before implementation and recorded through the repository ADR process.
+## Independent workers
+
+Top-level `.kiro/plans/workers/` is reserved for genuinely independent worker applications. Service-owned background processing must remain a service runtime role. Existing exceptional workers (gateway/registry/infrastructure-orchestrator) require their existing ADR/spec boundary to remain valid.
+
+## Applications
+
+Applications consume service APIs/events and public contracts and may use reusable SDK packages. They never import service implementation internals.
+
+## Governance / infrastructure
+
+- `.kiro/plans/01-global/service-worker-architecture.md`
+- `.kiro/plans/01-global/infrastructure-docker-terraform.md`
+- `.kiro/plans/01-global/monitoring-infrastructure.md`
+- `.kiro/plans/01-global/gap-closure-2026-09-03.md`
+- `.kiro/plans/2026-09-03-global-standards-plan.md`
+- `.kiro/plans/2026-09-03-adr-reconciliation-plan.md`
+- `.kiro/plans/2026-09-03-implementation-checklist-plan.md`
+
+## Removed duplicate targets
+
+The following are intentionally absent from the canonical graph:
+
+- standalone `@stackra/auth`;
+- `@stackra/notifications` domain package;
+- `@stackra/analytics` domain package;
+- `@stackra/marketing` domain package;
+- mirrored `workers/<service>` implementations where the owning service can provide the worker role.
+
+## Plan quality gate
+
+Every package/service/runtime plan must define ownership, exact source layout, public contracts, dependencies, DI/lifecycle, configuration, security, errors/recovery, observability, concurrency/resource limits, tenancy/isolation, persistence/migrations where applicable, tests, deployment and exit criteria. No TODO, target shim, placeholder provider, fake production driver or deferred architecture may be used as the target design.
