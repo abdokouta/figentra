@@ -1,29 +1,51 @@
 ---
 status: canonical
 component: service
-name: workflow
+service: workflow
+version: v1
+runtime: nestjs
 ---
-# Workflow Service — implementation plan
+# Workflow Service — implementation-complete plan
 
-Own durable workflow definitions, executions, steps, timers, retries, compensation and execution state. Business capabilities remain in their owning services.
+## Mission
+Durable orchestration control plane for long-running workflows. Owns workflow definitions, immutable versions, executions, step state, timers, retries, signals, human tasks, compensation and recovery. Business services own their aggregates and business state.
 
-## Modules
-`definition`, `execution`, `step`, `timer`, `activity`, `retry`, `compensation`, `persistence`, `http`, `messaging`.
+## Models
+`WorkflowDefinition(id,tenantId,key,version,status,inputSchemaHash,definitionHash)`; `WorkflowRun(id,tenantId,definitionId,definitionVersion,status,idempotencyKey,inputRef,startedAt,completedAt,version)`; `WorkflowStepRun(id,runId,stepKey,attempt,status,inputRef,outputRef,startedAt,completedAt,errorCode)`; `WorkflowTimer(id,runId,stepKey,dueAt,status)`; `WorkflowSignal(id,runId,name,payloadRef,receivedAt,dedupeKey)`; `HumanTask(id,runId,assigneeRef,roleKey,status,dueAt,decision)`; `WorkflowCompensation(id,runId,stepKey,status,attempt)`.
 
-## Runtime
-NestJS `api` for definition/execution control; `consumer` for workflow commands/events; `worker` for activities/timers; `scheduler` for due timers and recovery.
+## DTOs/interfaces
+`RegisterDefinitionDto`, `StartWorkflowDto`, `SignalWorkflowDto`, `CancelWorkflowDto`, `WorkflowRunDto`, `StepCommandDto`, `HumanTaskDecisionDto`, `WorkflowQueryDto`.
+```ts
+interface WorkflowEngine { start(def,input,ctx):Promise<WorkflowRun>; signal(runId,name,payload):Promise<void>; cancel(runId,reason):Promise<void>; recover(runId):Promise<void>; }
+interface ActivityDispatcher { dispatch(step:StepCommand):Promise<void>; }
+```
 
-## Contracts
-Versioned workflow commands/events/status contracts in `@stackra/contracts`; activities use explicit service-owned ports and never import another service implementation.
+## Controllers
+`POST /v1/definitions`; `GET /v1/definitions/:key/:version`; `POST /v1/runs`; `GET /v1/runs/:id`; `POST /v1/runs/:id/signal`; `POST /v1/runs/:id/cancel`; `GET /v1/runs/:id/tasks`; `POST /v1/tasks/:id/decision`.
+
+## Execution model
+Every transition is a compare-and-swap on run version and produces an outbox command/event in the same transaction. Step completion is durable before advancing. External activity results include a stable activity/attempt ID. Duplicate completion is ignored after the recorded attempt state. Timers are database-backed and scheduler-driven; process memory is never authoritative.
+
+## Cross-service interactions
+Workflow calls business services through versioned contracts/commands. Identity context and IAM authorization are evaluated at workflow start and again for sensitive human/activity actions. Tenant status is checked for tenant-owned runs. Workflow never imports another service implementation or repository.
+
+## Persistence
+PostgreSQL tables above plus `workflow_outbox`, `workflow_leases`, `workflow_execution_history`. JSON payloads are bounded and may be stored in Files/object storage for large values using content references. Index tenant/status/dueAt/runId and unique idempotency keys.
+
+## Workers/scheduler
+Consumer receives workflow commands/events; worker executes ready steps and recovery; scheduler claims due timers/leases. Claims use short leases with fencing tokens. Retry/DLQ policies are bounded. Stuck runs are reconciled from durable history.
+
+## Security/tenancy
+Tenant isolation on every query. Definition registration is admin-only. Secrets are references, not payloads. Activity authorization is checked at execution. Human task actions record actor/subject and are auditable. Workflow payloads are classified and redacted from logs.
 
 ## Reliability
-Durable state transitions with optimistic versions, idempotency keys, lease/heartbeat for workers, bounded retries, DLQ for unrecoverable messages, timeout/compensation semantics and recovery/reconciliation after crashes.
+At-least-once commands with idempotent transitions. Retries use exponential backoff/jitter and per-step budgets. Compensation runs only for steps that declare it and only after explicit failure semantics. Partial external side effects are handled by compensating activities or reconciliation; no distributed transaction is assumed.
 
-## Security / tenancy
-Definitions and executions are tenant-scoped; activity authorization is rechecked at execution time; secrets are references only; payload logging is allowlisted.
+## Observability
+Metrics: active runs, step latency, timer lag, retry count, failure rate, stuck leases, queue depth and compensation outcomes. Traces connect run/step/activity spans using correlation/causation IDs. Health checks verify database and NATS readiness.
 
-## Observability/testing/deployment
-Trace execution/activities, measure queue lag, step latency, retries and stuck executions. Test crash recovery, duplicate delivery, ordering, compensation, concurrency, isolation and migrations. Docker roles + Terraform, readiness and graceful shutdown.
+## Testing
+State-machine transition matrix, duplicate commands, crash/restart, timer recovery, lease fencing, compensation ordering, signal races, human-task authorization, tenant isolation, long-running load and migration compatibility.
 
-## Exit criteria
-Durable workflow state machine and execution engine are replay/recovery safe, contract-compliant and deployable without architectural redesign.
+## Completion gate
+Durable recovery works after process loss; every workflow is versioned and immutable; no service runs a second workflow engine; no business aggregate is persisted in Workflow tables.
