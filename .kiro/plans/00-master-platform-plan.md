@@ -199,7 +199,7 @@ Every package plan follows `.kiro/plans/2026-09-03-enterprise-day-one-plan-stand
 
 ## Observability contract
 
-OpenTelemetry is the canonical cross-runtime telemetry model for traces, metrics and telemetry context, with logs correlated to the same execution/resource context. The implementation follows OTel semantic conventions rather than inventing Figentra-specific replacements. citeturn1search3turn1search11
+OpenTelemetry is the canonical cross-runtime telemetry model for traces, metrics and telemetry context, with logs correlated to the same execution/resource context. The implementation follows OTel semantic conventions rather than inventing Figentra-specific replacements.
 
 Every runtime propagates, where applicable:
 
