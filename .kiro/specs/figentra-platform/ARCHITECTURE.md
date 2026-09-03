@@ -126,21 +126,58 @@ Testing integration  → package subpath
 
 Standalone runtime foundations (`node`, `browser`, `react`, `react-native`, `desktop`, `worker`, `nestjs`) are retained only for shared runtime/foundation responsibilities. Feature-specific adapters belong to their owning capability package.
 
+Canonical UI capabilities:
+
+```text
+@stackra/sdui
+  controlled schema/document/renderer contract
+
+@stackra/page-builder
+  visual document authoring built on @stackra/sdui
+```
+
+The page builder edits typed documents rather than DOM/React trees. SDUI never transports executable code. Pages, templates, revisions and publication state remain owned by the application/service that owns the domain.
+
 ## 11. Worker architecture
 
 ### Gateway
 Cloudflare Worker + Hono. Owns public edge routing, request normalization, authentication prevalidation, rate limits, correlation/trace context and upstream dispatch.
 
 ### Application Registry
-Cloudflare Worker + Hono. D1 is authoritative for sanitized application metadata; KV is disposable cache/optimization. Applications own source manifests. Registry never owns application business data and never executes application code.
+Cloudflare Worker + Hono. D1 is authoritative for sanitized application metadata; KV is disposable cache/optimization. Applications own source manifests. Registry never owns application business data, page documents or executable UI code and never executes application code.
 
 ### Infrastructure Orchestrator
 Cloudflare Worker + Hono. Owns authenticated infrastructure control intents and reconciliation. Terraform remains authoritative for durable infrastructure resources.
 
+### No SDUI Worker
+SDUI and page building are capabilities, not deployment boundaries. There is no dedicated SDUI Worker or Page Builder Worker in the canonical architecture. NestJS application/service APIs own page persistence, revisions, bindings and publication. The browser/mobile renderer consumes the controlled document through the owning application API.
+
 ### Service workers
 Every ordinary service uses the same NestJS source tree for `api`, `consumer`, `worker` and `scheduler` roles. Independent `workers/<service>` applications require an ADR.
 
-## 12. Signal ownership
+## 12. Page Builder / SDUI flow
+
+```text
+Builder UI
+  ↓ HTTPS/OpenAPI
+Owning NestJS page/template service
+  ↓
+Draft document
+  ↓
+@stackra/page-builder command model
+  ↓
+@stackra/sdui schema + validation
+  ↓
+Immutable published revision
+  ↓
+Owning service render/read endpoint
+  ↓
+@stackra/sdui/react or /react-native
+```
+
+Production and editor rendering share the same component contract. The editor adds transient selection/drop/debug overlays only.
+
+## 13. Signal ownership
 
 ```text
 Logger        → structured logs
@@ -154,10 +191,10 @@ Events        → business facts
 Notifications → delivery
 ```
 
-## 13. Infrastructure and environments
+## 14. Infrastructure and environments
 
 Docker is the standard container boundary for NestJS services/roles. Terraform is infrastructure source of truth. Environments are exactly `development`, `staging`, `production` and are isolated.
 
-## 14. Implementation gate
+## 15. Implementation gate
 
 A component is implementation-ready only when its specification defines ownership, exact source layout, public contracts, dependencies, lifecycle/DI, configuration, security, failure/recovery, observability, concurrency/resource limits, tenancy/isolation, persistence/migration where applicable, testing and deployment. Missing architecture is a specification defect, not an implementation task.
