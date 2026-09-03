@@ -6,22 +6,21 @@ Accepted.
 
 ## Decision
 
-Figentra uses HTTP for synchronous external/service APIs and NATS JetStream for
-asynchronous events and internal messaging. NestJS `@nestjs/microservices` is
-used where Nest transport integration provides value; it is not mandatory for
-every service.
+Figentra uses **HTTPS + OpenAPI** for the default synchronous service API and **NATS + JetStream** as the canonical internal messaging platform.
 
-Service calls must use authenticated service identity. User tokens are not
-blindly forwarded between services.
+- HTTPS + OpenAPI + typed SDK: default synchronous service-to-service calls.
+- NATS request/reply: allowed for explicitly justified internal low-latency interactions.
+- NATS JetStream: durable events and asynchronous commands/jobs requiring acknowledgement, replay or redelivery.
+- Transactional outbox: required before durable event publication.
+- Redis: cache, rate limiting, short-lived coordination and bounded locks only.
+- Kafka: not default; requires a dedicated ADR based on measured requirements.
 
-## Patterns
+Service calls authenticate the **calling service identity**. User/browser tokens are not blindly forwarded as service credentials.
 
-- Request/response: authenticated HTTP or NATS request/reply when appropriate.
-- Events: NATS JetStream.
-- Long-running work: event/job/workflow.
-- Durable delivery: transactional outbox before publishing.
+## Reliability rules
+
+Consumers must be idempotent, have bounded retries/backoff, explicit terminal failure handling, correlation/trace propagation, readiness and graceful shutdown. Durable event contracts are versioned in `@stackra/contracts`.
 
 ## Consequences
 
-Communication remains explicit, observable, retryable, and independently
-evolvable.
+Figentra has one canonical durable messaging backbone rather than competing NATS/Kafka/Redis event architectures. Redis remains useful for acceleration and coordination. Kafka remains available as a specialized future data-streaming technology without imposing its operational cost and semantics on every bounded context.
