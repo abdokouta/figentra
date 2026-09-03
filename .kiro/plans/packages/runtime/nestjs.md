@@ -1,23 +1,30 @@
 ---
 status: canonical
-component: package
+component: runtime
 package: "@stackra/nestjs"
 ---
-# NestJS Runtime — implementation plan
+# `@stackra/nestjs` — implementation-complete plan
 
-Canonical NestJS adapter over the runtime-neutral platform. Owns bootstrap, modules, DI integration, HTTP/NATS/queue role adapters, validation, OpenAPI, lifecycle and health/readiness integration.
+## Purpose
+Canonical NestJS integration layer for Figentra services. It standardizes modules, controllers, pipes, guards/interceptors, request context, discovery, health/readiness, OpenAPI and role-based process composition while keeping domain code framework-testable.
 
-## Baseline
-NestJS v12-aligned `@nestjs/*` versions; Fastify where repository standards require it; Standard Schema validation; versioned OpenAPI; NATS v3 transport; graceful shutdown and hybrid roles where needed.
+## Service roles
+One service source tree exposes `api`, `consumer`, `worker` and `scheduler` roles. Role bootstrap selects modules/transport consumers but never duplicates domain implementations into separate worker trees.
 
-## API/layout
-`bootstrap`, `modules`, `di`, `http`, `microservices`, `queues`, `validation`, `openapi`, `health`, `lifecycle`, `testing`.
+## API contracts
+`createNestApplication`, `createServiceModule`, `RequestContextGuard`, `ValidationPipe`, `AuthorizationGuard`, `ErrorInterceptor`, `TraceInterceptor`, `HealthController`, `OpenApiModule`, `NatsTransportModule` and typed lifecycle helpers. Controllers call application use cases, never repositories directly.
 
-## Rules
-No business modules inside the runtime package. Runtime role is explicit (`api|consumer|worker|scheduler`); request scope is explicit; no global mutable tenant state.
+## Controller factory
+Route/controller construction is explicit and deterministic. Health endpoints are defined through the shared health contract; services do not create arbitrary health handlers. Discovery is used for registration of decorated providers, not for hidden business behavior.
+
+## Security
+Authentication context is established before validation/authorization. IAM is the authorization boundary. Request IDs, correlation IDs and trace context are propagated. Error serialization uses `@stackra/errors`; secret-bearing headers are redacted.
+
+## Messaging
+NATS/JetStream consumers use versioned `@stackra/contracts`, bounded concurrency, ack/retry/DLQ semantics and graceful drain. HTTP uses Fastify adapter and `@stackra/http` policies.
 
 ## Testing
-Bootstrap smoke tests, validation/OpenAPI conformance, NATS/queue integration, health/readiness, shutdown/drain and role isolation.
+Module bootstrap, controller contracts, validation, guards, discovery, NATS consumer lifecycle, health/readiness, OpenAPI fixtures, graceful shutdown and role matrix tests.
 
-## Exit criteria
-Every NestJS service follows one production bootstrap/runtime standard with no competing framework adapters.
+## Completion criteria
+All NestJS services use one bootstrap/runtime convention; no mirrored workers, ad-hoc controller factories, direct environment access, or duplicated authorization/error pipelines exist.
