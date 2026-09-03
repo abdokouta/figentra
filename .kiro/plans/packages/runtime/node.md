@@ -1,27 +1,67 @@
 ---
+authored_by: kiro
+authored_at: 2026-09-03
 status: canonical
 component: runtime
 package: "@stackra/node"
+anchor_adrs: [ADR-0091]
+depends_on: ["@stackra/config", "@stackra/errors", "@stackra/security", "@stackra/observability"]
 ---
-# `@stackra/node` — implementation-complete plan
+# `@stackra/node` — implementation plan
 
 ## Purpose
-Canonical Node.js runtime boundary for process lifecycle, filesystem/process adapters, timers, crypto, networking primitives and graceful shutdown. Application/business packages remain runtime-neutral.
+Canonical Node.js runtime boundary. It owns process lifecycle, signal handling, filesystem/process adapters, timers, crypto capability access, network/runtime metadata and graceful shutdown. Application packages must not depend directly on Node globals when the capability is exposed here.
 
-## API
-`NodeRuntime`, `RuntimeCapabilities`, `ProcessLifecycle`, `TimerScheduler`, `NodeCrypto`, `NodeEnvSource`, `NodeFileSystem` and typed `RuntimeError`. APIs expose cancellation and deadlines where asynchronous.
+## Public API
+```ts
+interface NodeRuntime {
+  capabilities():RuntimeCapabilities;
+  initialize():Promise<void>;
+  ready():Promise<void>;
+  drain(deadlineMs:number):Promise<void>;
+  dispose():Promise<void>;
+}
+interface ProcessLifecycle { onShutdown(handler:()=>Promise<void>):()=>void; state():LifecycleState; exit(code:number):never; }
+interface NodeFileSystem { read(path:string):Promise<Uint8Array>; write(path:string,data:Uint8Array):Promise<void>; list(root:string):Promise<FileEntry[]>; }
+interface TimerScheduler { delay(ms:number,signal?:AbortSignal):Promise<void>; interval(ms:number,handler:()=>void|Promise<void>):Disposable; }
+```
+
+## Source tree
+```text
+packages/node/
+├── src/core/{runtime.ts,capabilities.ts,lifecycle.ts,signals.ts,timers.ts,env-source.ts,errors/,index.ts}
+├── src/fs/{filesystem.ts,path-policy.ts,index.ts}
+├── src/process/{process-controller.ts,index.ts}
+├── src/network/{network-capabilities.ts,index.ts}
+├── src/crypto/{crypto-adapter.ts,index.ts}
+├── src/testing/{runtime-fixture,signal-fixture,index.ts}
+└── __tests__/{unit,integration,conformance}/
+```
 
 ## Lifecycle
-Bootstrap phases are `load-config → construct-container → initialize → ready → draining → disposed`. Signals (`SIGTERM`, `SIGINT`) initiate graceful drain. New work is rejected after draining begins; active HTTP/NATS work gets a bounded deadline.
+`load-config → construct-container → initialize → ready → draining → disposed`. SIGTERM/SIGINT initiate drain. Once draining begins, new work is rejected; active HTTP/NATS/worker operations receive bounded cancellation deadlines. Shutdown hooks run deterministically and only once.
 
-## Configuration/security
-Environment is read only by the config adapter. Process arguments and environment values are classified and never dumped. File access uses explicit roots; path traversal is rejected. Crypto uses platform CSPRNG and delegates algorithms to `@stackra/security`.
+## Filesystem/process security
+All filesystem access uses explicit roots and canonical path checks. Traversal, symlink escapes and writes outside approved roots are rejected. Environment/argv values are classified and never dumped into logs. Child process execution requires an explicit allowlist and argument array; shell interpolation from untrusted input is prohibited.
 
-## Networking
-Outbound network access is through `@stackra/http` or explicit provider adapters. DNS/socket behavior is observable and bounded; arbitrary egress is not silently permitted.
+## Networking/crypto
+Outbound HTTP uses `@stackra/http`; raw sockets require explicit adapter ownership. Crypto uses platform CSPRNG and delegates algorithm/policy definitions to `@stackra/security`. Capability detection is explicit.
+
+## Observability
+Lifecycle transitions, shutdown duration, open handles, filesystem failures and runtime capability mismatches are measured. Runtime does not log environment secrets. OTel spans/metrics use the observability package.
 
 ## Testing
-Lifecycle, signal handling, timers, cancellation, filesystem boundaries, crypto capability detection, environment isolation, resource cleanup and Node-version compatibility. Production adapter tests run against the supported Node baseline.
+Signal/drain ordering, repeated signals, timer cancellation, filesystem root escapes, process invocation restrictions, capability detection, resource cleanup and supported Node baseline. Integration tests verify graceful shutdown with active HTTP/NATS operations.
 
-## Completion criteria
-No package imports `process`, filesystem or Node-only globals directly except through documented runtime adapters; shutdown is deterministic; capability checks are explicit; no browser/worker shims masquerade as Node implementations.
+## Implementation phases
+1. Core lifecycle/capabilities.
+2. filesystem/process/timer adapters.
+3. crypto/network integration.
+4. observability/security.
+5. runtime conformance/failure/shutdown tests.
+
+## Exit criteria
+- Direct Node-global usage outside runtime adapters is prohibited by architecture/lint rules.
+- Drain is bounded and deterministic.
+- Filesystem/process operations are policy-bound.
+- No browser/Worker emulation is exposed as Node behavior.
