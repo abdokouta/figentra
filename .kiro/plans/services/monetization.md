@@ -1,54 +1,133 @@
 ---
+authored_by: kiro
+authored_at: 2026-09-03
 status: canonical
 component: service
 service: monetization
 version: v1
 runtime: nestjs
+anchor_adrs: [ADR-0024]
 ---
-# Monetization Service — implementation-complete plan
+# Monetization Service — implementation plan
 
-## Mission
-Own commercial configuration and effective commercial access: products/plans, subscriptions, pricing, billing state, usage allowances and entitlements. Entitlements are not a separate service; they are the effective access result produced here.
+## Mission and boundary
+Monetization owns the commercial control plane: product plans, prices, subscriptions, billing state, invoices, commercial limits and **effective entitlements**. Entitlements are an internal module/result, not a standalone service. Monetization does not own authentication, authorization policy, usage fact ingestion, notifications or analytics.
 
-## Modules
-`catalog`, `plans`, `pricing`, `subscriptions`, `billing`, `invoices`, `entitlements`, `limits`, `providers`, `webhooks`, `persistence`.
-
-## Models and relations
-`Plan(id,tenantId,key,name,version,status,currency,interval,features,limits)`; `Price(id,planId,amountMinor,currency,interval,providerRef)`; `Subscription(id,tenantId,accountId,planId,status,currentPeriodStart,currentPeriodEnd,cancelAt)`; `Invoice(id,tenantId,subscriptionId,status,totalMinor,dueAt,providerRef)`; `Entitlement(id,tenantId,subjectId,featureKey,source,quantity,startsAt,endsAt,version)`; `UsageLimit(id,tenantId,subjectId,featureKey,period,limit,consumed)`. Plans contain prices; subscriptions reference plans; invoices reference subscription; entitlements are derived commercial grants.
-
-## DTOs
-Create/update plan, price, subscription checkout/change/cancel, invoice query, entitlement check, usage allowance and provider webhook DTOs. Webhook DTOs are provider-versioned and normalized immediately; provider payloads never leak to domain contracts.
-
-## Interfaces
-```ts
-interface MonetizationService { getEntitlement(ctx,subjectId,feature):Promise<EntitlementResult>; checkLimit(ctx,subjectId,feature,cost):Promise<LimitDecision>; }
-interface SubscriptionService { create(ctx,input):Promise<Subscription>; change(ctx,id,input):Promise<Subscription>; cancel(ctx,id,input):Promise<Subscription>; }
-interface BillingProvider { createCustomer(...):Promise<ProviderCustomer>; createSubscription(...):Promise<ProviderSubscription>; verifyWebhook(input):Promise<VerifiedWebhook>; }
+## Source tree
+```text
+services/monetization/src/
+├── modules/{plans,prices,subscriptions,billing,invoices,entitlements,limits,providers,webhooks,reconciliation}
+├── application/{commands,queries,services}
+├── domain/{aggregates,value-objects,policies}
+├── infrastructure/{database,cache,messaging,config}
+├── presentation/{http,openapi,mappers}
+├── events/
+├── database/{entities,migrations,seeds}
+├── app.module.ts
+└── main.ts
 ```
 
-## Controllers
-`GET/POST/PATCH/DELETE /v1/plans`; `GET/POST/PATCH /v1/prices`; `POST /v1/subscriptions`; `PATCH /v1/subscriptions/:id`; `POST /v1/subscriptions/:id/cancel`; `GET /v1/invoices`; `POST /v1/entitlements/check`; `POST /v1/usage/authorize`; provider webhooks under `/v1/webhooks/billing/:provider`.
+## Models
+`Plan(id,tenantId,key,name,status,version,currency,features,limits,createdAt,updatedAt)`
+`Price(id,tenantId,planId,amountMinor,currency,interval,providerRef,status)`
+`Subscription(id,tenantId,accountId,planId,status,currentPeriodStart,currentPeriodEnd,cancelAt,version)`
+`SubscriptionItem(id,subscriptionId,priceId,quantity)`
+`Invoice(id,tenantId,subscriptionId,status,subtotalMinor,taxMinor,totalMinor,currency,dueAt,paidAt,providerRef,version)`
+`Entitlement(id,tenantId,subjectId,featureKey,source,quantity,startsAt,endsAt,version)`
+`UsageLimit(id,tenantId,subjectId,featureKey,period,limit,consumed,version)`
+`BillingCustomer(id,tenantId,subjectId,provider,providerCustomerRef,status)`
+`ProviderEvent(id,provider,eventId,type,receivedAt,verifiedAt,processedAt,status,payloadHash)`
 
-## Identity/IAM/Tenant calls
-Identity establishes principal and tenant context. IAM authorizes plan administration and subscription actions. Tenant is consulted for tenant status/billing ownership. Monetization never authenticates users or stores role/permission tables. Feature access decisions can be cached but authoritative entitlement state remains PostgreSQL.
+All monetary values use integer minor units + ISO currency. Provider IDs are opaque. Financial records are never hard deleted after finalization.
 
-## Commercial correctness
-Subscription state transitions are explicit and idempotent. Provider webhook processing uses provider event IDs for deduplication. Entitlements are recalculated from authoritative subscription/plan state and versioned. A failed billing provider call cannot create a local “paid” state without verified provider confirmation.
+## Contracts
+```ts
+interface EntitlementService {
+  get(ctx:RequestContext, subjectId:string, featureKey:string):Promise<EntitlementResult>;
+  checkLimit(ctx:RequestContext, subjectId:string, featureKey:string, cost:number):Promise<LimitDecision>;
+}
+interface SubscriptionService {
+  create(ctx:RequestContext,input:CreateSubscriptionInput):Promise<SubscriptionView>;
+  change(ctx:RequestContext,id:string,input:ChangeSubscriptionInput):Promise<SubscriptionView>;
+  cancel(ctx:RequestContext,id:string,input:CancelSubscriptionInput):Promise<SubscriptionView>;
+}
+interface BillingProvider {
+  createCustomer(input:ProviderCustomerInput):Promise<ProviderCustomer>;
+  createSubscription(input:ProviderSubscriptionInput):Promise<ProviderSubscription>;
+  changeSubscription(input:ProviderChangeInput):Promise<ProviderSubscription>;
+  cancelSubscription(input:ProviderCancelInput):Promise<ProviderSubscription>;
+  verifyWebhook(input:unknown, signature:string):Promise<VerifiedProviderEvent>;
+}
+```
+
+DTOs: `CreatePlanDto`, `UpdatePlanDto`, `CreatePriceDto`, `CreateSubscriptionDto`, `ChangeSubscriptionDto`, `CancelSubscriptionDto`, `InvoiceQueryDto`, `EntitlementCheckDto`, `UsageLimitCheckDto`, `BillingWebhookDto` and provider-normalization DTOs.
+
+## HTTP controllers
+```text
+GET    /v1/plans
+POST   /v1/plans
+GET    /v1/plans/:id
+PATCH  /v1/plans/:id
+DELETE /v1/plans/:id
+POST   /v1/plans/:id/prices
+PATCH  /v1/prices/:id
+POST   /v1/subscriptions
+GET    /v1/subscriptions/:id
+PATCH  /v1/subscriptions/:id
+POST   /v1/subscriptions/:id/cancel
+GET    /v1/invoices
+GET    /v1/invoices/:id
+POST   /v1/entitlements/check
+POST   /v1/usage/authorize
+POST   /v1/webhooks/billing/:provider
+```
+
+## Cross-service interactions
+Identity establishes principal/session context. Tenant validates tenant status/ownership context. IAM authorizes plan administration and subscription operations. Usage publishes authoritative consumption facts; Monetization consumes only the usage contract necessary for commercial limits/billing. Notifications delivers billing communications but is never called from a database transaction. Audit receives finalized commercial mutations after commit.
+
+Monetization is authoritative for the **commercial** decision. IAM can consume `EntitlementResult` as one input to an authorization check but does not recreate it.
+
+## Subscription and billing correctness
+Subscription transitions are explicit: `trialing → active → past_due → canceled → expired` with guarded transitions. Local state cannot become paid solely because an API call was made; verified provider confirmation is required. Provider webhooks are deduplicated by `(provider,eventId)` and signature-verified before persistence. Every external mutation accepts an idempotency key.
+
+Entitlements are recalculated from plan + subscription + explicit commercial grants and versioned. A stale cache can reduce availability only; it cannot grant access after expiry. Limit consumption uses atomic compare-and-set/transaction semantics for race safety.
 
 ## Persistence
-PostgreSQL tables: `plans`, `prices`, `subscriptions`, `subscription_items`, `invoices`, `entitlements`, `usage_limits`, `billing_customers`, `provider_events`, `outbox`. Unique tenant/key and provider-event constraints. Monetary amounts stored in minor units with currency.
+PostgreSQL tables listed above plus `outbox`. Required indexes cover `(tenant_id,status)`, subscription period boundaries, `(tenant_id,subject_id,feature_key)`, provider references and webhook event IDs. Unique keys prevent duplicated provider events and active commercial records.
 
-## Workers
-NestJS consumer handles verified billing events; worker reconciles provider state and entitlement materialization; scheduler handles renewals/expiry/reconciliation with bounded batches. No standalone worker codebase.
+Migrations use expand/contract. Invoice and payment-history schemas are append-safe. Reconciliation jobs rebuild derived entitlement/limit state from authoritative records without silently changing financial history.
 
-## Security
-Webhook signature verification, secret references, PCI boundary avoidance, no raw payment credentials, tenant isolation, immutable financial records, idempotency keys and strict provider allowlists.
+## Provider boundary
+Each payment/billing provider implements `BillingProvider`. Provider SDK types never leave adapters. A production environment must name at least one real provider implementation; an unconfigured provider cannot silently behave as success. Sandbox/test providers are test-only and cannot be selected by production configuration.
 
-## Reliability/observability
-Track billing provider latency/failures, webhook lag/duplicates, subscription transition failures, entitlement evaluation latency and reconciliation drift. Financial mutations produce audit events and outbox messages transactionally.
+## Security/compliance
+No raw card/payment credentials are stored. Webhooks require signature verification and replay protection. Provider credentials are secret-manager references. Tenant isolation applies to every commercial row/query. Audit payloads contain action/result metadata rather than payment secrets. Financial exports require explicit IAM permission and bounded date ranges.
+
+## Runtime roles
+`api` serves catalog/subscription/invoice/entitlement queries and authorized mutations. `consumer` processes verified provider events. `worker` performs entitlement rebuild, reconciliation and provider state repair. `scheduler` runs renewal/expiry and retention jobs. All roles share one service source tree.
+
+## Reliability
+Provider calls have explicit connect/read/deadline limits and bounded retry rules based on idempotency. Webhook processing is at-least-once and resumable. Reconciliation detects drift between local and provider state. Failed jobs are retried with bounded exponential backoff and DLQ after the retry budget. No infinite retry loop.
+
+## Observability
+Metrics: provider latency/failure rate, webhook lag/duplicates, payment transition failures, entitlement latency, limit conflicts, reconciliation drift and invoice generation duration. OTel spans redact provider headers, tokens and payment identifiers. Financial mutation audit events include actor, tenant, aggregate, action and result.
 
 ## Testing
-Subscription transition matrix; entitlement derivation; limit atomicity; webhook signature/deduplication; provider contract fixtures; failed-payment recovery; tenant isolation; concurrent plan changes; migration compatibility; reconciliation tests.
+Subscription transition matrix; entitlement derivation; atomic usage-limit consumption; idempotent external mutations; webhook signature/replay/deduplication; provider contract fixtures; invoice calculation; tenant isolation; concurrent subscription changes; reconciliation recovery; migration compatibility; load tests for entitlement checks.
 
-## Completion gate
-All commercial access is resolved here; no `entitlements` service remains; every provider is a real adapter with verification tests; no payment credential enters application persistence.
+## Implementation phases
+1. Contracts, service scaffold, config and database.
+2. Plans/prices and catalog administration.
+3. Subscription lifecycle + billing-provider adapter.
+4. Invoices/webhooks/idempotency/reconciliation.
+5. Entitlement and commercial-limit engine.
+6. IAM/Identity/Tenant integration, audit/outbox and workers.
+7. Security, failure-injection, load testing and production rollout.
+
+## Exit criteria
+- One authoritative Monetization service resolves commercial access.
+- No standalone Entitlements service remains.
+- Payment/provider state cannot be forged through local API success alone.
+- All provider events are verified and deduplicated.
+- Entitlement/limit decisions are deterministic and tenant-isolated.
+- Financial and commercial mutation paths are auditable, migration-safe and tested.
