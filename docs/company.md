@@ -7,7 +7,9 @@
 
 ## 1. Who is Figentra?
 
-**Figentra is an agentic development company building AI-native software platforms and applications from the Middle East and Africa for a global market.**
+**Figentra is an agentic development company building AI-native software platforms and applications for MENA and global markets.**
+
+Figentra is headquartered in the UAE and is positioned to serve the broader Middle East and North Africa region while building for customers and opportunities globally.
 
 Figentra combines agentic software development, enterprise platform engineering, and product development into one technology company.
 
@@ -41,8 +43,8 @@ Figentra's offering has two primary technology products and an expanding applica
 
 ### Application products
 
-1. **Academorix**
-2. **Beautilon**
+1. **Academorix** — sports-academy SaaS application.
+2. **Beautilon** — Figentra application; current product name.
 3. Future products and vertical applications.
 
 ## 4. The Figentra thesis
@@ -105,11 +107,13 @@ Applications demonstrate what can be built using the Figentra ecosystem.
 
 ### Academorix
 
-An application product built by Figentra.
+**Academorix is a sports-academy SaaS application.** Its current V1 scope is centered on the core academy operating workflow: tenant creation, authentication, user invitations, branches, teams, and tenant-scoped management for coaches, athletes, and parents.
+
+Its product-specific business logic and data remain application-owned.
 
 ### Beautilon
 
-An application product built by Figentra.
+**Beautilon** is an application product built by Figentra.
 
 The current canonical name is **Beautilon**. The former name **Beauty Loan** is retained only as historical naming context.
 
@@ -117,8 +121,9 @@ The current canonical name is **Beautilon**. The former name **Beauty Loan** is 
 
 Figentra serves organizations that need to build or transform complex digital businesses, including:
 
-- Enterprises
-- Startups
+- Enterprises across MENA
+- Global enterprises
+- Startups and scale-ups
 - Technology companies
 - Digital product teams
 - Organizations modernizing legacy systems
@@ -127,43 +132,41 @@ Figentra serves organizations that need to build or transform complex digital bu
 
 ## 10. Geographic strategy
 
-Figentra's geographic identity is deliberately two-dimensional.
+Figentra has a clear regional focus with a global market strategy.
 
-### Home
+### Headquarters / home market
 
-**Middle East and Africa.**
+**UAE.**
 
-This is the company's regional identity and origin.
+### Regional target
 
-### Market
+**MENA — Middle East and North Africa.**
 
-**Global.**
+### Global target
 
-Figentra's products and technology are designed for customers beyond the region.
+**Global markets.**
+
+The company should not describe itself as MENA-only. The regional focus is an initial market strategy, while the product and technology ambition is global.
 
 ### Preferred statement
 
-> **Built from the Middle East and Africa. Built for the world.**
+> **Based in the UAE. Built for MENA and the world.**
 
 ### Agentic category statement
 
-> **Pioneering agentic software development from the Middle East and Africa for a global market.**
+> **Pioneering agentic software development for MENA and global markets.**
 
-## 11. Why not MENA-only?
+### Alternative corporate statement
 
-MENA is useful as a regional market term, but it should not define the entire company.
+> **Building the next generation of software from the UAE for MENA and global markets.**
 
-Africa is strategically important to the company's geographic identity, and the product strategy is global.
-
-Therefore the canonical company language is **Middle East and Africa**, with **global** used for market reach and ambition.
-
-## 12. What makes Figentra different?
+## 11. What makes Figentra different?
 
 Figentra combines three normally separate activities:
 
 1. Building the AI system that changes how software is developed.
-2. Building the enterprise platform that software runs on.
-3. Building real applications that prove and monetize the technology.
+2. Building the enterprise platform that software operates on.
+3. Building real applications that prove the technology in production.
 
 This creates a closed technology-to-product loop:
 
@@ -181,64 +184,48 @@ Improve Platform + Agents
 Build Better Products
 ```
 
-## 13. The company promise
+## 12. The company promise
 
-> **Build the next generation of software with AI agents, on an enterprise foundation, for a global market.**
+> **Build the next generation of software with AI agents, on an enterprise foundation, for MENA and the world.**
 
-## 14. Long-term vision
+## 13. Long-term vision
 
-Figentra aims to become a globally relevant technology company originating from the Middle East and Africa, with agentic development at the center of its engineering model and Figentra OS as its enterprise technology foundation.
+Figentra aims to become a globally relevant technology company based in the UAE, with a strong MENA market position and global reach.
 
-The long-term ecosystem is:
+Agentic development is central to how Figentra builds. Figentra OS is the enterprise technology foundation. Applications demonstrate the value of the ecosystem.
 
-```text
-                     FIGENTRA
-                        │
-           ┌────────────┴────────────┐
-           │                         │
-   Agentic Development          Figentra OS
-           │                         │
-           └────────────┬────────────┘
-                        │
-                   Applications
-                        │
-          ┌─────────────┼─────────────┐
-          │             │             │
-      Academorix     Beautilon      Future
-```
-
-## 15. Corporate one-liners
+## 14. Corporate one-liners
 
 ### Primary
 
-> **Figentra is an agentic development company building AI-native software platforms and applications from the Middle East and Africa for a global market.**
+> **Figentra is an agentic development company building AI-native software platforms and applications for MENA and global markets.**
 
 ### Short
 
 > **Figentra — the agentic development company.**
 
-### Visionary
-
-> **Figentra is building the next generation of software through agentic development.**
-
 ### Regional
 
-> **Pioneering agentic software development from the Middle East and Africa.**
+> **Pioneering agentic software development for MENA.**
 
 ### Global
 
 > **Building the next generation of software through AI agents.**
 
-## 16. Naming authority
+### Origin + market
+
+> **Based in the UAE. Built for MENA and the world.**
+
+## 15. Naming authority
 
 | Name | Type | Definition |
 |---|---|---|
 | **Figentra** | Company / brand | Agentic development company and technology ecosystem |
 | **Figentra Agentic Development** | Technology product | AI-native software development platform |
 | **Figentra OS** | Technology product | Enterprise Operating System |
-| **Academorix** | Application product | Figentra-built application |
-| **Beautilon** | Application product | Figentra-built application |
+| **Academorix** | Application product | Sports-academy SaaS application |
+| **Beautilon** | Application product | Figentra application product |
 
-## 17. Final company definition
+## 16. Final company definition
 
-> **Figentra is an agentic development company pioneering AI-native software development from the Middle East and Africa for a global market. It builds Figentra Agentic Development, Figentra OS, and a portfolio of applications including Academorix and Beautilon.**
+> **Figentra is an agentic development company based in the UAE, building AI-native software platforms and applications for MENA and global markets. Its technology portfolio includes Figentra Agentic Development and Figentra OS, alongside applications such as Academorix and Beautilon.**
