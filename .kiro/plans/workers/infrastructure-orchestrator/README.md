@@ -20,5 +20,7 @@ Runtime: Cloudflare Worker + Hono. This is the authenticated infrastructure cont
 14. `14-testing.md` — unit, integration, contract, E2E, security, load and sandbox tests.
 15. `15-deployment-and-operations.md` — Worker/IaC deployment and runbooks.
 16. `16-definition-of-done.md` — zero-deferred production gate.
+17. `17-dependency-graph.md` — compile/runtime dependencies and authority boundaries.
+18. `18-configuration.md` — complete Worker/runner configuration and secret bindings.
 
 The orchestrator accepts only authenticated, authorized, allowlisted infrastructure intents. It never accepts arbitrary Terraform, shell, provider URLs or credentials from callers.
