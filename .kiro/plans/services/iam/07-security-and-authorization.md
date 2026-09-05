@@ -1,6 +1,9 @@
 # IAM Service — Security & Authorization
 
-IAM is the sole authorization authority. It authenticates context through Identity but never imports Identity persistence/provider code.
+IAM is the sole authorization authority. Identity authenticates context; Gateway may prevalidate transport credentials but never supplies a final allow.
+
+## Gateway boundary
+Gateway owns public edge admission, CORS/WAF and coarse rate limiting. IAM independently validates trusted service context, tenant/resource scope, policy/grant state and authorization semantics. Client/Gateway-provided role, permission, policy-result, authorization-decision or tenant headers are untrusted.
 
 ## Evaluation controls
 - deny by default;
@@ -9,22 +12,22 @@ IAM is the sole authorization authority. It authenticates context through Identi
 - enforce policy/grant expiry;
 - evaluate only bounded typed conditions;
 - require matching tenant/principal/scope;
-- reject unknown action/resource rather than guessing;
+- reject unknown action/resource;
 - stale policy versions cannot produce allow;
 - delegation preserves actor/effective subject;
 - service identities require explicit audience/scope.
 
 ## Administrative controls
-Role, grant, policy and permission administration requires authenticated context and IAM administrative permissions. Permission catalog changes are controlled and versioned. Self-modification paths are explicitly protected against accidental privilege escalation.
+Role, grant, policy and permission administration requires authenticated context and IAM permissions. Self-modification is protected against privilege escalation.
 
 ## Isolation
-All tenant-scoped operations constrain tenant ID at repository level and application authorization level. Cross-tenant IDs are opaque and cannot be used to bypass scope. Resource hierarchy checks are deterministic.
+Tenant scope is enforced at application and repository layers. Cross-tenant IDs are opaque. Resource hierarchy checks are deterministic.
 
 ## Policy safety
-Conditions are a typed AST with allow-listed operators and bounded depth/size. No code execution, SQL fragments, dynamic imports, network access, filesystem access or template evaluation is permitted.
+Conditions are typed, bounded ASTs. No code execution, SQL fragments, dynamic imports, network, filesystem or template evaluation.
+
+## Rate/transport distinction
+Gateway limits protect edge traffic. IAM retains authorization-specific batch, AST, evaluation-time and privileged mutation limits. Neither layer may silently weaken the other.
 
 ## Abuse/security tests
-Cover forged context, tenant escape, privilege escalation, deny bypass, expired grant, stale cache, policy injection, oversized policy, algorithm/context confusion, concurrent mutation races and delegation escalation.
-
-## Failure
-Any uncertainty in identity, tenant, policy, resource scope or evaluator state results in deny or dependency failure—not allow.
+Cover forged Gateway context, tenant escape, privilege escalation, deny bypass, expired grant, stale cache, policy injection, oversized policy, concurrent races and direct/internal ingress. Any uncertainty results in deny/dependency failure.
