@@ -1,0 +1,22 @@
+# Registry — Definition of Done
+
+- Cloudflare Worker + Hono implementation specified.
+- D1 authoritative schema, constraints, indexes and migrations specified.
+- KV cache is explicitly disposable.
+- Application/version/environment/publication lifecycle complete.
+- Manifest schema, validation, sanitization and hashing complete.
+- Registry taxonomy and authority matrix complete.
+- Routes and resolution algorithms complete.
+- NestJS publisher/integration contract complete.
+- All routes, DTOs, errors, limits and headers specified.
+- Authentication, publication authorization and tenant isolation specified.
+- Middleware order and Worker lifecycle specified.
+- Observability, SLOs and alerts specified.
+- Failure, recovery and reconciliation specified.
+- Unit/integration/contract/security/E2E/load/recovery tests specified.
+- Wrangler environments, bindings, secrets, rollout and rollback specified.
+- Backup/restore and DR specified.
+- No business data, secrets, code or SQL accepted.
+- No startup hard dependency on Registry publication.
+- No undocumented metadata registry.
+- No placeholder provider or deferred production architecture.
