@@ -23,7 +23,7 @@ Retired standalone boundaries: Scope → Tenant/IAM context; Policy → IAM; App
 
 ## Canonical service-document structure
 
-Every service uses the same production documentation contract:
+Every service uses the full day-one production contract:
 
 ```text
 .kiro/plans/services/<service>/
@@ -37,104 +37,58 @@ Every service uses the same production documentation contract:
 ├── 07-security-and-authorization.md
 ├── 08-observability.md
 ├── 09-testing.md
-└── 10-deployment-and-operations.md
+├── 10-deployment-and-operations.md
+├── 11-messaging.md
+├── 12-notifications-and-realtime.md
+├── 13-runtime-and-framework.md
+├── 14-configuration-and-registry.md
+├── 15-dependency-graph.md
+├── 16-data-lifecycle.md
+├── 17-resilience-and-failure.md
+├── 18-migrations-and-upgrades.md
+├── 19-capabilities-permissions-and-settings.md
+├── 20-runtime-manifest.md
+└── 21-definition-of-done.md
 ```
 
-`01-architecture.md` defines ownership, boundaries, domain responsibilities, dependencies, trust model, runtime topology, cross-service relationships, non-goals and architecture acceptance.
+The documents form one contract and must remain mutually consistent. There is no deferred production architecture, placeholder provider, hidden queue/worker/schedule, magic setting, undocumented notification/realtime channel or unregistered runtime behavior.
 
-`02-implementation.md` is the complete day-one build contract: exact source tree, modules, entities, invariants, commands, queries, application methods, repository ports/adapters, controllers/routes/DTOs, authz, events, NATS subjects/streams, consumers, jobs, retry/DLQ/timeout behavior, schedulers, notification contracts, persistence, migrations, tenancy, security, health, observability, tests, deployment, rollback and operational runbooks.
+## Completed plan sets
 
-`03-api.md` is the externally and internally exposed synchronous contract: routes, DTOs, validation, errors, authentication, authorization, idempotency, pagination, rate limits and versioning.
-
-`04-data-model.md` is the authoritative persistence contract: entities/tables, columns, constraints, indexes, relationships, transaction boundaries, retention, encryption/classification and migration rules.
-
-`05-events.md` is the asynchronous contract: event schemas, NATS streams/subjects, producers/consumers, outbox, idempotency, ordering, retries, DLQ and schema evolution.
-
-`06-jobs-and-scheduling.md` defines every background job, worker, schedule, payload, timeout, retry/backoff, lease, checkpoint, idempotency, concurrency and recovery behavior. If a service has no autonomous job, the file must explicitly state that fact rather than inventing work.
-
-`07-security-and-authorization.md` defines the service security boundary, Identity/IAM/Tenant integration, data protection, abuse controls, threat cases and fail-closed behavior without creating a private authorization engine.
-
-`08-observability.md` defines structured logs, metrics, OTel spans, SLOs, alerts and audit hooks. Monitoring infrastructure remains the owner of collection and dashboards.
-
-`09-testing.md` defines unit, integration, contract, security, E2E, reliability, load and migration/recovery verification.
-
-`10-deployment-and-operations.md` defines runtime roles, configuration, Docker/Terraform integration, startup/readiness, scaling, rollout, rollback, recovery and operational runbooks.
-
-## Current completed plan sets
-
-| Service | Architecture | Implementation | Full operational set |
-|---|---|---|---|
-| Identity | complete | complete | complete |
-| IAM | complete | complete | complete |
-| Tenant | complete | complete | complete |
-| Audit | complete | complete | complete |
-| Integrations | complete | complete | complete |
-| Monetization | pending | pending | pending |
-| Usage | pending | pending | pending |
-| Workflow | pending | pending | pending |
-| Notifications | pending | pending | pending |
-| Files | pending | pending | pending |
-| Search | pending | pending | pending |
-| Reporting | pending | pending | pending |
-| Analytics | pending | pending | pending |
-| Marketing | pending | pending | pending |
+Identity, IAM, Tenant, Audit and Integrations have the full production set. Monetization, Usage, Workflow, Notifications, Files, Search, Reporting, Analytics and Marketing must be brought to the same contract.
 
 ## Runtime
 
-Each service may expose `api`, `consumer`, `worker` and `scheduler` roles from the same NestJS source tree. A mirrored `workers/<service>` implementation is forbidden unless an ADR proves an independent deployment boundary.
+Each business service uses one NestJS source tree and may expose `api`, `consumer`, `worker` and `scheduler` roles. A mirrored `workers/<service>` application is forbidden unless an ADR proves an independent deployment boundary.
+
+Independent edge/control-plane runtimes are documented under `.kiro/plans/workers/`. The API Gateway is an independent Cloudflare Worker + Hono application, not a NestJS service.
+
+## Gateway vs service responsibility
+
+The Gateway owns public edge-global transport concerns: public route resolution, request/correlation ID creation at internet ingress, trace initiation/propagation, CORS, public security headers, Cloudflare WAF/bot controls, coarse edge rate limiting, token prevalidation, origin routing/authentication, edge caching, and transport/realtime/file proxy concerns.
+
+NestJS services remain independent security/correctness boundaries. They preserve/validate propagated IDs, continue traces, establish trusted RequestContext, authenticate service/user context, resolve Tenant context, perform authoritative IAM/commercial checks, strictly validate DTOs, enforce domain/file/use-case limits, own idempotency/transactions/domain errors, and emit application observability.
+
+Do not remove service validation, authorization, filters or RequestContext because the Gateway has related middleware. Remove only duplicate **edge-only authority**. Canonical split: `.kiro/plans/workers/gateway/13-service-boundary-and-redundancy.md`.
 
 ## Required per-module implementation detail
 
-Every service plan must enumerate, for every module, exact source files and:
+Every service plan must enumerate exact source files and all entities/value objects/invariants; commands/queries/application methods; repository ports/adapters; controllers/routes/DTOs/authz; event schemas; NATS streams/subjects/consumers/DLQs; workers/jobs/schedules; notifications/email/Slack requests; realtime channels; persistence/indexes/migrations; configuration/settings; Registry metadata; tenancy/IAM/audit; middleware/guards/interceptors/pipes/filters/observers; health/readiness; logs/metrics/traces; unit/integration/contract/security/E2E/load/resilience/migration tests; dependency graph; lifecycle/recovery; deployment/rollback/runbooks.
 
-```text
-entities/value objects/invariants
-commands + application methods
-queries + read methods
-repository ports + adapters
-controllers + routes + DTOs + authz
-emitted/consumed event schemas
-queue subjects/streams
-jobs + handlers + payload + retry/DLQ/timeout
-scheduler entries + occurrence/idempotency policy
-notification/email/Slack request contracts
-persistence tables + indexes + migrations
-tenancy/IAM rules
-audit hooks
-health/readiness impact
-metrics/traces/logging
-unit/integration/contract/security/E2E/load tests
-deployment/runtime configuration
-```
-
-The complete canonical matrix is `.kiro/plans/2026-09-03-service-implementation-contract.md`.
+The base matrix remains `.kiro/plans/2026-09-03-service-implementation-contract.md` and is augmented by the numbered service documents above.
 
 ## Identity/IAM boundary
 
-Identity answers **who is authenticated**. IAM answers **what that principal may do**. Identity's production provider is Supabase Auth. The provider abstraction is intentionally narrow and lives inside Identity; authentication adapters are not moved into the generic Integrations service. Clerk is not a day-one dependency and Clerk Organizations/Roles/Permissions are not part of Figentra authorization.
-
-IAM owns roles, permissions, policies, grants, resource scopes, authorization evaluation, and authorization decision hooks. It never imports Identity persistence or provider SDKs.
+Identity answers **who is authenticated**. IAM answers **what that principal may do**. Identity's production provider is Supabase Auth behind the narrow Identity-owned provider port. Clerk is not a day-one dependency and provider authorization concepts are never the IAM source of truth.
 
 ## Contracts
 
 Cross-service DTOs, commands, queries, events and errors are versioned in `@stackra/contracts`. Consumers never import another service's implementation, ORM entities, repositories or providers.
 
-## Workflow
-
-`@stackra/workflow` is the reusable workflow definition/execution-client SDK. The Workflow service owns durable execution, timers, retries, compensation, human tasks and approvals. Business services define workflows with the SDK and expose the business commands/events they execute.
-
-## Authorization
-
-Identity answers who is authenticated. Tenant owns tenancy. IAM answers whether the principal may act. Policy is part of IAM. Monetization provides commercial entitlement decisions. Services do not implement private authorization systems.
-
 ## Notifications
 
-Business services never call SMTP, SES, SendGrid, Slack, SMS or push provider SDKs directly. They emit domain facts or explicit notification requests. Notifications owns provider delivery, retries, suppression and delivery state.
-
-## Package integrations
-
-Search, Reporting, Dashboard, SEO, Scope, SDUI and Page Builder are package/service integrations, not new microservices unless an ADR changes the boundary.
+Business services never call SMTP, SES, SendGrid, Slack, SMS or push provider SDKs directly. They emit domain facts or explicit notification requests. Notifications owns rendering/delivery/retries/suppression/delivery state.
 
 ## Completion gate
 
-No service plan is complete until every module is implementation-specified at file/method/controller/event/queue/job/scheduler/persistence/security/observability/test level, with no unresolved architecture. The ten-document service set is the canonical planning surface; implementation must not invent undocumented boundaries.
+No service is complete until all 21 numbered contracts are implemented and every runtime artifact is discoverable/registered/tested. No route, permission, event, queue, consumer, worker, schedule, notification, realtime channel, setting, middleware/guard/interceptor/pipe/filter, dependency, migration or recovery path may exist only implicitly.
