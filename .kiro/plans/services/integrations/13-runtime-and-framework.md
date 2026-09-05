@@ -13,28 +13,33 @@ Single NestJS source tree exposes `api`, `consumer`, `worker`, `scheduler`.
 `AppModule`, `RuntimeModule`, `ConfigModule`, `DatabaseModule`, `MessagingModule`, `IntegrationsCatalogModule`, `ConnectionsModule`, `CredentialsModule`, `WebhooksModule`, `SyncModule`, `MappingsModule`, `ReconciliationModule`, `ProviderModule`, `SecurityModule`, `RegistryModule`, `ObservabilityModule`, `HealthModule`.
 
 ## Middleware
-Request ID → correlation → trusted proxy/security headers/body limit → PrincipalContext extraction → tenant context → access-log context. Webhook routes use raw-body capture middleware before parsing where provider signature algorithms require exact bytes; raw body is never logged.
+Request ID → correlation → trusted proxy/security headers/body limit → PrincipalContext extraction → tenant context → access-log context. Webhook routes use raw-body capture before parsing where provider signature algorithms require exact bytes; raw body is never logged.
+
+Gateway owns public CORS/WAF and coarse edge controls. Integrations retains provider/webhook/egress invariants, consumes propagated request/trace context and never replaces a valid request ID.
 
 ## Guards
-`AuthenticationGuard`, `ServiceIdentityGuard`, `TenantBoundaryGuard`, `IamAuthorizationGuard`, `AssuranceGuard` for credential/provider admin changes, `WebhookAuthenticityGuard` using provider-specific verified adapter, `ConnectionOwnershipGuard`.
+`AuthenticationGuard`, `ServiceIdentityGuard`, `TenantBoundaryGuard`, `IamAuthorizationGuard`, `AssuranceGuard`, `WebhookAuthenticityGuard`, `ConnectionOwnershipGuard`. Gateway prevalidation cannot replace provider signature verification or final IAM authorization.
 
 ## Pipes
-Global strict validation plus `UuidPipe`, `ProviderKeyPipe`, `ConnectionConfigPipe`, `MappingDefinitionPipe`, `SyncRequestPipe`, `ReconciliationRequestPipe`, `PaginationPipe`, `UrlPipe` with SSRF-safe normalization/allowlist policy.
+Global strict validation plus `UuidPipe`, `ProviderKeyPipe`, `ConnectionConfigPipe`, `MappingDefinitionPipe`, `SyncRequestPipe`, `ReconciliationRequestPipe`, `PaginationPipe`, `UrlPipe` with SSRF-safe normalization/allowlist policy. Gateway body limits are additional transport controls.
 
 ## Interceptors
-`RequestContextInterceptor`, `TracingInterceptor`, `MetricsInterceptor`, `IdempotencyInterceptor`, `AuditContextInterceptor`, `SerializationInterceptor`, `TimeoutInterceptor`, `ProviderRequestTelemetryInterceptor`, `SensitiveFieldRedactionInterceptor`.
+`RequestContextInterceptor`, `TracingInterceptor`, `MetricsInterceptor`, `IdempotencyInterceptor`, `AuditContextInterceptor`, `SerializationInterceptor`, `TimeoutInterceptor`, `ProviderRequestTelemetryInterceptor`, `SensitiveFieldRedactionInterceptor`. Gateway forwards idempotency keys; Integrations owns state/dedupe.
 
 ## Filters
-`DomainExceptionFilter`, `ValidationExceptionFilter`, `AuthorizationExceptionFilter`, `ProviderDependencyExceptionFilter`, `WebhookVerificationExceptionFilter`, `RateLimitExceptionFilter`, `ConflictExceptionFilter`, `UnknownExceptionFilter`.
+`DomainExceptionFilter`, `ValidationExceptionFilter`, `AuthorizationExceptionFilter`, `ProviderDependencyExceptionFilter`, `WebhookVerificationExceptionFilter`, `RateLimitExceptionFilter`, `ConflictExceptionFilter`, `UnknownExceptionFilter`. Gateway can normalize transport shape but cannot change provider/domain meaning.
 
 ## Observers/listeners
-Connection state/version observer, credential-reference rotation handler, webhook normalization handler, sync progress/result projector, reconciliation finding handler, provider health/circuit state observer, tenant lifecycle disable handler, outbox publisher. ORM hooks never call providers or emit network traffic.
+Connection state/version, credential-reference rotation, webhook normalization, sync progress, reconciliation finding, provider health/circuit, tenant lifecycle and outbox handlers. ORM hooks never call providers or emit network traffic.
 
 ## Controllers
-`IntegrationsController`, `ConnectionsController`, `ConnectionAuthorizationController`, `WebhooksController`, `SyncController`, `MappingsController`, `ReconciliationController`, `ProviderStatusController` (authorized), `HealthController`.
+`IntegrationsController`, `ConnectionsController`, `ConnectionAuthorizationController`, `WebhooksController`, `SyncController`, `MappingsController`, `ReconciliationController`, `ProviderStatusController`, `HealthController`.
+
+## Gateway boundary invariants
+Gateway logs transport facts; Integrations logs provider/connection/sync/reconciliation facts with redaction. OTel spans continue across Gateway→service→provider/NATS/DB/jobs. Identity authenticates; IAM authorizes; provider webhook authenticity remains Integrations-owned. Registry is metadata projection only. Direct/internal ingress remains authenticated, tenant-isolated and provider-verified.
 
 ## Lifecycle
-Provider adapters are registered/validated at bootstrap. Only active-role dependencies initialize. Registry/OTel are degradable. Shutdown marks readiness false, stops scheduler/consumer pulls, drains provider requests and in-flight webhook/sync work to configured deadline, persists checkpoints/state, flushes outbox/telemetry and closes resources.
+Provider adapters validate at bootstrap; Registry/OTel are degradable. Shutdown stops pulls/schedules, drains provider requests and webhook/sync work, persists checkpoints and closes resources.
 
 ## Tests
-Bootstrap every role, verify raw-body middleware ordering, auth/tenant/SSRF guards, provider adapter registration, interceptor/filter order, no credential logging, graceful provider-call cancellation/drain and complete Registry discovery.
+Bootstrap every role; verify Gateway propagation, forged headers, provider signature verification, SSRF, direct ingress, IAM enforcement, CORS/rate boundary, idempotency ownership, trace continuity, graceful drain and Registry completeness.
