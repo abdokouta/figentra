@@ -1,13 +1,19 @@
 # Audit Service — Security & Authorization
 
-Audit is append-only governance evidence. Identity authenticates callers; IAM authorizes query/export/retention/legal-hold operations.
+Audit is append-only governance evidence. Identity authenticates callers; IAM authorizes query/export/retention/legal-hold operations. Gateway may prevalidate but cannot replace either authority.
 
-Controls: no update/delete API for records; tenant isolation at repository and application layers; exports require explicit permission; legal holds require privileged authorization and actor attribution; sensitive fields are minimized/redacted; exported data is encrypted and access-controlled; export references expire.
+## Gateway boundary
+Gateway owns public CORS/WAF/coarse edge controls. Audit independently validates producer/service identity, tenant scope, event schema and evidence provenance. No Gateway-only header can establish trusted provenance or authorization. Direct/internal ingress is equally protected.
 
-Ingestion accepts only registered event schemas and authenticated service/event envelopes. Producer identity and tenant context are validated. Duplicate event IDs are rejected as duplicates, not appended twice.
+## Controls
+No update/delete API for records; tenant isolation at repository/application layers; exports require explicit permission; legal holds require privileged authorization and actor attribution; sensitive fields are minimized/redacted; exports are encrypted/access-controlled/expiring; ingestion accepts only registered authenticated event envelopes; duplicate IDs are deduplicated.
 
-Hash-chain verification detects tampering. Any integrity failure triggers an alert and blocks silent continuation of the affected chain.
+Hash-chain verification detects tampering. Integrity failure alerts and blocks silent continuation.
 
-Threat tests: cross-tenant query/export, forged service event, event replay, payload injection, hash tampering, unauthorized retention change, legal-hold bypass, export data leakage, object-reference guessing and privilege escalation.
+## Rate/transport distinction
+Gateway limits edge traffic. Audit retains bounded query/export/ingestion controls and integrity safeguards.
 
-Audit must audit its own privileged operations without recursive infinite audit loops; self-audit events are marked with a bounded event class and excluded from re-ingestion recursion.
+## Threat tests
+Cross-tenant query/export, forged service/Gateway event, replay, payload injection, hash tampering, unauthorized retention/legal hold, export leakage, object-reference guessing, privilege escalation and direct-ingress bypass.
+
+Audit must audit privileged operations without recursive infinite loops.
