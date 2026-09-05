@@ -11,18 +11,7 @@ runtime: nestjs
 One NestJS source tree exposes `api`, `consumer`, `worker`, and `scheduler` roles. Role selection is configuration-driven at bootstrap. A mirrored `workers/identity` application is forbidden.
 
 ## 2. Bootstrap modules
-Required composition:
-- `AppModule`
-- `RuntimeModule`
-- `ConfigModule`
-- `DatabaseModule`
-- `MessagingModule`
-- `IdentityModule`
-- `ProviderModule`
-- `SecurityModule`
-- `RegistryModule`
-- `ObservabilityModule`
-- `HealthModule`
+Required composition: `AppModule`, `RuntimeModule`, `ConfigModule`, `DatabaseModule`, `MessagingModule`, `IdentityModule`, `ProviderModule`, `SecurityModule`, `RegistryModule`, `ObservabilityModule`, `HealthModule`.
 
 `main.ts` validates configuration before binding sockets or starting consumers. Bootstrap order: config → telemetry → database → provider clients → messaging → registry projection → HTTP/worker role. Registry failure is non-fatal and retries asynchronously; invalid security/provider/database configuration is fatal.
 
@@ -36,7 +25,7 @@ Required composition:
 7. `TenantContextHintMiddleware` (hint only; never trust header as authority)
 8. `AccessLogContextMiddleware`
 
-Each middleware has unit tests for ordering, malformed input and redaction.
+Gateway owns public edge CORS, WAF and coarse edge traffic controls. Identity MUST NOT replace a valid Gateway request ID or create a competing edge policy. Service middleware remains mandatory for direct/internal ingress and for authentication invariants.
 
 ## 4. Guards
 - `AuthenticationGuard` verifies credentials and establishes trusted `PrincipalContext`.
@@ -45,47 +34,34 @@ Each middleware has unit tests for ordering, malformed input and redaction.
 - `AssuranceGuard` enforces MFA/assurance requirements for sensitive operations.
 - `DelegationGuard` validates delegation validity and preserves actor/effective-subject attribution.
 
-No controller duplicates authorization logic inline.
+Gateway prevalidation is never final authentication or authorization. No controller duplicates authorization logic inline.
 
 ## 5. Pipes
-- global strict `ValidationPipe`: whitelist on, unknown fields rejected, transformation explicit.
-- `UuidPipe`
-- `PaginationPipe`
-- `ProviderIdentifierPipe`
-- `LocalePipe`
-
-Validation failures map to stable problem/error contracts.
+Global strict `ValidationPipe`; `UuidPipe`; `PaginationPipe`; `ProviderIdentifierPipe`; `LocalePipe`. Validation failures map to stable problem/error contracts. Gateway transport limits do not replace DTO/domain validation.
 
 ## 6. Interceptors
-- `RequestContextInterceptor`
-- `TracingInterceptor`
-- `MetricsInterceptor`
-- `AuditContextInterceptor`
-- `IdempotencyInterceptor` on mutation endpoints requiring a key
-- `SerializationInterceptor`
-- `TimeoutInterceptor`
-- `SensitiveFieldRedactionInterceptor` for defensive output/log context sanitation
-
-Transaction boundaries are application/use-case owned; a broad automatic transaction interceptor must not wrap provider network calls.
+`RequestContextInterceptor`, `TracingInterceptor`, `MetricsInterceptor`, `AuditContextInterceptor`, `IdempotencyInterceptor` on required mutations, `SerializationInterceptor`, `TimeoutInterceptor`, `SensitiveFieldRedactionInterceptor`. Request/trace context consumes Gateway propagation. Gateway does not own Identity idempotency state.
 
 ## 7. Exception filters
-- `DomainExceptionFilter`
-- `ValidationExceptionFilter`
-- `ProviderDependencyExceptionFilter`
-- `AuthorizationExceptionFilter`
-- `RateLimitExceptionFilter`
-- `UnknownExceptionFilter`
-
-Every filter produces the platform error envelope with request/correlation IDs and no stack traces or sensitive provider details in production.
+`DomainExceptionFilter`, `ValidationExceptionFilter`, `ProviderDependencyExceptionFilter`, `AuthorizationExceptionFilter`, `RateLimitExceptionFilter`, `UnknownExceptionFilter`. Filters own Identity semantics; Gateway may normalize transport shape but cannot rewrite domain meaning.
 
 ## 8. Observers/listeners
-Identity uses explicit domain-event handlers rather than hidden ORM side effects. Permitted listeners include outbox projection listeners, cache invalidation listeners, provider webhook normalization handlers, session-risk observers and registry metadata discovery. ORM entity hooks must not perform network calls, publish messages or mutate unrelated aggregates.
+Identity uses explicit domain-event handlers rather than hidden ORM side effects. Registry metadata discovery is projection only. No listener performs public-edge policy decisions.
 
 ## 9. Controllers
-Controllers are thin adapters. Required controller families: `AuthController`, `MeController`, `SessionsController`, `IdentitiesController`, `ServiceIdentitiesController`, `DelegationsController`, `ProviderWebhooksController`, and internal health/registry endpoints where platform conventions require them. Controllers validate/authorize/map and delegate to application handlers.
+Controllers are thin adapters: `AuthController`, `MeController`, `SessionsController`, `IdentitiesController`, `ServiceIdentitiesController`, `DelegationsController`, `ProviderWebhooksController`, health/metadata endpoints. Controllers validate/authorize/map and delegate.
 
 ## 10. Graceful lifecycle
-On SIGTERM/SIGINT: stop accepting HTTP, mark readiness false, stop scheduler acquisition, stop pulling new messages, drain in-flight work within configured deadline, flush outbox/telemetry, close NATS/Redis/provider clients, close PostgreSQL, then exit. Forced termination after deadline returns non-zero.
+On SIGTERM/SIGINT: stop accepting HTTP, mark readiness false, stop scheduler acquisition, stop pulling messages, drain bounded in-flight work, flush outbox/telemetry, close dependencies, then exit.
 
-## 11. Framework test gate
-Bootstrap tests instantiate every role independently, verify DI graph resolution, middleware/guard/interceptor/filter order, shutdown hooks, no accidental provider initialization in irrelevant roles, and registry discovery output.
+## 11. Gateway boundary invariants
+- Gateway owns public CORS, edge WAF/rate limiting, route resolution, transport normalization and propagation.
+- Identity owns authoritative authentication, sessions, provider semantics, replay, principal resolution and delegation.
+- IAM owns authorization; Gateway cannot manufacture an allow.
+- Identity revalidates forwarded-header trust and never trusts client identity/tenant/actor/assurance headers.
+- Gateway logs transport facts; Identity logs authentication/application facts.
+- OTel traces continue across the boundary; request/correlation IDs remain stable.
+- Direct/internal ingress is treated as untrusted until service authentication succeeds.
+
+## 12. Framework test gate
+Bootstrap every role; verify DI graph, middleware/guard/interceptor/filter order, Gateway context propagation, invalid/forged headers, direct ingress, no duplicate public CORS/rate authority, authoritative authentication after Gateway prevalidation, IAM calls, idempotency ownership, shutdown hooks and Registry discovery output.
