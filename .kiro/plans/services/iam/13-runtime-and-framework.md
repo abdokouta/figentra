@@ -16,32 +16,37 @@ Single NestJS source tree: `api`, `consumer`, `worker`, `scheduler`. No mirrored
 ## Middleware order
 `RequestIdMiddleware` → `CorrelationMiddleware` → trusted-proxy/security headers/body-limit → trusted `PrincipalContext` extraction → tenant-context extraction/validation → access-log context. Client-supplied role, permission, policy result or authorization-decision headers are rejected/ignored.
 
-## Guards
-- `AuthenticationGuard` requires trusted Identity-issued/authenticated context.
-- `IamAdministrationGuard` protects IAM administration routes through bootstrap-safe administrative permissions.
-- `TenantBoundaryGuard` validates tenant scope.
-- `AssuranceGuard` enforces stronger authentication for privileged grant/policy operations.
-- `ServiceIdentityGuard` protects service-to-service authorization API.
+Gateway owns public CORS/WAF, route admission and coarse edge rate limiting. IAM retains service-side trust validation, bounded request controls and all authorization invariants. A valid upstream request ID is consumed, never replaced.
 
-The authorization check endpoint must avoid recursive self-authorization: service authentication and predefined bootstrap/admin policy guard the control plane; the evaluator itself is not recursively invoked to authorize the same evaluation.
+## Guards
+`AuthenticationGuard`, `IamAdministrationGuard`, `TenantBoundaryGuard`, `AssuranceGuard`, `ServiceIdentityGuard`. Gateway prevalidation cannot satisfy final IAM authorization. The authorization check endpoint avoids recursive self-authorization.
 
 ## Pipes
-Global strict validation plus `UuidPipe`, `PermissionKeyPipe`, `ActionKeyPipe`, `ResourceIdentifierPipe`, `PolicyAstPipe`, `PaginationPipe`. Policy AST validation rejects unknown operators/fields, excessive depth/size and any executable/network/filesystem construct.
+Global strict validation plus `UuidPipe`, `PermissionKeyPipe`, `ActionKeyPipe`, `ResourceIdentifierPipe`, `PolicyAstPipe`, `PaginationPipe`. AST validation rejects unknown operators/fields, excessive depth/size and executable/network/filesystem constructs. Gateway body limits are an additional transport boundary, not a substitute.
 
 ## Interceptors
-`RequestContextInterceptor`, `TracingInterceptor`, `MetricsInterceptor`, `IdempotencyInterceptor`, `AuditContextInterceptor`, `SerializationInterceptor`, `TimeoutInterceptor`, `AuthorizationDecisionTelemetryInterceptor`. No interceptor may convert evaluation failure into allow.
+`RequestContextInterceptor`, `TracingInterceptor`, `MetricsInterceptor`, `IdempotencyInterceptor`, `AuditContextInterceptor`, `SerializationInterceptor`, `TimeoutInterceptor`, `AuthorizationDecisionTelemetryInterceptor`. No interceptor may convert evaluation failure into allow. Trace/correlation context continues from Gateway.
 
 ## Exception filters
-`DomainExceptionFilter`, `ValidationExceptionFilter`, `AuthorizationDeniedFilter`, `DependencyExceptionFilter`, `ConflictExceptionFilter`, `RateLimitExceptionFilter`, `UnknownExceptionFilter`. Errors expose stable reason/error codes without policy secrets or stack traces.
+`DomainExceptionFilter`, `ValidationExceptionFilter`, `AuthorizationDeniedFilter`, `DependencyExceptionFilter`, `ConflictExceptionFilter`, `RateLimitExceptionFilter`, `UnknownExceptionFilter`. Gateway may normalize transport shape; IAM owns reason/error semantics.
 
 ## Observers/listeners
-Explicit handlers: model-version bump, cache invalidation, grant-expiry projection, permission catalog bootstrap validation, tenant/resource invalidation, principal/delegation invalidation, outbox projection. ORM callbacks must not publish messages or perform network authorization.
+Explicit handlers for model-version bump, cache invalidation, grant expiry, permission validation, tenant/resource/principal invalidation and outbox projection. No hidden edge-policy observer exists.
 
 ## Controllers
 `AuthorizationController`, `RolesController`, `PermissionsController`, `PoliciesController`, `GrantsController`, `AdministrationController`, `HealthController`. Thin controller rule is mandatory.
 
+## Gateway boundary invariants
+- Gateway may prevalidate credentials but IAM remains authoritative for every authorization decision.
+- Gateway never supplies a trusted final allow, role, permission, policy result or tenant authority header.
+- Gateway owns public CORS and coarse edge rate limiting; IAM owns authorization-specific limits and fail-closed evaluation.
+- Gateway logs transport facts; IAM logs decision/application facts.
+- OTel traces continue across Gateway→IAM; IDs are stable.
+- Direct/internal ingress receives the same authentication, tenant and authorization protections.
+- Registry is metadata projection; IAM remains authoritative for roles, permissions, policies, grants and decisions.
+
 ## Lifecycle
-Configuration/database/evaluator catalogs initialize before accepting authorization traffic. On shutdown: readiness false, stop new checks/consumers, drain bounded in-flight evaluations and messages, flush outbox/telemetry, close dependencies. Startup fails on invalid permission/policy schema or database; Registry/OTel outage is degradable.
+Configuration/database/evaluator catalogs initialize before authorization traffic. Shutdown marks readiness false, stops checks/consumers, drains bounded work, flushes outbox/telemetry and closes dependencies. Registry/OTel outage is degradable.
 
 ## Tests
-DI/bootstrap tests run each runtime role, assert middleware/guard/interceptor/filter ordering, no recursive auth, AST limits, shutdown drain and discovered Registry artifacts.
+Bootstrap every role and assert DI, ordering, Gateway propagation, forged headers, no edge-final authorization, fail-closed evaluation, direct ingress, CORS/rate boundary, idempotency ownership, shutdown and Registry completeness.
