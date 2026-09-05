@@ -1,19 +1,22 @@
 # Identity Service — Observability
 
+## Gateway/service boundary
+Gateway records edge transport facts: route, upstream, status, edge latency, rate-limit outcome and propagated IDs. Identity records authentication/application facts: operation, principal outcome, provider result, session/replay state and domain result. Neither duplicates the other's authority.
+
 ## Logs
-Structured JSON logs include timestamp, level, service, runtime role, request/correlation/causation IDs, operation, result, latency, provider, principal ID where safe, and tenant ID where safe. Tokens, cookies, credentials, provider payloads and authentication secrets are always redacted.
+Structured JSON logs include timestamp, level, service, runtime role, request/correlation/causation IDs, operation, result, latency and safe principal/tenant identifiers. Tokens, cookies, credentials, provider payloads and authentication secrets are always redacted. A valid Gateway request ID is preserved.
 
 ## Metrics
-Required metrics: authentication attempts/success/failure; token verification count/failure; provider latency/error/timeout; session creation/refresh/revocation; replay detections; identity-link attempts; delegation lifecycle; service-identity rotation/revocation; webhook accepted/rejected/duplicate; queue depth; outbox age; job retries/DLQ; HTTP p50/p95/p99; database pool saturation.
+Authentication attempts/success/failure; token verification; provider latency/error/timeout; sessions; replay; identity linking; delegation; service identity; webhooks; queue/outbox/job/DLQ; HTTP latency; DB saturation; Gateway-propagation failures and direct-ingress authentication failures.
 
 ## Tracing
-OTel spans cover HTTP handlers, provider calls, token verification, database transactions, NATS publish/consume, jobs and reconciliation. Propagate trace, correlation and causation context. Never attach token values or sensitive claims.
+OTel spans cover HTTP, provider calls, token verification, DB, NATS, jobs and reconciliation. Continue W3C trace/correlation/causation context from Gateway. Never attach token values or sensitive claims.
 
 ## SLOs
-Production targets: 99.95% successful API availability excluding intentional 4xx; p95 token verification under 150ms locally and p95 authentication orchestration under 500ms excluding provider SLA; outbox publication age under 30s; provider-event processing p95 under 60s.
+99.95% API availability excluding intentional 4xx; p95 token verification under 150ms locally; p95 authentication orchestration under 500ms excluding provider SLA; outbox age under 30s.
 
 ## Alerts
-Alert on sustained authentication failure spikes, provider outage/latency, replay spikes, webhook rejection spikes, outbox age, DLQ growth, database exhaustion, readiness failure and SLO burn rate.
+Authentication failure spikes, provider outage/latency, replay spikes, webhook rejection, outbox/DLQ, DB exhaustion, readiness failure, SLO burn and broken trace/request propagation.
 
 ## Audit
-Security-significant identity mutations emit durable audit facts through the Audit contract. Observability telemetry is not the audit record.
+Security-significant identity mutations emit durable Audit facts. Logs/traces remain telemetry and are never treated as audit evidence.
