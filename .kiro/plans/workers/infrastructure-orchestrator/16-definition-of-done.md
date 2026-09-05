@@ -1,0 +1,21 @@
+# Infrastructure Orchestrator — Definition of Done
+
+- Independent Cloudflare Worker + Hono runtime defined.
+- API and all operation state transitions defined.
+- Terraform/IaC authority and controlled runner boundary defined.
+- Provider/resource/action allowlist complete.
+- Development/staging/production isolation complete.
+- Durable operation state and idempotency complete.
+- All queues, consumers, workers, schedules, retry/DLQ semantics defined.
+- Credentials/secrets boundary complete.
+- IAM permissions and destructive-operation policy complete.
+- Registry deployment metadata integration complete.
+- Logs, metrics, traces, SLOs and alerts complete.
+- Provider failure, unknown outcome, drift and recovery behavior complete.
+- Unit/integration/contract/security/E2E/load/recovery tests complete.
+- Wrangler deployment, Terraform deployment, rollback, backup and runbooks complete.
+- No arbitrary shell/Terraform/provider URL execution.
+- No user-supplied infrastructure credentials.
+- No alternate unmanaged IaC source of truth.
+- No business workflow ownership.
+- No placeholder provider or deferred production-critical architecture.
