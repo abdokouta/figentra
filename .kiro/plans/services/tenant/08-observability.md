@@ -1,13 +1,16 @@
 # Tenant Service — Observability
 
-Structured logs: operation, tenant, principal/actor IDs where safe, lifecycle transition, status, request/correlation IDs, latency and outcome. Never log domain challenges, credentials or secrets.
+## Gateway/service boundary
+Gateway records edge transport facts. Tenant records lifecycle, membership, domain and context-resolution application facts. Tenant never depends on Gateway telemetry for correctness.
 
-Metrics: tenant creation/lifecycle transitions, membership mutations, domain verification attempts/success/failure, context resolution latency, DB pool use, NATS/outbox age, job backlog/DLQ and API p50/p95/p99.
+Structured logs include operation, tenant, principal/actor IDs where safe, lifecycle transition, status, request/correlation IDs, latency and outcome. Valid propagated IDs remain stable. Never log challenges, credentials or secrets.
 
-OTel spans cover controllers, application commands, repository transactions, domain verification calls, cache, outbox and consumers/jobs. Propagate trace/correlation/causation context.
+Metrics: tenant creation/lifecycle, membership mutations, domain verification, context resolution, DB pool, NATS/outbox, job/DLQ, API p50/p95/p99, direct-ingress failures and propagation failures.
 
-SLOs: 99.95% API availability; p95 tenant context resolution under 100ms on warm path; domain verification processing p95 under 60s excluding external DNS propagation; outbox age under 30s.
+OTel spans cover controllers, commands, repositories, domain verification, cache, outbox and consumers/jobs. Continue trace/correlation/causation context from Gateway.
 
-Alerts: lifecycle failure spike, domain verification failures, context latency/SLO burn, DB saturation, outbox age, stream lag, DLQ growth and reconciliation lag.
+SLOs: 99.95% API availability; p95 tenant context resolution under 100ms warm; domain verification p95 under 60s excluding DNS propagation; outbox age under 30s.
 
-Security-significant lifecycle/membership/domain events go to Audit through the durable event contract.
+Alerts: lifecycle failure, domain verification failures, context latency/SLO burn, DB saturation, outbox/stream/DLQ, reconciliation lag and broken propagation.
+
+Security-significant events go to Audit through durable contracts. Observability is never the audit record.
