@@ -20,5 +20,7 @@ Runtime: Cloudflare Worker + Hono. The Registry is an authoritative control-plan
 14. `14-deployment-and-operations.md` — Wrangler, D1/KV, rollout, backup and runbooks.
 15. `15-integration-contract.md` — NestJS Registry package and application integration contract.
 16. `16-definition-of-done.md` — zero-deferred production acceptance gate.
+17. `17-dependency-graph.md` — compile/runtime dependency topology and failure classification.
+18. `18-configuration.md` — complete Worker configuration and secret-binding contract.
 
 D1 is authoritative. KV is disposable cache. Application manifests remain application-owned; the Registry stores validated projections only. No secrets, executable code, SQL, arbitrary URLs or business data are accepted.
