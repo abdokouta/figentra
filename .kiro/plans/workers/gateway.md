@@ -12,9 +12,6 @@ The complete implementation contract lives in `.kiro/plans/workers/gateway/`.
 
 ## Canonical plan set
 
-See:
-
-- `README.md`
 - `01-architecture.md`
 - `02-implementation.md`
 - `03-routing-and-upstreams.md`
@@ -31,5 +28,6 @@ See:
 - `14-deployment-and-operations.md`
 - `15-service-boundary-and-redundancy.md`
 - `16-definition-of-done.md`
+- `17-runtime-manifest.md`
 
-The old flat file is retained only as an index to prevent competing sources of truth.
+This flat file is an index only and contains no competing implementation contract.
