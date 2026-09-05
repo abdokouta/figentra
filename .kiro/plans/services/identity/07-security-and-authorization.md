@@ -1,28 +1,28 @@
 # Identity Service — Security & Authorization
 
 ## Trust boundary
-Identity is the authentication trust boundary. It validates provider credentials and creates trusted PrincipalContext. IAM remains the authorization authority.
+Identity is the authoritative authentication trust boundary. Gateway may prevalidate/admit credentials but cannot establish final authentication. Identity validates provider credentials and creates trusted PrincipalContext. IAM remains the authorization authority.
+
+## Gateway boundary
+Gateway owns public edge WAF/CORS/coarse rate controls and transport admission. Identity independently validates forwarded-header trust, credentials, provider semantics, sessions, replay, delegation and assurance. Gateway-only auth/principal/tenant/actor headers are never trusted. Direct/internal ingress receives the same service-side security controls.
 
 ## Controls
 - Validate JWT issuer, audience, signature, algorithm allow-list, expiry and bounded clock skew.
-- Validate provider webhook signatures before parsing business effects.
+- Validate provider webhook signatures before business effects.
 - Reject forged principal/tenant/actor/assurance headers.
 - Store no raw passwords, access tokens or refresh tokens.
 - Use secret-manager references for service credentials.
-- Encrypt restricted fields according to platform classification.
-- Redact credentials, provider tokens, cookies and security payloads from logs/traces/errors.
-- Rate-limit authentication, refresh, linking, webhook and credential-rotation endpoints.
-- Require elevated assurance for linking identities, disabling accounts, service credential rotation and delegation.
-- Delegation is explicit, time-bounded, purpose-bound and always evaluated by IAM.
+- Encrypt restricted fields according to classification.
+- Redact credentials, provider tokens, cookies and security payloads.
+- Rate-limit authentication, refresh, linking, webhook and credential-rotation endpoints; Gateway edge limits are additional protection, not the source of these invariants.
+- Require elevated assurance for sensitive operations.
+- Delegation is explicit, time-bounded and always evaluated by IAM.
 
 ## Session security
-Refresh-token rotation/replay controls follow the provider's canonical semantics. A replay signal revokes the affected session family according to policy. Logout is idempotent. Expired/revoked sessions cannot become trusted again through cache state.
-
-## Service identities
-Each service identity has explicit audience, status and credential lifecycle. Credentials are scoped, rotated, revoked and never treated as human authentication. Compromised credentials can be invalidated independently.
+Refresh-token rotation/replay controls follow canonical semantics. Replay revokes affected session family. Expired/revoked sessions cannot become trusted through cache state.
 
 ## Administrative authorization
-Administrative endpoints require an authenticated PrincipalContext and IAM permission checks such as `identity.sessions.revoke`, `identity.service-identities.manage`, and `identity.delegations.manage`. Identity does not define role or permission semantics.
+Administrative endpoints require authenticated PrincipalContext and IAM permission checks. Identity does not define role/permission semantics.
 
 ## Threat cases
-Provider spoofing, token algorithm confusion, expired token acceptance, replay, account takeover through identity linking, session fixation, webhook replay, secret leakage, tenant-context confusion, privilege escalation through delegation, and provider outage are explicit test cases. Failure is closed: unverifiable identity never becomes authenticated.
+Provider spoofing, token confusion, replay, account takeover, session fixation, webhook replay, secret leakage, tenant-context confusion, delegation escalation, forged Gateway headers and provider outage are explicit tests. Failure is closed.
