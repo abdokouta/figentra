@@ -2,22 +2,28 @@
 
 The API Gateway is an independent **Cloudflare Worker + Hono** application and the public edge boundary for Figentra. It is not a NestJS business service and does not own business/domain persistence or final authorization.
 
-Canonical documents:
+## Canonical documents
 
-- `01-architecture.md` — ownership, runtime decision, boundaries, traffic model.
-- `02-implementation.md` — exact Worker/Hono source tree and production implementation contract.
-- `03-routing-and-upstreams.md` — host/application/service/route resolution and upstream transport.
-- `04-request-response-pipeline.md` — full ingress/egress middleware pipeline and header/context contract.
-- `05-authentication-and-security.md` — edge authentication prevalidation, WAF, CORS, bot/abuse, trust boundaries.
-- `06-rate-limits-cache-and-traffic-control.md` — rate limiting, quotas, concurrency, edge caching and backpressure.
-- `07-registry-and-discovery.md` — Application Registry integration, route manifests and degraded behavior.
-- `08-realtime-streaming-and-files.md` — WebSocket/SSE/streaming/upload/download behavior.
-- `09-observability.md` — access/error logs, traces, metrics, SLOs and dashboards.
-- `10-resilience-and-failure.md` — timeouts, retries, circuit breakers, fallback and origin protection.
-- `11-testing.md` — unit, integration, contract, security, E2E, load, chaos and Worker-runtime tests.
-- `12-deployment-and-operations.md` — Wrangler, environments, bindings, secrets, rollout, rollback and runbooks.
-- `13-service-boundary-and-redundancy.md` — exact Gateway-vs-NestJS responsibility split; defines which controls remain in every service.
-- `14-runtime-manifest.md` — complete route/middleware/binding/registry/observability inventory.
-- `15-definition-of-done.md` — zero-deferred production release gate.
+- `01-architecture.md` — runtime decision, ownership, trust boundaries and traffic model.
+- `02-implementation.md` — Worker/Hono source tree, middleware composition and implementation contract.
+- `03-routing-and-upstreams.md` — host/application/route resolution, Service Bindings and authenticated HTTPS origins.
+- `04-request-response-pipeline.md` — canonical ingress/egress pipeline and context/header propagation.
+- `05-authentication-and-security.md` — token prevalidation, origin protection, CORS, headers and public security controls.
+- `06-rate-limits-cache-and-traffic-control.md` — WAF/rate limiting, concurrency, edge caching, traffic shaping and backpressure.
+- `07-registry-and-discovery.md` — Application Registry integration, route manifests, cache/freshness and failure policy.
+- `08-realtime-streaming-and-files.md` — WebSocket, SSE, streaming, upload/download and raw webhook transport.
+- `09-observability.md` — edge access/error logs, request/correlation/trace propagation, metrics, SLOs and alerts.
+- `10-resilience-and-failure.md` — deadlines, retries, circuit breakers, Registry/upstream failure and safe degradation.
+- `11-api-and-error-contract.md` — Gateway-owned public endpoints, proxy/error/header/status semantics.
+- `12-configuration-and-registry.md` — Worker configuration/bindings/secrets plus Gateway metadata published to Registry.
+- `13-testing.md` — unit, integration, contract, security, E2E, load, failure and real Worker-runtime tests.
+- `14-deployment-and-operations.md` — Wrangler environments, rollout, rollback, capacity, security operations and runbooks.
+- `15-service-boundary-and-redundancy.md` — canonical Gateway-vs-NestJS responsibility matrix.
+- `16-definition-of-done.md` — zero-deferred production completion gate.
+- `17-runtime-manifest.md` — complete runtime inventory of middleware, routes, security, bindings, traffic, realtime/files and telemetry.
 
-The Gateway must preserve defense in depth: edge-global transport controls are centralized here, while every NestJS service still validates trusted context, DTOs, authorization, domain invariants and its own error/transaction/runtime semantics.
+## Core rule
+
+The Gateway centralizes **public edge-global transport concerns**. Every NestJS service remains an independent security and correctness boundary. Services continue to validate/adopt propagated request context, strictly validate DTOs, establish Principal/Tenant context, perform authoritative IAM/commercial decisions, enforce domain invariants/idempotency/transactions, map domain errors and emit service-level observability.
+
+A request can therefore have both Gateway and service controls without harmful duplication because they protect different trust boundaries. The exact split is defined in `15-service-boundary-and-redundancy.md`.
