@@ -23,38 +23,61 @@ Retired standalone boundaries: Scope → Tenant/IAM context; Policy → IAM; App
 
 ## Canonical service-document structure
 
-Each service is organized as:
+Every service uses the same production documentation contract:
 
 ```text
 .kiro/plans/services/<service>/
+├── README.md
 ├── 01-architecture.md
-└── 02-implementation.md
+├── 02-implementation.md
+├── 03-api.md
+├── 04-data-model.md
+├── 05-events.md
+├── 06-jobs-and-scheduling.md
+├── 07-security-and-authorization.md
+├── 08-observability.md
+├── 09-testing.md
+└── 10-deployment-and-operations.md
 ```
 
-`01-architecture.md` defines ownership, boundaries, domain responsibilities, dependencies, trust model, runtime topology, cross-service relationships, non-goals, and architectural acceptance criteria.
+`01-architecture.md` defines ownership, boundaries, domain responsibilities, dependencies, trust model, runtime topology, cross-service relationships, non-goals and architecture acceptance.
 
-`02-implementation.md` is the day-one production contract: exact source tree, modules, entities, invariants, commands, queries, application methods, repository ports/adapters, controllers/routes/DTOs, authz, events, NATS subjects/streams, consumers, jobs, retry/DLQ/timeout behavior, schedulers, notification contracts, persistence, migrations, tenancy, security, health, observability, testing, deployment, rollback, and operational runbooks.
+`02-implementation.md` is the complete day-one build contract: exact source tree, modules, entities, invariants, commands, queries, application methods, repository ports/adapters, controllers/routes/DTOs, authz, events, NATS subjects/streams, consumers, jobs, retry/DLQ/timeout behavior, schedulers, notification contracts, persistence, migrations, tenancy, security, health, observability, tests, deployment, rollback and operational runbooks.
 
-There must be no third implementation plan that duplicates these contracts. When an existing flat service plan is migrated into this structure, its useful content is merged and the duplicate flat file is removed.
+`03-api.md` is the externally and internally exposed synchronous contract: routes, DTOs, validation, errors, authentication, authorization, idempotency, pagination, rate limits and versioning.
 
-## Service status
+`04-data-model.md` is the authoritative persistence contract: entities/tables, columns, constraints, indexes, relationships, transaction boundaries, retention, encryption/classification and migration rules.
 
-| Service | Architecture | Implementation | Notes |
+`05-events.md` is the asynchronous contract: event schemas, NATS streams/subjects, producers/consumers, outbox, idempotency, ordering, retries, DLQ and schema evolution.
+
+`06-jobs-and-scheduling.md` defines every background job, worker, schedule, payload, timeout, retry/backoff, lease, checkpoint, idempotency, concurrency and recovery behavior. If a service has no autonomous job, the file must explicitly state that fact rather than inventing work.
+
+`07-security-and-authorization.md` defines the service security boundary, Identity/IAM/Tenant integration, data protection, abuse controls, threat cases and fail-closed behavior without creating a private authorization engine.
+
+`08-observability.md` defines structured logs, metrics, OTel spans, SLOs, alerts and audit hooks. Monitoring infrastructure remains the owner of collection and dashboards.
+
+`09-testing.md` defines unit, integration, contract, security, E2E, reliability, load and migration/recovery verification.
+
+`10-deployment-and-operations.md` defines runtime roles, configuration, Docker/Terraform integration, startup/readiness, scaling, rollout, rollback, recovery and operational runbooks.
+
+## Current completed plan sets
+
+| Service | Architecture | Implementation | Full operational set |
 |---|---|---|---|
-| Identity | complete | complete | Supabase-first; narrow provider port; no Clerk dependency |
-| IAM | complete | complete | Fully Figentra-owned authorization |
-| Tenant | pending migration | pending migration | Existing flat plan to be split |
-| Monetization | pending migration | pending migration | Existing flat plan to be split |
-| Usage | pending migration | pending migration | Existing flat plan to be split |
-| Workflow | pending migration | pending migration | Existing flat plan to be split |
-| Notifications | pending migration | pending migration | Existing flat plan to be split |
-| Audit | pending migration | pending migration | Existing flat plan to be split |
-| Files | pending migration | pending migration | Existing flat plan to be split |
-| Integrations | pending migration | pending migration | Existing flat plan to be split |
-| Search | pending migration | pending migration | Existing flat plan to be split |
-| Reporting | pending migration | pending migration | Existing flat plan to be split |
-| Analytics | pending migration | pending migration | Existing flat plan to be split |
-| Marketing | pending migration | pending migration | Existing flat plan to be split |
+| Identity | complete | complete | complete |
+| IAM | complete | complete | complete |
+| Tenant | complete | complete | complete |
+| Audit | complete | complete | complete |
+| Integrations | complete | complete | complete |
+| Monetization | pending | pending | pending |
+| Usage | pending | pending | pending |
+| Workflow | pending | pending | pending |
+| Notifications | pending | pending | pending |
+| Files | pending | pending | pending |
+| Search | pending | pending | pending |
+| Reporting | pending | pending | pending |
+| Analytics | pending | pending | pending |
+| Marketing | pending | pending | pending |
 
 ## Runtime
 
@@ -114,4 +137,4 @@ Search, Reporting, Dashboard, SEO, Scope, SDUI and Page Builder are package/serv
 
 ## Completion gate
 
-No service plan is complete until every module is implementation-specified at file/method/controller/event/queue/job/scheduler/persistence/security/observability/test level, with no unresolved architecture.
+No service plan is complete until every module is implementation-specified at file/method/controller/event/queue/job/scheduler/persistence/security/observability/test level, with no unresolved architecture. The ten-document service set is the canonical planning surface; implementation must not invent undocumented boundaries.
