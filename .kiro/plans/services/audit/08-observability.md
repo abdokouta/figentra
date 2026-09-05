@@ -1,13 +1,16 @@
 # Audit Service — Observability
 
-Logs contain operation, tenant, event type, record ID, result, latency, correlation ID and job state; never raw audit payloads containing restricted values, credentials or secrets.
+## Gateway/service boundary
+Gateway logs transport facts; Audit logs operational/application facts. Audit never uses Gateway telemetry as authoritative evidence.
 
-Metrics: ingestion rate/lag, duplicate rate, append latency, hash failures, integrity-check failures, export throughput/failure, retention/archive/delete throughput, legal holds, DB latency, outbox age and DLQ depth.
+Logs contain operation, tenant, event type, record ID, result, latency and propagated correlation/request IDs; never raw restricted audit payloads, credentials or secrets. Valid Gateway request IDs remain stable.
 
-OTel spans cover ingestion, validation, deduplication, hash computation, DB append, exports, integrity checks, archive/delete, NATS and jobs. Sensitive record fields are not span attributes.
+Metrics: ingestion rate/lag, duplicates, append latency, hash/integrity failures, export throughput/failure, retention/archive/delete, legal holds, DB latency, outbox and DLQ, direct-ingress failures and trace propagation failures.
 
-SLOs: 99.95% query API availability; p95 query under 300ms for indexed filters; ingestion lag p95 under 30s; integrity-check jobs complete within their configured window; export backlog has an explicit operational target.
+OTel spans cover ingestion, validation, dedupe, hash, DB append, exports, integrity, archive/delete, NATS and jobs. Continue W3C trace/correlation/causation context from Gateway. Sensitive fields are never span attributes.
 
-Alerts: hash/integrity failure, ingestion lag, DLQ growth, export failures, DB saturation, outbox age, retention backlog and SLO burn.
+SLOs: 99.95% query availability; p95 indexed query under 300ms; ingestion lag p95 under 30s; integrity jobs within configured windows; export backlog has explicit target.
 
-Observability is not the authoritative audit record; durable evidence is stored in audit tables.
+Alerts: integrity/hash failure, ingestion lag, DLQ, export failures, DB saturation, outbox/retention backlog, SLO burn and broken propagation.
+
+Observability remains separate from durable audit evidence.
