@@ -11,53 +11,27 @@ All runtime configuration is declared in typed schema, validated before role sta
 
 ## 2. Required settings
 Core: `SERVICE_NAME=identity`, `SERVICE_VERSION`, `ENVIRONMENT`, `RUNTIME_ROLE`, `HTTP_HOST`, `HTTP_PORT`, `SHUTDOWN_GRACE_MS`, `REQUEST_TIMEOUT_MS`, `MAX_REQUEST_BODY_BYTES`.
-
-Database: `DATABASE_URL` (secret), pool min/max, connect timeout, statement timeout, idle timeout, migration lock timeout.
-
-NATS: `NATS_URL`, credentials/secret reference, connection timeout, reconnect bounds, publish timeout, stream/consumer prefixes, outbox batch size, outbox poll interval.
-
-Redis/cache: `REDIS_URL` (secret), connect timeout, command timeout, cache TTLs, token/JWKS cache TTL, rate-limit namespace.
-
-Supabase/Auth: `SUPABASE_URL`, `SUPABASE_PROJECT_REF`, `SUPABASE_ANON_KEY_REF` where required, `SUPABASE_SERVICE_ROLE_KEY_REF` only for privileged server operations, JWT issuer, allowed audiences, JWKS URI, JWKS refresh TTL, clock skew, provider timeout, webhook secret reference.
-
-Security: allowed origins, trusted proxy ranges, rate limits, session inactivity/max age, replay policy, delegation max duration, service-credential rotation age, MFA assurance policy, idempotency TTL.
-
-Observability: OTel endpoint, service namespace, sampling policy, log level, metrics export interval.
-
-Registry: Registry URL, application ID, service ID, registration timeout, refresh interval, retry min/max, metadata signing/integrity configuration if enabled.
+Database: `DATABASE_URL` (secret), pool/timeouts. NATS: URL/credentials, reconnect/publish, streams/consumers, outbox. Redis/cache: URL, TTLs, replay/rate namespaces. Supabase/Auth: URL/project, secret references, issuer/audience/JWKS, skew, provider/webhook timeouts. Security: trusted proxies, origin metadata, authentication limits, session/replay/delegation/assurance/idempotency controls. Observability: OTel/log settings. Registry: URL/application/service IDs, timeout, refresh/retry, integrity configuration.
 
 ## 3. Secret handling
-Secrets are referenced through the platform secret-management abstraction. Registry receives only secret **setting metadata** (`key`, purpose, required, secret=true), never secret values. Logs and diagnostics redact values by schema classification.
+Secrets are references only. Registry receives setting metadata (`key`, purpose, required, `secret=true`) and never secret values. Logs and diagnostics redact values by schema classification.
 
 ## 4. Settings metadata
-Each setting registered with the Registry includes key, namespace, type, description, required/default semantics, secret flag, mutable/restart-required classification, environment applicability, validation constraints and owning module. Runtime values are never projected unless explicitly classified public/non-sensitive.
+Each setting registered with Registry includes key, namespace, type, description, required/default semantics, secret flag, mutability, environment applicability, validation constraints and owning module. Runtime values are never projected unless explicitly public/non-sensitive.
 
 ## 5. Registry manifest
-Identity publishes through `@stackra/nestjs` registry integration:
-- application/service identity, version, environment, runtime roles;
-- module and capability catalog;
-- HTTP routes/methods/version/tags/auth requirements;
-- OpenAPI location/digest;
-- permissions consumed and administrative permissions exposed;
-- event schemas, NATS streams/subjects, consumers and DLQs;
-- workers/jobs/schedules;
-- notification request keys;
-- realtime channels and subscription permissions;
-- provider/webhook endpoints and verification mode;
-- configuration/settings schema;
-- health/readiness dependencies;
-- service/runtime/package dependencies;
-- data classifications and operational ownership metadata.
+Identity publishes application/service identity, version/environment/runtime roles, modules/capabilities, HTTP routes/OpenAPI digest/auth requirements, permissions consumed, event schemas/streams/subjects/consumers/DLQs, workers/jobs/schedules, notification/realtime metadata, provider/webhook endpoints, settings, health/readiness dependencies, package/service dependencies and classifications.
 
-Registry receives projections only; it does not become the source of truth for Identity domain data, credentials, sessions, IAM state or provider state.
+## 6. Gateway boundary
+Registry metadata is consumed by Gateway for discovery/route admission; it is not an authorization source. Gateway-owned public CORS, WAF, edge rate limits and transport policy are not represented as Identity-owned runtime authority. Identity metadata must distinguish `edge-admission` from `service-authoritative-authentication` so consumers cannot infer that Gateway prevalidation is sufficient.
 
-## 6. Registration lifecycle
-Registration is deterministic and idempotent by `(applicationId, serviceId, version, environment)`. Bootstrap discovers static metadata, computes a stable manifest digest, submits it after local initialization, and refreshes it at the configured interval. Metadata changes require a service version/build change or explicit manifest-version change.
+Identity manifest records that request/correlation/trace IDs are propagated from Gateway, that valid IDs are not replaced, and that direct/internal ingress still requires service authentication. Registry MUST NOT expose secrets or trust headers as authority.
 
-Registry timeout/failure does not fail service startup. The service marks a registry-registration metric/state as degraded and retries with exponential backoff and jitter. Health may expose Registry as informational/degraded, never as a false authentication dependency.
+## 7. Registration lifecycle
+Registration is deterministic and idempotent by `(applicationId, serviceId, version, environment)`. Bootstrap discovers static metadata, computes a stable digest, submits it after local initialization and refreshes it. Registry failure is non-blocking with exponential backoff+jitter and degraded telemetry.
 
-## 7. Drift protection
-CI generates/discovers the manifest and compares it with committed service contracts. Production startup rejects internally inconsistent metadata (duplicate route IDs, duplicate permission keys, invalid schedule, duplicate consumer durable name), but does not reject solely because Registry is temporarily unreachable.
+## 8. Drift protection
+CI compares discovered runtime artifacts with committed contracts. Duplicate routes, permissions, durable consumers, schedules or conflicting metadata fail local validation. Registry outage never blocks Identity startup.
 
-## 8. Testing
-Tests cover configuration parsing, missing/invalid secrets, production-only safety checks, registry manifest snapshot/contract, deterministic digest, retry, non-blocking Registry outage, no-secret projection, and discovery of every route/controller/event/consumer/job/schedule/notification/realtime channel.
+## 9. Testing
+Tests cover configuration parsing, secret exclusion, deterministic manifest, Gateway-consumed route metadata, propagation semantics, direct-ingress security, registry outage/retry and discovery of every route/controller/event/consumer/job/schedule/notification/realtime channel.
