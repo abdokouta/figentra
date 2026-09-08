@@ -1,0 +1,3 @@
+# Search — Testing
+
+Unit-test analyzers, normalization, query compilation, ranking policy, filters and provider ports. Integration-test OpenSearch mappings, autocomplete, fuzzy suggestions, facets, highlighting, pagination and aliases. Contract-test event payloads and projection idempotency. Security tests prove tenant and permission isolation. E2E tests cover global dashboard search and resource-scoped search.
