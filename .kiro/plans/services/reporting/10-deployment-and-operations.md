@@ -1,0 +1,3 @@
+# Reporting — Deployment and Operations
+
+One NestJS source tree deployed as API/consumer/worker/scheduler roles on ECS/Fargate. PostgreSQL migrations are backward compatible. OpenSearch index changes use versioned indexes plus aliases. S3 artifacts have lifecycle policies. Health checks cover database, OpenSearch, object storage and queue connectivity. Rollback restores application image and, when needed, a previous index alias.
