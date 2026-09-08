@@ -1,34 +1,39 @@
-# Agent INDEX — lean base set (15 agents)
+# Figentra Agent Index
 
-> **Every agent the workspace actively uses lives here.** Aspirational /
-> product-specific / review-only agents live in `.ref/agents/` for later
-> activation. Promote back into `.kiro/agents/` when the concern lands.
+This directory contains the project's active Kiro agent profiles. The current Figentra platform agents below are authoritative for the 2026 modular-application architecture. Legacy/package-specific agents remain available where their scope still applies.
 
-## Writers (bounded — one lane, one kind of edit)
+## Figentra enterprise platform agents
 
-| Agent                               | Lane                                     |
-| ----------------------------------- | ---------------------------------------- |
-| `framework-core-builder`            | Non-UI `@stackra/*` packages source      |
-| `code-standards-steward`            | File/folder standards enforcement        |
-| `code-documentation-writer`         | Docblocks + JSDoc                        |
-| `docs-adr-steward`                  | ADRs + steering rules                    |
-| `docs-changesets-steward`           | READMEs + changesets + CHANGELOGs        |
-| `env-naming-steward`                | Env-var naming audit                     |
-| `support-utilities-steward`         | @stackra/support helper migration        |
-| `vitest-test-engineer`              | Vitest test suites                       |
-| `workspace-standardization-steward` | Package manifests + config normalization |
+| Agent | Primary responsibility |
+|---|---|
+| `figentra-architecture-guardian` | architecture, boundaries, ADRs, dependency direction |
+| `figentra-module-builder` | vertical module implementation |
+| `figentra-api-contract-designer` | HTTP/OpenAPI and async contract design |
+| `figentra-database-engineer` | PostgreSQL, migrations, transactions, indexes |
+| `figentra-messaging-engineer` | NATS, outbox, consumers, retries, DLQ, idempotency |
+| `figentra-workflow-scheduler` | workflow, timers, schedules, human tasks |
+| `figentra-security-reviewer` | auth, IAM, tenancy, secrets, threat/security review |
+| `figentra-observability-engineer` | OpenTelemetry, logs, metrics, traces, SLOs |
+| `figentra-infrastructure-engineer` | AWS ECS, Terraform, Cloudflare, networking, secrets, CI/CD |
+| `figentra-frontend-agent` | SPA, Registry-driven UI, SDUI, accessibility, performance |
+| `figentra-integration-engineer` | OAuth, providers, webhooks, sync/reconciliation |
+| `figentra-data-analytics-agent` | Usage, Tracking, Analytics, Reporting, Search |
+| `figentra-test-engineer` | unit/integration/contract/e2e/security/load/architecture tests |
+| `figentra-release-operations` | release, deployment, rollback, SLO/runbook gate |
+| `figentra-docs-governance` | specs, plans, ADRs, docs, routing consistency |
 
-## Reviewers (read-only audits)
+## Existing specialized agents
 
-| Agent                          | Lane                                  |
-| ------------------------------ | ------------------------------------- |
-| `package-api-release-reviewer` | Exports, builds, semver, supply chain |
-| `security-compliance-reviewer` | Security + privacy audit              |
-| `frontend-package-auditor`     | Per-package audit checklist           |
+The existing package, frontend, native, documentation, release, and review agents remain available when their specific lane applies. Route platform architecture and backend runtime work through the Figentra enterprise agents above first.
 
-## Aspirational agents → `.ref/agents/`
+## Required reading
 
-44 agents covering product-lead, design-lead, quality-lead, mobile-native,
-MLOps, incident command, legal/compliance, and other review-only or
-product-line-specific concerns live at [`.ref/agents/`](../../.ref/agents/).
-Activate when the concern lands.
+- `AGENTS.md`
+- `.kiro/specs/figentra-platform/ARCHITECTURE.md`
+- `.kiro/plans/2026-09-03-enterprise-day-one-plan-standard.md`
+- `ROUTING.md`
+- `.clinerules/`
+
+## Multi-agent rule
+
+Agents may work in parallel only when ownership is disjoint. The same files or business concern must not be edited by multiple agents simultaneously. Reviewers report; the owning builder fixes.
