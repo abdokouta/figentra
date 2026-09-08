@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+**/node_modules/
+.pnpm-store/
+
+# Build output
+**/dist/
+**/build/
+**/.turbo/
+**/.next/
+**/coverage/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+**/*.pem
+**/*.key
+**/*.p12
+
+# Generated/runtime state
+**/.cache/
+**/.wrangler/
+**/.terraform/
+**/.terraform.lock.hcl
+
+# Large/generated data
+*.sqlite
+*.db
+*.csv
+*.xlsx
+*.zip
+*.tar
+*.gz
+
+# IDE/system
+.DS_Store
+.vscode/
+.idea/
+
+# Git internals
+.git/
