@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "figentra-agent-spawn-context",
+      "description": "Expose the repository contract and current working-tree state when a CLI agent starts.",
+      "trigger": "AgentSpawn",
+      "action": {
+        "type": "command",
+        "command": "printf '%s\\n' 'FIGENTRA AGENT CONTEXT' 'Read AGENTS.md, canonical architecture, applicable plan, routing, and selected agent charter before editing.' 'Current git status:'; git status --short"
+      }
+    }
+  ]
+}
