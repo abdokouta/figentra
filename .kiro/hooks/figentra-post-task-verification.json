@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "figentra-post-task-verification",
+      "description": "Run deterministic repository standards after a Kiro spec task completes.",
+      "trigger": "PostTaskExecution",
+      "action": {
+        "type": "command",
+        "command": "pnpm run standards:all"
+      }
+    }
+  ]
+}
