@@ -1,0 +1,3 @@
+# Search — Resilience and Failure
+
+OpenSearch failures fail closed for protected data and surface a typed provider-unavailable error for normal search. Event consumption pauses/retries without losing durable events. Bulk indexing uses partial-failure handling and retry. Projection lag is observable. Rebuilds are resumable from checkpoints. Search correctness must never require a synchronous write to Search.
