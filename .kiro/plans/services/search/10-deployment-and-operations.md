@@ -1,0 +1,3 @@
+# Search — Deployment and Operations
+
+Deploy as ECS/Fargate roles from the single NestJS source tree. API is internal behind Gateway; consumer runs the event subscription; worker handles rebuilds; scheduler triggers scheduled maintenance. Health/readiness verifies provider connectivity and event consumer state. Rollback is image rollback; index schema changes use new versioned indexes and alias switch, never destructive in-place migrations.
