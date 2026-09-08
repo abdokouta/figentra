@@ -1,0 +1,3 @@
+# Reporting — Resilience and Failure
+
+OpenSearch is a rebuildable projection dependency. If unavailable, source services continue; projection lag accumulates and report execution returns a typed unavailable/degraded response. Report jobs retry safely. Failed batches go to DLQ. Rebuilds use checkpoints and blue/green index aliases. Calculation failures preserve the execution record and diagnostic state.
