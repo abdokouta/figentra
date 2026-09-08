@@ -1,0 +1,3 @@
+# Reporting — Testing
+
+Unit-test report definitions, validation, semantic metrics, formula evaluation and query compilation. Integration-test OpenSearch aggregations, index aliases and projection handlers. Contract-test domain events. Security tests prove tenant isolation. E2E tests cover report creation, execution, scheduling and exports. Load tests cover high-cardinality dimensions and large result sets.
