@@ -1,0 +1,3 @@
+# Search — Configuration and Registry
+
+Configuration includes provider selection, endpoint/credentials reference, timeouts, retry policy, index prefix, shard/replica policy, autocomplete limits, fuzzy policy, ranking weights and rebuild batch size. Secrets come from the platform secret manager. Search resource registrations are explicit and discoverable through the service registry; no implicit index creation is allowed.
