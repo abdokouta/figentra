@@ -1,0 +1,42 @@
+version: 1
+kind: artifact-registry
+artifacts:
+  - id: goal
+    class: intake
+    canonical: docs/engineering-system/work/
+  - id: research
+    class: research
+    canonical: docs/research/
+  - id: requirements
+    class: specification
+    canonical: .kiro/specs/<name>/requirements.md
+    adapters: [kiro-spec, markdown-plan]
+  - id: bug-analysis
+    class: specification
+    canonical: .kiro/specs/<name>/bugfix.md
+    adapters: [kiro-bugfix, markdown-plan]
+  - id: architecture-decision
+    class: adr
+    canonical: docs/adr/
+  - id: technical-specification
+    class: plan
+    canonical: .kiro/plans/
+  - id: implementation-tasks
+    class: task-plan
+    canonical: .kiro/specs/<name>/tasks.md
+    adapters: [kiro-spec, tool-native]
+  - id: review
+    class: report
+    canonical: .kiro/reports/
+  - id: runbook
+    class: operations
+    canonical: docs/runbooks/
+  - id: agent-charter
+    class: governance
+    canonical: .kiro/agents/
+  - id: steering-rule
+    class: standard
+    canonical: .kiro/steering/
+  - id: cline-rule
+    class: adapter
+    canonical: .clinerules/
