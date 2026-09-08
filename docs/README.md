@@ -2,7 +2,7 @@
 
 **Status:** CANONICAL INDEX
 
-This directory contains the canonical company and product positioning documents for Figentra.
+This directory contains canonical company, product and engineering-system documentation for Figentra.
 
 ## Company
 
@@ -14,8 +14,21 @@ This directory contains the canonical company and product positioning documents 
 
 ## Technology Products
 
-- [`figentra-agentic-development.md`](./figentra-agentic-development.md) — AI-native agentic software-development product definition.
+- [`figentra-agentic-development.md`](./figentra-agentic-development.md) — canonical product definition for the AI-native software-development platform.
 - [`figentra-os.md`](./figentra-os.md) — Enterprise Operating System product definition and platform capabilities.
+
+## Engineering System
+
+- [`engineering-system/README.md`](./engineering-system/README.md) — tool-neutral Agent Engineering System and SDLC source of truth.
+- [`engineering-system/constitution.md`](./engineering-system/constitution.md) — engineering and agent constitution.
+- [`engineering-system/sdlc.md`](./engineering-system/sdlc.md) — autonomous software-development lifecycle.
+- [`engineering-system/agent-roster.md`](./engineering-system/agent-roster.md) — canonical logical agent roster.
+- [`engineering-system/routing.md`](./engineering-system/routing.md) — deterministic task routing and handoffs.
+- [`engineering-system/artifact-system.md`](./engineering-system/artifact-system.md) — canonical engineering artifacts and traceability.
+- [`engineering-system/context-system.md`](./engineering-system/context-system.md) — durable context and progressive loading model.
+- [`engineering-system/governance.md`](./engineering-system/governance.md) — authority, approvals and escalation.
+- [`engineering-system/quality-gates.md`](./engineering-system/quality-gates.md) — production evidence gates.
+- [`engineering-system/adapters/`](./engineering-system/adapters/) — Kiro, Cline and generic tool adapters.
 
 ## Application Products
 
@@ -32,7 +45,7 @@ Company / Brand
 │   AI-native software development platform
 │
 ├── Figentra OS
-│   Enterprise Operating System
+│   Enterprise Operating System product
 │
 └── Applications
     ├── Academorix
@@ -64,6 +77,4 @@ MENA may be used when a statement specifically refers to the Middle East and Nor
 
 ## Authority
 
-Technical architecture is governed by `.kiro/FINAL-ARCHITECTURE-STANDARD.md`.
-
-Commercial/product naming is governed by [`figentra-brand-architecture.md`](./figentra-brand-architecture.md).
+Technical architecture is governed by `.kiro/specs/figentra-platform/ARCHITECTURE.md` and the applicable implementation contracts. Agent engineering governance is governed by [`engineering-system/`](./engineering-system/). Commercial/product naming is governed by [`figentra-brand-architecture.md`](./figentra-brand-architecture.md).
