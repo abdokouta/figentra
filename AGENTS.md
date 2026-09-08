@@ -1,18 +1,34 @@
 # AGENTS.md — Figentra universal AI-agent entry point
 
-This repository is the Figentra platform. Every AI coding agent must treat this file, the canonical architecture, and the relevant implementation contracts as the source of truth.
+This repository is the Figentra platform. Every AI coding agent must treat this file, the canonical Agent Engineering System, the platform architecture, and the relevant implementation contracts as the source of truth.
 
 ## First-read sequence
 
 1. `AGENTS.md`
-2. `.kiro/specs/figentra-platform/ARCHITECTURE.md`
-3. `.kiro/plans/2026-09-03-enterprise-day-one-plan-standard.md`
-4. `.kiro/agents/ROUTING.md`
-5. `.kiro/agents/INDEX.md`
-6. Relevant `.kiro/plans/` service/package/worker documents
-7. Relevant `.clinerules/` and `.cline/skills/`
+2. `ENGINEERING.md`
+3. `docs/engineering-system/README.md`
+4. `docs/engineering-system/constitution.md`
+5. `.kiro/specs/figentra-platform/ARCHITECTURE.md`
+6. `.kiro/plans/2026-09-03-enterprise-day-one-plan-standard.md`
+7. `docs/engineering-system/routing.md`
+8. `.kiro/agents/ROUTING.md`
+9. `.kiro/agents/INDEX.md`
+10. Relevant service/package/worker plans
+11. Relevant tool adapters: `.kiro/`, `.clinerules/`, `.cline/`
 
 Do not load every document at startup. Use indexes and task-specific retrieval to preserve context.
+
+## Agent Engineering System
+
+`docs/engineering-system/` is the tool-neutral source of truth for the agentic SDLC. Kiro, Cline and other coding tools are adapters. They may use different mechanisms—Kiro steering/agents/skills/hooks/specs, Cline rules/skills/hooks/subagents, or another tool's native equivalents—but they must preserve the same ownership, routing, authority, artifact and quality-gate contracts.
+
+The lifecycle is:
+
+```text
+Intake → Discovery → Product Definition → Requirements → Architecture/ADR
+→ Specification → Planning → Build → Verification → Review
+→ Release Readiness → Deploy → Runtime Verification → Operate → Improve
+```
 
 ## Current architecture
 
@@ -73,16 +89,8 @@ Independent Cloudflare control-plane workers are Gateway, Application Registry, 
 
 ## Agent routing
 
-Use `.kiro/agents/ROUTING.md`. The current Figentra specialists include architecture, module implementation, API contracts, database, messaging, workflow/scheduling, security, observability, infrastructure, frontend, integrations, data/analytics, testing, release operations, and documentation governance.
-
-Cline uses the same contracts through `.clinerules/`, `.cline/skills/`, and `.clinerules/workflows/`. Cline read-only subagents are for reconnaissance; implementation remains with the owning agent/task.
-
-## AI development model
-
-Kimi K2.5 on AWS Bedrock may be the default implementation model. Claude/GPT-class models may be used for difficult architecture, security, concurrency, debugging, or independent review. Models are replaceable; repository contracts and automated tests are authoritative.
-
-Do not add `@cline/sdk` to product runtime solely for coding. Use Cline CLI/IDE for normal development. Adopt the SDK only for an explicit engineering automation product or CI orchestration system.
+Use `docs/engineering-system/routing.md` for canonical logical routing and `.kiro/agents/ROUTING.md` for the current Kiro projection. Reviewers report findings; owning builders fix them.
 
 ## Completion gate
 
-Before claiming completion, verify: architecture ownership, typecheck, lint, tests, API/async contracts, database migrations, security/tenancy, idempotency, retries/DLQ, scheduling safety, health/readiness, logs/metrics/traces, configuration/secrets, deployment/rollback, documentation, and relevant production runbooks.
+Before claiming completion, verify: architecture ownership, typecheck, lint, tests, API/async contracts, database migrations, security/tenancy, idempotency, retries/DLQ, scheduling safety, health/readiness, logs/metrics/traces, configuration/secrets, deployment/rollback, documentation, and relevant production runbooks. Use `docs/engineering-system/quality-gates.md` as the canonical evidence model.
