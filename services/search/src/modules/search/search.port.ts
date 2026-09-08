@@ -1,3 +1,5 @@
+export const SEARCH_PROVIDER = Symbol('SEARCH_PROVIDER');
+
 export interface SearchQuery {
   query: string;
   resourceTypes?: string[];
