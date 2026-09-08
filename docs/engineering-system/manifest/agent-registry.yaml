@@ -1,0 +1,52 @@
+version: 1
+kind: agent-registry
+source: docs/engineering-system/agent-roster.md
+agents:
+  - id: ORCH-001
+    slug: figentra-delivery-orchestrator
+    lane: orchestration
+  - id: ARCH-001
+    slug: figentra-architecture-guardian
+    lane: architecture
+  - id: BUILD-001
+    slug: figentra-module-builder
+    lane: implementation
+  - id: API-001
+    slug: figentra-api-contract-designer
+    lane: contracts
+  - id: DATA-001
+    slug: figentra-database-engineer
+    lane: data
+  - id: MSG-001
+    slug: figentra-messaging-engineer
+    lane: async
+  - id: WF-001
+    slug: figentra-workflow-scheduler
+    lane: workflow
+  - id: SEC-001
+    slug: figentra-security-reviewer
+    lane: security
+  - id: OBS-001
+    slug: figentra-observability-engineer
+    lane: observability
+  - id: INFRA-001
+    slug: figentra-infrastructure-engineer
+    lane: infrastructure
+  - id: FRONT-001
+    slug: figentra-frontend-agent
+    lane: frontend
+  - id: INT-001
+    slug: figentra-integration-engineer
+    lane: integrations
+  - id: DATAAI-001
+    slug: figentra-data-analytics-agent
+    lane: data-analytics
+  - id: TEST-001
+    slug: figentra-test-engineer
+    lane: verification
+  - id: REL-001
+    slug: figentra-release-operations
+    lane: release
+  - id: DOC-001
+    slug: figentra-docs-governance
+    lane: documentation
