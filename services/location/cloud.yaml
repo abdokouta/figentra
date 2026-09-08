@@ -1,0 +1,10 @@
+# Deployable metadata; infrastructure and secrets are managed outside this file.
+name: figentra-location
+runtime: node24
+framework: nestjs
+port: 3010
+health:
+  live: /v1/health/live
+  ready: /v1/health/ready
+transport:
+  internal: nats
