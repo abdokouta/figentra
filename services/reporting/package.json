@@ -1,0 +1,6 @@
+{
+  "name":"@figentra/reporting-service","version":"0.1.0","private":true,"description":"Figentra Reporting Service",
+  "scripts":{"build":"nest build","start":"node dist/main.js","start:dev":"nest start --watch","test":"jest --runInBand"},
+  "dependencies":{"@nestjs/common":"catalog:","@nestjs/config":"catalog:","@nestjs/core":"catalog:","@nestjs/platform-fastify":"catalog:","@nestjs/swagger":"catalog:","@nestjs/terminus":"catalog:","@mikro-orm/core":"catalog:","@mikro-orm/nestjs":"catalog:","@mikro-orm/postgresql":"catalog:","nestjs-pino":"catalog:","pino":"catalog:","reflect-metadata":"catalog:","rxjs":"catalog:","zod":"catalog:"},
+  "devDependencies":{"@nestjs/testing":"catalog:","@types/node":"catalog:","jest":"catalog:","typescript":"catalog:"}
+}
